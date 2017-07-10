@@ -1,6 +1,8 @@
 cmake_minimum_required (VERSION 3.8.2 FATAL_ERROR)
+set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
 project (ProgrammerStenoTutor)
 
+mark_as_advanced(CMAKE_INSTALL_PREFIX)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
