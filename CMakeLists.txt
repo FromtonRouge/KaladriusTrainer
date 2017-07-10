@@ -8,6 +8,13 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
+# Boost configuration
+find_package(Boost 1.58.0 REQUIRED COMPONENTS serialization)
+
+if (Boost_FOUND)
+    include_directories(${Boost_INCLUDE_DIRS})
+endif()
+
 # Qt5 directory looks like this C:\Qt\5.9.1\msvc2015_64\lib\cmake\Qt5
 find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
 
@@ -17,3 +24,7 @@ file(GLOB RCS ./*.rc)
 
 add_executable(ProgrammerStenoTutor WIN32 ${SOURCES} ${QRCS} ${RCS})
 target_link_libraries(ProgrammerStenoTutor Qt5::Core Qt5::Gui Qt5::Widgets)
+
+if (Boost_FOUND)
+    target_link_libraries(ProgrammerStenoTutor Boost::serialization)
+endif()
