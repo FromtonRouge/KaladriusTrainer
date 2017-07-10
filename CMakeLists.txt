@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.8.2 FATAL_ERROR)
+cmake_minimum_required (VERSION 3.5.1 FATAL_ERROR)
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
 project (ProgrammerStenoTutor)
 
@@ -8,10 +8,8 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-# Note: cmake qt packages can be found here: C:\Qt\5.9.1\msvc2015_64\lib\cmake\Qt5*
-find_package(Qt5Core)
-find_package(Qt5Gui)
-find_package(Qt5Widgets)
+# Qt5 directory looks like this C:\Qt\5.9.1\msvc2015_64\lib\cmake\Qt5
+find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
 
 file(GLOB SOURCES ./*.cpp)
 file(GLOB QRCS ./*.qrc)
