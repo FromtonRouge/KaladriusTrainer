@@ -9,6 +9,10 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
 # Boost configuration
+# Note: If there is a configuration error you may need to add 1 or 2 entries in cmake-gui : BOOST_ROOT and/or BOOST_LIBRARYDIR
+# eg: BOOST_ROOT = C:/boost_1_64_0
+# eg: BOOST_LIBRARYDIR = C:/boost_1_64_0/stage_x64/lib
+set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost 1.58.0 REQUIRED COMPONENTS serialization)
 
 if (Boost_FOUND)
