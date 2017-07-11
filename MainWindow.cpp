@@ -20,21 +20,12 @@
 #include "MainWindow.h"
 #include <QtWidgets/QApplication>
 #include "ui_MainWindow.h"
-#include <boost/archive/xml_oarchive.hpp>
-#include <boost/archive/xml_iarchive.hpp>
-#include <fstream>
-#include <string>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , _pUi(new Ui::MainWindow)
 {
     _pUi->setupUi(this);
-
-    std::ofstream ofs("HelloWorld.xml");
-    boost::archive::xml_oarchive oa(ofs);
-    std::string sTest("Hello World");
-    oa << BOOST_SERIALIZATION_NVP(sTest);
 }
 
 MainWindow::~MainWindow()

@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>Icons/door-open-out.png</file>
         <file>Icons/ProgrammerStenoTutor.png</file>
+        <file>Icons/book-open-next.png</file>
     </qresource>
 </RCC>

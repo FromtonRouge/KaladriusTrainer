@@ -31,6 +31,8 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionImport_Dictionaries"/>
+    <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
    <addaction name="menuFile"/>
@@ -43,6 +45,15 @@
    </property>
    <property name="text">
     <string>Quit</string>
+   </property>
+  </action>
+  <action name="actionImport_Dictionaries">
+   <property name="icon">
+    <iconset resource="programmerstenotutor.qrc">
+     <normaloff>:/Icons/book-open-next.png</normaloff>:/Icons/book-open-next.png</iconset>
+   </property>
+   <property name="text">
+    <string>Import Dictionaries</string>
    </property>
   </action>
  </widget>
