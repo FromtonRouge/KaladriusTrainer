@@ -2,6 +2,20 @@ cmake_minimum_required (VERSION 3.5.1 FATAL_ERROR)
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
 project (ProgrammerStenoTutor)
 
+# The application version number
+set (PROJECT_VERSION_MAJOR 0)
+set (PROJECT_VERSION_MINOR 1)
+set (PROJECT_VERSION_PATCH 0)
+ 
+# configure a header file to pass some of the CMake settings
+# to the source code
+configure_file ("${PROJECT_SOURCE_DIR}/ProjectConfig.h.in"
+                "${PROJECT_BINARY_DIR}/ProjectConfig.h")
+
+# Add the binary tree to the search path for include files
+# so that we will find ${PROJECT_NAME}.h
+include_directories("${PROJECT_BINARY_DIR}")
+
 mark_as_advanced(CMAKE_INSTALL_PREFIX)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
@@ -26,9 +40,9 @@ file(GLOB SOURCES ./*.cpp)
 file(GLOB QRCS ./*.qrc)
 file(GLOB RCS ./*.rc)
 
-add_executable(ProgrammerStenoTutor WIN32 ${SOURCES} ${QRCS} ${RCS})
-target_link_libraries(ProgrammerStenoTutor Qt5::Core Qt5::Gui Qt5::Widgets)
+add_executable(${PROJECT_NAME} WIN32 ${SOURCES} ${QRCS} ${RCS})
+target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::Widgets)
 
 if (Boost_FOUND)
-    target_link_libraries(ProgrammerStenoTutor Boost::serialization)
+    target_link_libraries(${PROJECT_NAME} Boost::serialization)
 endif()

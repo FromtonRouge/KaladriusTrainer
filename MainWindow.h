@@ -36,6 +36,8 @@ public:
 
 protected slots:
     void on_actionQuit_triggered();
+    void on_actionImport_Dictionaries_triggered();
+    void on_actionReload_Dictionaries_triggered();
 
 private:
     Ui::MainWindow* _pUi;

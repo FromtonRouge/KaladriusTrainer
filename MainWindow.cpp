@@ -18,7 +18,14 @@
 // ======================================================================
 
 #include "MainWindow.h"
+#include "DictionaryParser.h"
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QFileDialog>
+#include <QtCore/QSettings>
+#include <QtCore/QDir>
+#include <QtCore/QDebug>
+#include <QtCore/QStringList>
+#include <QtCore/QSet>
 #include "ui_MainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -36,4 +43,38 @@ MainWindow::~MainWindow()
 void MainWindow::on_actionQuit_triggered()
 {
     QApplication::quit();
+}
+
+void MainWindow::on_actionImport_Dictionaries_triggered()
+{
+    QSettings settings;
+    const QString& sLastImportDirectory = settings.value("lastImportDirectory").toString();
+    const QString& sDirectory = QFileDialog::getExistingDirectory(this, tr("Dictionaries"), sLastImportDirectory);
+    if (!sDirectory.isEmpty())
+    {
+        settings.setValue("lastImportDirectory", sDirectory);
+        _pUi->actionReload_Dictionaries->trigger();
+    }
+}
+
+void MainWindow::on_actionReload_Dictionaries_triggered()
+{
+    QSettings settings;
+    const QString& sLastImportDirectory = settings.value("lastImportDirectory").toString();
+    if (!sLastImportDirectory.isEmpty())
+    {
+        QDir dir(sLastImportDirectory);
+        QSet<QString> dictionariesFiles;
+        dictionariesFiles.insert("shelton_tables.c");
+        dictionariesFiles.insert("user_tables.c");
+        const auto& entries = dir.entryInfoList(QStringList() << "*.c");
+        for (const auto& entry : entries)
+        {
+            if (dictionariesFiles.contains(entry.fileName()))
+            {
+                DictionaryParser parser(entry.absoluteFilePath());
+                parser.parse();
+            }
+        }
+    }
 }

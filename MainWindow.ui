@@ -32,6 +32,7 @@
      <string>File</string>
     </property>
     <addaction name="actionImport_Dictionaries"/>
+    <addaction name="actionReload_Dictionaries"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -54,6 +55,18 @@
    </property>
    <property name="text">
     <string>Import Dictionaries</string>
+   </property>
+  </action>
+  <action name="actionReload_Dictionaries">
+   <property name="icon">
+    <iconset resource="programmerstenotutor.qrc">
+     <normaloff>:/Icons/book-open-next.png</normaloff>:/Icons/book-open-next.png</iconset>
+   </property>
+   <property name="text">
+    <string>Reload Dictionaries</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
    </property>
   </action>
  </widget>

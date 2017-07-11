@@ -17,25 +17,22 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "MainWindow.h"
-#include "ProjectConfig.h"
-#include <QtWidgets/QApplication>
-#include <QtCore/QCommandLineParser>
+#pragma once
 
-int main(int argc, char *argv[])
+#include <QtCore/QScopedPointer>
+#include <QtCore/QString>
+
+template <typename Iterator> struct InternalParser;
+class DictionaryParser
 {
-    QApplication a(argc, argv);
-    QApplication::setOrganizationName("FromtonRouge");
-    QApplication::setApplicationName(PROJECT_APPLICATION_NAME);
-    QApplication::setApplicationVersion(QString("v%1.%2.%3").arg(PROJECT_VERSION_MAJOR).arg(PROJECT_VERSION_MINOR).arg(PROJECT_VERSION_PATCH));
+public:
+    DictionaryParser(const QString& sFilePath);
+    ~DictionaryParser();
 
-    QCommandLineParser parser;
-    parser.setApplicationDescription(QObject::tr("Programmer Steno learning tool"));
-    parser.addHelpOption();
-    parser.addVersionOption();
-    parser.process(a);
+    bool parse();
 
-    MainWindow w;
-    w.show();
-    return a.exec();
-}
+private:
+    typedef std::string::const_iterator IteratorType;
+    QScopedPointer<InternalParser<IteratorType>> _pInternalParser;
+    QString _sFilePath;
+};
