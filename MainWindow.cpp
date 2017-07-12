@@ -33,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
     , _pUi(new Ui::MainWindow)
 {
     _pUi->setupUi(this);
+    _pUi->actionReload_Dictionaries->trigger();
 }
 
 MainWindow::~MainWindow()
