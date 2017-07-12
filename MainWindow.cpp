@@ -26,6 +26,8 @@
 #include <QtCore/QDebug>
 #include <QtCore/QStringList>
 #include <QtCore/QSet>
+#include <QtCore/QFile>
+#include <QtCore/QTextStream>
 #include "ui_MainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -64,6 +66,7 @@ void MainWindow::on_actionReload_Dictionaries_triggered()
     const QString& sLastImportDirectory = settings.value("lastImportDirectory").toString();
     if (!sLastImportDirectory.isEmpty())
     {
+        Dictionaries dictionaries;
         QDir dir(sLastImportDirectory);
         QSet<QString> dictionariesFiles;
         dictionariesFiles.insert("shelton_tables.c");
@@ -75,6 +78,35 @@ void MainWindow::on_actionReload_Dictionaries_triggered()
             {
                 DictionaryParser parser(entry.absoluteFilePath());
                 parser.parse();
+                dictionaries.unite(parser.getDictionaries());
+            }
+        }
+
+        if (!dictionaries.isEmpty())
+        {
+            QFile file("dictionaries.txt");
+            if (file.open(QFile::WriteOnly))
+            {
+                QTextStream stream(&file);
+
+                auto it = dictionaries.begin();
+                while (it != dictionaries.end())
+                {
+                    const QString& sDictionaryName = it.key();
+
+                    stream << "Table : " << sDictionaryName << "\n";
+
+                    const Dictionary& dictionary = it++.value();
+                    const auto& entries = dictionary.getEntriesByKeyBits();
+                    for (int i = 0; i < entries.size(); ++i)
+                    {
+                        const QString& sEntry = entries[i];
+                        stream << QString("\t[%1] = ").arg(i) << sEntry << "\n";
+                    }
+
+                    stream << "\n";
+                }
+                file.close();
             }
         }
     }

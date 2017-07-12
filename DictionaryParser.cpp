@@ -18,9 +18,7 @@
 // ======================================================================
 
 #include "DictionaryParser.h"
-#include "Ast.h"
 #include <QtCore/QFile>
-#include <QtCore/QTextStream>
 #include <QtCore/QRegularExpression>
 #include <QtCore/QDebug>
 #include <boost/config/warning_disable.hpp>
@@ -38,6 +36,39 @@ namespace qi = boost::spirit::qi;
 namespace ascii = boost::spirit::ascii;
 namespace spirit = boost::spirit;
 namespace phoenix = boost::phoenix;
+
+namespace Ast
+{
+    struct Keycode
+    {
+        Keycode(const std::string& key = std::string())
+        {
+            this->key = key;
+        }
+        std::string mods;
+        std::string key;
+    };
+
+    struct Entry
+    {
+        Entry(const std::string& s = std::string())
+        {
+            if (!s.empty())
+            {
+                Keycode keycode;
+                keycode.key = s;
+                keycodes.push_back(keycode);
+            }
+        }
+        std::vector<Keycode> keycodes;
+    };
+
+    struct Table
+    {
+        std::string tableName;
+        std::vector<Entry> entries;
+    };
+}
 
 BOOST_FUSION_ADAPT_STRUCT(Ast::Keycode, (std::string, mods) (std::string, key))
 BOOST_FUSION_ADAPT_STRUCT(Ast::Entry, (std::vector<Ast::Keycode>, keycodes))
@@ -121,33 +152,20 @@ bool DictionaryParser::parse()
             std::vector<Ast::Table> tables;
             bResult = qi::phrase_parse(it, sFilteredContent.end(), *_pInternalParser, ascii::space, tables);
 
-            QFile fileParseResult("result.txt");
-            if (fileParseResult.open(QFile::WriteOnly))
+            for (const auto& table : tables)
             {
-                QTextStream textStream(&fileParseResult);
-                for (const auto& table : tables)
+                Dictionary dictionary(QString::fromStdString(table.tableName));
+                for (size_t i = 0; i < table.entries.size(); ++i)
                 {
-                    textStream << "Table " << QString::fromStdString(table.tableName) << "\n";
-                    uint nIndex = 0;
-                    for (const auto& entry : table.entries)
+                    const auto& entry = table.entries[i];
+                    QStringList keycodes;
+                    for (const auto& keycode : entry.keycodes)
                     {
-                        QStringList keycodes;
-                        for (const auto& keycode : entry.keycodes)
-                        {
-                            if (!keycode.mods.empty())
-                            {
-                                keycodes << QString("%1(%2)").arg(QString::fromStdString(keycode.mods)).arg(QString::fromStdString(keycode.key));
-                            }
-                            else
-                            {
-                                keycodes << QString::fromStdString(keycode.key);
-                            }
-                        }
-                        textStream << "\t" << QString("[%1] = ").arg(nIndex) << keycodes.join(", ") << "\n";
-                        nIndex++;
+                        keycodes << QString::fromStdString(keycode.key);
                     }
+                    dictionary.addEntry(keycodes.join(", "), uint(i));
                 }
-                fileParseResult.close();
+                _dictionaries.insert(dictionary.getName(), dictionary);
             }
         }
         catch (const expectation_failure<IteratorType>&)

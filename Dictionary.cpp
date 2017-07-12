@@ -1,3 +1,4 @@
+#include "Dictionary.h"
 // ======================================================================
 // This file is a part of the ProgrammerStenoTutor project
 //
@@ -17,40 +18,19 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "Dictionary.h"
 
-#include <vector>
-#include <string>
-
-namespace Ast
+Dictionary::Dictionary(const QString& sName)
+    : _sName(sName)
 {
-    struct Keycode
-    {
-        Keycode(const std::string& key = std::string())
-        {
-            this->key = key;
-        }
-        std::string mods;
-        std::string key;
-    };
+}
 
-    struct Entry
-    {
-        Entry(const std::string& s = std::string())
-        {
-            if (!s.empty())
-            {
-                Keycode keycode;
-                keycode.key = s;
-                keycodes.push_back(keycode);
-            }
-        }
-        std::vector<Keycode> keycodes;
-    };
+Dictionary::~Dictionary()
+{
+}
 
-    struct Table
-    {
-        std::string tableName;
-        std::vector<Entry> entries;
-    };
+void Dictionary::addEntry(const QString& sEntry, uint keyBits)
+{
+    _stringToKeyBits.insertMulti(sEntry, keyBits);
+    _keyBitsToString << sEntry;
 }

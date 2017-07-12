@@ -19,23 +19,29 @@
 
 #pragma once
 
-#include "Dictionary.h"
-#include <QtCore/QScopedPointer>
+#include <QtCore/QHash>
+#include <QtCore/QVector>
 #include <QtCore/QString>
 
-template <typename Iterator> struct InternalParser;
-class DictionaryParser
+class Dictionary
 {
 public:
-    DictionaryParser(const QString& sFilePath);
-    ~DictionaryParser();
+    typedef QVector<QString> EntriesByKeyBits;
+    typedef QHash<QString, uint> EntriesByStrings;
 
-    bool parse();
-    const Dictionaries& getDictionaries() const { return _dictionaries; }
+public:
+    Dictionary(const QString& sName = QString());
+    ~Dictionary();
+
+    const QString& getName() const { return _sName; }
+    void addEntry(const QString& sEntry, uint keyBits);
+    const auto& getEntriesByKeyBits() const { return _keyBitsToString; }
+    const auto& getEntriesByStrings() const { return _stringToKeyBits; }
 
 private:
-    typedef std::string::const_iterator IteratorType;
-    QScopedPointer<InternalParser<IteratorType>> _pInternalParser;
-    QString _sFilePath;
-    Dictionaries _dictionaries;
+    QString _sName;
+    EntriesByStrings _stringToKeyBits;
+    EntriesByKeyBits _keyBitsToString;
 };
+
+typedef QHash<QString, Dictionary> Dictionaries;
