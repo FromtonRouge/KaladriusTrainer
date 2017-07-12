@@ -33,20 +33,23 @@ struct InternalParser : qi::grammar <Iterator, ascii::space_type, std::string>
     InternalParser() : InternalParser::base_type(start)
     {
         using qi::space;
+        using qi::int_;
         using qi::alnum;
+        using qi::alpha;
         using qi::lit;
         using qi::lexeme;
 
-        keycode = +(alnum | '_');
-        valid_entry = lexeme['_' > +alnum > '('] >> (keycode % ',') >> ')';
+        identifier = lexeme[(alpha | '_') > +(alnum|'_')]; // C identifier
+        mod = identifier; // eg: LSFT
+        keycode = (mod >> '(' >> identifier >> ')') | identifier; // eg: LSFT(_Y) or _Y 
         no_entry = lit("NO_ENTRY");
-        element = (no_entry | valid_entry) >> *lit(",");
-        array = lexeme['[' > +(alnum | '_') > ']'];
-        variable = lexeme["g_" > +(alnum | '_')];
+        entry = identifier >> '(' >> (keycode % ',') >> ')'; // eg: _3(_Y, _E, _S)
+        dimension = lit('[') >> (int_ | identifier)  >> ']'; // eg: [256] or [MAX_LETTERS]
+        type = identifier; // eg: uint16_t, int etc...
 
-        table = lit("const") >> (lit("uint16_t") | lit("uint8_t")) >> lit("PROGMEM") >> variable >> array >> array >> '='
+        table = lit("const") >> type >> lit("PROGMEM") >> identifier >> dimension >> dimension >> '='
             >> '{'
-            >> +(element)
+            >> (no_entry | entry) % ','
             >> '}' >> ';';
 
         start = +table;
@@ -54,12 +57,13 @@ struct InternalParser : qi::grammar <Iterator, ascii::space_type, std::string>
 
     qi::rule<Iterator, ascii::space_type, std::string> start;
     qi::rule<Iterator, ascii::space_type, std::string> table;
-    qi::rule<Iterator, ascii::space_type, std::string> variable;
-    qi::rule<Iterator, ascii::space_type, std::string> array;
-    qi::rule<Iterator, ascii::space_type, std::string> element;
+    qi::rule<Iterator, ascii::space_type, std::string> dimension;
     qi::rule<Iterator, ascii::space_type, std::string> no_entry;
-    qi::rule<Iterator, ascii::space_type, std::string> valid_entry;
+    qi::rule<Iterator, ascii::space_type, std::string> entry;
+    qi::rule<Iterator, ascii::space_type, std::string> mod;
     qi::rule<Iterator, ascii::space_type, std::string> keycode;
+    qi::rule<Iterator, ascii::space_type, std::string> type;
+    qi::rule<Iterator, ascii::space_type, std::string> identifier;
 };
 
 DictionaryParser::DictionaryParser(const QString& sFilePath)
@@ -85,11 +89,19 @@ bool DictionaryParser::parse()
         sFileContent.remove(QRegularExpression("#include.*"));
         sFileContent.remove(QRegularExpression("//.*"));
 
+        using qi::expectation_failure;
         std::string sFilteredContent = sFileContent.toStdString();
         auto it = sFilteredContent.begin();
-        bResult = qi::phrase_parse(it, sFilteredContent.end(), *_pInternalParser, ascii::space);
-        std::string sParsedString(sFilteredContent.begin(), it);
-        qDebug() << "Parsed string" << QString::fromStdString(sParsedString);
+        try
+        {
+            bResult = qi::phrase_parse(it, sFilteredContent.end(), *_pInternalParser, ascii::space);
+            std::string sParsedString(sFilteredContent.begin(), it);
+            qDebug() << "Parsed string" << QString::fromStdString(sParsedString);
+        }
+        catch (const expectation_failure<IteratorType>&)
+        {
+            // TODO: e.what_.tag.c_str();
+        }
     }
     return bResult;
 }
