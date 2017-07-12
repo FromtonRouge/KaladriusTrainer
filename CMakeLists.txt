@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.5.1 FATAL_ERROR)
+cmake_minimum_required (VERSION 3.8.2 FATAL_ERROR)
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
 project (ProgrammerStenoTutor)
 
@@ -27,7 +27,7 @@ set(CMAKE_AUTORCC ON)
 # eg: BOOST_ROOT = C:/boost_1_64_0
 # eg: BOOST_LIBRARYDIR = C:/boost_1_64_0/stage_x64/lib
 set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost 1.58.0 REQUIRED COMPONENTS serialization)
+find_package(Boost 1.64.0 REQUIRED COMPONENTS serialization)
 
 if (Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIRS})

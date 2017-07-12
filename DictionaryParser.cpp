@@ -114,7 +114,7 @@ bool DictionaryParser::parse()
         sFileContent.remove(QRegularExpression("//.*"));
 
         using qi::expectation_failure;
-        std::string sFilteredContent = sFileContent.toStdString();
+        const std::string& sFilteredContent = sFileContent.toStdString();
         auto it = sFilteredContent.begin();
         try
         {
