@@ -17,6 +17,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
+#include "ui_MainWindow.h"
 #include "MainWindow.h"
 #include "DictionaryParser.h"
 #include <QtWidgets/QApplication>
@@ -28,7 +29,8 @@
 #include <QtCore/QSet>
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
-#include "ui_MainWindow.h"
+#include <boost/dynamic_bitset.hpp>
+#include <cmath>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -98,10 +100,27 @@ void MainWindow::on_actionReload_Dictionaries_triggered()
 
                     const Dictionary& dictionary = it++.value();
                     const auto& entries = dictionary.getEntriesByKeyBits();
+                    const uint nBits = static_cast<uint>(std::floor(std::log2(entries.size() + 1)));
                     for (int i = 0; i < entries.size(); ++i)
                     {
-                        const QString& sEntry = entries[i];
-                        stream << QString("\t[%1] = ").arg(i) << sEntry << "\n";
+                        boost::dynamic_bitset<> bitset(nBits, i);
+                        std::string sBitset;
+                        boost::to_string(bitset, sBitset);
+                        const auto& keycodes = entries[i];
+                        QStringList vKeycodes;
+                        for (const auto& keycode : keycodes)
+                        {
+                            const QString& sUserString = keycode.getUserString();
+                            if (!sUserString.isEmpty())
+                            {
+                                vKeycodes << keycode.getUserString();
+                            }
+                        }
+
+                        if (!vKeycodes.isEmpty())
+                        {
+                            stream << QString("\t%1 = ").arg(QString::fromStdString(sBitset)) << vKeycodes.join("") << "\n";
+                        }
                     }
 
                     stream << "\n";

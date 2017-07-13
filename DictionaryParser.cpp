@@ -18,6 +18,7 @@
 // ======================================================================
 
 #include "DictionaryParser.h"
+#include "Keycode.h"
 #include <QtCore/QFile>
 #include <QtCore/QRegularExpression>
 #include <QtCore/QDebug>
@@ -158,12 +159,17 @@ bool DictionaryParser::parse()
                 for (size_t i = 0; i < table.entries.size(); ++i)
                 {
                     const auto& entry = table.entries[i];
-                    QStringList keycodes;
+                    Keycodes keycodes;
                     for (const auto& keycode : entry.keycodes)
                     {
-                        keycodes << QString::fromStdString(keycode.key);
+                        QStringList vMods;
+                        if (!keycode.mods.empty())
+                        {
+                            vMods << QString::fromStdString(keycode.mods);
+                        }
+                        keycodes << Keycode(vMods, QString::fromStdString(keycode.key));
                     }
-                    dictionary.addEntry(keycodes.join(", "), uint(i));
+                    dictionary.addEntry(keycodes, uint(i));
                 }
                 _dictionaries.insert(dictionary.getName(), dictionary);
             }

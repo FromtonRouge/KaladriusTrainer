@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include "Keycode.h"
+
 #include <QtCore/QHash>
 #include <QtCore/QVector>
 #include <QtCore/QString>
@@ -26,22 +28,22 @@
 class Dictionary
 {
 public:
-    typedef QVector<QString> EntriesByKeyBits;
-    typedef QHash<QString, uint> EntriesByStrings;
+    typedef QVector<Keycodes> EntriesByKeyBits;
+    typedef QHash<Keycodes, uint> EntriesByStrings;
 
 public:
     Dictionary(const QString& sName = QString());
     ~Dictionary();
 
     const QString& getName() const { return _sName; }
-    void addEntry(const QString& sEntry, uint keyBits);
-    const auto& getEntriesByKeyBits() const { return _keyBitsToString; }
-    const auto& getEntriesByStrings() const { return _stringToKeyBits; }
+    void addEntry(const Keycodes& keycodes, uint keyBits);
+    const auto& getEntriesByKeyBits() const { return _keyBitsToKeycodes; }
+    const auto& getEntriesByKeycodes() const { return _keycodesToKeyBits; }
 
 private:
     QString _sName;
-    EntriesByStrings _stringToKeyBits;
-    EntriesByKeyBits _keyBitsToString;
+    EntriesByStrings _keycodesToKeyBits;
+    EntriesByKeyBits _keyBitsToKeycodes;
 };
 
 typedef QHash<QString, Dictionary> Dictionaries;

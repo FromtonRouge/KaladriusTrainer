@@ -29,8 +29,8 @@ Dictionary::~Dictionary()
 {
 }
 
-void Dictionary::addEntry(const QString& sEntry, uint keyBits)
+void Dictionary::addEntry(const Keycodes& keycodes, uint keyBits)
 {
-    _stringToKeyBits.insertMulti(sEntry, keyBits);
-    _keyBitsToString << sEntry;
+    _keycodesToKeyBits.insertMulti(keycodes, keyBits);
+    _keyBitsToKeycodes << keycodes;
 }
