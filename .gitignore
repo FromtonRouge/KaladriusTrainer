@@ -3,4 +3,5 @@
 /cmake
 /x64
 /.vscode
+/build
 /CMakeLists.txt.user
