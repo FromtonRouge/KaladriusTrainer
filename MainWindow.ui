@@ -14,7 +14,7 @@
    <string>Programmer Steno Tutor</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="programmerstenotutor.qrc">
+   <iconset resource="ProgrammerStenoTutor.qrc">
     <normaloff>:/Icons/ProgrammerStenoTutor.png</normaloff>:/Icons/ProgrammerStenoTutor.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget"/>
@@ -24,7 +24,7 @@
      <x>0</x>
      <y>0</y>
      <width>753</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -36,7 +36,7 @@
       <string>Dictionaries</string>
      </property>
      <property name="icon">
-      <iconset resource="programmerstenotutor.qrc">
+      <iconset resource="ProgrammerStenoTutor.qrc">
        <normaloff>:/Icons/book-open.png</normaloff>:/Icons/book-open.png</iconset>
      </property>
      <addaction name="actionImport_Dictionaries"/>
@@ -54,7 +54,7 @@
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionQuit">
    <property name="icon">
-    <iconset resource="programmerstenotutor.qrc">
+    <iconset resource="ProgrammerStenoTutor.qrc">
      <normaloff>:/Icons/door-open-out.png</normaloff>:/Icons/door-open-out.png</iconset>
    </property>
    <property name="text">
@@ -63,7 +63,7 @@
   </action>
   <action name="actionImport_Dictionaries">
    <property name="icon">
-    <iconset resource="programmerstenotutor.qrc">
+    <iconset resource="ProgrammerStenoTutor.qrc">
      <normaloff>:/Icons/book-open-next.png</normaloff>:/Icons/book-open-next.png</iconset>
    </property>
    <property name="text">
@@ -72,7 +72,7 @@
   </action>
   <action name="actionReload_Dictionaries">
    <property name="icon">
-    <iconset resource="programmerstenotutor.qrc">
+    <iconset resource="ProgrammerStenoTutor.qrc">
      <normaloff>:/Icons/book-open-next.png</normaloff>:/Icons/book-open-next.png</iconset>
    </property>
    <property name="text">
@@ -84,7 +84,7 @@
   </action>
   <action name="actionWrite_Markdown_Files_To">
    <property name="icon">
-    <iconset resource="programmerstenotutor.qrc">
+    <iconset resource="ProgrammerStenoTutor.qrc">
      <normaloff>:/Icons/disk--pencil.png</normaloff>:/Icons/disk--pencil.png</iconset>
    </property>
    <property name="text">
@@ -93,7 +93,7 @@
   </action>
   <action name="actionWrite_Markdown_Files">
    <property name="icon">
-    <iconset resource="programmerstenotutor.qrc">
+    <iconset resource="ProgrammerStenoTutor.qrc">
      <normaloff>:/Icons/disk.png</normaloff>:/Icons/disk.png</iconset>
    </property>
    <property name="text">
@@ -106,7 +106,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="programmerstenotutor.qrc"/>
+  <include location="ProgrammerStenoTutor.qrc"/>
  </resources>
  <connections/>
 </ui>
