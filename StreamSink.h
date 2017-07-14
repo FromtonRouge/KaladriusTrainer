@@ -19,40 +19,35 @@
 
 #pragma once
 
-#include "StreamSink.h"
-#include "Dictionary.h"
-#include <QtWidgets/QMainWindow>
-#include <QtCore/QScopedPointer>
-#include <boost/iostreams/stream_buffer.hpp> 
+#include <QtCore/QString>
+#include <QtCore/QSharedPointer>
+#include <boost/iostreams/concepts.hpp> 
+#include <boost/signals2.hpp>
 
-namespace Ui
+class StreamSink : public boost::iostreams::sink
 {
-    class MainWindow;
-}
-
-class MainWindow : public QMainWindow
-{
-    Q_OBJECT
+public:
+    typedef boost::signals2::signal<void(const QString&)> SignalWrite;
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    StreamSink(const SignalWrite::slot_function_type& slot)
+        : _pSignalWrite(new SignalWrite())
+    {
+        _pSignalWrite->connect(slot);
+    }
 
-protected slots:
-    void on_actionQuit_triggered();
-    void on_actionImport_Dictionaries_triggered();
-    void on_actionReload_Dictionaries_triggered();
-    void on_actionWrite_Markdown_Files_To_triggered();
-    void on_actionWrite_Markdown_Files_triggered();
+    /**
+     * Write the incoming string.
+     * We just send the signal.
+     */
+    std::streamsize write(const char* s, std::streamsize n)
+    {
+        // The signal is thread safe
+        (*_pSignalWrite)(QString(QByteArray(s, static_cast<int>(n))));
+        return n;
+    }
 
 private:
-    void toLogs(const QString& sText, int iWarningLevel = 0);
-
-private:
-    QScopedPointer<Ui::MainWindow> _pUi;
-    Dictionaries _dictionaries;
-	boost::iostreams::stream_buffer<StreamSink> _streamBufferCout;
-	std::streambuf* _pOldStreambufCout;
-	boost::iostreams::stream_buffer<StreamSink> _streamBufferCerr;
-	std::streambuf* _pOldStreambufCerr;
+    QSharedPointer<SignalWrite> _pSignalWrite;
 };
+

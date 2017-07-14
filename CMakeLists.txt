@@ -1,6 +1,9 @@
 cmake_minimum_required (VERSION 3.8.2 FATAL_ERROR)
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
+if (WIN32)
+	set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
+	add_definitions(-D_SCL_SECURE_NO_WARNINGS)
+endif(WIN32)
 project (ProgrammerStenoTutor)
 
 # The application version number

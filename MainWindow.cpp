@@ -23,6 +23,10 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QStatusBar>
+#include <QtGui/QTextCursor>
+#include <QtGui/QTextCharFormat>
+#include <QtGui/QBrush>
+#include <QtGui/QColor>
 #include <QtCore/QSettings>
 #include <QtCore/QDir>
 #include <QtCore/QDebug>
@@ -31,18 +35,43 @@
 #include <QtCore/QFile>
 #include <QtCore/QMultiMap>
 #include <QtCore/QTextStream>
+#include <functional>
+#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , _pUi(new Ui::MainWindow)
+    , _pOldStreambufCout(std::cout.rdbuf())
+    , _pOldStreambufCerr(std::cerr.rdbuf())
 {
     _pUi->setupUi(this);
+
+    // Setup std::cout redirection
+    _streamBufferCout.open(StreamSink(std::bind(&MainWindow::toLogs, this, std::placeholders::_1, 0)));
+    std::cout.rdbuf(&_streamBufferCout);
+
+    // Setup std::cerr redirection
+    _streamBufferCerr.open(StreamSink(std::bind(&MainWindow::toLogs, this, std::placeholders::_1, 2)));
+    std::cerr.rdbuf(&_streamBufferCerr);
+
     _pUi->actionReload_Dictionaries->trigger();
 }
 
 MainWindow::~MainWindow()
 {
-    delete _pUi;
+	std::cerr.rdbuf(_pOldStreambufCerr);
+	std::cout.rdbuf(_pOldStreambufCout);
+}
+
+void MainWindow::toLogs(const QString& sText, int iWarningLevel)
+{
+    // Write logs to the text edit with the appropriate color
+    QTextCursor cursor(_pUi->textEditLogs->textCursor());
+    QTextCharFormat format(cursor.charFormat());
+    format.setForeground(QBrush(iWarningLevel == 0 ? Qt::black : Qt::red));
+    cursor.movePosition(QTextCursor::End);
+    cursor.insertText(sText, format);
+    _pUi->textEditLogs->setTextCursor(cursor);
 }
 
 void MainWindow::on_actionQuit_triggered()
