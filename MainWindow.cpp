@@ -160,7 +160,7 @@ void MainWindow::on_actionWrite_Markdown_Files_triggered()
                         {
                             const QString& sKey = itKeyCodes.key();
                             const QString& sValue = itKeyCodes++.value();
-                            stream << QString("\t %1 = %2\n").arg(sKey).arg(sValue);
+                            stream << QString("\t%1 = %2\n").arg(sKey).arg(sValue);
                         }
                         stream << "```\n";
                         stream << "\n";
