@@ -2,4 +2,5 @@
 /*.exe
 /cmake
 /x64
-CMakeLists.txt.user
+/.vscode
+/CMakeLists.txt.user
