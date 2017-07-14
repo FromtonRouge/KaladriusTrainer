@@ -21,6 +21,7 @@
 #include "Keycode.h"
 #include <QtCore/QFile>
 #include <QtCore/QRegularExpression>
+#include <QtCore/QObject>
 #include <QtCore/QDebug>
 #include <boost/config/warning_disable.hpp>
 #include <boost/spirit/include/qi.hpp>
@@ -30,6 +31,7 @@
 #include <boost/spirit/include/phoenix_fusion.hpp>
 #include <boost/spirit/include/phoenix_stl.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
+#include <iostream>
 #include <string>
 
 namespace qi = boost::spirit::qi;
@@ -201,8 +203,10 @@ bool DictionaryParser::parse()
                 }
             }
         }
-        catch (const expectation_failure<IteratorType>&)
+        catch (const expectation_failure<IteratorType>& e)
         {
+            const QString sError = QObject::tr("Parse error in file \"%1\": %2").arg(_sFilePath).arg(e.what());
+            std::cerr << sError.toStdString() << std::endl;
         }
     }
     return bResult;

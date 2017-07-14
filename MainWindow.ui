@@ -71,6 +71,36 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="dockWidgetDictionary1">
+   <property name="windowTitle">
+    <string>Dictionary 1</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_2">
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="0" column="0">
+      <widget class="DictionaryWidget" name="widgetDictionary1" native="true"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidgetDictionary2">
+   <property name="windowTitle">
+    <string>Dictionary 2</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_3">
+    <layout class="QGridLayout" name="gridLayout_3">
+     <item row="0" column="0">
+      <widget class="DictionaryWidget" name="widgetDictionary2" native="true"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="actionQuit">
    <property name="icon">
     <iconset resource="ProgrammerStenoTutor.qrc">
@@ -124,6 +154,14 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>DictionaryWidget</class>
+   <extends>QWidget</extends>
+   <header>DictionaryWidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="ProgrammerStenoTutor.qrc"/>
  </resources>

@@ -55,6 +55,10 @@ MainWindow::MainWindow(QWidget *parent)
     std::cerr.rdbuf(&_streamBufferCerr);
 
     _pUi->actionReload_Dictionaries->trigger();
+
+    QSettings settings;
+    restoreGeometry(settings.value("geometry").toByteArray());
+    restoreState(settings.value("windowState").toByteArray());
 }
 
 MainWindow::~MainWindow()
@@ -72,6 +76,14 @@ void MainWindow::toLogs(const QString& sText, int iWarningLevel)
     cursor.movePosition(QTextCursor::End);
     cursor.insertText(sText, format);
     _pUi->textEditLogs->setTextCursor(cursor);
+}
+
+void MainWindow::closeEvent(QCloseEvent* pEvent)
+{
+    QSettings settings;
+    settings.setValue("geometry", saveGeometry());
+    settings.setValue("windowState", saveState());
+    QMainWindow::closeEvent(pEvent);
 }
 
 void MainWindow::on_actionQuit_triggered()

@@ -19,43 +19,22 @@
 
 #pragma once
 
-#include "StreamSink.h"
-#include "Dictionary.h"
-#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QWidget>
 #include <QtCore/QScopedPointer>
-#include <boost/iostreams/stream_buffer.hpp> 
 
 namespace Ui
 {
-    class MainWindow;
+    class DictionaryWidget;
 }
 
-class MainWindow : public QMainWindow
+class DictionaryWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
-
-protected slots:
-    void on_actionQuit_triggered();
-    void on_actionImport_Dictionaries_triggered();
-    void on_actionReload_Dictionaries_triggered();
-    void on_actionWrite_Markdown_Files_To_triggered();
-    void on_actionWrite_Markdown_Files_triggered();
+    DictionaryWidget(QWidget* pParent = nullptr);
+    ~DictionaryWidget();
 
 private:
-    void toLogs(const QString& sText, int iWarningLevel = 0);
-
-protected:
-    virtual void closeEvent(QCloseEvent* pEvent) override;
-
-private:
-    QScopedPointer<Ui::MainWindow> _pUi;
-    Dictionaries _dictionaries;
-	boost::iostreams::stream_buffer<StreamSink> _streamBufferCout;
-	std::streambuf* _pOldStreambufCout;
-	boost::iostreams::stream_buffer<StreamSink> _streamBufferCerr;
-	std::streambuf* _pOldStreambufCerr;
+    QScopedPointer<Ui::DictionaryWidget> _pUi;
 };
