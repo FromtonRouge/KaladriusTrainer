@@ -21,6 +21,7 @@
 
 #include "Dictionary.h"
 #include <QtCore/QScopedPointer>
+#include <QtCore/QHash>
 #include <QtCore/QString>
 
 template <typename Iterator> struct InternalParser;
@@ -34,8 +35,17 @@ public:
     const Dictionaries& getDictionaries() const { return _dictionaries; }
 
 private:
+    struct KnownDictionary
+    {
+        QString userName;
+        QString markdownFileName;
+        QVector<QString> keysLabels;
+        QVector<int> keyBitsReadingOrder;
+    };
+    typedef QHash<QString, KnownDictionary> KnownDictionaries;
     typedef std::string::const_iterator IteratorType;
     QScopedPointer<InternalParser<IteratorType>> _pInternalParser;
     QString _sFilePath;
     Dictionaries _dictionaries;
+    static KnownDictionaries KNOWN_DICTIONARIES;
 };

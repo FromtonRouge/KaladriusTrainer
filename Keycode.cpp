@@ -25,7 +25,7 @@ QDebug operator<<(QDebug dbg, const Keycode& keycode)
 	return dbg.space();
 }
 
-QHash<QString, QString> Keycode::firmwareStringToUserString =
+QHash<QString, QString> Keycode::FIRMWARE_STRING_TO_USER_STRING =
 {
 	{"CKC_CAMEL", "[camel case mode]"},
 	{"CKC_CASE_INNER_LOCKED", "[inner case locked]"},
@@ -146,8 +146,8 @@ Keycode::Keycode(const QStringList& mods, const QString& sKeycode)
     for (const QString& sMod : _mods)
     {
         sUserMod = sMod;
-        auto it = firmwareStringToUserString.find(sMod);
-        if (it != firmwareStringToUserString.end())
+        auto it = FIRMWARE_STRING_TO_USER_STRING.find(sMod);
+        if (it != FIRMWARE_STRING_TO_USER_STRING.end())
         {
             sUserMod = it.value();
         }
@@ -155,8 +155,8 @@ Keycode::Keycode(const QStringList& mods, const QString& sKeycode)
     }
 
     _sUserString = _sKeycode;
-    auto it = firmwareStringToUserString.find(_sKeycode);
-    if (it != firmwareStringToUserString.end())
+    auto it = FIRMWARE_STRING_TO_USER_STRING.find(_sKeycode);
+    if (it != FIRMWARE_STRING_TO_USER_STRING.end())
     {
         _sUserString = it.value();
     }

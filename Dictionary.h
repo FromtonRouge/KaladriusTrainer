@@ -22,28 +22,64 @@
 #include "Keycode.h"
 
 #include <QtCore/QHash>
+#include <QtCore/QHash>
 #include <QtCore/QVector>
+#include <QtCore/QStringList>
 #include <QtCore/QString>
+#include <QtCore/qhashfunctions.h>
+#include <boost/dynamic_bitset.hpp>
 
 class Dictionary
 {
 public:
-    typedef QVector<Keycodes> EntriesByKeyBits;
-    typedef QHash<Keycodes, uint> EntriesByStrings;
+    struct Entry
+    {
+        typedef boost::dynamic_bitset<> KeyBits;
+        Entry(const Keycodes& keycodes = Keycodes(), uint nBitsCount = 0, uint nKeyBits = 0);
+        bool operator==(const Entry& e) const { return keycodesAsUserString == e.keycodesAsUserString && bitsAsString == e.bitsAsString; }
+        bool hasKeycodes() const { return !keycodesAsUserString.isEmpty(); }
+        Keycodes keycodes;
+        KeyBits bits;
+        QString keycodesAsUserString;
+        QString bitsAsString;
+    };
+    typedef QVector<Entry> KeyBitsToEntry;
+    typedef QHash<Entry, Entry::KeyBits> EntryToKeyBits;
+    typedef QVector<QString> KeysLabels;
+    typedef QVector<int> KeyBitsReadingOrder;
 
 public:
-    Dictionary(const QString& sName = QString());
+    Dictionary(const QString& sName = QString(),
+               const QString& sMarkdownFileName = QString(),
+               uint nSize = 0,
+               const KeysLabels& keysLabels = KeysLabels(),
+               const KeyBitsReadingOrder& keyBitsReadingOrder = KeyBitsReadingOrder());
     ~Dictionary();
 
     const QString& getName() const { return _sName; }
-    void addEntry(const Keycodes& keycodes, uint keyBits);
-    const auto& getEntriesByKeyBits() const { return _keyBitsToKeycodes; }
-    const auto& getEntriesByKeycodes() const { return _keycodesToKeyBits; }
+    const QString& getMarkdownFileName() const { return _sMarkdownFileName; }
+    void addEntry(const Keycodes& keycodes, uint uiKeyBits);
+    const auto& getKeyBitsToEntry() const { return _keyBitsToEntry; }
+    const auto& getEntryToKeyBits() const { return _entryToKeyBits; }
+    QString getKeysLabels(const Entry& entry, const QString& sSep = QString("|")) const;
 
 private:
     QString _sName;
-    EntriesByStrings _keycodesToKeyBits;
-    EntriesByKeyBits _keyBitsToKeycodes;
+    QString _sMarkdownFileName;
+    uint _uiBitsCount;
+    KeysLabels _keysLabels;
+    KeyBitsReadingOrder _keyBitsReadingOrder;
+    KeyBitsToEntry _keyBitsToEntry;
+    EntryToKeyBits _entryToKeyBits;
 };
 
 typedef QHash<QString, Dictionary> Dictionaries;
+inline uint qHash(const Dictionary::Entry& entry, uint nSeed = 0)
+{
+    QtPrivate::QHashCombine hash;
+    for (const auto& keycode : entry.keycodes)
+    {
+        nSeed = hash(nSeed, keycode.getFirmwareString());
+    }
+    return nSeed;
+}

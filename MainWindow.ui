@@ -31,8 +31,21 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionImport_Dictionaries"/>
-    <addaction name="actionReload_Dictionaries"/>
+    <widget class="QMenu" name="menuDictionaries">
+     <property name="title">
+      <string>Dictionaries</string>
+     </property>
+     <property name="icon">
+      <iconset resource="programmerstenotutor.qrc">
+       <normaloff>:/Icons/book-open.png</normaloff>:/Icons/book-open.png</iconset>
+     </property>
+     <addaction name="actionImport_Dictionaries"/>
+     <addaction name="actionReload_Dictionaries"/>
+     <addaction name="separator"/>
+     <addaction name="actionWrite_Markdown_Files_To"/>
+     <addaction name="actionWrite_Markdown_Files"/>
+    </widget>
+    <addaction name="menuDictionaries"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -54,7 +67,7 @@
      <normaloff>:/Icons/book-open-next.png</normaloff>:/Icons/book-open-next.png</iconset>
    </property>
    <property name="text">
-    <string>Import Dictionaries</string>
+    <string>Import Dictionaries...</string>
    </property>
   </action>
   <action name="actionReload_Dictionaries">
@@ -67,6 +80,27 @@
    </property>
    <property name="shortcut">
     <string>F5</string>
+   </property>
+  </action>
+  <action name="actionWrite_Markdown_Files_To">
+   <property name="icon">
+    <iconset resource="programmerstenotutor.qrc">
+     <normaloff>:/Icons/disk--pencil.png</normaloff>:/Icons/disk--pencil.png</iconset>
+   </property>
+   <property name="text">
+    <string>Write Markdown Files To...</string>
+   </property>
+  </action>
+  <action name="actionWrite_Markdown_Files">
+   <property name="icon">
+    <iconset resource="programmerstenotutor.qrc">
+     <normaloff>:/Icons/disk.png</normaloff>:/Icons/disk.png</iconset>
+   </property>
+   <property name="text">
+    <string>Write Markdown Files</string>
+   </property>
+   <property name="shortcut">
+    <string>F6</string>
    </property>
   </action>
  </widget>

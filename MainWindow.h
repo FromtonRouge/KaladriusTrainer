@@ -19,6 +19,7 @@
 
 #pragma once
 
+#include "Dictionary.h"
 #include <QtWidgets/QMainWindow>
 
 namespace Ui
@@ -38,7 +39,10 @@ protected slots:
     void on_actionQuit_triggered();
     void on_actionImport_Dictionaries_triggered();
     void on_actionReload_Dictionaries_triggered();
+    void on_actionWrite_Markdown_Files_To_triggered();
+    void on_actionWrite_Markdown_Files_triggered();
 
 private:
     Ui::MainWindow* _pUi;
+    Dictionaries _dictionaries;
 };

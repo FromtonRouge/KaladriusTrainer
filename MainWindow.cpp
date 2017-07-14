@@ -22,15 +22,15 @@
 #include "DictionaryParser.h"
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QFileDialog>
+#include <QtWidgets/QStatusBar>
 #include <QtCore/QSettings>
 #include <QtCore/QDir>
 #include <QtCore/QDebug>
 #include <QtCore/QStringList>
 #include <QtCore/QSet>
 #include <QtCore/QFile>
+#include <QtCore/QMultiMap>
 #include <QtCore/QTextStream>
-#include <boost/dynamic_bitset.hpp>
-#include <cmath>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -64,11 +64,12 @@ void MainWindow::on_actionImport_Dictionaries_triggered()
 
 void MainWindow::on_actionReload_Dictionaries_triggered()
 {
+    statusBar()->clearMessage();
     QSettings settings;
     const QString& sLastImportDirectory = settings.value("lastImportDirectory").toString();
     if (!sLastImportDirectory.isEmpty())
     {
-        Dictionaries dictionaries;
+        _dictionaries.clear();
         QDir dir(sLastImportDirectory);
         QSet<QString> dictionariesFiles;
         dictionariesFiles.insert("shelton_tables.c");
@@ -80,53 +81,99 @@ void MainWindow::on_actionReload_Dictionaries_triggered()
             {
                 DictionaryParser parser(entry.absoluteFilePath());
                 parser.parse();
-                dictionaries.unite(parser.getDictionaries());
+                _dictionaries.unite(parser.getDictionaries());
             }
         }
 
-        if (!dictionaries.isEmpty())
+        statusBar()->showMessage(tr("%1 dictonaries loaded").arg(_dictionaries.size()));
+    }
+}
+
+void MainWindow::on_actionWrite_Markdown_Files_To_triggered()
+{
+    QSettings settings;
+    const QString& sLastMarkdownFilesDirectory = settings.value("lastMarkdownFilesDirectory").toString();
+    const QString& sDirectory = QFileDialog::getExistingDirectory(this, tr("Markdown dictionaries directory"), sLastMarkdownFilesDirectory);
+    if (!sDirectory.isEmpty())
+    {
+        settings.setValue("lastMarkdownFilesDirectory", sDirectory);
+        _pUi->actionWrite_Markdown_Files->trigger();
+    }
+}
+
+void MainWindow::on_actionWrite_Markdown_Files_triggered()
+{
+    statusBar()->clearMessage();
+    QSettings settings;
+    const QString& sDirectory = settings.value("lastMarkdownFilesDirectory").toString();
+    if (!sDirectory.isEmpty())
+    {
+        if (!_dictionaries.isEmpty())
         {
-            QFile file("dictionaries.txt");
-            if (file.open(QFile::WriteOnly))
+            struct DumpInfo
             {
-                QTextStream stream(&file);
+                typedef QMultiMap<QString, QString> OrderedEntries;
+                Dictionary dictonary;
+                OrderedEntries orderedEntries;
+            };
 
-                auto it = dictionaries.begin();
-                while (it != dictionaries.end())
+            QMap<QString, DumpInfo> orderedDictionaries;
+            auto it = _dictionaries.begin();
+            while (it != _dictionaries.end())
+            {
+                QMultiMap<QString, QString> keycodesToKeysLabels;
+                const Dictionary& dictionary = it++.value();
+                const auto& entries = dictionary.getKeyBitsToEntry();
+                for (int i = 0; i < entries.size(); ++i)
                 {
-                    const QString& sDictionaryName = it.key();
-
-                    stream << "Table : " << sDictionaryName << "\n";
-
-                    const Dictionary& dictionary = it++.value();
-                    const auto& entries = dictionary.getEntriesByKeyBits();
-                    const uint nBits = static_cast<uint>(std::floor(std::log2(entries.size() + 1)));
-                    for (int i = 0; i < entries.size(); ++i)
+                    const auto& entry = entries[i];
+                    if (entry.hasKeycodes())
                     {
-                        boost::dynamic_bitset<> bitset(nBits, i);
-                        std::string sBitset;
-                        boost::to_string(bitset, sBitset);
-                        const auto& keycodes = entries[i];
-                        QStringList vKeycodes;
-                        for (const auto& keycode : keycodes)
-                        {
-                            const QString& sUserString = keycode.getUserString();
-                            if (!sUserString.isEmpty())
-                            {
-                                vKeycodes << keycode.getUserString();
-                            }
-                        }
-
-                        if (!vKeycodes.isEmpty())
-                        {
-                            stream << QString("\t%1 = ").arg(QString::fromStdString(sBitset)) << vKeycodes.join("") << "\n";
-                        }
+                        const QString& sKeysLabels = dictionary.getKeysLabels(entry);
+                        const QString& sKeycodes = entry.keycodesAsUserString;
+                        keycodesToKeysLabels.insert(sKeycodes, sKeysLabels);
                     }
-
-                    stream << "\n";
                 }
-                file.close();
+
+                orderedDictionaries.insert(dictionary.getName(), { dictionary, keycodesToKeysLabels });
             }
+
+            QFile fileAllDictionaries(QString("%1/dict_all.md").arg(sDirectory));
+            if (fileAllDictionaries.open(QFile::WriteOnly))
+            {
+                auto itOrdered = orderedDictionaries.begin();
+                while (itOrdered != orderedDictionaries.end())
+                {
+                    const auto& dumpInfo = itOrdered++.value();
+                    const Dictionary& dictionary = dumpInfo.dictonary;
+                    const auto& orderedEntries = dumpInfo.orderedEntries;
+
+                    QFile fileDictionary(QString("%1/%2").arg(sDirectory).arg(dictionary.getMarkdownFileName()));
+                    if (fileDictionary.open(QFile::WriteOnly))
+                    {
+                        QString sContent;
+                        QTextStream stream(&sContent);
+                        stream << "### " << dictionary.getName() << "\n\n";
+                        stream << "```\n";
+                        auto itKeyCodes = orderedEntries.begin();
+                        while (itKeyCodes != orderedEntries.end())
+                        {
+                            const QString& sKey = itKeyCodes.key();
+                            const QString& sValue = itKeyCodes++.value();
+                            stream << QString("\t %1 = %2\n").arg(sKey).arg(sValue);
+                        }
+                        stream << "```\n";
+                        stream << "\n";
+
+                        const QByteArray& utf8 = sContent.toUtf8();
+                        fileDictionary.write(utf8);
+                        fileAllDictionaries.write(utf8);
+                        fileDictionary.close();
+                    }
+                }
+                fileAllDictionaries.close();
+            }
+            statusBar()->showMessage(tr("%1 markdown files written").arg(_dictionaries.size()));
         }
     }
 }

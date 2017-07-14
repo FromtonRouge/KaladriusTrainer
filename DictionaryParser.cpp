@@ -30,7 +30,6 @@
 #include <boost/spirit/include/phoenix_fusion.hpp>
 #include <boost/spirit/include/phoenix_stl.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
-#include <boost/fusion/include/io.hpp>
 #include <string>
 
 namespace qi = boost::spirit::qi;
@@ -102,9 +101,9 @@ struct InternalParser : qi::grammar <Iterator, ascii::space_type, std::vector<As
         dimension = lit('[') >> (int_ | identifier)  >> ']'; // eg: [256] or [MAX_LETTERS]
         type = identifier; // eg: uint16_t, int etc...
 
-        table = lit("const") >> identifier >> lit("PROGMEM") >> identifier[at_c<0>(_val) = _1] >> dimension >> dimension >> '='
+        table = *lit("const") >> identifier >> lit("PROGMEM") >> identifier[at_c<0>(_val) = _1] >> dimension >> dimension >> '='
             >> '{'
-            >> any_entry[push_back(at_c<1>(_val), _1)] % ','
+            >> any_entry[push_back(at_c<1>(_val), _1)] % ',' >> *lit(',') // Note: Optional last comma
             >> '}' >> ';';
 
         start = +table[push_back(_val, _1)];
@@ -120,6 +119,21 @@ struct InternalParser : qi::grammar <Iterator, ascii::space_type, std::vector<As
     qi::rule<Iterator, ascii::space_type, Ast::Keycode()> keycode;
     qi::rule<Iterator, ascii::space_type, std::string()> type;
     qi::rule<Iterator, ascii::space_type, std::string()> identifier;
+};
+
+// Hardcoded known dictionaries from the firmware
+DictionaryParser::KnownDictionaries DictionaryParser::KNOWN_DICTIONARIES =
+{
+    {"g_left_controls_table",       {"Left Controls Dictionary",        "dict_left_controls.md",       {"L0", "L1", "L2", "L3", "L4", "L5"}, {5, 4, 3, 2, 1, 0}}},
+    {"g_left_hand_table",           {"Left Hand Shelton Dictionary",    "dict_left_hand.md",           {"N", "R", "W", "H", "C", "T", "A", "S"}, {6, 7, 4, 5, 2, 3, 0, 1}}},
+    {"g_left_pinky_table",          {"Left Pinky Dictionary",           "dict_left_pinky.md",          {"O", "U", "I"}, {2, 1, 0}}},
+    {"g_left_punctuation_table",    {"Left Punctuation Dictionary",     "dict_left_punctuation.md",    {"LP0", "LP1", "LP2", "LP3", "LP4", "LP5", "LP6", "LP7"}, {6, 7, 4, 5, 2, 3, 0, 1}}},
+    {"g_right_controls_table",      {"Right Controls Dictionary",       "dict_right_controls.md",      {"R0", "R1", "R2", "R3", "R4"}}},
+    {"g_right_hand_table",          {"Right Hand Shelton Dictionary",   "dict_right_hand.md",          {"R", "N", "L", "G", "C", "H", "T", "S"}}},
+    {"g_right_pinky_table",         {"Right Pinky Dictionary",          "dict_right_pinky.md",         {"E", "Y", "S"}}},
+    {"g_right_punctuation_table",   {"Right Punctuation Dictionary",    "dict_right_punctuation.md",   {"RP0", "RP1", "RP2", "RP3", "RP4", "RP5", "RP6", "RP7"}}},
+    {"g_thumbs_bigrams_table",      {"Thumbs Bigrams Dictionary",       "dict_thumbs_bigrams.md",      {"E", "O", "A", "U", "I"}}},
+    {"g_thumbs_table",              {"Thumbs Dictionary",               "dict_thumbs.md",              {"E", "O", "A", "U", "I"}}}
 };
 
 DictionaryParser::DictionaryParser(const QString& sFilePath)
@@ -141,7 +155,7 @@ bool DictionaryParser::parse()
         QString sFileContent = file.readAll();
         file.close();
 
-        // File cleaning
+        // Removing comments and #include lines
         sFileContent.remove(QRegularExpression("#include.*"));
         sFileContent.remove(QRegularExpression("//.*"));
 
@@ -155,23 +169,36 @@ bool DictionaryParser::parse()
 
             for (const auto& table : tables)
             {
-                Dictionary dictionary(QString::fromStdString(table.tableName));
-                for (size_t i = 0; i < table.entries.size(); ++i)
+                const QString& sTableFirmwareName = QString::fromStdString(table.tableName);
+                auto it = KNOWN_DICTIONARIES.find(sTableFirmwareName);
+                if (it != KNOWN_DICTIONARIES.end())
                 {
-                    const auto& entry = table.entries[i];
-                    Keycodes keycodes;
-                    for (const auto& keycode : entry.keycodes)
+                    const auto& knownDictionary = it.value();
+
+                    const uint nTableSize = static_cast<uint>(table.entries.size());
+                    Dictionary dictionary(knownDictionary.userName,
+                                          knownDictionary.markdownFileName,
+                                          nTableSize,
+                                          knownDictionary.keysLabels,
+                                          knownDictionary.keyBitsReadingOrder);
+
+                    for (size_t i = 0; i < table.entries.size(); ++i)
                     {
-                        QStringList vMods;
-                        if (!keycode.mods.empty())
+                        const auto& entry = table.entries[i];
+                        Keycodes keycodes;
+                        for (const auto& keycode : entry.keycodes)
                         {
-                            vMods << QString::fromStdString(keycode.mods);
+                            QStringList vMods;
+                            if (!keycode.mods.empty())
+                            {
+                                vMods << QString::fromStdString(keycode.mods);
+                            }
+                            keycodes << Keycode(vMods, QString::fromStdString(keycode.key));
                         }
-                        keycodes << Keycode(vMods, QString::fromStdString(keycode.key));
+                        dictionary.addEntry(keycodes, uint(i));
                     }
-                    dictionary.addEntry(keycodes, uint(i));
+                    _dictionaries.insert(dictionary.getName(), dictionary);
                 }
-                _dictionaries.insert(dictionary.getName(), dictionary);
             }
         }
         catch (const expectation_failure<IteratorType>&)

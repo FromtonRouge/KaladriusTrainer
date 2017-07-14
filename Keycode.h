@@ -42,7 +42,7 @@ private:
     QString _sKeycode;
     QString _sFirmwareString;
     QString _sUserString;
-    static QHash<QString, QString> firmwareStringToUserString;
+    static QHash<QString, QString> FIRMWARE_STRING_TO_USER_STRING;
 };
 
 typedef QVector<Keycode> Keycodes;

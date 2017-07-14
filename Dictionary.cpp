@@ -1,4 +1,3 @@
-#include "Dictionary.h"
 // ======================================================================
 // This file is a part of the ProgrammerStenoTutor project
 //
@@ -19,9 +18,38 @@
 // ======================================================================
 
 #include "Dictionary.h"
+#include <cmath>
 
-Dictionary::Dictionary(const QString& sName)
+Dictionary::Entry::Entry(const Keycodes& keycodes, uint nBitsCount, uint nKeyBits)
+    : keycodes(keycodes)
+    , bits(nBitsCount, nKeyBits)
+{
+    std::string sBitset;
+    boost::to_string(bits, sBitset);
+    bitsAsString = QString::fromStdString(sBitset);
+
+    QStringList vKeycodes;
+    for (const auto& keycode : keycodes)
+    {
+        const QString& sUserString = keycode.getUserString();
+        if (!sUserString.isEmpty())
+        {
+            vKeycodes << keycode.getUserString();
+        }
+    }
+    keycodesAsUserString = vKeycodes.join("");
+}
+
+Dictionary::Dictionary(const QString& sName, 
+                       const QString& sMarkdownFileName,
+                       uint nSize, 
+                       const KeysLabels& keysLabels, 
+                       const KeyBitsReadingOrder& keyBitsReadingOrder)
     : _sName(sName)
+    , _sMarkdownFileName(sMarkdownFileName)
+    , _uiBitsCount(static_cast<uint>(std::floor(std::log2(nSize + 1))))
+    , _keysLabels(keysLabels)
+    , _keyBitsReadingOrder(keyBitsReadingOrder)
 {
 }
 
@@ -29,8 +57,32 @@ Dictionary::~Dictionary()
 {
 }
 
-void Dictionary::addEntry(const Keycodes& keycodes, uint keyBits)
+void Dictionary::addEntry(const Keycodes& keycodes, uint nKeyBits)
 {
-    _keycodesToKeyBits.insertMulti(keycodes, keyBits);
-    _keyBitsToKeycodes << keycodes;
+    Entry entry(keycodes, _uiBitsCount, nKeyBits);
+    _entryToKeyBits.insertMulti(entry, entry.bits);
+    _keyBitsToEntry << entry;
+}
+
+QString Dictionary::getKeysLabels(const Entry& entry, const QString& sSep) const
+{
+    QStringList result;
+    if (entry.bits.size() == _keysLabels.size())
+    {
+        for (Entry::KeyBits::size_type i = 0; i < entry.bits.size(); ++i)
+        {
+            int iReadIndex = static_cast<int>(i);
+            if (!_keyBitsReadingOrder.isEmpty() && _keyBitsReadingOrder.size() == entry.bits.size())
+            {
+                iReadIndex = _keyBitsReadingOrder[iReadIndex];
+            }
+
+            const bool bEnabled = entry.bits.test(iReadIndex);
+            if (bEnabled)
+            {
+                result << _keysLabels[iReadIndex];
+            }
+        }
+    }
+    return result.isEmpty() ? entry.bitsAsString : result.join(sSep);
 }

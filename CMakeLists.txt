@@ -1,12 +1,12 @@
 cmake_minimum_required (VERSION 3.8.2 FATAL_ERROR)
-set (CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
 project (ProgrammerStenoTutor)
 
 # The application version number
-set (PROJECT_VERSION_MAJOR 0)
-set (PROJECT_VERSION_MINOR 1)
-set (PROJECT_VERSION_PATCH 0)
+set(PROJECT_VERSION_MAJOR 0)
+set(PROJECT_VERSION_MINOR 1)
+set(PROJECT_VERSION_PATCH 0)
  
 # configure a header file to pass some of the CMake settings
 # to the source code
