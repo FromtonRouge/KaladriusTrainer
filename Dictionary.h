@@ -22,7 +22,7 @@
 #include "Keycode.h"
 
 #include <QtCore/QHash>
-#include <QtCore/QHash>
+#include <QtCore/QMap>
 #include <QtCore/QVector>
 #include <QtCore/QStringList>
 #include <QtCore/QString>
@@ -73,7 +73,7 @@ private:
     EntryToKeyBits _entryToKeyBits;
 };
 
-typedef QHash<QString, Dictionary> Dictionaries;
+typedef QMap<QString, Dictionary> Dictionaries;
 inline uint qHash(const Dictionary::Entry& entry, uint nSeed = 0)
 {
     QtPrivate::QHashCombine hash;

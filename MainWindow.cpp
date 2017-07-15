@@ -19,6 +19,7 @@
 
 #include "ui_MainWindow.h"
 #include "MainWindow.h"
+#include "DictionariesModel.h"
 #include "DictionaryParser.h"
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QFileDialog>
@@ -43,6 +44,7 @@ MainWindow::MainWindow(QWidget *parent)
     , _pUi(new Ui::MainWindow)
     , _pOldStreambufCout(std::cout.rdbuf())
     , _pOldStreambufCerr(std::cerr.rdbuf())
+    , _pDictionariesModel(new DictionariesModel(this))
 {
     _pUi->setupUi(this);
 
@@ -59,6 +61,9 @@ MainWindow::MainWindow(QWidget *parent)
     QSettings settings;
     restoreGeometry(settings.value("geometry").toByteArray());
     restoreState(settings.value("windowState").toByteArray());
+
+    _pUi->widgetDictionary1->setDictonariesModel(_pDictionariesModel);
+    _pUi->widgetDictionary2->setDictonariesModel(_pDictionariesModel);
 }
 
 MainWindow::~MainWindow()
@@ -125,6 +130,8 @@ void MainWindow::on_actionReload_Dictionaries_triggered()
                 _dictionaries.unite(parser.getDictionaries());
             }
         }
+
+        _pDictionariesModel->setDictionaries(_dictionaries);
 
         statusBar()->showMessage(tr("%1 dictonaries loaded").arg(_dictionaries.size()));
     }

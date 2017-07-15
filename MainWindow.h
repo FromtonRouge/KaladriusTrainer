@@ -23,13 +23,15 @@
 #include "Dictionary.h"
 #include <QtWidgets/QMainWindow>
 #include <QtCore/QScopedPointer>
-#include <boost/iostreams/stream_buffer.hpp> 
+#include <QtCore/QMap>
+#include <boost/iostreams/stream_buffer.hpp>
 
 namespace Ui
 {
     class MainWindow;
 }
 
+class DictionariesModel;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -53,9 +55,10 @@ protected:
 
 private:
     QScopedPointer<Ui::MainWindow> _pUi;
-    Dictionaries _dictionaries;
-	boost::iostreams::stream_buffer<StreamSink> _streamBufferCout;
+    boost::iostreams::stream_buffer<StreamSink> _streamBufferCout;
 	std::streambuf* _pOldStreambufCout;
 	boost::iostreams::stream_buffer<StreamSink> _streamBufferCerr;
 	std::streambuf* _pOldStreambufCerr;
+    Dictionaries _dictionaries;
+    DictionariesModel* _pDictionariesModel;
 };

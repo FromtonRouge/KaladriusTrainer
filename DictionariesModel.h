@@ -17,24 +17,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "DictionaryWidget.h"
-#include "DictionariesModel.h"
-#include "ui_DictionaryWidget.h"
+#pragma once
 
-DictionaryWidget::DictionaryWidget(QWidget* pParent)
-    : QWidget(pParent)
-    , _pUi(new Ui::DictionaryWidget())
-{
-    _pUi->setupUi(this);
-    _pUi->treeView->setAlternatingRowColors(true);
-}
+#include "Dictionary.h"
+#include <QtGui/QStandardItemModel>
 
-DictionaryWidget::~DictionaryWidget()
+class DictionariesModel : public QStandardItemModel
 {
-}
+public:
+    DictionariesModel(QObject* pParent = nullptr);
+    ~DictionariesModel();
 
-void DictionaryWidget::setDictonariesModel(DictionariesModel* pModel)
-{
-    _pUi->treeView->setModel(pModel);
-    _pUi->treeView->resizeColumnToContents(0);
-}
+    void setDictionaries(const Dictionaries& dictionaries);
+};

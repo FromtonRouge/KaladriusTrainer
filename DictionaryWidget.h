@@ -27,6 +27,7 @@ namespace Ui
     class DictionaryWidget;
 }
 
+class DictionariesModel;
 class DictionaryWidget : public QWidget
 {
     Q_OBJECT
@@ -34,6 +35,8 @@ class DictionaryWidget : public QWidget
 public:
     DictionaryWidget(QWidget* pParent = nullptr);
     ~DictionaryWidget();
+
+    void setDictonariesModel(DictionariesModel* pModel);
 
 private:
     QScopedPointer<Ui::DictionaryWidget> _pUi;
