@@ -17,24 +17,45 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "DictionaryWidget.h"
-#include "DictionariesModel.h"
-#include "ui_DictionaryWidget.h"
+#pragma once
 
-DictionaryWidget::DictionaryWidget(QWidget* pParent)
-    : QWidget(pParent)
-    , _pUi(new Ui::DictionaryWidget())
+#include <QtWidgets/QWidget>
+#include <QtCore/QScopedPointer>
+
+namespace Ui
 {
-    _pUi->setupUi(this);
-    _pUi->treeView->setAlternatingRowColors(true);
+    class DictionariesWidget;
 }
 
-DictionaryWidget::~DictionaryWidget()
+class QSortFilterProxyModel;
+class DictionariesModel;
+class QTimer;
+class DictionariesWidget : public QWidget
 {
-}
+    Q_OBJECT
 
-void DictionaryWidget::setDictonariesModel(DictionariesModel* pModel)
-{
-    _pUi->treeView->setModel(pModel);
-    _pUi->treeView->resizeColumnToContents(0);
-}
+public:
+    DictionariesWidget(QWidget* pParent = nullptr);
+    ~DictionariesWidget();
+
+    void setDictonariesModel(DictionariesModel* pModel);
+
+protected slots:
+    void on_lineEdit_textChanged();
+    void on_comboBox_currentIndexChanged(int iCurrent);
+    void applyFilter();
+
+private:
+    void saveExpandedIndexes();
+    void restoreExpandedIndexes();
+
+private:
+    QScopedPointer<Ui::DictionariesWidget> _pUi;
+    QSortFilterProxyModel* _pSortFilterDictionary;
+    QSortFilterProxyModel* _pSortFilterNoEntries;
+    QSortFilterProxyModel* _pSortFilterSearch;
+    int _iPreviousDictionary;
+    QString _sPreviousFilter;
+    QTimer* _pTimer;
+    bool _bBuildingDictionaries;
+};

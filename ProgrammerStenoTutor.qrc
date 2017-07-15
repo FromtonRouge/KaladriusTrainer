@@ -1,14 +1,15 @@
 <RCC>
     <qresource prefix="/">
         <file>Icons/ProgrammerStenoTutor.png</file>
-        <file>Icons/door-open-out.png</file>
-        <file>Icons/book-open.png</file>
-        <file>Icons/book-open-next.png</file>
-        <file>Icons/disk.png</file>
-        <file>Icons/disk--pencil.png</file>
         <file>Icons/book-brown.png</file>
-        <file>Icons/question.png</file>
-        <file>Icons/keyboard-full.png</file>
+        <file>Icons/book-open-next.png</file>
+        <file>Icons/book-open.png</file>
+        <file>Icons/disk--pencil.png</file>
+        <file>Icons/disk.png</file>
+        <file>Icons/door-open-out.png</file>
         <file>Icons/edit.png</file>
+        <file>Icons/funnel.png</file>
+        <file>Icons/keyboard-full.png</file>
+        <file>Icons/question.png</file>
     </qresource>
 </RCC>

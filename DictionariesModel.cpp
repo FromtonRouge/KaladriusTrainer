@@ -39,7 +39,10 @@ void DictionariesModel::setDictionaries(const Dictionaries &dictionaries)
     {
         const QString& sName = dictionary.getName();
         QStandardItem* pDictionaryItem = new QStandardItem(QIcon(":/Icons/book-brown.png"),sName);
-        appendRow(pDictionaryItem);
+        pDictionaryItem->setEditable(false);
+        QStandardItem* pEmptyItem = new QStandardItem();
+        pEmptyItem->setEditable(false);
+        appendRow(QList<QStandardItem*>() << pDictionaryItem << pEmptyItem);
         const auto& entries = dictionary.getKeyBitsToEntry();
         for (const Dictionary::Entry& entry : entries)
         {
@@ -53,8 +56,10 @@ void DictionariesModel::setDictionaries(const Dictionaries &dictionaries)
                     sText = "<no_entry>";
                 }
                 QStandardItem* pTextItem = new QStandardItem(QIcon(sIcon), sText);
+                pTextItem->setEditable(false);
                 pTextItem->setToolTip(tr("Output text"));
                 QStandardItem* pKeysItem = new QStandardItem(QIcon(":/Icons/keyboard-full.png"), dictionary.getKeysLabels(entry));
+                pKeysItem->setEditable(false);
                 pKeysItem->setToolTip(tr("Keys on the steno keyboard"));
                 pDictionaryItem->appendRow(QList<QStandardItem*>() << pTextItem << pKeysItem);
             }

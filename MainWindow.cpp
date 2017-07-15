@@ -62,8 +62,8 @@ MainWindow::MainWindow(QWidget *parent)
     restoreGeometry(settings.value("geometry").toByteArray());
     restoreState(settings.value("windowState").toByteArray());
 
-    _pUi->widgetDictionary1->setDictonariesModel(_pDictionariesModel);
-    _pUi->widgetDictionary2->setDictonariesModel(_pDictionariesModel);
+    _pUi->widgetDictionaries1->setDictonariesModel(_pDictionariesModel);
+    _pUi->widgetDictionaries2->setDictonariesModel(_pDictionariesModel);
 }
 
 MainWindow::~MainWindow()

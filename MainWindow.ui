@@ -71,9 +71,9 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="dockWidgetDictionary1">
+  <widget class="QDockWidget" name="dockWidgetDictionaries1">
    <property name="windowTitle">
-    <string>Dictionary 1</string>
+    <string>Dictionaries 1</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
@@ -81,14 +81,14 @@
    <widget class="QWidget" name="dockWidgetContents_2">
     <layout class="QGridLayout" name="gridLayout_2">
      <item row="0" column="0">
-      <widget class="DictionaryWidget" name="widgetDictionary1" native="true"/>
+      <widget class="DictionariesWidget" name="widgetDictionaries1" native="true"/>
      </item>
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="dockWidgetDictionary2">
+  <widget class="QDockWidget" name="dockWidgetDictionaries2">
    <property name="windowTitle">
-    <string>Dictionary 2</string>
+    <string>Dictionaries 2</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
@@ -96,7 +96,7 @@
    <widget class="QWidget" name="dockWidgetContents_3">
     <layout class="QGridLayout" name="gridLayout_3">
      <item row="0" column="0">
-      <widget class="DictionaryWidget" name="widgetDictionary2" native="true"/>
+      <widget class="DictionariesWidget" name="widgetDictionaries2" native="true"/>
      </item>
     </layout>
    </widget>
@@ -156,9 +156,9 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>DictionaryWidget</class>
+   <class>DictionariesWidget</class>
    <extends>QWidget</extends>
-   <header>DictionaryWidget.h</header>
+   <header>DictionariesWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
