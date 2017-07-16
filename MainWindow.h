@@ -46,12 +46,14 @@ protected slots:
     void on_actionReload_Dictionaries_triggered();
     void on_actionWrite_Markdown_Files_To_triggered();
     void on_actionWrite_Markdown_Files_triggered();
+    void delayedRestoreState();
 
 private:
     void toLogs(const QString& sText, int iWarningLevel = 0);
 
 protected:
     virtual void closeEvent(QCloseEvent* pEvent) override;
+    virtual bool event(QEvent* pEvent) override;
 
 private:
     QScopedPointer<Ui::MainWindow> _pUi;

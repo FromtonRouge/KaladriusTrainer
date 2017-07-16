@@ -31,11 +31,13 @@
 #include <QtCore/QSettings>
 #include <QtCore/QDir>
 #include <QtCore/QDebug>
+#include <QtCore/QEvent>
 #include <QtCore/QStringList>
 #include <QtCore/QSet>
 #include <QtCore/QFile>
 #include <QtCore/QMultiMap>
 #include <QtCore/QTextStream>
+#include <QtCore/QTimer>
 #include <functional>
 #include <iostream>
 
@@ -68,10 +70,9 @@ MainWindow::MainWindow(QWidget *parent)
     _pUi->dockWidgetDictionaries4->hide();
     _pUi->dockWidgetLogs->hide();
 
-    // Restore geometry and dock states
+    // Restore geometry
     QSettings settings;
     restoreGeometry(settings.value("geometry").toByteArray());
-    restoreState(settings.value("windowState").toByteArray());
 }
 
 MainWindow::~MainWindow()
@@ -97,6 +98,23 @@ void MainWindow::closeEvent(QCloseEvent* pEvent)
     settings.setValue("geometry", saveGeometry());
     settings.setValue("windowState", saveState());
     QMainWindow::closeEvent(pEvent);
+}
+
+bool MainWindow::event(QEvent *pEvent)
+{
+    switch (pEvent->type())
+    {
+    case QEvent::Polish:
+        {
+            QTimer::singleShot(80, this, SLOT(delayedRestoreState()));
+            break;
+        }
+    default:
+        {
+            break;
+        }
+    }
+    return QMainWindow::event(pEvent);
 }
 
 void MainWindow::on_actionQuit_triggered()
@@ -232,4 +250,11 @@ void MainWindow::on_actionWrite_Markdown_Files_triggered()
             statusBar()->showMessage(tr("%1 markdown files written").arg(_dictionaries.size()));
         }
     }
+}
+
+void MainWindow::delayedRestoreState()
+{
+    // Restore dock states
+    QSettings settings;
+    restoreState(settings.value("windowState").toByteArray());
 }
