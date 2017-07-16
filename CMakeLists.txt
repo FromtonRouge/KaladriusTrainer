@@ -13,7 +13,7 @@ set(PROJECT_VERSION_PATCH 0)
  
 # configure a header file to pass some of the CMake settings
 # to the source code
-configure_file ("${PROJECT_SOURCE_DIR}/ProjectConfig.h.in"
+configure_file ("${PROJECT_SOURCE_DIR}/Sources/ProjectConfig.h.in"
                 "${PROJECT_BINARY_DIR}/ProjectConfig.h")
 
 # Add the binary tree to the search path for include files
