@@ -46,6 +46,8 @@ protected slots:
     void on_actionReload_Dictionaries_triggered();
     void on_actionWrite_Markdown_Files_To_triggered();
     void on_actionWrite_Markdown_Files_triggered();
+    void on_actionAbout_triggered();
+    void on_actionKeyboard_Window_triggered();
     void delayedRestoreState();
 
 private:

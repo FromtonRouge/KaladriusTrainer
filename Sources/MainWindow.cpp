@@ -19,10 +19,13 @@
 
 #include "ui_MainWindow.h"
 #include "MainWindow.h"
+#include "KeyboardGraphicsView.h"
 #include "DictionariesModel.h"
 #include "DictionaryParser.h"
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QFileDialog>
+#include <QtWidgets/QMdiSubWindow>
+#include <QtWidgets/QMessageBox>
 #include <QtWidgets/QStatusBar>
 #include <QtGui/QTextCursor>
 #include <QtGui/QTextCharFormat>
@@ -60,10 +63,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     _pUi->actionReload_Dictionaries->trigger();
 
-    _pUi->widgetDictionaries1->setDictonariesModel(_pDictionariesModel);
-    _pUi->widgetDictionaries2->setDictonariesModel(_pDictionariesModel);
-    _pUi->widgetDictionaries3->setDictonariesModel(_pDictionariesModel);
-    _pUi->widgetDictionaries4->setDictonariesModel(_pDictionariesModel);
+    _pUi->widgetDictionaries1->setDictionariesModel(_pDictionariesModel);
+    _pUi->widgetDictionaries2->setDictionariesModel(_pDictionariesModel);
+    _pUi->widgetDictionaries3->setDictionariesModel(_pDictionariesModel);
+    _pUi->widgetDictionaries4->setDictionariesModel(_pDictionariesModel);
+
+    _pUi->actionKeyboard_Window->trigger();
 
     // Default dock states
     _pUi->dockWidgetDictionaries3->hide();
@@ -159,7 +164,7 @@ void MainWindow::on_actionReload_Dictionaries_triggered()
 
         _pDictionariesModel->setDictionaries(_dictionaries);
 
-        statusBar()->showMessage(tr("%1 dictonaries loaded").arg(_dictionaries.size()));
+        statusBar()->showMessage(tr("%1 dictionaries loaded").arg(_dictionaries.size()));
     }
 }
 
@@ -187,7 +192,7 @@ void MainWindow::on_actionWrite_Markdown_Files_triggered()
             struct DumpInfo
             {
                 typedef QMultiMap<QString, QString> OrderedEntries;
-                Dictionary dictonary;
+                Dictionary dictionary;
                 OrderedEntries orderedEntries;
             };
 
@@ -219,7 +224,7 @@ void MainWindow::on_actionWrite_Markdown_Files_triggered()
                 while (itOrdered != orderedDictionaries.end())
                 {
                     const auto& dumpInfo = itOrdered++.value();
-                    const Dictionary& dictionary = dumpInfo.dictonary;
+                    const Dictionary& dictionary = dumpInfo.dictionary;
                     const auto& orderedEntries = dumpInfo.orderedEntries;
 
                     QFile fileDictionary(QString("%1/%2").arg(sDirectory).arg(dictionary.getMarkdownFileName()));
@@ -250,6 +255,29 @@ void MainWindow::on_actionWrite_Markdown_Files_triggered()
             statusBar()->showMessage(tr("%1 markdown files written").arg(_dictionaries.size()));
         }
     }
+}
+
+void MainWindow::on_actionAbout_triggered()
+{
+    QMessageBox messageBox;
+    messageBox.setIcon(QMessageBox::Information);
+    messageBox.setWindowTitle(tr("About"));
+    messageBox.setTextFormat(Qt::RichText);
+
+    QString sText = tr("%1 %2").arg(QApplication::applicationName()).arg(QApplication::applicationVersion());
+    sText += tr("<p>Author: %1</p>").arg(QApplication::organizationName());
+    sText += tr("<p>Some icons by <a href='http://p.yusukekamiyamane.com'>Yusuke Kamiyamane</a>. Licensed under a <a href='http://creativecommons.org/licenses/by/3.0'>Creative Commons Attribution 3.0 License</a>.</p>");
+    messageBox.setText(sText);
+    messageBox.exec();
+}
+
+void MainWindow::on_actionKeyboard_Window_triggered()
+{
+    auto pGraphicsView = new KeyboardGraphicsView();
+    auto pSubWindow = _pUi->mdiArea->addSubWindow(pGraphicsView);
+    pSubWindow->setWindowTitle(tr("Keyboard"));
+    pGraphicsView->setParent(pSubWindow);
+    pSubWindow->showMaximized();
 }
 
 void MainWindow::delayedRestoreState()

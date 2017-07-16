@@ -38,14 +38,15 @@ if (Boost_FOUND)
 endif()
 
 # Qt5 directory looks like this C:\Qt\5.9.1\msvc2015_64\lib\cmake\Qt5
-find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
+find_package(Qt5 COMPONENTS Core Gui Widgets Svg REQUIRED)
 
-file(GLOB SOURCES ./*.cpp)
-file(GLOB QRCS ./*.qrc)
-file(GLOB RCS ./*.rc)
+file(GLOB SOURCES ./Sources/*.cpp)
+file(GLOB QRCS ./Resources/*.qrc)
+file(GLOB RCS ./Resources*.rc)
+include_directories(./Sources)
 
 add_executable(${PROJECT_NAME} WIN32 ${SOURCES} ${QRCS} ${RCS})
-target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::Widgets)
+target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Svg)
 
 if (Boost_FOUND)
     target_link_libraries(${PROJECT_NAME} Boost::serialization)

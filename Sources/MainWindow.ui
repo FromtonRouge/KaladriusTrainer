@@ -67,7 +67,21 @@
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
+   <widget class="QMenu" name="menuWindow">
+    <property name="title">
+     <string>Window</string>
+    </property>
+    <addaction name="actionKeyboard_Window"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuWindow"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="dockWidgetDictionaries1">
@@ -155,6 +169,8 @@
    <addaction name="separator"/>
    <addaction name="actionWrite_Markdown_Files_To"/>
    <addaction name="actionWrite_Markdown_Files"/>
+   <addaction name="separator"/>
+   <addaction name="actionKeyboard_Window"/>
   </widget>
   <widget class="QDockWidget" name="dockWidgetDictionaries4">
    <property name="windowTitle">
@@ -220,6 +236,24 @@
    </property>
    <property name="shortcut">
     <string>F6</string>
+   </property>
+  </action>
+  <action name="actionKeyboard_Window">
+   <property name="icon">
+    <iconset resource="ProgrammerStenoTutor.qrc">
+     <normaloff>:/Icons/keyboard-full.png</normaloff>:/Icons/keyboard-full.png</iconset>
+   </property>
+   <property name="text">
+    <string>Keyboard Window</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="icon">
+    <iconset resource="ProgrammerStenoTutor.qrc">
+     <normaloff>:/Icons/question.png</normaloff>:/Icons/question.png</iconset>
+   </property>
+   <property name="text">
+    <string>About</string>
    </property>
   </action>
  </widget>

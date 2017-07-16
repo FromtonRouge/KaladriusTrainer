@@ -48,7 +48,7 @@ struct DictionaryFilter : public QSortFilterProxyModel
 };
 
 /**
- * Always accept top dictonaries elements.
+ * Always accept top dictionaries elements.
  */
 struct AcceptTopRowsFilter : public QSortFilterProxyModel
 {
@@ -116,7 +116,7 @@ DictionariesWidget::~DictionariesWidget()
     }
 }
 
-void DictionariesWidget::setDictonariesModel(DictionariesModel* pModel)
+void DictionariesWidget::setDictionariesModel(DictionariesModel* pModel)
 {
     _bBuildingDictionaries = true;
     QSettings settings;

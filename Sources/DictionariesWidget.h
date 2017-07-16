@@ -38,7 +38,7 @@ public:
     DictionariesWidget(QWidget* pParent = nullptr);
     ~DictionariesWidget();
 
-    void setDictonariesModel(DictionariesModel* pModel);
+    void setDictionariesModel(DictionariesModel* pModel);
 
 protected slots:
     void on_lineEdit_textChanged();

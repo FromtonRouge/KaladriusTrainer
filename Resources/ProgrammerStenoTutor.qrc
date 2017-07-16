@@ -11,5 +11,6 @@
         <file>Icons/funnel.png</file>
         <file>Icons/keyboard-full.png</file>
         <file>Icons/question.png</file>
+        <file>Svgs/ergodox.svg</file>
     </qresource>
 </RCC>
