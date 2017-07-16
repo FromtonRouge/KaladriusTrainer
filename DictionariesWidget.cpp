@@ -87,6 +87,7 @@ DictionariesWidget::DictionariesWidget(QWidget* pParent)
     , _pSortFilterDictionary(new DictionaryFilter(this))
     , _pSortFilterNoEntries(new NoEntriesFilter(this))
     , _pSortFilterSearch(new AcceptTopRowsFilter(this))
+    , _pSortFilterAlphabeticalOrder(new QSortFilterProxyModel(this))
     , _iPreviousDictionary(-1)
     , _pTimer(new QTimer(this))
     , _bBuildingDictionaries(false)
@@ -96,7 +97,9 @@ DictionariesWidget::DictionariesWidget(QWidget* pParent)
     _pSortFilterNoEntries->setSourceModel(_pSortFilterDictionary);
     _pSortFilterSearch->setSourceModel(_pSortFilterNoEntries);
     _pSortFilterSearch->setFilterCaseSensitivity(Qt::CaseInsensitive);
-    _pUi->treeView->setModel(_pSortFilterSearch);
+    _pSortFilterAlphabeticalOrder->setSourceModel(_pSortFilterSearch);
+    _pUi->treeView->setModel(_pSortFilterAlphabeticalOrder);
+    _pUi->treeView->setSortingEnabled(true);
     connect(_pTimer, SIGNAL(timeout()), this, SLOT(applyFilter()));
     _pTimer->setSingleShot(true);
     _pTimer->setInterval(500);
@@ -131,6 +134,7 @@ void DictionariesWidget::setDictonariesModel(DictionariesModel* pModel)
     _pUi->comboBox->addItems(dictionaries);
 
     _pSortFilterDictionary->setSourceModel(pModel);
+    _pSortFilterAlphabeticalOrder->sort(0);
     _pUi->treeView->resizeColumnToContents(0);
 
     _pUi->comboBox->setCurrentIndex(iSelectedDictionary);

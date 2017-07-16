@@ -54,6 +54,7 @@ private:
     QSortFilterProxyModel* _pSortFilterDictionary;
     QSortFilterProxyModel* _pSortFilterNoEntries;
     QSortFilterProxyModel* _pSortFilterSearch;
+    QSortFilterProxyModel* _pSortFilterAlphabeticalOrder;
     int _iPreviousDictionary;
     QString _sPreviousFilter;
     QTimer* _pTimer;
