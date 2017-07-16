@@ -58,12 +58,20 @@ MainWindow::MainWindow(QWidget *parent)
 
     _pUi->actionReload_Dictionaries->trigger();
 
+    _pUi->widgetDictionaries1->setDictonariesModel(_pDictionariesModel);
+    _pUi->widgetDictionaries2->setDictonariesModel(_pDictionariesModel);
+    _pUi->widgetDictionaries3->setDictonariesModel(_pDictionariesModel);
+    _pUi->widgetDictionaries4->setDictonariesModel(_pDictionariesModel);
+
+    // Default dock states
+    _pUi->dockWidgetDictionaries3->hide();
+    _pUi->dockWidgetDictionaries4->hide();
+    _pUi->dockWidgetLogs->hide();
+
+    // Restore geometry and dock states
     QSettings settings;
     restoreGeometry(settings.value("geometry").toByteArray());
     restoreState(settings.value("windowState").toByteArray());
-
-    _pUi->widgetDictionaries1->setDictonariesModel(_pDictionariesModel);
-    _pUi->widgetDictionaries2->setDictonariesModel(_pDictionariesModel);
 }
 
 MainWindow::~MainWindow()

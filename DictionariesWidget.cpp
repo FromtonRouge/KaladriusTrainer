@@ -180,6 +180,7 @@ void DictionariesWidget::on_comboBox_currentIndexChanged(int iCurrent)
         _pUi->treeView->setRootIndex(pModel->index(0, 0));
         _pUi->treeView->expandAll();
     }
+    _pUi->treeView->resizeColumnToContents(0);
     _iPreviousDictionary = pFilter->selectedDictionary;
 }
 
