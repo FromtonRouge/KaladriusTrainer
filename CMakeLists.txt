@@ -42,7 +42,7 @@ find_package(Qt5 COMPONENTS Core Gui Widgets Svg REQUIRED)
 
 file(GLOB SOURCES ./Sources/*.cpp)
 file(GLOB QRCS ./Resources/*.qrc)
-file(GLOB RCS ./Resources*.rc)
+file(GLOB RCS ./Resources/*.rc)
 include_directories(./Sources)
 
 add_executable(${PROJECT_NAME} WIN32 ${SOURCES} ${QRCS} ${RCS})
