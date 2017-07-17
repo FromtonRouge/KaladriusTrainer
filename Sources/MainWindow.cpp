@@ -272,7 +272,7 @@ void MainWindow::on_actionAbout_triggered()
     QString sText = tr("%1 %2").arg(QApplication::applicationName()).arg(QApplication::applicationVersion());
     sText += tr("<p>Author: %1</p>").arg(QApplication::organizationName());
     sText += tr("<p>Some icons by <a href='http://p.yusukekamiyamane.com/'>Yusuke Kamiyamane</a>. Licensed under a <a href='http://creativecommons.org/licenses/by/3.0/'>Creative Commons Attribution 3.0 License</a>.</p>");
-    sText += tr("<p>Application icon by <a href='http://www.doublejdesign.co.uk/'>Double-J Design</a>. Licensed under a <a href='http://creativecommons.org/licenses/by/4.0/'>Creative Commons Attribution 4.0 License</a>.</p>");
+    sText += tr("<p>Application icon by <a href='http://chromatix.deviantart.com/'>Chromatix</a>. Licensed under a <a href='http://creativecommons.org/licenses/by-nc-nd/4.0/'>Creative Commons Attribution-Noncommercial-NoDerivate 4.0 License</a>.</p>");
     messageBox.setText(sText);
     messageBox.exec();
 }
