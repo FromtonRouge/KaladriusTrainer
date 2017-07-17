@@ -32,6 +32,7 @@ namespace Ui
 }
 
 class DictionariesModel;
+class KeyboardPropertiesModel;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -65,4 +66,5 @@ private:
 	std::streambuf* _pOldStreambufCerr;
     Dictionaries _dictionaries;
     DictionariesModel* _pDictionariesModel;
+    KeyboardPropertiesModel* _pKeyboardPropertiesModel;
 };

@@ -14,7 +14,7 @@
    <string>Programmer Steno Tutor</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="ProgrammerStenoTutor.qrc">
+   <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
     <normaloff>:/Icons/ProgrammerStenoTutor.png</normaloff>:/Icons/ProgrammerStenoTutor.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
@@ -42,7 +42,7 @@
      <x>0</x>
      <y>0</y>
      <width>737</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -54,7 +54,7 @@
       <string>Dictionaries</string>
      </property>
      <property name="icon">
-      <iconset resource="ProgrammerStenoTutor.qrc">
+      <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
        <normaloff>:/Icons/book-open.png</normaloff>:/Icons/book-open.png</iconset>
      </property>
      <addaction name="actionImport_Dictionaries"/>
@@ -93,6 +93,18 @@
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_2">
     <layout class="QGridLayout" name="gridLayout_2">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
      <item row="0" column="0">
       <widget class="DictionariesWidget" name="widgetDictionaries1" native="true"/>
      </item>
@@ -108,6 +120,18 @@
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_3">
     <layout class="QGridLayout" name="gridLayout_3">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
      <item row="0" column="0">
       <widget class="DictionariesWidget" name="widgetDictionaries2" native="true"/>
      </item>
@@ -123,6 +147,18 @@
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_4">
     <layout class="QGridLayout" name="gridLayout_4">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
      <item row="0" column="0">
       <widget class="DictionariesWidget" name="widgetDictionaries3" native="true"/>
      </item>
@@ -138,6 +174,18 @@
    </attribute>
    <widget class="QWidget" name="dockWidgetContents">
     <layout class="QGridLayout" name="gridLayout">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
      <item row="0" column="0">
       <widget class="QTextEdit" name="textEditLogs">
        <property name="readOnly">
@@ -181,15 +229,54 @@
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_5">
     <layout class="QGridLayout" name="gridLayout_5">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
      <item row="0" column="0">
       <widget class="DictionariesWidget" name="widgetDictionaries4" native="true"/>
      </item>
     </layout>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="dockWidgetKeyboardProperties">
+   <property name="windowTitle">
+    <string>Keyboard Properties</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_6">
+    <layout class="QGridLayout" name="gridLayout_7">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item row="0" column="0">
+      <widget class="KeyboardPropertiesTreeView" name="treeViewKeyboardProperties"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="actionQuit">
    <property name="icon">
-    <iconset resource="ProgrammerStenoTutor.qrc">
+    <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
      <normaloff>:/Icons/door-open-out.png</normaloff>:/Icons/door-open-out.png</iconset>
    </property>
    <property name="text">
@@ -198,7 +285,7 @@
   </action>
   <action name="actionImport_Dictionaries">
    <property name="icon">
-    <iconset resource="ProgrammerStenoTutor.qrc">
+    <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
      <normaloff>:/Icons/book-open-next.png</normaloff>:/Icons/book-open-next.png</iconset>
    </property>
    <property name="text">
@@ -207,7 +294,7 @@
   </action>
   <action name="actionReload_Dictionaries">
    <property name="icon">
-    <iconset resource="ProgrammerStenoTutor.qrc">
+    <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
      <normaloff>:/Icons/book-open-next.png</normaloff>:/Icons/book-open-next.png</iconset>
    </property>
    <property name="text">
@@ -219,7 +306,7 @@
   </action>
   <action name="actionWrite_Markdown_Files_To">
    <property name="icon">
-    <iconset resource="ProgrammerStenoTutor.qrc">
+    <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
      <normaloff>:/Icons/disk--pencil.png</normaloff>:/Icons/disk--pencil.png</iconset>
    </property>
    <property name="text">
@@ -228,7 +315,7 @@
   </action>
   <action name="actionWrite_Markdown_Files">
    <property name="icon">
-    <iconset resource="ProgrammerStenoTutor.qrc">
+    <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
      <normaloff>:/Icons/disk.png</normaloff>:/Icons/disk.png</iconset>
    </property>
    <property name="text">
@@ -240,7 +327,7 @@
   </action>
   <action name="actionKeyboard_Window">
    <property name="icon">
-    <iconset resource="ProgrammerStenoTutor.qrc">
+    <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
      <normaloff>:/Icons/keyboard-full.png</normaloff>:/Icons/keyboard-full.png</iconset>
    </property>
    <property name="text">
@@ -249,7 +336,7 @@
   </action>
   <action name="actionAbout">
    <property name="icon">
-    <iconset resource="ProgrammerStenoTutor.qrc">
+    <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
      <normaloff>:/Icons/question.png</normaloff>:/Icons/question.png</iconset>
    </property>
    <property name="text">
@@ -265,9 +352,14 @@
    <header>DictionariesWidget.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>KeyboardPropertiesTreeView</class>
+   <extends>QTreeView</extends>
+   <header>KeyboardPropertiesTreeView.h</header>
+  </customwidget>
  </customwidgets>
  <resources>
-  <include location="ProgrammerStenoTutor.qrc"/>
+  <include location="../Resources/ProgrammerStenoTutor.qrc"/>
  </resources>
  <connections/>
 </ui>

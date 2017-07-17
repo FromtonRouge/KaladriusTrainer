@@ -20,6 +20,7 @@
 #include "ui_MainWindow.h"
 #include "MainWindow.h"
 #include "KeyboardGraphicsView.h"
+#include "KeyboardPropertiesModel.h"
 #include "DictionariesModel.h"
 #include "DictionaryParser.h"
 #include <QtWidgets/QApplication>
@@ -50,6 +51,7 @@ MainWindow::MainWindow(QWidget *parent)
     , _pOldStreambufCout(std::cout.rdbuf())
     , _pOldStreambufCerr(std::cerr.rdbuf())
     , _pDictionariesModel(new DictionariesModel(this))
+    , _pKeyboardPropertiesModel(new KeyboardPropertiesModel(this))
 {
     _pUi->setupUi(this);
 
@@ -68,9 +70,12 @@ MainWindow::MainWindow(QWidget *parent)
     _pUi->widgetDictionaries3->setDictionariesModel(_pDictionariesModel);
     _pUi->widgetDictionaries4->setDictionariesModel(_pDictionariesModel);
 
+    _pUi->treeViewKeyboardProperties->setModel(_pKeyboardPropertiesModel);
+
     _pUi->actionKeyboard_Window->trigger();
 
     // Default dock states
+    _pUi->dockWidgetKeyboardProperties->hide();
     _pUi->dockWidgetDictionaries3->hide();
     _pUi->dockWidgetDictionaries4->hide();
     _pUi->dockWidgetLogs->hide();
@@ -259,7 +264,7 @@ void MainWindow::on_actionWrite_Markdown_Files_triggered()
 
 void MainWindow::on_actionAbout_triggered()
 {
-    QMessageBox messageBox;
+    QMessageBox messageBox(this);
     messageBox.setIcon(QMessageBox::Information);
     messageBox.setWindowTitle(tr("About"));
     messageBox.setTextFormat(Qt::RichText);
