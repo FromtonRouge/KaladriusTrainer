@@ -30,6 +30,13 @@ public:
     KeyboardGraphicsView(QWidget* pParent = nullptr);
     ~KeyboardGraphicsView();
 
+protected:
+    virtual void contextMenuEvent(QContextMenuEvent* pEvent) override;
+    virtual void resizeEvent(QResizeEvent* pEvent) override;
+
+private slots:
+    void fitKeyboardInView();
+
 private:
     QSvgRenderer* _pSvgRenderer;
 };

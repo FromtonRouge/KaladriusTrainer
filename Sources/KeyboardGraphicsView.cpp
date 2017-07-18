@@ -19,9 +19,12 @@
 
 #include "KeyboardGraphicsView.h"
 #include <QtWidgets/QGraphicsScene>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QAction>
+#include <QtGui/QContextMenuEvent>
 #include <QtSvg/QGraphicsSvgItem>
 #include <QtSvg/QSvgRenderer>
-#include <QtDebug>
+#include <QtCore/QTimer>
 
 KeyboardGraphicsView::KeyboardGraphicsView(QWidget* pParent)
     : QGraphicsView(pParent)
@@ -125,4 +128,24 @@ KeyboardGraphicsView::KeyboardGraphicsView(QWidget* pParent)
 
 KeyboardGraphicsView::~KeyboardGraphicsView()
 {
+}
+
+void KeyboardGraphicsView::contextMenuEvent(QContextMenuEvent* pEvent)
+{
+    QMenu menu;
+    if (!menu.isEmpty())
+    {
+        menu.exec(pEvent->globalPos());
+    }
+}
+
+void KeyboardGraphicsView::resizeEvent(QResizeEvent* pEvent)
+{
+    fitKeyboardInView();
+    QGraphicsView::resizeEvent(pEvent);
+}
+
+void KeyboardGraphicsView::fitKeyboardInView()
+{
+    fitInView(scene()->itemsBoundingRect(), Qt::KeepAspectRatio);
 }
