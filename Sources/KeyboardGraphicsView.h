@@ -22,6 +22,7 @@
 #include <QtWidgets/QGraphicsView>
 
 class QSvgRenderer;
+class KeyboardPropertiesModel;
 class KeyboardGraphicsView : public QGraphicsView
 {
     Q_OBJECT
@@ -30,13 +31,19 @@ public:
     KeyboardGraphicsView(QWidget* pParent = nullptr);
     ~KeyboardGraphicsView();
 
+    void setKeyboardPropertiesModel(KeyboardPropertiesModel* pKeyboardPropertiesModel);
+
 protected:
     virtual void contextMenuEvent(QContextMenuEvent* pEvent) override;
     virtual void resizeEvent(QResizeEvent* pEvent) override;
 
 private slots:
     void fitKeyboardInView();
+    void reloadKeyboard();
+    void onModelReset();
+    void onRowsInserted(const QModelIndex& parent, int iFirst, int iLast);
 
 private:
     QSvgRenderer* _pSvgRenderer;
+    KeyboardPropertiesModel* _pKeyboardPropertiesModel;
 };

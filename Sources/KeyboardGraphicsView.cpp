@@ -18,6 +18,7 @@
 // ======================================================================
 
 #include "KeyboardGraphicsView.h"
+#include "KeyboardPropertiesModel.h"
 #include <QtWidgets/QGraphicsScene>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QAction>
@@ -28,106 +29,22 @@
 
 KeyboardGraphicsView::KeyboardGraphicsView(QWidget* pParent)
     : QGraphicsView(pParent)
+    , _pSvgRenderer(nullptr)
+    , _pKeyboardPropertiesModel(nullptr)
 {
-    auto pScene = new QGraphicsScene(this);
-    _pSvgRenderer = new QSvgRenderer(QLatin1String(":/Svgs/ergodox.svg"), pScene);
-
-    QStringList elementsToLoad =
-    {
-        "g100",
-        "g110",
-        "g120",
-        "g130",
-        "g140",
-        "g150",
-        "g160",
-        "g170",
-        "g180",
-        "g190",
-        "g200",
-        "g210",
-        "g220",
-        "g230",
-        "g240",
-        "g250",
-        "g260",
-        "g270",
-        "g280",
-        "g290",
-        "g300",
-        "g310",
-        "g320",
-        "g330",
-        "g340",
-        "g350",
-        "g360",
-        "g370",
-        "g380",
-        "g390",
-        "g40",
-        "g400",
-        "g410",
-        "g420",
-        "g430",
-        "g440",
-        "g450",
-        "g460",
-        "g470",
-        "g480",
-        "g490",
-        "g50",
-        "g500",
-        "g510",
-        "g520",
-        "g530",
-        "g540",
-        "g550",
-        "g560",
-        "g570",
-        "g580",
-        "g590",
-        "g60",
-        "g600",
-        "g610",
-        "g620",
-        "g630",
-        "g640",
-        "g650",
-        "g660",
-        "g670",
-        "g680",
-        "g690",
-        "g70",
-        "g700",
-        "g710",
-        "g720",
-        "g730",
-        "g740",
-        "g750",
-        "g760",
-        "g770",
-        "g780",
-        "g790",
-        "g80",
-        "g90"
-    };
-
-    for (const auto& sElementId : elementsToLoad)
-    {
-        auto pSvgItem = new QGraphicsSvgItem();
-        pSvgItem->setFlag(QGraphicsItem::ItemIsSelectable);
-        pSvgItem->setSharedRenderer(_pSvgRenderer);
-        pSvgItem->setElementId(sElementId);
-        const auto& r = _pSvgRenderer->boundsOnElement(sElementId);
-        pSvgItem->setPos(r.topLeft());
-        pScene->addItem(pSvgItem);
-    }
-
-    setScene(pScene);
+    setScene(new QGraphicsScene(this));
 }
 
 KeyboardGraphicsView::~KeyboardGraphicsView()
 {
+}
+
+void KeyboardGraphicsView::setKeyboardPropertiesModel(KeyboardPropertiesModel* pKeyboardPropertiesModel)
+{
+    _pKeyboardPropertiesModel = pKeyboardPropertiesModel;
+    connect(_pKeyboardPropertiesModel, SIGNAL(modelReset()), this, SLOT(onModelReset()));
+    connect(_pKeyboardPropertiesModel, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(onRowsInserted(QModelIndex, int, int)));
+    reloadKeyboard();
 }
 
 void KeyboardGraphicsView::contextMenuEvent(QContextMenuEvent* pEvent)
@@ -148,4 +65,53 @@ void KeyboardGraphicsView::resizeEvent(QResizeEvent* pEvent)
 void KeyboardGraphicsView::fitKeyboardInView()
 {
     fitInView(scene()->itemsBoundingRect(), Qt::KeepAspectRatio);
+}
+
+void KeyboardGraphicsView::reloadKeyboard()
+{
+    delete _pSvgRenderer;
+    _pSvgRenderer = new QSvgRenderer(_pKeyboardPropertiesModel->getKeyboardSvgPath(), scene());
+
+    const int iRows = _pKeyboardPropertiesModel->rowCount();
+    for (int iRow = 0; iRow < iRows; ++iRow)
+    {
+        const QModelIndex& indexKey = _pKeyboardPropertiesModel->index(iRow, 0);
+        const QString& sKeyId = indexKey.data().toString();
+        auto pSvgItem = new QGraphicsSvgItem();
+        pSvgItem->setFlag(QGraphicsItem::ItemIsSelectable);
+        pSvgItem->setSharedRenderer(_pSvgRenderer);
+        pSvgItem->setElementId(sKeyId);
+        const auto& bounds = _pSvgRenderer->boundsOnElement(sKeyId);
+        pSvgItem->setPos(bounds.topLeft());
+        scene()->addItem(pSvgItem);
+    }
+}
+
+void KeyboardGraphicsView::onModelReset()
+{
+   scene()->clear();
+
+    delete _pSvgRenderer;
+    _pSvgRenderer = new QSvgRenderer(_pKeyboardPropertiesModel->getKeyboardSvgPath(), scene());
+}
+
+void KeyboardGraphicsView::onRowsInserted(const QModelIndex& parent, int iFirst, int iLast)
+{
+    if (!parent.isValid())
+    {
+        for (int iRow = iFirst; iRow < iLast+1; ++iRow)
+        {
+            const QModelIndex& indexKey = _pKeyboardPropertiesModel->index(iRow, 0, parent);
+            const QString& sKeyId = indexKey.data().toString();
+            auto pSvgItem = new QGraphicsSvgItem();
+            pSvgItem->setFlag(QGraphicsItem::ItemIsSelectable);
+            pSvgItem->setSharedRenderer(_pSvgRenderer);
+            pSvgItem->setElementId(sKeyId);
+            const auto& bounds = _pSvgRenderer->boundsOnElement(sKeyId);
+            pSvgItem->setPos(bounds.topLeft());
+            scene()->addItem(pSvgItem);
+        }
+    }
+
+    fitKeyboardInView();
 }

@@ -63,6 +63,9 @@
      <addaction name="actionWrite_Markdown_Files_To"/>
      <addaction name="actionWrite_Markdown_Files"/>
     </widget>
+    <addaction name="actionLoad_Keyboard_Svg"/>
+    <addaction name="actionLoad_Default_Keyboard_Svg"/>
+    <addaction name="separator"/>
     <addaction name="menuDictionaries"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
@@ -341,6 +344,24 @@
    </property>
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionLoad_Keyboard_Svg">
+   <property name="icon">
+    <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
+     <normaloff>:/Icons/keyboard-full.png</normaloff>:/Icons/keyboard-full.png</iconset>
+   </property>
+   <property name="text">
+    <string>Load Keyboard Svg...</string>
+   </property>
+  </action>
+  <action name="actionLoad_Default_Keyboard_Svg">
+   <property name="icon">
+    <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
+     <normaloff>:/Icons/keyboard-full.png</normaloff>:/Icons/keyboard-full.png</iconset>
+   </property>
+   <property name="text">
+    <string>Load Default Keyboard Svg</string>
    </property>
   </action>
  </widget>

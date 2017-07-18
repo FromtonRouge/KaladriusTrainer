@@ -18,14 +18,81 @@
 // ======================================================================
 
 #include "KeyboardPropertiesModel.h"
+#include <QtXml/QDomDocument>
+#include <QtGui/QStandardItem>
+#include <QtCore/QFile>
 #include <QtCore/QStringList>
+#include <iostream>
 
 KeyboardPropertiesModel::KeyboardPropertiesModel(QObject* pParent)
     : QStandardItemModel(pParent)
 {
-    setHorizontalHeaderLabels(QStringList() << tr("Name") << tr("Value"));
 }
 
 KeyboardPropertiesModel::~KeyboardPropertiesModel()
 {
+}
+
+void KeyboardPropertiesModel::loadKeyboardSvg(const QString& sSvgFilePath)
+{
+    _sKeyboardSvgFilePath = sSvgFilePath;
+
+    clear();
+    setHorizontalHeaderLabels(QStringList() << tr("Name") << tr("Value"));
+
+    QDomDocument document;
+    QFile fileKeyboard(_sKeyboardSvgFilePath);
+    if (fileKeyboard.open(QFile::ReadOnly))
+    {
+        document.setContent(&fileKeyboard);
+        fileKeyboard.close();
+    }
+
+    if (document.hasChildNodes())
+    {
+        QList<QDomElement> elements;
+        const QDomNode& nodeDocument = document.documentElement();
+        QDomNode node = nodeDocument.firstChild();
+        while (!node.isNull())
+        {
+            QDomElement element = node.toElement();
+            if (!element.isNull())
+            {
+                const QString& sName = element.tagName();
+                if (sName == "g")
+                {
+                    const QString& sClass = element.attribute("class");
+                    if (!sClass.isEmpty())
+                    {
+                        if (sClass.contains("keycap"))
+                        {
+                            const QString& sKeyId = element.attribute("id");
+                            if (!sKeyId.isEmpty())
+                            {
+                                elements << element;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        node = node.firstChild();
+                        continue;
+                    }
+                }
+            }
+            node = node.nextSibling();
+        }
+
+        for (const auto& element : elements)
+        {
+            const QString& sKeyId = element.attribute("id");
+            QList<QStandardItem*> items;
+            auto pItem1 = new QStandardItem(QIcon(":/Icons/keyboard.png"), sKeyId);
+            pItem1->setEditable(false);
+            auto pItem2 = new QStandardItem();
+            pItem2->setEditable(false);
+            items << pItem1 << pItem2;
+            appendRow(items);
+        }
+    }
 }

@@ -20,7 +20,10 @@
 #include "KeyboardPropertiesTreeView.h"
 
 KeyboardPropertiesTreeView::KeyboardPropertiesTreeView(QWidget* pParent)
+    : QTreeView(pParent)
 {
+    setAlternatingRowColors(true);
+    setRootIsDecorated(false);
 }
 
 KeyboardPropertiesTreeView::~KeyboardPropertiesTreeView()

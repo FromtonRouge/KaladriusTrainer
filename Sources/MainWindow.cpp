@@ -72,8 +72,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     _pUi->treeViewKeyboardProperties->setModel(_pKeyboardPropertiesModel);
 
-    _pUi->actionKeyboard_Window->trigger();
-
     // Default dock states
     _pUi->dockWidgetKeyboardProperties->hide();
     _pUi->dockWidgetDictionaries3->hide();
@@ -83,6 +81,11 @@ MainWindow::MainWindow(QWidget *parent)
     // Restore geometry
     QSettings settings;
     restoreGeometry(settings.value("geometry").toByteArray());
+
+    // Load keyboard svg
+    const QString& sLastKeyboardSvg = settings.value("lastKeyboardSvg", ":/Svgs/ergodox.svg").toString();
+    _pKeyboardPropertiesModel->loadKeyboardSvg(sLastKeyboardSvg);
+    _pUi->actionKeyboard_Window->trigger();
 }
 
 MainWindow::~MainWindow()
@@ -130,6 +133,25 @@ bool MainWindow::event(QEvent *pEvent)
 void MainWindow::on_actionQuit_triggered()
 {
     QApplication::quit();
+}
+
+void MainWindow::on_actionLoad_Keyboard_Svg_triggered()
+{
+    QSettings settings;
+    const QString& sLastKeyboardSvg = settings.value("lastKeyboardSvg").toString();
+    const QString& sKeyboardSvg = QFileDialog::getOpenFileName(this, tr("Keyboard Svg"), sLastKeyboardSvg, "*.svg");
+    if (!sKeyboardSvg.isEmpty())
+    {
+        _pKeyboardPropertiesModel->loadKeyboardSvg(sKeyboardSvg);
+        settings.setValue("lastKeyboardSvg", sKeyboardSvg);
+    }
+}
+
+void MainWindow::on_actionLoad_Default_Keyboard_Svg_triggered()
+{
+    _pKeyboardPropertiesModel->loadKeyboardSvg(":/Svgs/ergodox.svg");
+    QSettings settings;
+    settings.setValue("lastKeyboardSvg", ":/Svgs/ergodox.svg");
 }
 
 void MainWindow::on_actionImport_Dictionaries_triggered()
@@ -283,6 +305,7 @@ void MainWindow::on_actionKeyboard_Window_triggered()
     auto pSubWindow = _pUi->mdiArea->addSubWindow(pGraphicsView);
     pSubWindow->setWindowTitle(tr("Keyboard"));
     pGraphicsView->setParent(pSubWindow);
+    pGraphicsView->setKeyboardPropertiesModel(_pKeyboardPropertiesModel);
     pSubWindow->showMaximized();
 }
 
