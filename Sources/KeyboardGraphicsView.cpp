@@ -71,10 +71,16 @@ void KeyboardGraphicsView::reloadKeyboard()
 {
     onModelReset();
 
-    const int iRows = _pKeyboardPropertiesModel->rowCount();
-    if (iRows)
+    // Search for the "Keys" index and load all keycaps svg elements
+    const auto& start = _pKeyboardPropertiesModel->index(0, 0);
+    const auto& matches = _pKeyboardPropertiesModel->match(start, Qt::DisplayRole, tr("Keys"), 1, Qt::MatchExactly);
+    if (!matches.isEmpty())
     {
-        onRowsInserted(QModelIndex(), 0, iRows-1);
+        const int iRows = _pKeyboardPropertiesModel->rowCount();
+        if (iRows)
+        {
+            onRowsInserted(QModelIndex(), 0, iRows-1);
+        }
     }
 }
 
@@ -87,21 +93,35 @@ void KeyboardGraphicsView::onModelReset()
 
 void KeyboardGraphicsView::onRowsInserted(const QModelIndex& parent, int iFirst, int iLast)
 {
-    if (!parent.isValid())
+    for (int iRow = iFirst; iRow <= iLast; ++iRow)
     {
-        for (int iRow = iFirst; iRow <= iLast; ++iRow)
+        const QModelIndex& indexInserted = _pKeyboardPropertiesModel->index(iRow, 0, parent);
+        if (!parent.isValid())
         {
-            const QModelIndex& indexKey = _pKeyboardPropertiesModel->index(iRow, 0, parent);
-            const QString& sKeyId = indexKey.data().toString();
-            auto pSvgItem = new QGraphicsSvgItem();
-            pSvgItem->setFlag(QGraphicsItem::ItemIsSelectable);
-            pSvgItem->setSharedRenderer(_pSvgRenderer);
-            pSvgItem->setElementId(sKeyId);
-            const auto& bounds = _pSvgRenderer->boundsOnElement(sKeyId);
-            pSvgItem->setPos(bounds.topLeft());
-            scene()->addItem(pSvgItem);
+            // Inserting a top level item
+            if (indexInserted.data().toString() == tr("Keys"))
+            {
+                // Parsing all keycaps under "Keys"
+                const int iKeycaps = _pKeyboardPropertiesModel->rowCount(indexInserted);
+                for (int iKeycap = 0; iKeycap < iKeycaps; ++iKeycap)
+                {
+                    addKeyIndex(indexInserted.child(iKeycap, 0));
+                }
+
+                // All keycaps added, we can fit the keyboard to graphics view
+                fitKeyboardInView();
+            }
         }
     }
+}
 
-    fitKeyboardInView();
+void KeyboardGraphicsView::addKeyIndex(const QModelIndex& indexKey)
+{
+    const QString& sKeyId = indexKey.data().toString();
+    auto pSvgItem = new QGraphicsSvgItem();
+    pSvgItem->setFlag(QGraphicsItem::ItemIsSelectable);
+    pSvgItem->setSharedRenderer(_pSvgRenderer);
+    pSvgItem->setElementId(sKeyId);
+    pSvgItem->setPos(_pSvgRenderer->boundsOnElement(sKeyId).topLeft());
+    scene()->addItem(pSvgItem);
 }

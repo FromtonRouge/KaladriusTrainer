@@ -28,4 +28,9 @@ class KeyboardPropertiesTreeView : public QTreeView
 public:
     KeyboardPropertiesTreeView(QWidget* pParent = nullptr);
     ~KeyboardPropertiesTreeView();
+
+    virtual void setModel(QAbstractItemModel* pModel) override;
+
+private slots:
+    void onRowsInserted(const QModelIndex& parent, int iFirst, int iLast);
 };

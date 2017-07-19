@@ -23,9 +23,46 @@ KeyboardPropertiesTreeView::KeyboardPropertiesTreeView(QWidget* pParent)
     : QTreeView(pParent)
 {
     setAlternatingRowColors(true);
-    setRootIsDecorated(false);
 }
 
 KeyboardPropertiesTreeView::~KeyboardPropertiesTreeView()
 {
+}
+
+void KeyboardPropertiesTreeView::setModel(QAbstractItemModel* pModel)
+{
+    if (model())
+    {
+        model()->disconnect(this);
+    }
+
+    QTreeView::setModel(pModel);
+
+    if (pModel)
+    {
+        connect(pModel, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(onRowsInserted(QModelIndex,int,int)));
+    }
+}
+
+void KeyboardPropertiesTreeView::onRowsInserted(const QModelIndex& parent, int iFirst, int iLast)
+{
+    bool bResizeColumn = false;
+    for (int iRow = iFirst; iRow <= iLast; ++iRow)
+    {
+        const QModelIndex& indexInserted = model()->index(iRow, 0, parent);
+        if (!parent.isValid())
+        {
+            // Inserting a top level item
+            if (indexInserted.data().toString() == tr("Keys"))
+            {
+                bResizeColumn = true;
+                expand(indexInserted);
+            }
+        }
+    }
+
+    if (bResizeColumn)
+    {
+        resizeColumnToContents(0);
+    }
 }

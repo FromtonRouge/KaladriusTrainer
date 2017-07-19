@@ -44,6 +44,9 @@ private slots:
     void onRowsInserted(const QModelIndex& parent, int iFirst, int iLast);
 
 private:
+    void addKeyIndex(const QModelIndex& indexKey);
+
+private:
     QSvgRenderer* _pSvgRenderer;
     KeyboardPropertiesModel* _pKeyboardPropertiesModel;
 };

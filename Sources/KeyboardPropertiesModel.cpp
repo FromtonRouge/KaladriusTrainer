@@ -37,7 +37,7 @@ void KeyboardPropertiesModel::loadKeyboardSvg(const QString& sSvgFilePath)
 {
     _sKeyboardSvgFilePath = sSvgFilePath;
 
-    clear();
+    clear(); // modelReset() signal sent here
     setHorizontalHeaderLabels(QStringList() << tr("Name") << tr("Value"));
 
     QDomDocument document;
@@ -83,16 +83,21 @@ void KeyboardPropertiesModel::loadKeyboardSvg(const QString& sSvgFilePath)
             node = node.nextSibling();
         }
 
+        auto pKeysRoot = new QStandardItem(QIcon(":/Icons/keyboard-full.png"), tr("Keys"));
+        pKeysRoot->setEditable(false);
+
         for (const auto& element : elements)
         {
             const QString& sKeyId = element.attribute("id");
-            QList<QStandardItem*> items;
             auto pItem1 = new QStandardItem(QIcon(":/Icons/keyboard.png"), sKeyId);
             pItem1->setEditable(false);
             auto pItem2 = new QStandardItem();
             pItem2->setEditable(false);
-            items << pItem1 << pItem2;
-            appendRow(items);
+            pKeysRoot->appendRow({pItem1, pItem2}); // no signal sent
         }
+
+        auto pEmptyItem  = new QStandardItem();
+        pEmptyItem->setEditable(false);
+        appendRow({pKeysRoot, pEmptyItem}); // rowsInserted() signal sent here
     }
 }
