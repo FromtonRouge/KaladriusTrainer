@@ -69,28 +69,18 @@ void KeyboardGraphicsView::fitKeyboardInView()
 
 void KeyboardGraphicsView::reloadKeyboard()
 {
-    delete _pSvgRenderer;
-    _pSvgRenderer = new QSvgRenderer(_pKeyboardPropertiesModel->getKeyboardSvgPath(), scene());
+    onModelReset();
 
     const int iRows = _pKeyboardPropertiesModel->rowCount();
-    for (int iRow = 0; iRow < iRows; ++iRow)
+    if (iRows)
     {
-        const QModelIndex& indexKey = _pKeyboardPropertiesModel->index(iRow, 0);
-        const QString& sKeyId = indexKey.data().toString();
-        auto pSvgItem = new QGraphicsSvgItem();
-        pSvgItem->setFlag(QGraphicsItem::ItemIsSelectable);
-        pSvgItem->setSharedRenderer(_pSvgRenderer);
-        pSvgItem->setElementId(sKeyId);
-        const auto& bounds = _pSvgRenderer->boundsOnElement(sKeyId);
-        pSvgItem->setPos(bounds.topLeft());
-        scene()->addItem(pSvgItem);
+        onRowsInserted(QModelIndex(), 0, iRows-1);
     }
 }
 
 void KeyboardGraphicsView::onModelReset()
 {
    scene()->clear();
-
     delete _pSvgRenderer;
     _pSvgRenderer = new QSvgRenderer(_pKeyboardPropertiesModel->getKeyboardSvgPath(), scene());
 }
@@ -99,7 +89,7 @@ void KeyboardGraphicsView::onRowsInserted(const QModelIndex& parent, int iFirst,
 {
     if (!parent.isValid())
     {
-        for (int iRow = iFirst; iRow < iLast+1; ++iRow)
+        for (int iRow = iFirst; iRow <= iLast; ++iRow)
         {
             const QModelIndex& indexKey = _pKeyboardPropertiesModel->index(iRow, 0, parent);
             const QString& sKeyId = indexKey.data().toString();
