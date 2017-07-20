@@ -18,6 +18,7 @@
 // ======================================================================
 
 #include "KeyboardGraphicsView.h"
+#include "KeyboardGraphicsScene.h"
 #include "KeyboardPropertiesModel.h"
 #include <QtWidgets/QGraphicsScene>
 #include <QtWidgets/QMenu>
@@ -25,25 +26,28 @@
 #include <QtGui/QContextMenuEvent>
 #include <QtSvg/QGraphicsSvgItem>
 #include <QtSvg/QSvgRenderer>
+#include <QtCore/QItemSelectionModel>
 #include <QtCore/QTimer>
+#include <iostream>
 
 KeyboardGraphicsView::KeyboardGraphicsView(QWidget* pParent)
     : QGraphicsView(pParent)
     , _pSvgRenderer(nullptr)
     , _pKeyboardPropertiesModel(nullptr)
 {
-    setScene(new QGraphicsScene(this));
+    setScene(new KeyboardGraphicsScene(this));
 }
 
 KeyboardGraphicsView::~KeyboardGraphicsView()
 {
 }
 
-void KeyboardGraphicsView::setKeyboardPropertiesModel(KeyboardPropertiesModel* pKeyboardPropertiesModel)
+void KeyboardGraphicsView::setKeyboardProperties(KeyboardPropertiesModel* pKeyboardPropertiesModel, QItemSelectionModel* pSelectionModel)
 {
     _pKeyboardPropertiesModel = pKeyboardPropertiesModel;
     connect(_pKeyboardPropertiesModel, SIGNAL(modelReset()), this, SLOT(onModelReset()));
     connect(_pKeyboardPropertiesModel, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(onRowsInserted(QModelIndex, int, int)));
+    connect(pSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(onKeyboardPropertiesSelectionChanged(QItemSelection, QItemSelection)));
     reloadKeyboard();
 }
 
@@ -111,6 +115,31 @@ void KeyboardGraphicsView::onRowsInserted(const QModelIndex& parent, int iFirst,
                 // All keycaps added, we can fit the keyboard to graphics view
                 fitKeyboardInView();
             }
+        }
+    }
+}
+
+void KeyboardGraphicsView::onKeyboardPropertiesSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
+{
+    // Handle deselected indexes
+    const auto& deselectedIndexes = deselected.indexes();
+    for (const auto& deselectedIndex : deselectedIndexes)
+    {
+        if (deselectedIndex.column() == 0 && deselectedIndex.data(int(KeyboardPropertiesModel::UserRole::PropertyType)).toInt() == int(KeyboardPropertiesModel::PropertyType::Keycap))
+        {
+            const QString& sKeycapId = deselectedIndex.data().toString();
+            std::cerr << sKeycapId.toStdString() << std::endl;
+        }
+    }
+
+    // Handle selected indexes
+    const auto& selectedIndexes = selected.indexes();
+    for (const auto& selectedIndex : selectedIndexes)
+    {
+        if (selectedIndex.column() == 0 && selectedIndex.data(int(KeyboardPropertiesModel::UserRole::PropertyType)).toInt() == int(KeyboardPropertiesModel::PropertyType::Keycap))
+        {
+            const QString& sKeycapId = selectedIndex.data().toString();
+            std::cout << sKeycapId.toStdString() << std::endl;
         }
     }
 }

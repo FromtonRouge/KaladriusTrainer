@@ -22,6 +22,8 @@
 #include <QtWidgets/QGraphicsView>
 
 class QSvgRenderer;
+class QItemSelectionModel;
+class QItemSelection;
 class KeyboardPropertiesModel;
 class KeyboardGraphicsView : public QGraphicsView
 {
@@ -31,7 +33,7 @@ public:
     KeyboardGraphicsView(QWidget* pParent = nullptr);
     ~KeyboardGraphicsView();
 
-    void setKeyboardPropertiesModel(KeyboardPropertiesModel* pKeyboardPropertiesModel);
+    void setKeyboardProperties(KeyboardPropertiesModel* pKeyboardPropertiesModel, QItemSelectionModel* pSelectionModel);
 
 protected:
     virtual void contextMenuEvent(QContextMenuEvent* pEvent) override;
@@ -42,6 +44,7 @@ private slots:
     void reloadKeyboard();
     void onModelReset();
     void onRowsInserted(const QModelIndex& parent, int iFirst, int iLast);
+    void onKeyboardPropertiesSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected);
 
 private:
     void addKeyIndex(const QModelIndex& indexKey);

@@ -84,12 +84,14 @@ void KeyboardPropertiesModel::loadKeyboardSvg(const QString& sSvgFilePath)
         }
 
         auto pKeysRoot = new QStandardItem(QIcon(":/Icons/keyboard-full.png"), tr("Keys"));
+        pKeysRoot->setData(int(PropertyType::KeycapsRoot));
         pKeysRoot->setEditable(false);
 
         for (const auto& element : elements)
         {
             const QString& sKeyId = element.attribute("id");
             auto pItem1 = new QStandardItem(QIcon(":/Icons/keyboard.png"), sKeyId);
+            pItem1->setData(int(PropertyType::Keycap));
             pItem1->setEditable(false);
             auto pItem2 = new QStandardItem();
             pItem2->setEditable(false);

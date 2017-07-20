@@ -305,7 +305,7 @@ void MainWindow::on_actionKeyboard_Window_triggered()
     auto pSubWindow = _pUi->mdiArea->addSubWindow(pGraphicsView);
     pSubWindow->setWindowTitle(tr("Keyboard"));
     pGraphicsView->setParent(pSubWindow);
-    pGraphicsView->setKeyboardPropertiesModel(_pKeyboardPropertiesModel);
+    pGraphicsView->setKeyboardProperties(_pKeyboardPropertiesModel, _pUi->treeViewKeyboardProperties->selectionModel());
     pSubWindow->showMaximized();
 }
 
