@@ -19,21 +19,19 @@
 
 #pragma once
 
-#include <QtWidgets/QTreeView>
+#include <QtSvg/QGraphicsSvgItem>
 
-class KeyboardPropertiesTreeView : public QTreeView
+class QSvgRenderer;
+class QColor;
+class KeycapGraphicsItem : public QGraphicsSvgItem
 {
-    Q_OBJECT
-
 public:
-    KeyboardPropertiesTreeView(QWidget* pParent = nullptr);
-    ~KeyboardPropertiesTreeView();
+    KeycapGraphicsItem(const QString& sKeycapId, QSvgRenderer* pSvgRenderer, QGraphicsItem* pParent = nullptr);
+    ~KeycapGraphicsItem();
 
-    virtual void setModel(QAbstractItemModel* pModel) override;
+    void setColor(const QColor& color);
 
-public slots:
-    void onGraphicsSceneSelectionChanged();
-
-private slots:
-    void onRowsInserted(const QModelIndex& parent, int iFirst, int iLast);
+protected:
+    virtual QVariant itemChange(GraphicsItemChange change, const QVariant& value) override;
+    virtual void paint(QPainter* pPainter, const QStyleOptionGraphicsItem* pOption, QWidget* pWidget) override;
 };

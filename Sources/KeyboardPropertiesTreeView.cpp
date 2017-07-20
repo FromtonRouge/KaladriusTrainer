@@ -18,11 +18,14 @@
 // ======================================================================
 
 #include "KeyboardPropertiesTreeView.h"
+#include "KeyboardGraphicsScene.h"
+#include "KeycapGraphicsItem.h"
 
 KeyboardPropertiesTreeView::KeyboardPropertiesTreeView(QWidget* pParent)
     : QTreeView(pParent)
 {
     setAlternatingRowColors(true);
+    setSelectionMode(ExtendedSelection);
 }
 
 KeyboardPropertiesTreeView::~KeyboardPropertiesTreeView()
@@ -41,6 +44,38 @@ void KeyboardPropertiesTreeView::setModel(QAbstractItemModel* pModel)
     if (pModel)
     {
         connect(pModel, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(onRowsInserted(QModelIndex,int,int)));
+    }
+}
+
+void KeyboardPropertiesTreeView::onGraphicsSceneSelectionChanged()
+{
+    auto pGraphicsScene = qobject_cast<KeyboardGraphicsScene*>(sender());
+    if (pGraphicsScene)
+    {
+        QModelIndexList matches;
+        const auto& selected = pGraphicsScene->selectedItems();
+        for (auto pSelected : selected)
+        {
+            auto pKeycapItem = dynamic_cast<KeycapGraphicsItem*>(pSelected);
+            if (pKeycapItem)
+            {
+                const QString& sKeycapId = pKeycapItem->elementId();
+                const QModelIndex& start = model()->index(0, 0);
+                matches << model()->match(start, Qt::DisplayRole, sKeycapId, 1, Qt::MatchExactly|Qt::MatchRecursive);
+            }
+        }
+
+        if (!matches.isEmpty())
+        {
+            QItemSelection finalSelection;
+            for (const auto& index : matches)
+            {
+                QItemSelection selection;
+                selection.select(index, index);
+                finalSelection.merge(selection, QItemSelectionModel::Select);
+            }
+            selectionModel()->select(finalSelection, QItemSelectionModel::ClearAndSelect);
+        }
     }
 }
 

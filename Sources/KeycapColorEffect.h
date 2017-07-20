@@ -19,21 +19,19 @@
 
 #pragma once
 
-#include <QtWidgets/QTreeView>
+#include <QtWidgets/QGraphicsEffect>
+#include <QtGui/QColor>
 
-class KeyboardPropertiesTreeView : public QTreeView
+class KeycapColorEffect : public QGraphicsEffect
 {
-    Q_OBJECT
-
 public:
-    KeyboardPropertiesTreeView(QWidget* pParent = nullptr);
-    ~KeyboardPropertiesTreeView();
+    KeycapColorEffect(QObject* pParent = nullptr);
+    ~KeycapColorEffect();
 
-    virtual void setModel(QAbstractItemModel* pModel) override;
+    virtual void draw(QPainter* painter) override;
+    void setColor(const QColor& color);
+    void setAlpha(qreal dAlpha);
 
-public slots:
-    void onGraphicsSceneSelectionChanged();
-
-private slots:
-    void onRowsInserted(const QModelIndex& parent, int iFirst, int iLast);
+private:
+    QColor _color;
 };

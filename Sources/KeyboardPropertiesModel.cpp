@@ -95,11 +95,13 @@ void KeyboardPropertiesModel::loadKeyboardSvg(const QString& sSvgFilePath)
             pItem1->setEditable(false);
             auto pItem2 = new QStandardItem();
             pItem2->setEditable(false);
+            pItem2->setSelectable(false);
             pKeysRoot->appendRow({pItem1, pItem2}); // no signal sent
         }
 
         auto pEmptyItem  = new QStandardItem();
         pEmptyItem->setEditable(false);
+        pEmptyItem->setSelectable(false);
         appendRow({pKeysRoot, pEmptyItem}); // rowsInserted() signal sent here
     }
 }

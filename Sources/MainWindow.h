@@ -33,6 +33,7 @@ namespace Ui
 
 class DictionariesModel;
 class KeyboardPropertiesModel;
+class KeyboardGraphicsScene;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -69,4 +70,5 @@ private:
     Dictionaries _dictionaries;
     DictionariesModel* _pDictionariesModel;
     KeyboardPropertiesModel* _pKeyboardPropertiesModel;
+    KeyboardGraphicsScene* _pKeyboardGraphicsScene; ///< Only 1 scene and potentialy N views on this scene.
 };

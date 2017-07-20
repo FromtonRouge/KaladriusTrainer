@@ -20,6 +20,7 @@
 #include "ui_MainWindow.h"
 #include "MainWindow.h"
 #include "KeyboardGraphicsView.h"
+#include "KeyboardGraphicsScene.h"
 #include "KeyboardPropertiesModel.h"
 #include "DictionariesModel.h"
 #include "DictionaryParser.h"
@@ -52,6 +53,7 @@ MainWindow::MainWindow(QWidget *parent)
     , _pOldStreambufCerr(std::cerr.rdbuf())
     , _pDictionariesModel(new DictionariesModel(this))
     , _pKeyboardPropertiesModel(new KeyboardPropertiesModel(this))
+    , _pKeyboardGraphicsScene(new KeyboardGraphicsScene(this))
 {
     _pUi->setupUi(this);
 
@@ -71,6 +73,7 @@ MainWindow::MainWindow(QWidget *parent)
     _pUi->widgetDictionaries4->setDictionariesModel(_pDictionariesModel);
 
     _pUi->treeViewKeyboardProperties->setModel(_pKeyboardPropertiesModel);
+    _pKeyboardGraphicsScene->setKeyboardProperties(_pUi->treeViewKeyboardProperties);
 
     // Default dock states
     _pUi->dockWidgetKeyboardProperties->hide();
@@ -305,7 +308,7 @@ void MainWindow::on_actionKeyboard_Window_triggered()
     auto pSubWindow = _pUi->mdiArea->addSubWindow(pGraphicsView);
     pSubWindow->setWindowTitle(tr("Keyboard"));
     pGraphicsView->setParent(pSubWindow);
-    pGraphicsView->setKeyboardProperties(_pKeyboardPropertiesModel, _pUi->treeViewKeyboardProperties->selectionModel());
+    pGraphicsView->setScene(_pKeyboardGraphicsScene);
     pSubWindow->showMaximized();
 }
 

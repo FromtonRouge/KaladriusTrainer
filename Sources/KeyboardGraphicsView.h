@@ -21,10 +21,6 @@
 
 #include <QtWidgets/QGraphicsView>
 
-class QSvgRenderer;
-class QItemSelectionModel;
-class QItemSelection;
-class KeyboardPropertiesModel;
 class KeyboardGraphicsView : public QGraphicsView
 {
     Q_OBJECT
@@ -33,23 +29,10 @@ public:
     KeyboardGraphicsView(QWidget* pParent = nullptr);
     ~KeyboardGraphicsView();
 
-    void setKeyboardProperties(KeyboardPropertiesModel* pKeyboardPropertiesModel, QItemSelectionModel* pSelectionModel);
-
 protected:
     virtual void contextMenuEvent(QContextMenuEvent* pEvent) override;
     virtual void resizeEvent(QResizeEvent* pEvent) override;
 
 private slots:
     void fitKeyboardInView();
-    void reloadKeyboard();
-    void onModelReset();
-    void onRowsInserted(const QModelIndex& parent, int iFirst, int iLast);
-    void onKeyboardPropertiesSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected);
-
-private:
-    void addKeyIndex(const QModelIndex& indexKey);
-
-private:
-    QSvgRenderer* _pSvgRenderer;
-    KeyboardPropertiesModel* _pKeyboardPropertiesModel;
 };

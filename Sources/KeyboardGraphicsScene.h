@@ -20,12 +20,35 @@
 #pragma once
 
 #include <QtWidgets/QGraphicsScene>
+#include <QtCore/QHash>
 
+class KeycapGraphicsItem;
+class KeyboardPropertiesModel;
+class KeyboardPropertiesTreeView;
+class QSvgRenderer;
+class QItemSelectionModel;
+class QItemSelection;
 class KeyboardGraphicsScene : public QGraphicsScene
 {
     Q_OBJECT
 
 public:
+    typedef QHash<QString, KeycapGraphicsItem*> DictKeycaps;
+
+public:
     KeyboardGraphicsScene(QObject* pParent);
     ~KeyboardGraphicsScene();
+
+    void setKeyboardProperties(KeyboardPropertiesTreeView* pTreeView);
+    KeycapGraphicsItem* getKeycapItem(const QString& sKeycapId) const;
+
+private slots:
+    void onModelReset();
+    void onRowsInserted(const QModelIndex& parent, int iFirst, int iLast);
+    void onKeyboardPropertiesSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected);
+
+private:
+    QSvgRenderer* _pSvgRenderer;
+    KeyboardPropertiesModel* _pKeyboardPropertiesModel;
+    DictKeycaps _dictKeycaps;
 };
