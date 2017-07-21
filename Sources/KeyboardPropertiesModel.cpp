@@ -20,6 +20,7 @@
 #include "KeyboardPropertiesModel.h"
 #include <QtXml/QDomDocument>
 #include <QtGui/QStandardItem>
+#include <QtGui/QFont>
 #include <QtCore/QFile>
 #include <QtCore/QStringList>
 #include <QtCore/QRegularExpression>
@@ -32,6 +33,16 @@ KeyboardPropertiesModel::KeyboardPropertiesModel(QObject* pParent)
 
 KeyboardPropertiesModel::~KeyboardPropertiesModel()
 {
+}
+
+QModelIndex KeyboardPropertiesModel::getParentKeycap(const QModelIndex& indexInKeycapHierarchy)
+{
+    QModelIndex indexKeycap = indexInKeycapHierarchy;
+    while (indexKeycap.isValid() && (indexKeycap.data(int(KeyboardPropertiesModel::UserRole::PropertyTypeRole)).toInt() != int(KeyboardPropertiesModel::PropertyType::Keycap)))
+    {
+        indexKeycap = indexKeycap.parent();
+    }
+    return indexKeycap;
 }
 
 void KeyboardPropertiesModel::loadKeyboardSvg(const QString& sSvgFilePath)
@@ -109,14 +120,40 @@ void KeyboardPropertiesModel::loadKeyboardSvg(const QString& sSvgFilePath)
                 }
             }
 
-            auto pItem1 = new QStandardItem(QIcon(":/Icons/keyboard.png"), sKeyId);
-            pItem1->setData(int(PropertyType::Keycap), int(UserRole::PropertyTypeRole));
-            pItem1->setData(fAngle, int(UserRole::AngleRole));
-            pItem1->setEditable(false);
-            auto pItem2 = new QStandardItem();
-            pItem2->setEditable(false);
-            pItem2->setSelectable(false);
-            pKeysRoot->appendRow({pItem1, pItem2}); // no signal sent
+            auto pKeycapItem = new QStandardItem(QIcon(":/Icons/keyboard.png"), sKeyId);
+            pKeycapItem->setData(int(PropertyType::Keycap), int(UserRole::PropertyTypeRole));
+            pKeycapItem->setData(fAngle, int(UserRole::AngleRole));
+            pKeycapItem->setEditable(false);
+
+            // Keycap attributes item
+            {
+                auto pCurrentParentItem = pKeycapItem;
+                auto addAttribute = [&pCurrentParentItem](const QString& sName, const QVariant& value) -> QStandardItem*
+                {
+                    auto pAttrCol0 = new QStandardItem(QIcon(":/Icons/document-attribute.png"), sName);
+                    pAttrCol0->setData(int(PropertyType::Attribute), int(UserRole::PropertyTypeRole));
+                    pAttrCol0->setEditable(false);
+                    auto pAttrCol1 = new QStandardItem();
+                    pAttrCol1->setData(value, Qt::EditRole);
+                    pAttrCol1->setData(int(PropertyType::Attribute), int(UserRole::PropertyTypeRole));
+                    pCurrentParentItem->appendRow({pAttrCol0, pAttrCol1}); // no signal sent
+                    return pAttrCol0;
+                };
+
+                pCurrentParentItem = addAttribute(tr("Label"), sKeyId);
+                addAttribute(tr("Font"), QFont("Arial", 7));
+                addAttribute(tr("X"), qreal(0));
+                addAttribute(tr("Y"), qreal(0));
+
+                pCurrentParentItem = pKeycapItem;
+                addAttribute(tr("Color"), QColor());
+            }
+
+            auto pEmptyItem = new QStandardItem();
+            pEmptyItem->setEditable(false);
+            pEmptyItem->setSelectable(false);
+
+            pKeysRoot->appendRow({pKeycapItem, pEmptyItem}); // no signal sent
         }
 
         auto pEmptyItem  = new QStandardItem();

@@ -32,7 +32,8 @@ public:
     enum class PropertyType
     {
         KeycapsRoot,
-        Keycap
+        Keycap,
+        Attribute
     };
 
     enum class UserRole
@@ -45,6 +46,7 @@ public:
     KeyboardPropertiesModel(QObject* pParent = nullptr);
     ~KeyboardPropertiesModel();
 
+    static QModelIndex getParentKeycap(const QModelIndex& indexInKeycapHierarchy);
     void loadKeyboardSvg(const QString& sSvgFilePath);
     const QString& getKeyboardSvgPath() const {return _sKeyboardSvgFilePath;}
 

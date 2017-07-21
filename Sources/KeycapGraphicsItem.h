@@ -32,7 +32,9 @@ public:
 
     void setColor(const QColor& color);
     void setText(const QString& sText);
-    void setTextSize(int iSize);
+    void setTextFont(const QFont& font);
+    void setTextOffsetX(qreal fX);
+    void setTextOffsetY(qreal fY);
 
 protected:
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant& value) override;
@@ -45,4 +47,5 @@ private:
     QGraphicsSimpleTextItem* _pTextItem;
     float _fAngle;
     int _iTextPixelSize;
+    QPointF _textOffset;
 };

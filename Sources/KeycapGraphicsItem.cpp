@@ -63,12 +63,21 @@ void KeycapGraphicsItem::setText(const QString& sText)
     centerText();
 }
 
-void KeycapGraphicsItem::setTextSize(int iSize)
+void KeycapGraphicsItem::setTextFont(const QFont& font)
 {
-    _iTextPixelSize = iSize;
-    QFont font = _pTextItem->font();
-    font.setPixelSize(_iTextPixelSize);
     _pTextItem->setFont(font);
+    centerText();
+}
+
+void KeycapGraphicsItem::setTextOffsetX(qreal fX)
+{
+    _textOffset.setX(fX);
+    centerText();
+}
+
+void KeycapGraphicsItem::setTextOffsetY(qreal fY)
+{
+    _textOffset.setY(-fY);
     centerText();
 }
 
@@ -109,5 +118,5 @@ void KeycapGraphicsItem::centerText()
     const auto& rectText = _pTextItem->boundingRect();
     _pTextItem->setTransformOriginPoint(rectText.center());
     _pTextItem->setRotation(_fAngle);
-    _pTextItem->setPos(rectKeycap.center()-rectText.center()-QPointF(0, 4));
+    _pTextItem->setPos(rectKeycap.center()-rectText.center()-QPointF(0, 4) + _textOffset);
 }

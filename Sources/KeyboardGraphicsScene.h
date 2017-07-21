@@ -41,10 +41,12 @@ public:
 
     void setKeyboardProperties(KeyboardPropertiesTreeView* pTreeView);
     KeycapGraphicsItem* getKeycapItem(const QString& sKeycapId) const;
+    KeycapGraphicsItem* getKeycapItem(const QModelIndex& indexKeycap) const;
 
 private slots:
     void onModelReset();
     void onRowsInserted(const QModelIndex& parent, int iFirst, int iLast);
+    void onDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight, const QVector<int>& roles);
     void onKeyboardPropertiesSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected);
 
 private:

@@ -20,12 +20,15 @@
 #include "KeyboardPropertiesTreeView.h"
 #include "KeyboardGraphicsScene.h"
 #include "KeycapGraphicsItem.h"
+#include <QtWidgets/QHeaderView>
 
 KeyboardPropertiesTreeView::KeyboardPropertiesTreeView(QWidget* pParent)
     : QTreeView(pParent)
 {
     setAlternatingRowColors(true);
     setSelectionMode(ExtendedSelection);
+    setEditTriggers(SelectedClicked|DoubleClicked|AnyKeyPressed);
+    header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 }
 
 KeyboardPropertiesTreeView::~KeyboardPropertiesTreeView()

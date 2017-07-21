@@ -22,7 +22,10 @@
 #include "KeyboardPropertiesTreeView.h"
 #include "KeycapGraphicsItem.h"
 #include <QtSvg/QSvgRenderer>
+#include <QtGui/QFont>
 #include <QtCore/QItemSelectionModel>
+#include <QtCore/QSignalBlocker>
+#include <functional>
 #include <iostream>
 
 KeyboardGraphicsScene::KeyboardGraphicsScene(QObject* pParent)
@@ -41,6 +44,7 @@ void KeyboardGraphicsScene::setKeyboardProperties(KeyboardPropertiesTreeView* pT
     _pKeyboardPropertiesModel = qobject_cast<KeyboardPropertiesModel*>(pTreeView->model());
     connect(_pKeyboardPropertiesModel, SIGNAL(modelReset()), this, SLOT(onModelReset()));
     connect(_pKeyboardPropertiesModel, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(onRowsInserted(QModelIndex, int, int)));
+    connect(_pKeyboardPropertiesModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(onDataChanged(QModelIndex,QModelIndex,QVector<int>)));
     connect(pTreeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(onKeyboardPropertiesSelectionChanged(QItemSelection, QItemSelection)));
     connect(this, SIGNAL(selectionChanged()), pTreeView, SLOT(onGraphicsSceneSelectionChanged()));
 }
@@ -53,6 +57,11 @@ KeycapGraphicsItem*KeyboardGraphicsScene::getKeycapItem(const QString& sKeycapId
         return it.value();
     }
     return nullptr;
+}
+
+KeycapGraphicsItem*KeyboardGraphicsScene::getKeycapItem(const QModelIndex& indexKeycap) const
+{
+    return getKeycapItem(indexKeycap.data().toString());
 }
 
 void KeyboardGraphicsScene::onModelReset()
@@ -81,10 +90,79 @@ void KeyboardGraphicsScene::onRowsInserted(const QModelIndex& parent, int iFirst
                     const QString& sKeycapId = indexKeycap.data().toString();
                     const float fAngle = indexKeycap.data(int(KeyboardPropertiesModel::UserRole::AngleRole)).toFloat();
                     auto pKeycapGraphicsItem = new KeycapGraphicsItem(sKeycapId, fAngle, _pSvgRenderer);
-                    pKeycapGraphicsItem->setText(sKeycapId);
-                    pKeycapGraphicsItem->setTextSize(12);
                     addItem(pKeycapGraphicsItem);
                     _dictKeycaps.insert(sKeycapId, pKeycapGraphicsItem);
+
+                    std::function<void (const QModelIndex&)> traverse = [&](const QModelIndex& index)
+                    {
+                        const int iColumns = _pKeyboardPropertiesModel->columnCount();
+                        onDataChanged(index, index.sibling(index.row(), iColumns-1), {});
+                        const int iRows = _pKeyboardPropertiesModel->rowCount(index);
+                        for (int iRow = 0; iRow < iRows; ++iRow)
+                        {
+                            traverse(index.child(iRow, 0));
+                        }
+                    };
+                    traverse(indexKeycap);
+                }
+            }
+        }
+    }
+}
+
+void KeyboardGraphicsScene::onDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight, const QVector<int>& roles)
+{
+    if (!topLeft.isValid() || !bottomRight.isValid())
+    {
+        return;
+    }
+
+    if (roles.isEmpty() || roles.contains(Qt::EditRole))
+    {
+        const QModelIndex& parent = topLeft.parent();
+        const QModelIndex& indexKeycap = KeyboardPropertiesModel::getParentKeycap(parent);
+        if (!indexKeycap.isValid())
+        {
+            return;
+        }
+
+        auto pKeycapItem = getKeycapItem(indexKeycap);
+        if (!pKeycapItem)
+        {
+            return;
+        }
+
+        const int iTopRow = topLeft.row();
+        const int iBottomRow = bottomRight.row();
+        const int iLeftColumn = topLeft.column();
+        const int iRightColumn = bottomRight.column();
+        for (int iRow = iTopRow; iRow <= iBottomRow; ++iRow)
+        {
+            const QModelIndex& indexName = _pKeyboardPropertiesModel->index(iRow, 0, parent);
+            const QString& sName = indexName.data().toString();
+            for (int iColumn = iLeftColumn; iColumn <= iRightColumn; ++iColumn)
+            {
+                const QModelIndex& indexChanged = indexName.sibling(iRow, iColumn);
+                const QVariant& value = indexChanged.data(Qt::EditRole);
+                if (sName == tr("Label"))
+                {
+                    pKeycapItem->setText(value.toString());
+                }
+                else if (sName == tr("Font"))
+                {
+                    pKeycapItem->setTextFont(value.value<QFont>());
+                }
+                else if (sName == tr("X"))
+                {
+                    pKeycapItem->setTextOffsetX(value.toReal());
+                }
+                else if (sName == tr("Y"))
+                {
+                    pKeycapItem->setTextOffsetY(value.toReal());
+                }
+                else if (sName == tr("Color"))
+                {
+                    pKeycapItem->setColor(value.value<QColor>());
                 }
             }
         }
@@ -93,14 +171,15 @@ void KeyboardGraphicsScene::onRowsInserted(const QModelIndex& parent, int iFirst
 
 void KeyboardGraphicsScene::onKeyboardPropertiesSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
 {
+    QSignalBlocker blocker(this);
+
     // Handle deselected indexes
     const auto& deselectedIndexes = deselected.indexes();
     for (const auto& deselectedIndex : deselectedIndexes)
     {
-        if (deselectedIndex.column() == 0 && deselectedIndex.data(int(KeyboardPropertiesModel::UserRole::PropertyTypeRole)).toInt() == int(KeyboardPropertiesModel::PropertyType::Keycap))
+        if (deselectedIndex.column() == 0)
         {
-            const QString& sKeycapId = deselectedIndex.data().toString();
-            auto pKeycapItem = getKeycapItem(sKeycapId);
+            auto pKeycapItem = getKeycapItem(KeyboardPropertiesModel::getParentKeycap(deselectedIndex));
             if (pKeycapItem)
             {
                 pKeycapItem->setSelected(false);
@@ -112,10 +191,9 @@ void KeyboardGraphicsScene::onKeyboardPropertiesSelectionChanged(const QItemSele
     const auto& selectedIndexes = selected.indexes();
     for (const auto& selectedIndex : selectedIndexes)
     {
-        if (selectedIndex.column() == 0 && selectedIndex.data(int(KeyboardPropertiesModel::UserRole::PropertyTypeRole)).toInt() == int(KeyboardPropertiesModel::PropertyType::Keycap))
+        if (selectedIndex.column() == 0)
         {
-            const QString& sKeycapId = selectedIndex.data().toString();
-            auto pKeycapItem = getKeycapItem(sKeycapId);
+            auto pKeycapItem = getKeycapItem(KeyboardPropertiesModel::getParentKeycap(selectedIndex));
             if (pKeycapItem)
             {
                 pKeycapItem->setSelected(true);

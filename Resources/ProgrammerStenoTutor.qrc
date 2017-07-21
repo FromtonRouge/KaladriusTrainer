@@ -13,5 +13,6 @@
         <file>Icons/question.png</file>
         <file>Svgs/ergodox.svg</file>
         <file>Icons/keyboard.png</file>
+        <file>Icons/document-attribute.png</file>
     </qresource>
 </RCC>
