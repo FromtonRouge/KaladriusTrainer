@@ -22,6 +22,7 @@
 #include <QtGui/QStandardItem>
 #include <QtCore/QFile>
 #include <QtCore/QStringList>
+#include <QtCore/QRegularExpression>
 #include <iostream>
 
 KeyboardPropertiesModel::KeyboardPropertiesModel(QObject* pParent)
@@ -84,14 +85,33 @@ void KeyboardPropertiesModel::loadKeyboardSvg(const QString& sSvgFilePath)
         }
 
         auto pKeysRoot = new QStandardItem(QIcon(":/Icons/keyboard-full.png"), tr("Keys"));
-        pKeysRoot->setData(int(PropertyType::KeycapsRoot));
+        pKeysRoot->setData(int(PropertyType::KeycapsRoot), int(UserRole::PropertyTypeRole));
         pKeysRoot->setEditable(false);
 
         for (const auto& element : elements)
         {
             const QString& sKeyId = element.attribute("id");
+
+            // Check for transform
+            float fAngle = 0;
+            if (element.hasAttribute("transform"))
+            {
+                QString sTransform = element.attribute("transform");
+                if (sTransform.contains("rotate"))
+                {
+                    sTransform.replace(QRegularExpression("(rotate\\()|\\)"), "");
+                    const QStringList& params = sTransform.split(" ");
+                    if (!params.isEmpty())
+                    {
+                        const QString& sAngle = params.front();
+                        fAngle = sAngle.toFloat();
+                    }
+                }
+            }
+
             auto pItem1 = new QStandardItem(QIcon(":/Icons/keyboard.png"), sKeyId);
-            pItem1->setData(int(PropertyType::Keycap));
+            pItem1->setData(int(PropertyType::Keycap), int(UserRole::PropertyTypeRole));
+            pItem1->setData(fAngle, int(UserRole::AngleRole));
             pItem1->setEditable(false);
             auto pItem2 = new QStandardItem();
             pItem2->setEditable(false);
@@ -104,4 +124,6 @@ void KeyboardPropertiesModel::loadKeyboardSvg(const QString& sSvgFilePath)
         pEmptyItem->setSelectable(false);
         appendRow({pKeysRoot, pEmptyItem}); // rowsInserted() signal sent here
     }
+
+    emit keyboardLoaded();
 }

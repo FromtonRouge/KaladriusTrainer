@@ -305,6 +305,7 @@ void MainWindow::on_actionAbout_triggered()
 void MainWindow::on_actionKeyboard_Window_triggered()
 {
     auto pGraphicsView = new KeyboardGraphicsView();
+    connect(_pKeyboardPropertiesModel, SIGNAL(keyboardLoaded()), pGraphicsView, SLOT(fitKeyboardInView()));
     auto pSubWindow = _pUi->mdiArea->addSubWindow(pGraphicsView);
     pSubWindow->setWindowTitle(tr("Keyboard"));
     pGraphicsView->setParent(pSubWindow);

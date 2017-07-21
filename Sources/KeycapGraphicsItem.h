@@ -21,17 +21,28 @@
 
 #include <QtSvg/QGraphicsSvgItem>
 
+class QGraphicsSimpleTextItem;
 class QSvgRenderer;
 class QColor;
 class KeycapGraphicsItem : public QGraphicsSvgItem
 {
 public:
-    KeycapGraphicsItem(const QString& sKeycapId, QSvgRenderer* pSvgRenderer, QGraphicsItem* pParent = nullptr);
+    KeycapGraphicsItem(const QString& sKeycapId, float fAngle, QSvgRenderer* pSvgRenderer, QGraphicsItem* pParent = nullptr);
     ~KeycapGraphicsItem();
 
     void setColor(const QColor& color);
+    void setText(const QString& sText);
+    void setTextSize(int iSize);
 
 protected:
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant& value) override;
     virtual void paint(QPainter* pPainter, const QStyleOptionGraphicsItem* pOption, QWidget* pWidget) override;
+
+private:
+    void centerText();
+
+private:
+    QGraphicsSimpleTextItem* _pTextItem;
+    float _fAngle;
+    int _iTextPixelSize;
 };

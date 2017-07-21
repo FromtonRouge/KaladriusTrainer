@@ -20,10 +20,14 @@
 #include "KeycapGraphicsItem.h"
 #include "KeycapColorEffect.h"
 #include <QtWidgets/QStyleOptionGraphicsItem>
+#include <QtWidgets/QGraphicsSimpleTextItem>
+#include <QtGui/QFont>
 #include <QtSvg/QSvgRenderer>
 
-KeycapGraphicsItem::KeycapGraphicsItem(const QString& sKeycapId, QSvgRenderer* pSvgRenderer, QGraphicsItem* pParent)
+KeycapGraphicsItem::KeycapGraphicsItem(const QString& sKeycapId, float fAngle, QSvgRenderer* pSvgRenderer, QGraphicsItem* pParent)
     : QGraphicsSvgItem(pParent)
+    , _fAngle(fAngle)
+    , _iTextPixelSize(20)
 {
     setSharedRenderer(pSvgRenderer);
     setFlag(QGraphicsItem::ItemIsSelectable);
@@ -31,6 +35,8 @@ KeycapGraphicsItem::KeycapGraphicsItem(const QString& sKeycapId, QSvgRenderer* p
     setPos(pSvgRenderer->boundsOnElement(sKeycapId).topLeft());
     setGraphicsEffect(new KeycapColorEffect(this));
     setColor(QColor());
+
+    _pTextItem = new QGraphicsSimpleTextItem(this);
 }
 
 KeycapGraphicsItem::~KeycapGraphicsItem()
@@ -51,6 +57,21 @@ void KeycapGraphicsItem::setColor(const QColor& color)
     }
 }
 
+void KeycapGraphicsItem::setText(const QString& sText)
+{
+    _pTextItem->setText(sText);
+    centerText();
+}
+
+void KeycapGraphicsItem::setTextSize(int iSize)
+{
+    _iTextPixelSize = iSize;
+    QFont font = _pTextItem->font();
+    font.setPixelSize(_iTextPixelSize);
+    _pTextItem->setFont(font);
+    centerText();
+}
+
 QVariant KeycapGraphicsItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value)
 {
     switch (change)
@@ -59,7 +80,7 @@ QVariant KeycapGraphicsItem::itemChange(QGraphicsItem::GraphicsItemChange change
         {
             if (value.toBool())
             {
-                setColor(Qt::red);
+                setColor(Qt::blue);
             }
             else
             {
@@ -69,6 +90,7 @@ QVariant KeycapGraphicsItem::itemChange(QGraphicsItem::GraphicsItemChange change
         }
     default:
         {
+            break;
         }
     }
     return QGraphicsSvgItem::itemChange(change, value);
@@ -79,4 +101,13 @@ void KeycapGraphicsItem::paint(QPainter* pPainter, const QStyleOptionGraphicsIte
     QStyleOptionGraphicsItem options(*pOption);
     options.state &= ~QStyle::State_Selected;
     return QGraphicsSvgItem::paint(pPainter, &options, pWidget);
+}
+
+void KeycapGraphicsItem::centerText()
+{
+    const auto& rectKeycap = boundingRect();
+    const auto& rectText = _pTextItem->boundingRect();
+    _pTextItem->setTransformOriginPoint(rectText.center());
+    _pTextItem->setRotation(_fAngle);
+    _pTextItem->setPos(rectKeycap.center()-rectText.center()-QPointF(0, 4));
 }

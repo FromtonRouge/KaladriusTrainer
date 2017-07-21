@@ -25,6 +25,9 @@ class KeyboardPropertiesModel : public QStandardItemModel
 {
     Q_OBJECT
 
+signals:
+    void keyboardLoaded();
+
 public:
     enum class PropertyType
     {
@@ -34,7 +37,8 @@ public:
 
     enum class UserRole
     {
-        PropertyType = Qt::UserRole + 1
+        PropertyTypeRole = Qt::UserRole + 1,
+        AngleRole
     };
 
 public:

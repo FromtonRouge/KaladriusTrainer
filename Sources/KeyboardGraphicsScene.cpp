@@ -77,8 +77,12 @@ void KeyboardGraphicsScene::onRowsInserted(const QModelIndex& parent, int iFirst
                 const int iKeycaps = _pKeyboardPropertiesModel->rowCount(indexInserted);
                 for (int iKeycap = 0; iKeycap < iKeycaps; ++iKeycap)
                 {
-                    const QString& sKeycapId = indexInserted.child(iKeycap, 0).data().toString();
-                    auto pKeycapGraphicsItem = new KeycapGraphicsItem(sKeycapId, _pSvgRenderer);
+                    const QModelIndex& indexKeycap = indexInserted.child(iKeycap, 0);
+                    const QString& sKeycapId = indexKeycap.data().toString();
+                    const float fAngle = indexKeycap.data(int(KeyboardPropertiesModel::UserRole::AngleRole)).toFloat();
+                    auto pKeycapGraphicsItem = new KeycapGraphicsItem(sKeycapId, fAngle, _pSvgRenderer);
+                    pKeycapGraphicsItem->setText(sKeycapId);
+                    pKeycapGraphicsItem->setTextSize(12);
                     addItem(pKeycapGraphicsItem);
                     _dictKeycaps.insert(sKeycapId, pKeycapGraphicsItem);
                 }
@@ -93,7 +97,7 @@ void KeyboardGraphicsScene::onKeyboardPropertiesSelectionChanged(const QItemSele
     const auto& deselectedIndexes = deselected.indexes();
     for (const auto& deselectedIndex : deselectedIndexes)
     {
-        if (deselectedIndex.column() == 0 && deselectedIndex.data(int(KeyboardPropertiesModel::UserRole::PropertyType)).toInt() == int(KeyboardPropertiesModel::PropertyType::Keycap))
+        if (deselectedIndex.column() == 0 && deselectedIndex.data(int(KeyboardPropertiesModel::UserRole::PropertyTypeRole)).toInt() == int(KeyboardPropertiesModel::PropertyType::Keycap))
         {
             const QString& sKeycapId = deselectedIndex.data().toString();
             auto pKeycapItem = getKeycapItem(sKeycapId);
@@ -108,7 +112,7 @@ void KeyboardGraphicsScene::onKeyboardPropertiesSelectionChanged(const QItemSele
     const auto& selectedIndexes = selected.indexes();
     for (const auto& selectedIndex : selectedIndexes)
     {
-        if (selectedIndex.column() == 0 && selectedIndex.data(int(KeyboardPropertiesModel::UserRole::PropertyType)).toInt() == int(KeyboardPropertiesModel::PropertyType::Keycap))
+        if (selectedIndex.column() == 0 && selectedIndex.data(int(KeyboardPropertiesModel::UserRole::PropertyTypeRole)).toInt() == int(KeyboardPropertiesModel::PropertyType::Keycap))
         {
             const QString& sKeycapId = selectedIndex.data().toString();
             auto pKeycapItem = getKeycapItem(sKeycapId);
