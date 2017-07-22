@@ -25,6 +25,7 @@
 #include <QtWidgets/QGraphicsRectItem>
 #include <QtWidgets/QGraphicsScene>
 #include <QtGui/QFont>
+#include <QtGui/QPainter>
 #include <QtGui/QMatrix>
 #include <QtSvg/QSvgRenderer>
 #include <QDebug>
@@ -45,9 +46,9 @@ KeycapGraphicsItem::KeycapGraphicsItem( const QString& sKeycapId,
     setFlag(QGraphicsItem::ItemIsSelectable);
     setElementId(sKeycapId);
 
-    const auto& matrixScene = pSvgRenderer->matrixForElement(sKeycapId);
+    _matrixScene = pSvgRenderer->matrixForElement(sKeycapId);
     const auto& rectItem = pSvgRenderer->boundsOnElement(sKeycapId);
-    const auto& rectScene = matrixScene.mapRect(rectItem);
+    const auto& rectScene = _matrixScene.mapRect(rectItem);
     const QPointF& pointScene = rectScene.topLeft();
     setPos(pointScene);
     auto pGraphicsEffect = new KeycapColorEffect(this);
@@ -55,11 +56,11 @@ KeycapGraphicsItem::KeycapGraphicsItem( const QString& sKeycapId,
     pGraphicsEffect->setEnabled(false);
 
     // We only use this rect as an invisible parent for _pTextItem
-    const QPointF& pointOuterBorderInScene = matrixScene.map(_rectOuterBorder.topLeft());
+    const QPointF& pointOuterBorderInScene = _matrixScene.map(_rectOuterBorder.topLeft());
     const QPointF& pointInParentItem = mapFromScene(pointOuterBorderInScene);
     _pOuterBorderItem = new QGraphicsRectItem(QRectF(QPointF(), _rectOuterBorder.size()), this);
     _pOuterBorderItem->setPos(pointInParentItem);
-    const QPointF& pointRotationInParentItem = mapFromScene(matrixScene.map(_rotationOrigin));
+    const QPointF& pointRotationInParentItem = mapFromScene(_matrixScene.map(_rotationOrigin));
     const QPointF& poinRotationInRectItem = _pOuterBorderItem->mapFromParent(pointRotationInParentItem);
     _pRotation = new QGraphicsRotation(this);
     _pRotation->setAngle(_dRotationAngle);
@@ -107,6 +108,34 @@ void KeycapGraphicsItem::setTextOffsetY(qreal fY)
     centerText();
 }
 
+QPainterPath KeycapGraphicsItem::shape() const
+{
+    QPainterPath result;
+
+    // Rebuild the rotation transform
+    QMatrix4x4 m;
+    const QPointF& pointRotationInItem = mapFromScene(_matrixScene.map(_rotationOrigin));
+    QGraphicsRotation rotation;
+    rotation.setAngle(_dRotationAngle);
+    rotation.setOrigin(QVector3D(pointRotationInItem.x(), pointRotationInItem.y(), 0));
+    rotation.applyTo(&m);
+
+    // Apply the rotation the the rectangle and build the shape path
+    const QTransform& t = m.toTransform();
+    QRectF rectOuterBorder = _pOuterBorderItem->rect();
+    rectOuterBorder.moveTo(_pOuterBorderItem->pos());
+    QPointF p1 = t.map(rectOuterBorder.topLeft());
+    QPointF p2 = t.map(rectOuterBorder.topRight());
+    QPointF p3 = t.map(rectOuterBorder.bottomRight());
+    QPointF p4 = t.map(rectOuterBorder.bottomLeft());
+    result.moveTo(p1);
+    result.lineTo(p2);
+    result.lineTo(p3);
+    result.lineTo(p4);
+    result.lineTo(p1);
+    return result;
+}
+
 QVariant KeycapGraphicsItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value)
 {
     switch (change)
@@ -137,7 +166,7 @@ void KeycapGraphicsItem::paint(QPainter* pPainter, const QStyleOptionGraphicsIte
 {
     QStyleOptionGraphicsItem options(*pOption);
     options.state &= ~QStyle::State_Selected;
-    return QGraphicsSvgItem::paint(pPainter, &options, pWidget);
+    QGraphicsSvgItem::paint(pPainter, &options, pWidget);
 }
 
 void KeycapGraphicsItem::centerText()

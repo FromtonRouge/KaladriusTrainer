@@ -20,6 +20,7 @@
 #pragma once
 
 #include <QtSvg/QGraphicsSvgItem>
+#include <QtGui/QMatrix>
 #include <QtCore/QRectF>
 #include <QtCore/QPointF>
 
@@ -45,6 +46,8 @@ public:
     void setTextOffsetX(qreal fX);
     void setTextOffsetY(qreal fY);
 
+    virtual QPainterPath shape() const override;
+
 protected:
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant& value) override;
     virtual void paint(QPainter* pPainter, const QStyleOptionGraphicsItem* pOption, QWidget* pWidget) override;
@@ -53,6 +56,7 @@ private:
     void centerText();
 
 private:
+    QMatrix _matrixScene;
     QGraphicsRectItem* _pOuterBorderItem;
     QGraphicsSimpleTextItem* _pTextItem;
     qreal _dRotationAngle;

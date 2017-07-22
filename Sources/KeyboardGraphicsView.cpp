@@ -24,6 +24,7 @@
 KeyboardGraphicsView::KeyboardGraphicsView(QWidget* pParent)
     : QGraphicsView(pParent)
 {
+    setDragMode(RubberBandDrag);
 }
 
 KeyboardGraphicsView::~KeyboardGraphicsView()
