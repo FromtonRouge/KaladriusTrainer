@@ -24,6 +24,7 @@
 #include <QtWidgets/QGraphicsRotation>
 #include <QtWidgets/QGraphicsRectItem>
 #include <QtWidgets/QGraphicsScene>
+#include <QtWidgets/QGraphicsSceneMouseEvent>
 #include <QtGui/QFont>
 #include <QtGui/QPainter>
 #include <QtGui/QMatrix>
@@ -167,6 +168,15 @@ void KeycapGraphicsItem::paint(QPainter* pPainter, const QStyleOptionGraphicsIte
     QStyleOptionGraphicsItem options(*pOption);
     options.state &= ~QStyle::State_Selected;
     QGraphicsSvgItem::paint(pPainter, &options, pWidget);
+}
+
+void KeycapGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent* pEvent)
+{
+    QGraphicsSvgItem::mousePressEvent(pEvent);
+    if (pEvent->modifiers() & Qt::ShiftModifier)
+    {
+        pEvent->ignore();
+    }
 }
 
 void KeycapGraphicsItem::centerText()
