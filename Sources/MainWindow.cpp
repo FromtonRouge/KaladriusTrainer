@@ -74,9 +74,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     _pUi->treeViewKeyboardProperties->setModel(_pKeyboardPropertiesModel);
     _pKeyboardGraphicsScene->setKeyboardProperties(_pUi->treeViewKeyboardProperties);
+    _pUi->widgetKeycapProperties->setKeyboardProperties(_pUi->treeViewKeyboardProperties);
 
     // Default dock states
     _pUi->dockWidgetKeyboardProperties->hide();
+    _pUi->dockWidgetKeycapProperties->hide();
     _pUi->dockWidgetDictionaries3->hide();
     _pUi->dockWidgetDictionaries4->hide();
     _pUi->dockWidgetLogs->hide();

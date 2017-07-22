@@ -277,6 +277,33 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="dockWidgetKeycapProperties">
+   <property name="windowTitle">
+    <string>Keycap Properties</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_7">
+    <layout class="QGridLayout" name="gridLayout_8">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item row="0" column="0">
+      <widget class="KeycapPropertiesWidget" name="widgetKeycapProperties" native="true"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="actionQuit">
    <property name="icon">
     <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
@@ -377,6 +404,12 @@
    <class>KeyboardPropertiesTreeView</class>
    <extends>QTreeView</extends>
    <header>KeyboardPropertiesTreeView.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KeycapPropertiesWidget</class>
+   <extends>QWidget</extends>
+   <header>KeycapPropertiesWidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>
