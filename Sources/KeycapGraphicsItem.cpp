@@ -21,22 +21,54 @@
 #include "KeycapColorEffect.h"
 #include <QtWidgets/QStyleOptionGraphicsItem>
 #include <QtWidgets/QGraphicsSimpleTextItem>
+#include <QtWidgets/QGraphicsRotation>
+#include <QtWidgets/QGraphicsRectItem>
+#include <QtWidgets/QGraphicsScene>
 #include <QtGui/QFont>
+#include <QtGui/QMatrix>
 #include <QtSvg/QSvgRenderer>
+#include <QDebug>
 
-KeycapGraphicsItem::KeycapGraphicsItem(const QString& sKeycapId, float fAngle, QSvgRenderer* pSvgRenderer, QGraphicsItem* pParent)
+KeycapGraphicsItem::KeycapGraphicsItem( const QString& sKeycapId,
+                                        qreal dRotationAngle,
+                                        const QPointF& rotationOrigin,
+                                        const QRectF& rectOuterBorder,
+                                        QSvgRenderer* pSvgRenderer,
+                                        QGraphicsItem* pParent)
     : QGraphicsSvgItem(pParent)
-    , _fAngle(fAngle)
     , _iTextPixelSize(20)
+    , _dRotationAngle(dRotationAngle)
+    , _rotationOrigin(rotationOrigin)
+    , _rectOuterBorder(rectOuterBorder)
 {
     setSharedRenderer(pSvgRenderer);
     setFlag(QGraphicsItem::ItemIsSelectable);
     setElementId(sKeycapId);
-    setPos(pSvgRenderer->boundsOnElement(sKeycapId).topLeft());
+
+    const auto& matrixScene = pSvgRenderer->matrixForElement(sKeycapId);
+    const auto& rectItem = pSvgRenderer->boundsOnElement(sKeycapId);
+    const auto& rectScene = matrixScene.mapRect(rectItem);
+    const QPointF& pointScene = rectScene.topLeft();
+    setPos(pointScene);
     setGraphicsEffect(new KeycapColorEffect(this));
     setColor(QColor());
 
-    _pTextItem = new QGraphicsSimpleTextItem(this);
+    // We only use this rect as an invisible parent for _pTextItem
+    const QPointF& pointOuterBorderInScene = matrixScene.map(_rectOuterBorder.topLeft());
+    const QPointF& pointInParentItem = mapFromScene(pointOuterBorderInScene);
+    _pOuterBorderItem = new QGraphicsRectItem(QRectF(QPointF(), _rectOuterBorder.size()), this);
+    _pOuterBorderItem->setPos(pointInParentItem);
+    const QPointF& pointRotationInParentItem = mapFromScene(matrixScene.map(_rotationOrigin));
+    const QPointF& poinRotationInRectItem = _pOuterBorderItem->mapFromParent(pointRotationInParentItem);
+    _pRotation = new QGraphicsRotation(this);
+    _pRotation->setAngle(_dRotationAngle);
+    _pRotation->setOrigin(QVector3D(poinRotationInRectItem.x(), poinRotationInRectItem.y(), 0));
+    _pOuterBorderItem->setTransformations({_pRotation});
+    _pOuterBorderItem->setPen(QPen(Qt::NoPen));
+    _pOuterBorderItem->setBrush(Qt::transparent);
+
+    // Build text item as a child of the invisible rect that contains the rotation transform
+    _pTextItem = new QGraphicsSimpleTextItem(_pOuterBorderItem);
 }
 
 KeycapGraphicsItem::~KeycapGraphicsItem()
@@ -114,9 +146,10 @@ void KeycapGraphicsItem::paint(QPainter* pPainter, const QStyleOptionGraphicsIte
 
 void KeycapGraphicsItem::centerText()
 {
-    const auto& rectKeycap = boundingRect();
     const auto& rectText = _pTextItem->boundingRect();
-    _pTextItem->setTransformOriginPoint(rectText.center());
-    _pTextItem->setRotation(_fAngle);
-    _pTextItem->setPos(rectKeycap.center()-rectText.center()-QPointF(0, 4) + _textOffset);
+    QPointF posText;
+    posText.setX(_rectOuterBorder.width()/2 - rectText.width()/2);
+    posText.setY(_rectOuterBorder.height()/2 - rectText.height()/2);
+    const QPointF OFFSET(0, -4);
+    _pTextItem->setPos(posText + OFFSET + _textOffset);
 }

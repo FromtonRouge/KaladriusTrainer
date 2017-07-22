@@ -88,8 +88,15 @@ void KeyboardGraphicsScene::onRowsInserted(const QModelIndex& parent, int iFirst
                 {
                     const QModelIndex& indexKeycap = indexInserted.child(iKeycap, 0);
                     const QString& sKeycapId = indexKeycap.data().toString();
-                    const float fAngle = indexKeycap.data(int(KeyboardPropertiesModel::UserRole::AngleRole)).toFloat();
-                    auto pKeycapGraphicsItem = new KeycapGraphicsItem(sKeycapId, fAngle, _pSvgRenderer);
+                    const qreal& dRotationAngle = indexKeycap.data(KeyboardPropertiesModel::RotationAngleRole).toReal();
+                    const QPointF& rotationOrigin = indexKeycap.data(KeyboardPropertiesModel::RotationOriginRole).toPointF();
+                    const QRectF& rectOuterBorder = indexKeycap.data(KeyboardPropertiesModel::OuterBorderRole).toRectF();
+                    auto pKeycapGraphicsItem = new KeycapGraphicsItem(  sKeycapId,
+                                                                        dRotationAngle,
+                                                                        rotationOrigin,
+                                                                        rectOuterBorder,
+                                                                        _pSvgRenderer);
+
                     addItem(pKeycapGraphicsItem);
                     _dictKeycaps.insert(sKeycapId, pKeycapGraphicsItem);
 

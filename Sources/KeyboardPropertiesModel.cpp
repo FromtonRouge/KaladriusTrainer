@@ -21,6 +21,7 @@
 #include <QtXml/QDomDocument>
 #include <QtGui/QStandardItem>
 #include <QtGui/QFont>
+#include <QtCore/QRectF>
 #include <QtCore/QFile>
 #include <QtCore/QStringList>
 #include <QtCore/QRegularExpression>
@@ -38,7 +39,7 @@ KeyboardPropertiesModel::~KeyboardPropertiesModel()
 QModelIndex KeyboardPropertiesModel::getParentKeycap(const QModelIndex& indexInKeycapHierarchy)
 {
     QModelIndex indexKeycap = indexInKeycapHierarchy;
-    while (indexKeycap.isValid() && (indexKeycap.data(int(KeyboardPropertiesModel::UserRole::PropertyTypeRole)).toInt() != int(KeyboardPropertiesModel::PropertyType::Keycap)))
+    while (indexKeycap.isValid() && (indexKeycap.data(PropertyTypeRole).toInt() != Keycap))
     {
         indexKeycap = indexKeycap.parent();
     }
@@ -96,7 +97,7 @@ void KeyboardPropertiesModel::loadKeyboardSvg(const QString& sSvgFilePath)
         }
 
         auto pKeysRoot = new QStandardItem(QIcon(":/Icons/keyboard-full.png"), tr("Keys"));
-        pKeysRoot->setData(int(PropertyType::KeycapsRoot), int(UserRole::PropertyTypeRole));
+        pKeysRoot->setData(KeycapsRoot, PropertyTypeRole);
         pKeysRoot->setEditable(false);
 
         for (const auto& element : elements)
@@ -104,25 +105,40 @@ void KeyboardPropertiesModel::loadKeyboardSvg(const QString& sSvgFilePath)
             const QString& sKeyId = element.attribute("id");
 
             // Check for transform
-            float fAngle = 0;
+            QVector<qreal> rotateTransform;
             if (element.hasAttribute("transform"))
             {
                 QString sTransform = element.attribute("transform");
                 if (sTransform.contains("rotate"))
                 {
                     sTransform.replace(QRegularExpression("(rotate\\()|\\)"), "");
-                    const QStringList& params = sTransform.split(" ");
-                    if (!params.isEmpty())
+                    for (const QString& sToken : sTransform.split(" "))
                     {
-                        const QString& sAngle = params.front();
-                        fAngle = sAngle.toFloat();
+                        rotateTransform << sToken.toDouble();
                     }
                 }
             }
 
             auto pKeycapItem = new QStandardItem(QIcon(":/Icons/keyboard.png"), sKeyId);
-            pKeycapItem->setData(int(PropertyType::Keycap), int(UserRole::PropertyTypeRole));
-            pKeycapItem->setData(fAngle, int(UserRole::AngleRole));
+            pKeycapItem->setData(Keycap, PropertyTypeRole);
+            if (rotateTransform.size() == 3)
+            {
+                pKeycapItem->setData(rotateTransform[0], RotationAngleRole);
+                pKeycapItem->setData(QPointF(rotateTransform[1], rotateTransform[2]), RotationOriginRole);
+            }
+
+            // Get the child outer border rect element
+            const auto& rectElement = element.firstChildElement("rect");
+            if (!rectElement.isNull() && rectElement.attribute("class") == "outer border")
+            {
+                QRectF rectOuterBorder;
+                rectOuterBorder.setX(rectElement.attribute("x").toDouble());
+                rectOuterBorder.setY(rectElement.attribute("y").toDouble());
+                rectOuterBorder.setWidth(rectElement.attribute("width").toDouble());
+                rectOuterBorder.setHeight(rectElement.attribute("height").toDouble());
+                pKeycapItem->setData(rectOuterBorder, int(UserRole::OuterBorderRole));
+            }
+
             pKeycapItem->setEditable(false);
 
             // Keycap attributes item
@@ -131,11 +147,11 @@ void KeyboardPropertiesModel::loadKeyboardSvg(const QString& sSvgFilePath)
                 auto addAttribute = [&pCurrentParentItem](const QString& sName, const QVariant& value) -> QStandardItem*
                 {
                     auto pAttrCol0 = new QStandardItem(QIcon(":/Icons/document-attribute.png"), sName);
-                    pAttrCol0->setData(int(PropertyType::Attribute), int(UserRole::PropertyTypeRole));
+                    pAttrCol0->setData(Attribute, PropertyTypeRole);
                     pAttrCol0->setEditable(false);
                     auto pAttrCol1 = new QStandardItem();
                     pAttrCol1->setData(value, Qt::EditRole);
-                    pAttrCol1->setData(int(PropertyType::Attribute), int(UserRole::PropertyTypeRole));
+                    pAttrCol1->setData(Attribute, PropertyTypeRole);
                     pCurrentParentItem->appendRow({pAttrCol0, pAttrCol1}); // no signal sent
                     return pAttrCol0;
                 };

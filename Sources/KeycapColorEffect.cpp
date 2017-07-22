@@ -21,6 +21,7 @@
 #include <QtGui/QPixmap>
 #include <QtGui/QPainter>
 #include <QtGui/QBitmap>
+#include <QtGui/QTransform>
 
 KeycapColorEffect::KeycapColorEffect(QObject* pParent)
     : QGraphicsEffect(pParent)
@@ -41,14 +42,19 @@ void KeycapColorEffect::draw(QPainter* pPainter)
     }
     else
     {
+        // Get and draw the source pixmap first
+        const QTransform& oldTransform = pPainter->worldTransform();
         QPoint pointOffset;
-        const QPixmap& pixmap = sourcePixmap(Qt::LogicalCoordinates, &pointOffset);
+        const QPixmap& pixmap = sourcePixmap(Qt::DeviceCoordinates, &pointOffset);
+        pPainter->setWorldTransform(QTransform());
         pPainter->drawPixmap(pointOffset, pixmap);
 
+        // Apply a color layer
         QPixmap pixmapColor(pixmap.size());
         pixmapColor.fill(_color);
         pixmapColor.setMask(pixmap.createMaskFromColor(Qt::transparent));
         pPainter->drawPixmap(pointOffset, pixmapColor);
+        pPainter->setWorldTransform(oldTransform);
     }
 }
 

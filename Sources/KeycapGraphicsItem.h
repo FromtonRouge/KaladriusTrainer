@@ -20,14 +20,23 @@
 #pragma once
 
 #include <QtSvg/QGraphicsSvgItem>
+#include <QtCore/QRectF>
+#include <QtCore/QPointF>
 
 class QGraphicsSimpleTextItem;
+class QGraphicsRectItem;
+class QGraphicsRotation;
 class QSvgRenderer;
 class QColor;
 class KeycapGraphicsItem : public QGraphicsSvgItem
 {
 public:
-    KeycapGraphicsItem(const QString& sKeycapId, float fAngle, QSvgRenderer* pSvgRenderer, QGraphicsItem* pParent = nullptr);
+    KeycapGraphicsItem( const QString& sKeycapId,
+                        qreal dRotationAngle,
+                        const QPointF& rotationOrigin,
+                        const QRectF& rectOuterBorder,
+                        QSvgRenderer* pSvgRenderer,
+                        QGraphicsItem* pParent = nullptr);
     ~KeycapGraphicsItem();
 
     void setColor(const QColor& color);
@@ -44,8 +53,12 @@ private:
     void centerText();
 
 private:
+    QGraphicsRectItem* _pOuterBorderItem;
     QGraphicsSimpleTextItem* _pTextItem;
-    float _fAngle;
+    qreal _dRotationAngle;
+    QPointF _rotationOrigin;
     int _iTextPixelSize;
     QPointF _textOffset;
+    QRectF _rectOuterBorder;
+    QGraphicsRotation* _pRotation;
 };

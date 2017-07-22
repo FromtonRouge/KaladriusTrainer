@@ -29,17 +29,19 @@ signals:
     void keyboardLoaded();
 
 public:
-    enum class PropertyType
+    enum PropertyType
     {
         KeycapsRoot,
         Keycap,
         Attribute
     };
 
-    enum class UserRole
+    enum UserRole
     {
         PropertyTypeRole = Qt::UserRole + 1,
-        AngleRole
+        RotationAngleRole,
+        RotationOriginRole,
+        OuterBorderRole
     };
 
 public:
