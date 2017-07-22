@@ -26,7 +26,6 @@
 KeycapColorEffect::KeycapColorEffect(QObject* pParent)
     : QGraphicsEffect(pParent)
 {
-    _color.setAlphaF(0.3);
 }
 
 KeycapColorEffect::~KeycapColorEffect()
@@ -36,7 +35,7 @@ KeycapColorEffect::~KeycapColorEffect()
 
 void KeycapColorEffect::draw(QPainter* pPainter)
 {
-    if (!_color.isValid())
+    if (_color == Qt::black && !_selectionColor.isValid())
     {
         drawSource(pPainter);
     }
@@ -51,23 +50,38 @@ void KeycapColorEffect::draw(QPainter* pPainter)
 
         // Apply a color layer
         QPixmap pixmapColor(pixmap.size());
-        pixmapColor.fill(_color);
-        pixmapColor.setMask(pixmap.createMaskFromColor(Qt::transparent));
-        pPainter->drawPixmap(pointOffset, pixmapColor);
+        const auto& mask = pixmap.createMaskFromColor(Qt::transparent);
+        if (_color != Qt::black && _color.isValid())
+        {
+            QColor color = _color;
+            color.setAlphaF(0.3f);
+            pixmapColor.fill(color);
+            pixmapColor.setMask(mask);
+            pPainter->drawPixmap(pointOffset, pixmapColor);
+        }
+
+        // Apply a color layer
+        if (_selectionColor.isValid())
+        {
+            QColor color = _selectionColor;
+            color.setAlphaF(0.2f);
+            pixmapColor.fill(color);
+            pixmapColor.setMask(mask);
+            pPainter->drawPixmap(pointOffset, pixmapColor);
+        }
+
         pPainter->setWorldTransform(oldTransform);
     }
 }
 
 void KeycapColorEffect::setColor(const QColor& color)
 {
-    _color.setRed(color.red());
-    _color.setGreen(color.green());
-    _color.setBlue(color.blue());
+    _color = color;
     update();
 }
 
-void KeycapColorEffect::setAlpha(qreal dAlpha)
+void KeycapColorEffect::setSelectionColor(const QColor& color)
 {
-    _color.setAlphaF(dAlpha);
+    _selectionColor = color;
     update();
 }

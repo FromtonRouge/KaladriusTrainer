@@ -50,8 +50,9 @@ KeycapGraphicsItem::KeycapGraphicsItem( const QString& sKeycapId,
     const auto& rectScene = matrixScene.mapRect(rectItem);
     const QPointF& pointScene = rectScene.topLeft();
     setPos(pointScene);
-    setGraphicsEffect(new KeycapColorEffect(this));
-    setColor(QColor());
+    auto pGraphicsEffect = new KeycapColorEffect(this);
+    setGraphicsEffect(pGraphicsEffect);
+    pGraphicsEffect->setEnabled(false);
 
     // We only use this rect as an invisible parent for _pTextItem
     const QPointF& pointOuterBorderInScene = matrixScene.map(_rectOuterBorder.topLeft());
@@ -78,15 +79,8 @@ KeycapGraphicsItem::~KeycapGraphicsItem()
 void KeycapGraphicsItem::setColor(const QColor& color)
 {
     auto pGraphicsEffect = static_cast<KeycapColorEffect*>(graphicsEffect());
-    if (!color.isValid())
-    {
-        pGraphicsEffect->setEnabled(false);
-    }
-    else
-    {
-        pGraphicsEffect->setEnabled(true);
-        pGraphicsEffect->setColor(color);
-    }
+    pGraphicsEffect->setEnabled(true);
+    pGraphicsEffect->setColor(color);
 }
 
 void KeycapGraphicsItem::setText(const QString& sText)
@@ -119,13 +113,15 @@ QVariant KeycapGraphicsItem::itemChange(QGraphicsItem::GraphicsItemChange change
     {
     case QGraphicsItem::GraphicsItemChange::ItemSelectedChange:
         {
+            auto pGraphicsEffect = static_cast<KeycapColorEffect*>(graphicsEffect());
+            pGraphicsEffect->setEnabled(true);
             if (value.toBool())
             {
-                setColor(Qt::blue);
+                pGraphicsEffect->setSelectionColor(Qt::blue);
             }
             else
             {
-                setColor(QColor());
+                pGraphicsEffect->setSelectionColor(QColor());
             }
             return value;
         }

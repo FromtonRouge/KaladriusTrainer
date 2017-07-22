@@ -30,8 +30,9 @@ public:
 
     virtual void draw(QPainter* painter) override;
     void setColor(const QColor& color);
-    void setAlpha(qreal dAlpha);
+    void setSelectionColor(const QColor& color);
 
 private:
     QColor _color;
+    QColor _selectionColor;
 };
