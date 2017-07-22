@@ -20,11 +20,17 @@
 #include "KeyboardGraphicsView.h"
 #include <QtWidgets/QMenu>
 #include <QtGui/QContextMenuEvent>
+#include <QtWidgets/QAction>
 
 KeyboardGraphicsView::KeyboardGraphicsView(QWidget* pParent)
     : QGraphicsView(pParent)
 {
     setDragMode(RubberBandDrag);
+
+    _pActionSelectAll = new QAction(tr("Select all"), this);
+    _pActionSelectAll->setShortcut(QKeySequence("Ctrl+a"));
+    connect(_pActionSelectAll, SIGNAL(triggered(bool)), this, SLOT(selectAll()));
+    addAction(_pActionSelectAll);
 }
 
 KeyboardGraphicsView::~KeyboardGraphicsView()
@@ -52,4 +58,11 @@ void KeyboardGraphicsView::fitKeyboardInView()
     {
         fitInView(scene()->itemsBoundingRect(), Qt::KeepAspectRatio);
     }
+}
+
+void KeyboardGraphicsView::selectAll()
+{
+    QPainterPath path;
+    path.addRect(scene()->sceneRect());
+    scene()->setSelectionArea(path, transform());
 }

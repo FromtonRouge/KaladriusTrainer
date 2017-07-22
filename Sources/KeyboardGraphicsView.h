@@ -21,6 +21,7 @@
 
 #include <QtWidgets/QGraphicsView>
 
+class QAction;
 class KeyboardGraphicsView : public QGraphicsView
 {
     Q_OBJECT
@@ -31,8 +32,12 @@ public:
 
 public slots:
     void fitKeyboardInView();
+    void selectAll();
 
 protected:
     virtual void contextMenuEvent(QContextMenuEvent* pEvent) override;
     virtual void resizeEvent(QResizeEvent* pEvent) override;
+
+private:
+    QAction* _pActionSelectAll;
 };

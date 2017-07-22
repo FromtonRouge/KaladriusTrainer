@@ -21,6 +21,7 @@
 #include "KeyboardGraphicsScene.h"
 #include "KeycapGraphicsItem.h"
 #include <QtWidgets/QHeaderView>
+#include <QtCore/QItemSelectionModel>
 
 KeyboardPropertiesTreeView::KeyboardPropertiesTreeView(QWidget* pParent)
     : QTreeView(pParent)
@@ -57,6 +58,12 @@ void KeyboardPropertiesTreeView::onGraphicsSceneSelectionChanged()
     {
         QModelIndexList matches;
         const auto& selected = pGraphicsScene->selectedItems();
+        if (selected.isEmpty())
+        {
+            selectionModel()->clearSelection();
+            return;
+        }
+
         for (auto pSelected : selected)
         {
             auto pKeycapItem = dynamic_cast<KeycapGraphicsItem*>(pSelected);
