@@ -44,5 +44,4 @@ private:
     DiffModel* _pDiffModel;
     KeyboardPropertiesModel* _pKeyboardPropertiesModel;
     QItemSelectionModel* _pItemSelectionModel;
-    QModelIndexList _selectedIndexes;
 };

@@ -58,40 +58,54 @@ void KeycapPropertiesTreeView::updateRootIndexFromSelection(const QItemSelection
     if (selected.isEmpty() && deselected.isEmpty())
     {
         const auto& allSelectedIndexes = _pItemSelectionModel->selectedIndexes();
-        for (const auto& index : allSelectedIndexes)
+        if (!allSelectedIndexes.isEmpty())
         {
-            const int iPropertyType = index.data(KeyboardPropertiesModel::PropertyTypeRole).toInt();
-            if (iPropertyType >= KeyboardPropertiesModel::Keycap)
+            if (!_pDiffModel->sourceModel())
             {
-                const QModelIndex& indexKeycap = _pKeyboardPropertiesModel->getParentKeycap(index);
-                _selectedIndexes << indexKeycap;
+                _pDiffModel->setSourceModel(_pKeyboardPropertiesModel);
+            }
+
+            _pDiffModel->clearMapping();
+            for (const auto& index : allSelectedIndexes)
+            {
+                const int iPropertyType = index.data(KeyboardPropertiesModel::PropertyTypeRole).toInt();
+                if (iPropertyType >= KeyboardPropertiesModel::Keycap)
+                {
+                    _pDiffModel->addSourceIndex(_pKeyboardPropertiesModel->getParentKeycap(index));
+                }
             }
         }
     }
     else
     {
-        for (const auto& selectedIndex : selected.indexes())
-        {
-            _selectedIndexes.push_back(selectedIndex);
-        }
-
-        for (const auto& deselectedIndex : deselected.indexes())
-        {
-            _selectedIndexes.removeOne(deselectedIndex);
-        }
-    }
-
-    if (!_selectedIndexes.isEmpty())
-    {
         if (!_pDiffModel->sourceModel())
         {
             _pDiffModel->setSourceModel(_pKeyboardPropertiesModel);
         }
-        setRootIndex(_pDiffModel->mapFromSource(_selectedIndexes.back()));
-        expandAll();
 
-        auto pItemDelegate = static_cast<KeycapPropertiesDelegate*>(itemDelegate());
-        pItemDelegate->setMultipleEditions(_selectedIndexes.size() > 1);
+        for (const auto& selectedIndex : selected.indexes())
+        {
+            _pDiffModel->addSourceIndex(selectedIndex);
+        }
+
+        for (const auto& deselectedIndex : deselected.indexes())
+        {
+            _pDiffModel->removeSourceIndex(deselectedIndex);
+        }
+    }
+
+    if (_pDiffModel->hasMapping())
+    {
+        const QModelIndex& proxyIndex = _pDiffModel->mapFromSource(_pDiffModel->getSourceIndexes().back());
+        if (proxyIndex.isValid())
+        {
+            setRootIndex(proxyIndex);
+            expandAll();
+        }
+        else
+        {
+            _pDiffModel->setSourceModel(nullptr);
+        }
     }
     else
     {

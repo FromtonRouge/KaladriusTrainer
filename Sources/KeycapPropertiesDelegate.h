@@ -27,12 +27,5 @@ public:
     KeycapPropertiesDelegate(QObject* pParent = nullptr);
     ~KeycapPropertiesDelegate();
 
-    void setMultipleEditions(bool bState) {_bMultipleEditions = bState;}
-    bool isMultipleEditions() const {return _bMultipleEditions;}
-
     virtual void initStyleOption(QStyleOptionViewItem* pOption, const QModelIndex& index) const override;
-    virtual void paint(QPainter* pPainter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
-
-private:
-    bool _bMultipleEditions;
 };

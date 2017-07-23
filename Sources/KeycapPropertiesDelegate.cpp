@@ -22,7 +22,6 @@
 
 KeycapPropertiesDelegate::KeycapPropertiesDelegate(QObject* pParent)
     : QStyledItemDelegate(pParent)
-    , _bMultipleEditions(false)
 {
 
 }
@@ -35,15 +34,13 @@ KeycapPropertiesDelegate::~KeycapPropertiesDelegate()
 void KeycapPropertiesDelegate::initStyleOption(QStyleOptionViewItem* pOption, const QModelIndex& index) const
 {
     QStyledItemDelegate::initStyleOption(pOption, index);
-    if (_bMultipleEditions && index.flags().testFlag(Qt::ItemIsEditable))
-    {
-        // TODO: Use a merger model to check different values
-        auto pDiffModel = qobject_cast<DiffModel*>(const_cast<QAbstractItemModel*>(index.model()));
-        pOption->text = tr("<different values>");
-    }
-}
 
-void KeycapPropertiesDelegate::paint(QPainter* pPainter, const QStyleOptionViewItem& option, const QModelIndex& index) const
-{
-    QStyledItemDelegate::paint(pPainter, option, index);
+    if (index.flags().testFlag(Qt::ItemIsEditable))
+    {
+        auto pDiffModel = qobject_cast<DiffModel*>(const_cast<QAbstractItemModel*>(index.model()));
+        if (pDiffModel->hasDifferentValues(index))
+        {
+            pOption->text = tr("<different values>");
+        }
+    }
 }

@@ -20,6 +20,8 @@
 #pragma once
 
 #include <QtCore/QIdentityProxyModel>
+#include <QtCore/QSet>
+#include <QtCore/QHash>
 
 class DiffModel : public QIdentityProxyModel
 {
@@ -28,4 +30,23 @@ class DiffModel : public QIdentityProxyModel
 public:
     DiffModel(QObject* pParent = nullptr);
     ~DiffModel();
+
+    virtual bool setData(const QModelIndex& index, const QVariant& value, int iRole) override;
+
+    void clearMapping();
+    bool hasMapping() const {return !_sourceValuesByPath.isEmpty();}
+
+    const QModelIndexList& getSourceIndexes() const {return _sourceIndexes;}
+    void addSourceIndex(const QModelIndex& sourceIndex);
+    void removeSourceIndex(const QModelIndex& sourceIndex);
+
+    bool hasDifferentValues(const QModelIndex& proxyIndex) const;
+
+private:
+    typedef QStringList Path;
+    typedef QHash<Path, QSet<QModelIndex>> SourcesValueByPath;
+    typedef QHash<QModelIndex, Path> PathBySourceValue;
+    SourcesValueByPath _sourceValuesByPath;
+    PathBySourceValue _pathBySourceValue;
+    QModelIndexList _sourceIndexes;
 };
