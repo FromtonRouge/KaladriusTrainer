@@ -18,8 +18,10 @@
 // ======================================================================
 
 #include "KeycapPropertiesTreeView.h"
+#include "KeycapPropertiesDelegate.h"
 #include "KeyboardPropertiesTreeView.h"
 #include "KeyboardPropertiesModel.h"
+#include "DiffModel.h"
 #include <QtWidgets/QHeaderView>
 #include <QtCore/QItemSelectionModel>
 
@@ -27,31 +29,20 @@ KeycapPropertiesTreeView::KeycapPropertiesTreeView(QWidget* pParent)
     : QTreeView(pParent)
     , _pKeyboardPropertiesModel(nullptr)
     , _pItemSelectionModel(nullptr)
+    , _pDiffModel(new DiffModel(this))
 {
     setAlternatingRowColors(true);
     setSelectionMode(ExtendedSelection);
     setEditTriggers(SelectedClicked|DoubleClicked|AnyKeyPressed);
     header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    delete itemDelegate();
+    setItemDelegate(new KeycapPropertiesDelegate(this));
+    setModel(_pDiffModel);
 }
 
 KeycapPropertiesTreeView::~KeycapPropertiesTreeView()
 {
 
-}
-
-void KeycapPropertiesTreeView::setModel(QAbstractItemModel* pModel)
-{
-    if (model())
-    {
-        model()->disconnect(this);
-    }
-
-    QTreeView::setModel(pModel);
-
-    if (pModel)
-    {
-        connect(pModel, SIGNAL(keyboardLoaded()), this, SLOT(onKeyboardLoaded()));
-    }
 }
 
 void KeycapPropertiesTreeView::setKeyboardProperties(KeyboardPropertiesTreeView* pTreeView)
@@ -62,14 +53,8 @@ void KeycapPropertiesTreeView::setKeyboardProperties(KeyboardPropertiesTreeView*
     updateRootIndexFromSelection();
 }
 
-void KeycapPropertiesTreeView::onKeyboardLoaded()
-{
-}
-
 void KeycapPropertiesTreeView::updateRootIndexFromSelection(const QItemSelection& selected, const QItemSelection& deselected)
 {
-    QModelIndexList selectedKeycaps;
-
     if (selected.isEmpty() && deselected.isEmpty())
     {
         const auto& allSelectedIndexes = _pItemSelectionModel->selectedIndexes();
@@ -79,32 +64,42 @@ void KeycapPropertiesTreeView::updateRootIndexFromSelection(const QItemSelection
             if (iPropertyType >= KeyboardPropertiesModel::Keycap)
             {
                 const QModelIndex& indexKeycap = _pKeyboardPropertiesModel->getParentKeycap(index);
-                selectedKeycaps << indexKeycap;
+                _selectedIndexes << indexKeycap;
             }
         }
     }
     else
     {
-        // TODO
+        for (const auto& selectedIndex : selected.indexes())
+        {
+            _selectedIndexes.push_back(selectedIndex);
+        }
+
+        for (const auto& deselectedIndex : deselected.indexes())
+        {
+            _selectedIndexes.removeOne(deselectedIndex);
+        }
     }
 
-    if (!selectedKeycaps.isEmpty())
+    if (!_selectedIndexes.isEmpty())
     {
-        if (!model())
+        if (!_pDiffModel->sourceModel())
         {
-            setModel(_pKeyboardPropertiesModel);
+            _pDiffModel->setSourceModel(_pKeyboardPropertiesModel);
         }
-        setRootIndex(selectedKeycaps.back());
+        setRootIndex(_pDiffModel->mapFromSource(_selectedIndexes.back()));
         expandAll();
+
+        auto pItemDelegate = static_cast<KeycapPropertiesDelegate*>(itemDelegate());
+        pItemDelegate->setMultipleEditions(_selectedIndexes.size() > 1);
     }
     else
     {
-        setModel(nullptr);
+        _pDiffModel->setSourceModel(nullptr);
     }
 }
 
 void KeycapPropertiesTreeView::onKeyboardPropertiesSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected)
 {
-    updateRootIndexFromSelection();
+    updateRootIndexFromSelection(selected, deselected);
 }
-

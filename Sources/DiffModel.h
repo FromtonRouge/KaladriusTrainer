@@ -19,30 +19,13 @@
 
 #pragma once
 
-#include <QtWidgets/QTreeView>
+#include <QtCore/QIdentityProxyModel>
 
-class DiffModel;
-class KeyboardPropertiesTreeView;
-class KeyboardPropertiesModel;
-class KeycapPropertiesTreeView : public QTreeView
+class DiffModel : public QIdentityProxyModel
 {
     Q_OBJECT
 
 public:
-    KeycapPropertiesTreeView(QWidget* pParent = nullptr);
-    ~KeycapPropertiesTreeView();
-
-    void setKeyboardProperties(KeyboardPropertiesTreeView* pTreeView);
-
-private slots:
-    void onKeyboardPropertiesSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected);
-
-private:
-    void updateRootIndexFromSelection(const QItemSelection& selected = QItemSelection(), const QItemSelection& deselected = QItemSelection());
-
-private:
-    DiffModel* _pDiffModel;
-    KeyboardPropertiesModel* _pKeyboardPropertiesModel;
-    QItemSelectionModel* _pItemSelectionModel;
-    QModelIndexList _selectedIndexes;
+    DiffModel(QObject* pParent = nullptr);
+    ~DiffModel();
 };

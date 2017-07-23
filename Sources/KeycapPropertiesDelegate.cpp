@@ -17,32 +17,33 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "KeycapPropertiesDelegate.h"
+#include "DiffModel.h"
 
-#include <QtWidgets/QTreeView>
-
-class DiffModel;
-class KeyboardPropertiesTreeView;
-class KeyboardPropertiesModel;
-class KeycapPropertiesTreeView : public QTreeView
+KeycapPropertiesDelegate::KeycapPropertiesDelegate(QObject* pParent)
+    : QStyledItemDelegate(pParent)
+    , _bMultipleEditions(false)
 {
-    Q_OBJECT
 
-public:
-    KeycapPropertiesTreeView(QWidget* pParent = nullptr);
-    ~KeycapPropertiesTreeView();
+}
 
-    void setKeyboardProperties(KeyboardPropertiesTreeView* pTreeView);
+KeycapPropertiesDelegate::~KeycapPropertiesDelegate()
+{
 
-private slots:
-    void onKeyboardPropertiesSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected);
+}
 
-private:
-    void updateRootIndexFromSelection(const QItemSelection& selected = QItemSelection(), const QItemSelection& deselected = QItemSelection());
+void KeycapPropertiesDelegate::initStyleOption(QStyleOptionViewItem* pOption, const QModelIndex& index) const
+{
+    QStyledItemDelegate::initStyleOption(pOption, index);
+    if (_bMultipleEditions && index.flags().testFlag(Qt::ItemIsEditable))
+    {
+        // TODO: Use a merger model to check different values
+        auto pDiffModel = qobject_cast<DiffModel*>(const_cast<QAbstractItemModel*>(index.model()));
+        pOption->text = tr("<different values>");
+    }
+}
 
-private:
-    DiffModel* _pDiffModel;
-    KeyboardPropertiesModel* _pKeyboardPropertiesModel;
-    QItemSelectionModel* _pItemSelectionModel;
-    QModelIndexList _selectedIndexes;
-};
+void KeycapPropertiesDelegate::paint(QPainter* pPainter, const QStyleOptionViewItem& option, const QModelIndex& index) const
+{
+    QStyledItemDelegate::paint(pPainter, option, index);
+}

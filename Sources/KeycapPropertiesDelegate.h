@@ -19,30 +19,20 @@
 
 #pragma once
 
-#include <QtWidgets/QTreeView>
+#include <QtWidgets/QStyledItemDelegate>
 
-class DiffModel;
-class KeyboardPropertiesTreeView;
-class KeyboardPropertiesModel;
-class KeycapPropertiesTreeView : public QTreeView
+class KeycapPropertiesDelegate : public QStyledItemDelegate
 {
-    Q_OBJECT
-
 public:
-    KeycapPropertiesTreeView(QWidget* pParent = nullptr);
-    ~KeycapPropertiesTreeView();
+    KeycapPropertiesDelegate(QObject* pParent = nullptr);
+    ~KeycapPropertiesDelegate();
 
-    void setKeyboardProperties(KeyboardPropertiesTreeView* pTreeView);
+    void setMultipleEditions(bool bState) {_bMultipleEditions = bState;}
+    bool isMultipleEditions() const {return _bMultipleEditions;}
 
-private slots:
-    void onKeyboardPropertiesSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected);
-
-private:
-    void updateRootIndexFromSelection(const QItemSelection& selected = QItemSelection(), const QItemSelection& deselected = QItemSelection());
+    virtual void initStyleOption(QStyleOptionViewItem* pOption, const QModelIndex& index) const override;
+    virtual void paint(QPainter* pPainter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
 private:
-    DiffModel* _pDiffModel;
-    KeyboardPropertiesModel* _pKeyboardPropertiesModel;
-    QItemSelectionModel* _pItemSelectionModel;
-    QModelIndexList _selectedIndexes;
+    bool _bMultipleEditions;
 };

@@ -17,32 +17,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "DiffModel.h"
 
-#include <QtWidgets/QTreeView>
-
-class DiffModel;
-class KeyboardPropertiesTreeView;
-class KeyboardPropertiesModel;
-class KeycapPropertiesTreeView : public QTreeView
+DiffModel::DiffModel(QObject* pParent)
+    : QIdentityProxyModel(pParent)
 {
-    Q_OBJECT
 
-public:
-    KeycapPropertiesTreeView(QWidget* pParent = nullptr);
-    ~KeycapPropertiesTreeView();
+}
 
-    void setKeyboardProperties(KeyboardPropertiesTreeView* pTreeView);
+DiffModel::~DiffModel()
+{
 
-private slots:
-    void onKeyboardPropertiesSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected);
-
-private:
-    void updateRootIndexFromSelection(const QItemSelection& selected = QItemSelection(), const QItemSelection& deselected = QItemSelection());
-
-private:
-    DiffModel* _pDiffModel;
-    KeyboardPropertiesModel* _pKeyboardPropertiesModel;
-    QItemSelectionModel* _pItemSelectionModel;
-    QModelIndexList _selectedIndexes;
-};
+}
