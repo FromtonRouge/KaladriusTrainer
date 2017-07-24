@@ -19,29 +19,20 @@
 
 #pragma once
 
-#include <QtWidgets/QTreeView>
+#include <QtCore/QIdentityProxyModel>
 
-class DiffModel;
-class UndoableProxyModel;
-class KeyboardPropertiesTreeView;
-class KeycapPropertiesTreeView : public QTreeView
+class QUndoStack;
+class UndoableProxyModel : public QIdentityProxyModel
 {
     Q_OBJECT
 
 public:
-    KeycapPropertiesTreeView(QWidget* pParent = nullptr);
-    ~KeycapPropertiesTreeView();
+    UndoableProxyModel(QObject* pParent = nullptr);
+    ~UndoableProxyModel();
 
-    void setKeyboardProperties(KeyboardPropertiesTreeView* pTreeView);
-
-private slots:
-    void onKeyboardPropertiesSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected);
+    void setUndoStack(QUndoStack* pUndoStack) {_pUndoStack = pUndoStack;}
+    QUndoStack* getUndoStack() const {return _pUndoStack;}
 
 private:
-    void updateRootIndexFromSelection(const QItemSelection& selected = QItemSelection(), const QItemSelection& deselected = QItemSelection());
-
-private:
-    DiffModel* _pDiffModel;
-    UndoableProxyModel* _pUndoableKeyboardModel;
-    QItemSelectionModel* _pItemSelectionModel;
+    QUndoStack* _pUndoStack;
 };

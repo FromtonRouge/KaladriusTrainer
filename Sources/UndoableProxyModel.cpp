@@ -17,31 +17,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "UndoableProxyModel.h"
 
-#include <QtWidgets/QTreeView>
-
-class DiffModel;
-class UndoableProxyModel;
-class KeyboardPropertiesTreeView;
-class KeycapPropertiesTreeView : public QTreeView
+UndoableProxyModel::UndoableProxyModel(QObject* pParent)
+    : QIdentityProxyModel(pParent)
+    , _pUndoStack(nullptr)
 {
-    Q_OBJECT
 
-public:
-    KeycapPropertiesTreeView(QWidget* pParent = nullptr);
-    ~KeycapPropertiesTreeView();
+}
 
-    void setKeyboardProperties(KeyboardPropertiesTreeView* pTreeView);
+UndoableProxyModel::~UndoableProxyModel()
+{
 
-private slots:
-    void onKeyboardPropertiesSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected);
-
-private:
-    void updateRootIndexFromSelection(const QItemSelection& selected = QItemSelection(), const QItemSelection& deselected = QItemSelection());
-
-private:
-    DiffModel* _pDiffModel;
-    UndoableProxyModel* _pUndoableKeyboardModel;
-    QItemSelectionModel* _pItemSelectionModel;
-};
+}

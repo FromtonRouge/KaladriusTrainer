@@ -22,6 +22,7 @@
 #include "KeyboardGraphicsView.h"
 #include "KeyboardGraphicsScene.h"
 #include "KeyboardPropertiesModel.h"
+#include "UndoableProxyModel.h"
 #include "DictionariesModel.h"
 #include "DictionaryParser.h"
 #include <QtWidgets/QApplication>
@@ -29,6 +30,7 @@
 #include <QtWidgets/QMdiSubWindow>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QStatusBar>
+#include <QtWidgets/QUndoStack>
 #include <QtGui/QTextCursor>
 #include <QtGui/QTextCharFormat>
 #include <QtGui/QBrush>
@@ -52,8 +54,10 @@ MainWindow::MainWindow(QWidget *parent)
     , _pOldStreambufCout(std::cout.rdbuf())
     , _pOldStreambufCerr(std::cerr.rdbuf())
     , _pDictionariesModel(new DictionariesModel(this))
-    , _pKeyboardPropertiesModel(new KeyboardPropertiesModel(this))
+    , _pKeyboardModel(new KeyboardPropertiesModel(this))
+    , _pUndoableKeyboardModel(new UndoableProxyModel(this))
     , _pKeyboardGraphicsScene(new KeyboardGraphicsScene(this))
+    , _pUndoStack(new QUndoStack(this))
 {
     _pUi->setupUi(this);
 
@@ -65,6 +69,11 @@ MainWindow::MainWindow(QWidget *parent)
     _streamBufferCerr.open(StreamSink(std::bind(&MainWindow::toLogs, this, std::placeholders::_1, 2)));
     std::cerr.rdbuf(&_streamBufferCerr);
 
+    // Undo/redo
+    _pUi->listViewUndo->setStack(_pUndoStack);
+    _pUndoableKeyboardModel->setSourceModel(_pKeyboardModel);
+    _pUndoableKeyboardModel->setUndoStack(_pUndoStack);
+
     _pUi->actionReload_Dictionaries->trigger();
 
     _pUi->widgetDictionaries1->setDictionariesModel(_pDictionariesModel);
@@ -72,7 +81,7 @@ MainWindow::MainWindow(QWidget *parent)
     _pUi->widgetDictionaries3->setDictionariesModel(_pDictionariesModel);
     _pUi->widgetDictionaries4->setDictionariesModel(_pDictionariesModel);
 
-    _pUi->treeViewKeyboardProperties->setModel(_pKeyboardPropertiesModel);
+    _pUi->treeViewKeyboardProperties->setModel(_pUndoableKeyboardModel);
     _pKeyboardGraphicsScene->setKeyboardProperties(_pUi->treeViewKeyboardProperties);
     _pUi->widgetKeycapProperties->setKeyboardProperties(_pUi->treeViewKeyboardProperties);
 
@@ -82,6 +91,7 @@ MainWindow::MainWindow(QWidget *parent)
     _pUi->dockWidgetDictionaries3->hide();
     _pUi->dockWidgetDictionaries4->hide();
     _pUi->dockWidgetLogs->hide();
+    _pUi->dockWidgetUndo->hide();
 
     // Restore geometry
     QSettings settings;
@@ -89,7 +99,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Load keyboard svg
     const QString& sLastKeyboardSvg = settings.value("lastKeyboardSvg", ":/Svgs/ergodox.svg").toString();
-    _pKeyboardPropertiesModel->loadKeyboardSvg(sLastKeyboardSvg);
+    _pKeyboardModel->loadKeyboardSvg(sLastKeyboardSvg);
     _pUi->actionKeyboard_Window->trigger();
 }
 
@@ -147,14 +157,14 @@ void MainWindow::on_actionLoad_Keyboard_Svg_triggered()
     const QString& sKeyboardSvg = QFileDialog::getOpenFileName(this, tr("Keyboard Svg"), sLastKeyboardSvg, "*.svg");
     if (!sKeyboardSvg.isEmpty())
     {
-        _pKeyboardPropertiesModel->loadKeyboardSvg(sKeyboardSvg);
+        _pKeyboardModel->loadKeyboardSvg(sKeyboardSvg);
         settings.setValue("lastKeyboardSvg", sKeyboardSvg);
     }
 }
 
 void MainWindow::on_actionLoad_Default_Keyboard_Svg_triggered()
 {
-    _pKeyboardPropertiesModel->loadKeyboardSvg(":/Svgs/ergodox.svg");
+    _pKeyboardModel->loadKeyboardSvg(":/Svgs/ergodox.svg");
     QSettings settings;
     settings.setValue("lastKeyboardSvg", ":/Svgs/ergodox.svg");
 }
@@ -307,7 +317,7 @@ void MainWindow::on_actionAbout_triggered()
 void MainWindow::on_actionKeyboard_Window_triggered()
 {
     auto pGraphicsView = new KeyboardGraphicsView();
-    connect(_pKeyboardPropertiesModel, SIGNAL(keyboardLoaded()), pGraphicsView, SLOT(fitKeyboardInView()));
+    connect(_pKeyboardModel, SIGNAL(keyboardLoaded()), pGraphicsView, SLOT(fitKeyboardInView()));
     auto pSubWindow = _pUi->mdiArea->addSubWindow(pGraphicsView);
     pSubWindow->setWindowTitle(tr("Keyboard"));
     pGraphicsView->setParent(pSubWindow);

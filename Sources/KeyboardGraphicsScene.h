@@ -23,7 +23,7 @@
 #include <QtCore/QHash>
 
 class KeycapGraphicsItem;
-class KeyboardPropertiesModel;
+class UndoableProxyModel;
 class KeyboardPropertiesTreeView;
 class QSvgRenderer;
 class QItemSelectionModel;
@@ -51,6 +51,6 @@ private slots:
 
 private:
     QSvgRenderer* _pSvgRenderer;
-    KeyboardPropertiesModel* _pKeyboardPropertiesModel;
+    UndoableProxyModel* _pUndoableKeyboardModel;
     DictKeycaps _dictKeycaps;
 };

@@ -42,7 +42,7 @@
      <x>0</x>
      <y>0</y>
      <width>737</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -304,6 +304,33 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="dockWidgetUndo">
+   <property name="windowTitle">
+    <string>Undo</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_8">
+    <layout class="QGridLayout" name="gridLayout_9">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item row="0" column="0">
+      <widget class="QUndoView" name="listViewUndo"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="actionQuit">
    <property name="icon">
     <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
@@ -410,6 +437,11 @@
    <extends>QWidget</extends>
    <header>KeycapPropertiesWidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QUndoView</class>
+   <extends>QListView</extends>
+   <header location="global">QtWidgets/QUndoView</header>
   </customwidget>
  </customwidgets>
  <resources>

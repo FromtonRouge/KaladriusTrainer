@@ -19,6 +19,7 @@
 
 #include "KeyboardGraphicsScene.h"
 #include "KeyboardPropertiesModel.h"
+#include "UndoableProxyModel.h"
 #include "KeyboardPropertiesTreeView.h"
 #include "KeycapGraphicsItem.h"
 #include <QtSvg/QSvgRenderer>
@@ -31,7 +32,7 @@
 KeyboardGraphicsScene::KeyboardGraphicsScene(QObject* pParent)
     : QGraphicsScene(pParent)
     , _pSvgRenderer(nullptr)
-    , _pKeyboardPropertiesModel(nullptr)
+    , _pUndoableKeyboardModel(nullptr)
 {
 }
 
@@ -41,10 +42,10 @@ KeyboardGraphicsScene::~KeyboardGraphicsScene()
 
 void KeyboardGraphicsScene::setKeyboardProperties(KeyboardPropertiesTreeView* pTreeView)
 {
-    _pKeyboardPropertiesModel = qobject_cast<KeyboardPropertiesModel*>(pTreeView->model());
-    connect(_pKeyboardPropertiesModel, SIGNAL(modelReset()), this, SLOT(onModelReset()));
-    connect(_pKeyboardPropertiesModel, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(onRowsInserted(QModelIndex, int, int)));
-    connect(_pKeyboardPropertiesModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(onDataChanged(QModelIndex,QModelIndex,QVector<int>)));
+    _pUndoableKeyboardModel = qobject_cast<UndoableProxyModel*>(pTreeView->model());
+    connect(_pUndoableKeyboardModel, SIGNAL(modelReset()), this, SLOT(onModelReset()));
+    connect(_pUndoableKeyboardModel, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(onRowsInserted(QModelIndex, int, int)));
+    connect(_pUndoableKeyboardModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(onDataChanged(QModelIndex,QModelIndex,QVector<int>)));
     connect(pTreeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(onKeyboardPropertiesSelectionChanged(QItemSelection, QItemSelection)));
     connect(this, SIGNAL(selectionChanged()), pTreeView, SLOT(onGraphicsSceneSelectionChanged()));
 }
@@ -68,22 +69,23 @@ void KeyboardGraphicsScene::onModelReset()
 {
    _dictKeycaps.clear();
    clear();
-    delete _pSvgRenderer;
-    _pSvgRenderer = new QSvgRenderer(_pKeyboardPropertiesModel->getKeyboardSvgPath(), this);
+   delete _pSvgRenderer;
+   auto pKeyboardPropertiesModel = qobject_cast<KeyboardPropertiesModel*>(_pUndoableKeyboardModel->sourceModel());
+   _pSvgRenderer = new QSvgRenderer(pKeyboardPropertiesModel->getKeyboardSvgPath(), this);
 }
 
 void KeyboardGraphicsScene::onRowsInserted(const QModelIndex& parent, int iFirst, int iLast)
 {
     for (int iRow = iFirst; iRow <= iLast; ++iRow)
     {
-        const QModelIndex& indexInserted = _pKeyboardPropertiesModel->index(iRow, 0, parent);
+        const QModelIndex& indexInserted = _pUndoableKeyboardModel->index(iRow, 0, parent);
         if (!parent.isValid())
         {
             // Inserting a top level item
             if (indexInserted.data().toString() == tr("Keys"))
             {
                 // Parsing all keycaps under "Keys"
-                const int iKeycaps = _pKeyboardPropertiesModel->rowCount(indexInserted);
+                const int iKeycaps = _pUndoableKeyboardModel->rowCount(indexInserted);
                 for (int iKeycap = 0; iKeycap < iKeycaps; ++iKeycap)
                 {
                     const QModelIndex& indexKeycap = indexInserted.child(iKeycap, 0);
@@ -102,9 +104,9 @@ void KeyboardGraphicsScene::onRowsInserted(const QModelIndex& parent, int iFirst
 
                     std::function<void (const QModelIndex&)> traverse = [&](const QModelIndex& index)
                     {
-                        const int iColumns = _pKeyboardPropertiesModel->columnCount();
+                        const int iColumns = _pUndoableKeyboardModel->columnCount();
                         onDataChanged(index, index.sibling(index.row(), iColumns-1), {});
-                        const int iRows = _pKeyboardPropertiesModel->rowCount(index);
+                        const int iRows = _pUndoableKeyboardModel->rowCount(index);
                         for (int iRow = 0; iRow < iRows; ++iRow)
                         {
                             traverse(index.child(iRow, 0));
@@ -145,7 +147,7 @@ void KeyboardGraphicsScene::onDataChanged(const QModelIndex& topLeft, const QMod
         const int iRightColumn = bottomRight.column();
         for (int iRow = iTopRow; iRow <= iBottomRow; ++iRow)
         {
-            const QModelIndex& indexName = _pKeyboardPropertiesModel->index(iRow, 0, parent);
+            const QModelIndex& indexName = _pUndoableKeyboardModel->index(iRow, 0, parent);
             const QString& sName = indexName.data().toString();
             for (int iColumn = iLeftColumn; iColumn <= iRightColumn; ++iColumn)
             {

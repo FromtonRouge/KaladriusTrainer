@@ -21,13 +21,14 @@
 #include "KeycapPropertiesDelegate.h"
 #include "KeyboardPropertiesTreeView.h"
 #include "KeyboardPropertiesModel.h"
+#include "UndoableProxyModel.h"
 #include "DiffModel.h"
 #include <QtWidgets/QHeaderView>
 #include <QtCore/QItemSelectionModel>
 
 KeycapPropertiesTreeView::KeycapPropertiesTreeView(QWidget* pParent)
     : QTreeView(pParent)
-    , _pKeyboardPropertiesModel(nullptr)
+    , _pUndoableKeyboardModel(nullptr)
     , _pItemSelectionModel(nullptr)
     , _pDiffModel(new DiffModel(this))
 {
@@ -47,7 +48,7 @@ KeycapPropertiesTreeView::~KeycapPropertiesTreeView()
 
 void KeycapPropertiesTreeView::setKeyboardProperties(KeyboardPropertiesTreeView* pTreeView)
 {
-    _pKeyboardPropertiesModel = qobject_cast<KeyboardPropertiesModel*>(pTreeView->model());
+    _pUndoableKeyboardModel = qobject_cast<UndoableProxyModel*>(pTreeView->model());
     _pItemSelectionModel = pTreeView->selectionModel();
     connect(_pItemSelectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)), this, SLOT(onKeyboardPropertiesSelectionChanged(QItemSelection,QItemSelection)));
     updateRootIndexFromSelection();
@@ -62,16 +63,18 @@ void KeycapPropertiesTreeView::updateRootIndexFromSelection(const QItemSelection
         {
             if (!_pDiffModel->sourceModel())
             {
-                _pDiffModel->setSourceModel(_pKeyboardPropertiesModel);
+                _pDiffModel->setSourceModel(_pUndoableKeyboardModel);
             }
 
+            auto pKeyboardModel = qobject_cast<KeyboardPropertiesModel*>(_pUndoableKeyboardModel->sourceModel());
             _pDiffModel->clearMapping();
             for (const auto& index : allSelectedIndexes)
             {
                 const int iPropertyType = index.data(KeyboardPropertiesModel::PropertyTypeRole).toInt();
                 if (iPropertyType >= KeyboardPropertiesModel::Keycap)
                 {
-                    _pDiffModel->addSourceIndex(_pKeyboardPropertiesModel->getParentKeycap(index));
+                    const QModelIndex& indexKeycapInKeyboardModel = pKeyboardModel->getParentKeycap(index);
+                    _pDiffModel->addSourceIndex(_pUndoableKeyboardModel->mapFromSource(indexKeycapInKeyboardModel));
                 }
             }
         }
@@ -80,7 +83,7 @@ void KeycapPropertiesTreeView::updateRootIndexFromSelection(const QItemSelection
     {
         if (!_pDiffModel->sourceModel())
         {
-            _pDiffModel->setSourceModel(_pKeyboardPropertiesModel);
+            _pDiffModel->setSourceModel(_pUndoableKeyboardModel);
         }
 
         for (const auto& selectedIndex : selected.indexes())
