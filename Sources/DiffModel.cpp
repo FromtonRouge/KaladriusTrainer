@@ -18,6 +18,8 @@
 // ======================================================================
 
 #include "DiffModel.h"
+#include "UndoableProxyModel.h"
+#include <QtWidgets/QUndoStack>
 #include <functional>
 
 DiffModel::DiffModel(QObject* pParent)
@@ -44,9 +46,21 @@ bool DiffModel::setData(const QModelIndex& index, const QVariant& value, int iRo
             {
                 auto pSourceModel = sourceModel();
                 const auto& sourceValues = itSourceValues.value();
+
+                auto pUndoableProxyModel = qobject_cast<UndoableProxyModel*>(const_cast<QAbstractItemModel*>(sourceIndex.model()));
+                if (pUndoableProxyModel && sourceValues.size() > 1)
+                {
+                    pUndoableProxyModel->getUndoStack()->beginMacro(tr("%1 indexes changed to %2").arg(sourceValues.size()).arg(value.toString()));
+                }
+
                 for (const auto& sourceIndex : sourceValues)
                 {
                     pSourceModel->setData(sourceIndex, value, iRole);
+                }
+
+                if (pUndoableProxyModel && sourceValues.size() > 1)
+                {
+                    pUndoableProxyModel->getUndoStack()->endMacro();
                 }
             }
         }

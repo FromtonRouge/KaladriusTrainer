@@ -18,6 +18,7 @@
 // ======================================================================
 
 #include "UndoableProxyModel.h"
+#include "SetDataCommand.h"
 
 UndoableProxyModel::UndoableProxyModel(QObject* pParent)
     : QIdentityProxyModel(pParent)
@@ -29,4 +30,15 @@ UndoableProxyModel::UndoableProxyModel(QObject* pParent)
 UndoableProxyModel::~UndoableProxyModel()
 {
 
+}
+
+bool UndoableProxyModel::setData(const QModelIndex& index, const QVariant& value, int iRole)
+{
+    if (_pUndoStack)
+    {
+        _pUndoStack->push(new SetDataCommand(index, value, iRole));
+        return true;
+    }
+
+    return QIdentityProxyModel::setData(index, value, iRole);
 }

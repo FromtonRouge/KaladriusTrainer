@@ -19,21 +19,25 @@
 
 #pragma once
 
-#include <QtCore/QIdentityProxyModel>
+#include <QtWidgets/QUndoCommand>
+#include <QtCore/QPersistentModelIndex>
+#include <QtCore/QVariant>
 
-class QUndoStack;
-class UndoableProxyModel : public QIdentityProxyModel
+class SetDataCommand : public QUndoCommand
 {
-    Q_OBJECT
-
 public:
-    UndoableProxyModel(QObject* pParent = nullptr);
-    ~UndoableProxyModel();
+    SetDataCommand( const QModelIndex& index,
+                    const QVariant& value,
+                    int iRole,
+                    QUndoCommand* pParent = nullptr);
+    ~SetDataCommand();
 
-    void setUndoStack(QUndoStack* pUndoStack) {_pUndoStack = pUndoStack;}
-    QUndoStack* getUndoStack() const {return _pUndoStack;}
-    virtual bool setData(const QModelIndex& index, const QVariant& value, int iRole) override;
+    virtual void redo() override;
+    virtual void undo() override;
 
 private:
-    QUndoStack* _pUndoStack;
+    QPersistentModelIndex _index;
+    QVariant _oldValue;
+    QVariant _newValue;
+    int _iRole;
 };
