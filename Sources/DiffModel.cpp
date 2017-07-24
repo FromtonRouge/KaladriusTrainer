@@ -19,8 +19,6 @@
 
 #include "DiffModel.h"
 #include <functional>
-#include <QDebug>
-#include <iostream>
 
 DiffModel::DiffModel(QObject* pParent)
     : QIdentityProxyModel(pParent)
@@ -87,8 +85,6 @@ void DiffModel::addSourceIndex(const QModelIndex& sourceIndex)
         {
             _sourceValuesByPath[path].insert(parentValue);
             _pathBySourceValue.insert(parentValue, path);
-
-            std::cerr << (path.join("/").toStdString()) << " " << _sourceValuesByPath[path].size() << std::endl;
         }
 
         path.pop_back();
