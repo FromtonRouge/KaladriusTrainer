@@ -18,9 +18,18 @@
 // ======================================================================
 
 #include "KeyboardGraphicsView.h"
+#include "KeyboardGraphicsScene.h"
+#include "KeycapGraphicsItem.h"
+#include "UndoableProxyModel.h"
 #include <QtWidgets/QMenu>
 #include <QtGui/QContextMenuEvent>
+#include <QtGui/QKeyEvent>
+#include <QtGui/QKeySequence>
 #include <QtWidgets/QAction>
+#include <QtWidgets/QUndoStack>
+#include <QtGui/QCursor>
+#include <QtCore/QHash>
+#include <iostream>
 
 KeyboardGraphicsView::KeyboardGraphicsView(QWidget* pParent)
     : QGraphicsView(pParent)
@@ -50,6 +59,76 @@ void KeyboardGraphicsView::resizeEvent(QResizeEvent* pEvent)
 {
     fitKeyboardInView();
     QGraphicsView::resizeEvent(pEvent);
+}
+
+void KeyboardGraphicsView::keyReleaseEvent(QKeyEvent* pEvent)
+{
+    QGraphicsView::keyReleaseEvent(pEvent);
+
+    // Get selected KeycapGraphicsItem
+    const auto& selected = scene()->selectedItems();
+    QStringList selectedKeycaps;
+    for (auto pItem : selected)
+    {
+        auto pKeycapItem = qgraphicsitem_cast<KeycapGraphicsItem*>(pItem);
+        if (pKeycapItem)
+        {
+            selectedKeycaps << pKeycapItem->elementId();
+        }
+    }
+
+    if (!selectedKeycaps.isEmpty())
+    {
+        QString sKey = QKeySequence(pEvent->key()).toString();
+
+        static QHash<int, QString> dictModifiers;
+        dictModifiers[Qt::Key_Shift] = "Shift";
+        dictModifiers[Qt::Key_Control] = "Ctrl";
+        dictModifiers[Qt::Key_Meta] = "Meta";
+        dictModifiers[Qt::Key_Alt] = "Alt";
+        dictModifiers[Qt::Key_AltGr] = "AltGr";
+
+        auto it = dictModifiers.find(pEvent->key());
+        if (it != dictModifiers.end())
+        {
+            sKey = it.value();
+        }
+
+        bool bCanSetKey = false;
+        const QPoint& posInViewport = mapFromGlobal(QCursor::pos());
+        const auto& itemsUnderCursor = items(posInViewport);
+        for (auto pGraphicsItem : itemsUnderCursor)
+        {
+            auto pKeycapItem = qgraphicsitem_cast<KeycapGraphicsItem*>(pGraphicsItem);
+            if (pKeycapItem && pKeycapItem->isSelected())
+            {
+                bCanSetKey = true;
+                break;
+            }
+        }
+
+        if (bCanSetKey)
+        {
+            auto pKeyboardScene = qobject_cast<KeyboardGraphicsScene*>(scene());
+            if (pKeyboardScene)
+            {
+                auto pKeyboardModel = pKeyboardScene->getUndoableKeyboardModel();
+                pKeyboardModel->getUndoStack()->beginMacro(tr("%1 indexes changed to %2").arg(selectedKeycaps.size()).arg(sKey));
+                const QModelIndex& start = pKeyboardModel->index(0, 0, pKeyboardModel->index(0, 0));
+                for (const auto& sKeycap : selectedKeycaps)
+                {
+                    const auto& matches = pKeyboardModel->match(start, Qt::DisplayRole, sKeycap, 1, Qt::MatchExactly);
+                    if (!matches.isEmpty())
+                    {
+                        const QModelIndex& index = matches.front();
+                        const QModelIndex& indexLabelValue = index.child(0,1);
+                        pKeyboardModel->setData(indexLabelValue, sKey, Qt::EditRole);
+                    }
+                }
+                pKeyboardModel->getUndoStack()->endMacro();
+            }
+        }
+    }
 }
 
 void KeyboardGraphicsView::fitKeyboardInView()

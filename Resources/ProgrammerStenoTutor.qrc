@@ -14,5 +14,7 @@
         <file>Svgs/ergodox.svg</file>
         <file>Icons/keyboard.png</file>
         <file>Icons/document-attribute.png</file>
+        <file>Icons/arrow-curve.png</file>
+        <file>Icons/arrow-curve-180-left.png</file>
     </qresource>
 </RCC>

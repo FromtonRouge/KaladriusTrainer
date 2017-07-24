@@ -35,6 +35,7 @@
 #include <QtGui/QTextCharFormat>
 #include <QtGui/QBrush>
 #include <QtGui/QColor>
+#include <QtGui/QKeySequence>
 #include <QtCore/QSettings>
 #include <QtCore/QDir>
 #include <QtCore/QDebug>
@@ -73,6 +74,16 @@ MainWindow::MainWindow(QWidget *parent)
     _pUi->listViewUndo->setStack(_pUndoStack);
     _pUndoableKeyboardModel->setSourceModel(_pKeyboardModel);
     _pUndoableKeyboardModel->setUndoStack(_pUndoStack);
+
+    QAction* pUndoAction = _pUndoStack->createUndoAction(this);
+    pUndoAction->setIcon(QIcon(":/Icons/arrow-curve-180-left.png"));
+    pUndoAction->setShortcut(QKeySequence("Ctrl+Z"));
+    _pUi->menuEdit->addAction(pUndoAction);
+
+    QAction* pRedoAction = _pUndoStack->createRedoAction(this);
+    pRedoAction->setIcon(QIcon(":/Icons/arrow-curve.png"));
+    pRedoAction->setShortcut(QKeySequence("Ctrl+Y"));
+    _pUi->menuEdit->addAction(pRedoAction);
 
     _pUi->actionReload_Dictionaries->trigger();
 
@@ -118,6 +129,12 @@ void MainWindow::toLogs(const QString& sText, int iWarningLevel)
     cursor.movePosition(QTextCursor::End);
     cursor.insertText(sText, format);
     _pUi->textEditLogs->setTextCursor(cursor);
+
+    if (iWarningLevel == 2)
+    {
+        _pUi->dockWidgetLogs->setVisible(true);
+        _pUi->dockWidgetLogs->raise();
+    }
 }
 
 void MainWindow::closeEvent(QCloseEvent* pEvent)

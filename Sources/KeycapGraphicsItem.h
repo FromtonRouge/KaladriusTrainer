@@ -32,6 +32,12 @@ class QColor;
 class KeycapGraphicsItem : public QGraphicsSvgItem
 {
 public:
+    enum
+    {
+        Type = UserType + 1
+    };
+
+public:
     KeycapGraphicsItem( const QString& sKeycapId,
                         qreal dRotationAngle,
                         const QPointF& rotationOrigin,
@@ -46,6 +52,7 @@ public:
     void setTextOffsetX(qreal fX);
     void setTextOffsetY(qreal fY);
 
+    virtual int type() const override {return Type;}
     virtual QPainterPath shape() const override;
 
 protected:

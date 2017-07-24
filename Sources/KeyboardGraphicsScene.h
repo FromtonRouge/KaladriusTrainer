@@ -39,6 +39,7 @@ public:
     KeyboardGraphicsScene(QObject* pParent);
     ~KeyboardGraphicsScene();
 
+    UndoableProxyModel* getUndoableKeyboardModel() const {return _pUndoableKeyboardModel;}
     void setKeyboardProperties(KeyboardPropertiesTreeView* pTreeView);
     KeycapGraphicsItem* getKeycapItem(const QString& sKeycapId) const;
     KeycapGraphicsItem* getKeycapItem(const QModelIndex& indexKeycap) const;

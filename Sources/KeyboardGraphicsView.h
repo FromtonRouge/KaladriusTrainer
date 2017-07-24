@@ -37,6 +37,7 @@ public slots:
 protected:
     virtual void contextMenuEvent(QContextMenuEvent* pEvent) override;
     virtual void resizeEvent(QResizeEvent* pEvent) override;
+    virtual void keyReleaseEvent(QKeyEvent* pEvent) override;
 
 private:
     QAction* _pActionSelectAll;
