@@ -18,6 +18,7 @@
 // ======================================================================
 
 #include "KeyboardPropertiesTreeView.h"
+#include "KeycapPropertiesDelegate.h"
 #include "KeyboardGraphicsScene.h"
 #include "KeycapGraphicsItem.h"
 #include <QtWidgets/QHeaderView>
@@ -28,8 +29,11 @@ KeyboardPropertiesTreeView::KeyboardPropertiesTreeView(QWidget* pParent)
 {
     setAlternatingRowColors(true);
     setSelectionMode(ExtendedSelection);
-    setEditTriggers(SelectedClicked|DoubleClicked|AnyKeyPressed);
+    setEditTriggers(AllEditTriggers);
     header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+
+    delete itemDelegate();
+    setItemDelegate(new KeycapPropertiesDelegate(this));
 }
 
 KeyboardPropertiesTreeView::~KeyboardPropertiesTreeView()

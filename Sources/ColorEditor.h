@@ -19,15 +19,26 @@
 
 #pragma once
 
-#include <QtWidgets/QStyledItemDelegate>
+#include <QtWidgets/QWidget>
+#include <QtGui/QColor>
 
-class KeycapPropertiesDelegate : public QStyledItemDelegate
+class QPushButton;
+class ColorEditor : public QWidget
 {
-public:
-    KeycapPropertiesDelegate(QObject* pParent = nullptr);
-    ~KeycapPropertiesDelegate();
+    Q_OBJECT
+    Q_PROPERTY(QColor color READ getColor WRITE setColor USER true)
 
-    virtual bool eventFilter(QObject* pObject, QEvent* pEvent) override;
-    virtual void setModelData(QWidget* pEditor, QAbstractItemModel* pModel, const QModelIndex& index) const override;
-    virtual void initStyleOption(QStyleOptionViewItem* pOption, const QModelIndex& index) const override;
+public:
+    ColorEditor(QWidget* pParent = nullptr);
+    ~ColorEditor();
+
+    const QColor& getColor() const {return _color;}
+    void setColor(const QColor& color);
+
+protected slots:
+    void onPushButton();
+
+private:
+    QColor _color;
+    QPushButton* _pPushButton;
 };

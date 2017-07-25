@@ -34,7 +34,7 @@ KeycapPropertiesTreeView::KeycapPropertiesTreeView(QWidget* pParent)
 {
     setAlternatingRowColors(true);
     setSelectionMode(ExtendedSelection);
-    setEditTriggers(SelectedClicked|DoubleClicked|AnyKeyPressed);
+    setEditTriggers(AllEditTriggers);
     header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     delete itemDelegate();
     setItemDelegate(new KeycapPropertiesDelegate(this));

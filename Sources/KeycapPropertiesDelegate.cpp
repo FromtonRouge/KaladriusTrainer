@@ -19,6 +19,8 @@
 
 #include "KeycapPropertiesDelegate.h"
 #include "DiffModel.h"
+#include <QtCore/QEvent>
+#include <QtCore/QMetaProperty>
 
 KeycapPropertiesDelegate::KeycapPropertiesDelegate(QObject* pParent)
     : QStyledItemDelegate(pParent)
@@ -31,6 +33,35 @@ KeycapPropertiesDelegate::~KeycapPropertiesDelegate()
 
 }
 
+bool KeycapPropertiesDelegate::eventFilter(QObject* pObject, QEvent* pEvent)
+{
+    if (pEvent->type() == QEvent::User)
+    {
+        QWidget* pWidget = qobject_cast<QWidget*>(pObject);
+        if (pWidget)
+        {
+            emit commitData(pWidget);
+            return true;
+        }
+    }
+    QStyledItemDelegate::eventFilter(pObject, pEvent);
+}
+
+void KeycapPropertiesDelegate::setModelData(QWidget* pEditor, QAbstractItemModel* pModel, const QModelIndex& index) const
+{
+    // Set model data only if the value has really changed
+    QByteArray name = pEditor->metaObject()->userProperty().name();
+    if (!name.isEmpty())
+    {
+        const QVariant& oldValue = index.data(Qt::EditRole);
+        const QVariant& newValue = pEditor->property(name);
+        if (oldValue != newValue)
+        {
+            QStyledItemDelegate::setModelData(pEditor, pModel, index);
+        }
+    }
+}
+
 void KeycapPropertiesDelegate::initStyleOption(QStyleOptionViewItem* pOption, const QModelIndex& index) const
 {
     QStyledItemDelegate::initStyleOption(pOption, index);
@@ -38,9 +69,29 @@ void KeycapPropertiesDelegate::initStyleOption(QStyleOptionViewItem* pOption, co
     if (index.flags().testFlag(Qt::ItemIsEditable))
     {
         auto pDiffModel = qobject_cast<DiffModel*>(const_cast<QAbstractItemModel*>(index.model()));
-        if (pDiffModel->hasDifferentValues(index))
+        if (pDiffModel && pDiffModel->hasDifferentValues(index))
         {
             pOption->text = tr("<different values>");
+        }
+        else
+        {
+            const QVariant& value = index.data(Qt::EditRole);
+            switch (value.type())
+            {
+            case QVariant::Color:
+                {
+                    const QColor& color = value.value<QColor>();
+                    pOption->backgroundBrush = QBrush(color);
+                    pOption->palette.setBrush(QPalette::Text, QBrush(color.lightnessF() > 0.5 ? Qt::black : Qt::white));
+                    pOption->displayAlignment = Qt::AlignCenter;
+                    pOption->text = value.toString();
+                    break;
+                }
+            default:
+                {
+                    break;
+                }
+            }
         }
     }
 }

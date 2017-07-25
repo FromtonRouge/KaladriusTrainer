@@ -19,21 +19,36 @@
 
 #include "MainWindow.h"
 #include "ProjectConfig.h"
+#include "ColorEditor.h"
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QItemEditorFactory>
+#include <QtWidgets/QStandardItemEditorCreator>
 #include <QtCore/QCommandLineParser>
 
 int main(int argc, char *argv[])
 {
+    // Application settings
     QApplication a(argc, argv);
     QApplication::setOrganizationName("FromtonRouge");
     QApplication::setApplicationName(PROJECT_APPLICATION_NAME);
     QApplication::setApplicationVersion(QString("v%1.%2.%3").arg(PROJECT_VERSION_MAJOR).arg(PROJECT_VERSION_MINOR).arg(PROJECT_VERSION_PATCH));
 
+    // Command line options (--help, --version)
     QCommandLineParser parser;
     parser.setApplicationDescription(QObject::tr("Programmer Steno learning tool"));
     parser.addHelpOption();
     parser.addVersionOption();
     parser.process(a);
+
+    // Register custom editors for item delegates, all custom editors must have a USER property
+    auto pEditorFactory = new QItemEditorFactory();
+    pEditorFactory->registerEditor(QVariant::Color, new QStandardItemEditorCreator<ColorEditor>());
+    pEditorFactory->registerEditor(QVariant::String, new QStandardItemEditorCreator<QLineEdit>());
+    pEditorFactory->registerEditor(QVariant::Double, new QStandardItemEditorCreator<QDoubleSpinBox>());
+    pEditorFactory->registerEditor(QVariant::Font, new QStandardItemEditorCreator<QLineEdit>());
+    QItemEditorFactory::setDefaultFactory(pEditorFactory);
 
     MainWindow w;
     w.show();
