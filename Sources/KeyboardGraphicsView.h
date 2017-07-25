@@ -22,6 +22,7 @@
 #include <QtWidgets/QGraphicsView>
 
 class QAction;
+class QSvgRenderer;
 class KeyboardGraphicsView : public QGraphicsView
 {
     Q_OBJECT
@@ -33,12 +34,16 @@ public:
 public slots:
     void fitKeyboardInView();
     void selectAll();
+    void recordKeyboardInputs(bool bActivated);
 
 protected:
     virtual void contextMenuEvent(QContextMenuEvent* pEvent) override;
     virtual void resizeEvent(QResizeEvent* pEvent) override;
     virtual void keyReleaseEvent(QKeyEvent* pEvent) override;
+    virtual void paintEvent(QPaintEvent* pEvent) override;
 
 private:
     QAction* _pActionSelectAll;
+    QSvgRenderer* _pSvgRenderer;
+    bool _bRecordKeyboardMode;
 };

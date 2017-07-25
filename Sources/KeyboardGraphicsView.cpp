@@ -27,12 +27,16 @@
 #include <QtGui/QKeySequence>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QUndoStack>
+#include <QtSvg/QSvgRenderer>
 #include <QtGui/QCursor>
+#include <QtGui/QPainter>
 #include <QtCore/QHash>
 #include <iostream>
 
 KeyboardGraphicsView::KeyboardGraphicsView(QWidget* pParent)
     : QGraphicsView(pParent)
+    , _pSvgRenderer(new QSvgRenderer(QString(":/Svgs/rec-button.svg"), this))
+    , _bRecordKeyboardMode(false)
 {
     setDragMode(RubberBandDrag);
 
@@ -65,70 +69,85 @@ void KeyboardGraphicsView::keyReleaseEvent(QKeyEvent* pEvent)
 {
     QGraphicsView::keyReleaseEvent(pEvent);
 
-    // Get selected KeycapGraphicsItem
-    const auto& selected = scene()->selectedItems();
-    QStringList selectedKeycaps;
-    for (auto pItem : selected)
+    if (_bRecordKeyboardMode)
     {
-        auto pKeycapItem = qgraphicsitem_cast<KeycapGraphicsItem*>(pItem);
-        if (pKeycapItem)
+        // Get selected KeycapGraphicsItem
+        const auto& selected = scene()->selectedItems();
+        QStringList selectedKeycaps;
+        for (auto pItem : selected)
         {
-            selectedKeycaps << pKeycapItem->elementId();
-        }
-    }
-
-    if (!selectedKeycaps.isEmpty())
-    {
-        QString sKey = QKeySequence(pEvent->key()).toString();
-
-        static QHash<int, QString> dictModifiers;
-        dictModifiers[Qt::Key_Shift] = "Shift";
-        dictModifiers[Qt::Key_Control] = "Ctrl";
-        dictModifiers[Qt::Key_Meta] = "Meta";
-        dictModifiers[Qt::Key_Alt] = "Alt";
-        dictModifiers[Qt::Key_AltGr] = "AltGr";
-
-        auto it = dictModifiers.find(pEvent->key());
-        if (it != dictModifiers.end())
-        {
-            sKey = it.value();
-        }
-
-        bool bCanSetKey = false;
-        const QPoint& posInViewport = mapFromGlobal(QCursor::pos());
-        const auto& itemsUnderCursor = items(posInViewport);
-        for (auto pGraphicsItem : itemsUnderCursor)
-        {
-            auto pKeycapItem = qgraphicsitem_cast<KeycapGraphicsItem*>(pGraphicsItem);
-            if (pKeycapItem && pKeycapItem->isSelected())
+            auto pKeycapItem = qgraphicsitem_cast<KeycapGraphicsItem*>(pItem);
+            if (pKeycapItem)
             {
-                bCanSetKey = true;
-                break;
+                selectedKeycaps << pKeycapItem->elementId();
             }
         }
 
-        if (bCanSetKey)
+        if (!selectedKeycaps.isEmpty())
         {
-            auto pKeyboardScene = qobject_cast<KeyboardGraphicsScene*>(scene());
-            if (pKeyboardScene)
+            QString sKey = QKeySequence(pEvent->key()).toString();
+
+            static QHash<int, QString> dictModifiers;
+            dictModifiers[Qt::Key_Shift] = "Shift";
+            dictModifiers[Qt::Key_Control] = "Ctrl";
+            dictModifiers[Qt::Key_Meta] = "Meta";
+            dictModifiers[Qt::Key_Alt] = "Alt";
+            dictModifiers[Qt::Key_AltGr] = "AltGr";
+
+            auto it = dictModifiers.find(pEvent->key());
+            if (it != dictModifiers.end())
             {
-                auto pKeyboardModel = pKeyboardScene->getUndoableKeyboardModel();
-                pKeyboardModel->getUndoStack()->beginMacro(tr("%1 indexes changed to %2").arg(selectedKeycaps.size()).arg(sKey));
-                const QModelIndex& start = pKeyboardModel->index(0, 0, pKeyboardModel->index(0, 0));
-                for (const auto& sKeycap : selectedKeycaps)
+                sKey = it.value();
+            }
+
+            bool bCanSetKey = false;
+            const QPoint& posInViewport = mapFromGlobal(QCursor::pos());
+            const auto& itemsUnderCursor = items(posInViewport);
+            for (auto pGraphicsItem : itemsUnderCursor)
+            {
+                auto pKeycapItem = qgraphicsitem_cast<KeycapGraphicsItem*>(pGraphicsItem);
+                if (pKeycapItem && pKeycapItem->isSelected())
                 {
-                    const auto& matches = pKeyboardModel->match(start, Qt::DisplayRole, sKeycap, 1, Qt::MatchExactly);
-                    if (!matches.isEmpty())
-                    {
-                        const QModelIndex& index = matches.front();
-                        const QModelIndex& indexLabelValue = index.child(0,1);
-                        pKeyboardModel->setData(indexLabelValue, sKey, Qt::EditRole);
-                    }
+                    bCanSetKey = true;
+                    break;
                 }
-                pKeyboardModel->getUndoStack()->endMacro();
+            }
+
+            if (bCanSetKey)
+            {
+                auto pKeyboardScene = qobject_cast<KeyboardGraphicsScene*>(scene());
+                if (pKeyboardScene)
+                {
+                    auto pKeyboardModel = pKeyboardScene->getUndoableKeyboardModel();
+                    pKeyboardModel->getUndoStack()->beginMacro(tr("%1 indexes changed to %2").arg(selectedKeycaps.size()).arg(sKey));
+                    const QModelIndex& start = pKeyboardModel->index(0, 0, pKeyboardModel->index(0, 0));
+                    for (const auto& sKeycap : selectedKeycaps)
+                    {
+                        const auto& matches = pKeyboardModel->match(start, Qt::DisplayRole, sKeycap, 1, Qt::MatchExactly);
+                        if (!matches.isEmpty())
+                        {
+                            const QModelIndex& index = matches.front();
+                            const QModelIndex& indexLabelValue = index.child(0,1);
+                            pKeyboardModel->setData(indexLabelValue, sKey, Qt::EditRole);
+                        }
+                    }
+                    pKeyboardModel->getUndoStack()->endMacro();
+                }
             }
         }
     }
+}
+
+void KeyboardGraphicsView::paintEvent(QPaintEvent* pEvent)
+{
+    if (_bRecordKeyboardMode)
+    {
+        QPainter painter(viewport());
+        QRectF bounds(QPointF(), QSize(80, 50));
+        _pSvgRenderer->render(&painter, "g6", bounds);
+    }
+
+    QGraphicsView::paintEvent(pEvent);
 }
 
 void KeyboardGraphicsView::fitKeyboardInView()
@@ -144,4 +163,10 @@ void KeyboardGraphicsView::selectAll()
     QPainterPath path;
     path.addRect(scene()->sceneRect());
     scene()->setSelectionArea(path, transform());
+}
+
+void KeyboardGraphicsView::recordKeyboardInputs(bool bActivated)
+{
+    _bRecordKeyboardMode = bActivated;
+    viewport()->update();
 }

@@ -42,7 +42,7 @@
      <x>0</x>
      <y>0</y>
      <width>737</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -228,6 +228,8 @@
    <addaction name="actionWrite_Markdown_Files"/>
    <addaction name="separator"/>
    <addaction name="actionKeyboard_Window"/>
+   <addaction name="separator"/>
+   <addaction name="actionRecord_Keyboard"/>
   </widget>
   <widget class="QDockWidget" name="dockWidgetDictionaries4">
    <property name="windowTitle">
@@ -422,6 +424,21 @@
    </property>
    <property name="text">
     <string>Load Default Keyboard Svg</string>
+   </property>
+  </action>
+  <action name="actionRecord_Keyboard">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
+     <normaloff>:/Icons/control-record.png</normaloff>:/Icons/control-record.png</iconset>
+   </property>
+   <property name="text">
+    <string>Record Keyboard</string>
+   </property>
+   <property name="toolTip">
+    <string>Record keyboard inputs</string>
    </property>
   </action>
  </widget>

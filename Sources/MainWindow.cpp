@@ -327,6 +327,7 @@ void MainWindow::on_actionAbout_triggered()
     sText += tr("<p>Author: %1</p>").arg(QApplication::organizationName());
     sText += tr("<p>Some icons by <a href='http://p.yusukekamiyamane.com/'>Yusuke Kamiyamane</a>. Licensed under a <a href='http://creativecommons.org/licenses/by/3.0/'>Creative Commons Attribution 3.0 License</a>.</p>");
     sText += tr("<p>Application icon by <a href='http://chromatix.deviantart.com/'>Chromatix</a>. Licensed under a <a href='http://creativecommons.org/licenses/by-nc-nd/4.0/'>Creative Commons Attribution-Noncommercial-NoDerivate 4.0 License</a>.</p>");
+    sText += tr("<p>Record icon made by <a href='http://www.freepik.com/'>Freepik</a> from <a href='http://www.flaticon.com/'>www.flaticon.com</a>.</p>");
     messageBox.setText(sText);
     messageBox.exec();
 }
@@ -335,6 +336,7 @@ void MainWindow::on_actionKeyboard_Window_triggered()
 {
     auto pGraphicsView = new KeyboardGraphicsView();
     connect(_pKeyboardModel, SIGNAL(keyboardLoaded()), pGraphicsView, SLOT(fitKeyboardInView()));
+    connect(_pUi->actionRecord_Keyboard, SIGNAL(triggered(bool)), pGraphicsView, SLOT(recordKeyboardInputs(bool)));
     auto pSubWindow = _pUi->mdiArea->addSubWindow(pGraphicsView);
     pSubWindow->setWindowTitle(tr("Keyboard"));
     pGraphicsView->setParent(pSubWindow);
