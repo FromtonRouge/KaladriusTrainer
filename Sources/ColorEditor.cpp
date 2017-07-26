@@ -42,8 +42,13 @@ ColorEditor::~ColorEditor()
 void ColorEditor::setColor(const QColor& color)
 {
     _color = color;
-    _pPushButton->setText(color.name());
-    _pPushButton->setStyleSheet(QString("QPushButton { background-color: %1; color: %2}").arg(_color.name(QColor::HexArgb)).arg(_color.lightnessF() > 0.5 ? "black" : "white"));
+    QString sColorname;
+    if (_color.isValid())
+    {
+        sColorname = color.name();
+        _pPushButton->setStyleSheet(QString("QPushButton { background-color: %1; color: %2}").arg(_color.name(QColor::HexArgb)).arg(_color.lightnessF() > 0.5 ? "black" : "white"));
+    }
+    _pPushButton->setText(tr("%1Pick color...").arg(sColorname.isEmpty() ? "" : tr("[%1] ").arg(sColorname)));
 }
 
 void ColorEditor::onPushButton()

@@ -81,10 +81,15 @@ void KeycapPropertiesDelegate::initStyleOption(QStyleOptionViewItem* pOption, co
             case QVariant::Color:
                 {
                     const QColor& color = value.value<QColor>();
-                    pOption->backgroundBrush = QBrush(color);
-                    pOption->palette.setBrush(QPalette::Text, QBrush(color.lightnessF() > 0.5 ? Qt::black : Qt::white));
-                    pOption->displayAlignment = Qt::AlignCenter;
-                    pOption->text = value.toString();
+                    QString sText(QObject::tr("No color"));
+                    if (color.isValid())
+                    {
+                        pOption->backgroundBrush = QBrush(color);
+                        pOption->palette.setBrush(QPalette::Text, QBrush(color.lightnessF() > 0.5 ? Qt::black : Qt::white));
+                        pOption->displayAlignment = Qt::AlignCenter;
+                        sText = QString("[%1]").arg(value.toString());
+                    }
+                    pOption->text = sText;
                     break;
                 }
             default:
