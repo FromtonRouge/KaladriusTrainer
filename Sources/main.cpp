@@ -20,6 +20,7 @@
 #include "MainWindow.h"
 #include "ProjectConfig.h"
 #include "ColorEditor.h"
+#include "FontEditor.h"
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QApplication>
@@ -44,10 +45,10 @@ int main(int argc, char *argv[])
 
     // Register custom editors for item delegates, all custom editors must have a USER property
     auto pEditorFactory = new QItemEditorFactory();
+    pEditorFactory->registerEditor(QVariant::Font, new QStandardItemEditorCreator<FontEditor>());
     pEditorFactory->registerEditor(QVariant::Color, new QStandardItemEditorCreator<ColorEditor>());
     pEditorFactory->registerEditor(QVariant::String, new QStandardItemEditorCreator<QLineEdit>());
     pEditorFactory->registerEditor(QVariant::Double, new QStandardItemEditorCreator<QDoubleSpinBox>());
-    pEditorFactory->registerEditor(QVariant::Font, new QStandardItemEditorCreator<QLineEdit>());
     QItemEditorFactory::setDefaultFactory(pEditorFactory);
 
     MainWindow w;

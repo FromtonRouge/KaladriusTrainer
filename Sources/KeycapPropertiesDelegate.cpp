@@ -19,6 +19,7 @@
 
 #include "KeycapPropertiesDelegate.h"
 #include "DiffModel.h"
+#include <QtGui/QFont>
 #include <QtCore/QEvent>
 #include <QtCore/QMetaProperty>
 
@@ -78,15 +79,20 @@ void KeycapPropertiesDelegate::initStyleOption(QStyleOptionViewItem* pOption, co
             const QVariant& value = index.data(Qt::EditRole);
             switch (value.type())
             {
+            case QVariant::Font:
+                {
+                    const QFont& font = value.value<QFont>();
+                    pOption->text = QString("[%1]").arg(font.family());
+                    break;
+                }
             case QVariant::Color:
                 {
                     const QColor& color = value.value<QColor>();
-                    QString sText(QObject::tr("No color"));
+                    QString sText(QObject::tr("[No color]"));
                     if (color.isValid())
                     {
                         pOption->backgroundBrush = QBrush(color);
                         pOption->palette.setBrush(QPalette::Text, QBrush(color.lightnessF() > 0.5 ? Qt::black : Qt::white));
-                        pOption->displayAlignment = Qt::AlignCenter;
                         sText = QString("[%1]").arg(value.toString());
                     }
                     pOption->text = sText;
