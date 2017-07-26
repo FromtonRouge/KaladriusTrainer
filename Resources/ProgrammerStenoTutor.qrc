@@ -18,5 +18,6 @@
         <file>Icons/arrow-curve-180-left.png</file>
         <file>Svgs/rec-button.svg</file>
         <file>Icons/control-record.png</file>
+        <file>Icons/folder-open-document.png</file>
     </qresource>
 </RCC>

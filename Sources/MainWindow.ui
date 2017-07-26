@@ -42,7 +42,7 @@
      <x>0</x>
      <y>0</y>
      <width>737</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -63,8 +63,23 @@
      <addaction name="actionWrite_Markdown_Files_To"/>
      <addaction name="actionWrite_Markdown_Files"/>
     </widget>
-    <addaction name="actionLoad_Keyboard_Svg"/>
-    <addaction name="actionLoad_Default_Keyboard_Svg"/>
+    <widget class="QMenu" name="menuKeyboard">
+     <property name="title">
+      <string>Keyboard</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
+       <normaloff>:/Icons/keyboard-full.png</normaloff>:/Icons/keyboard-full.png</iconset>
+     </property>
+     <addaction name="actionLoad_Keyboard"/>
+     <addaction name="actionSave_Keyboard_as"/>
+     <addaction name="actionSave_Keyboard"/>
+     <addaction name="separator"/>
+     <addaction name="actionImport_Default_Keyboard_Svg"/>
+     <addaction name="actionImport_Keyboard_Svg"/>
+    </widget>
+    <addaction name="separator"/>
+    <addaction name="menuKeyboard"/>
     <addaction name="separator"/>
     <addaction name="menuDictionaries"/>
     <addaction name="separator"/>
@@ -408,22 +423,22 @@
     <string>About</string>
    </property>
   </action>
-  <action name="actionLoad_Keyboard_Svg">
+  <action name="actionImport_Keyboard_Svg">
    <property name="icon">
     <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
      <normaloff>:/Icons/keyboard-full.png</normaloff>:/Icons/keyboard-full.png</iconset>
    </property>
    <property name="text">
-    <string>Load Keyboard Svg...</string>
+    <string>Import Keyboard Svg...</string>
    </property>
   </action>
-  <action name="actionLoad_Default_Keyboard_Svg">
+  <action name="actionImport_Default_Keyboard_Svg">
    <property name="icon">
     <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
      <normaloff>:/Icons/keyboard-full.png</normaloff>:/Icons/keyboard-full.png</iconset>
    </property>
    <property name="text">
-    <string>Load Default Keyboard Svg</string>
+    <string>Import Default Keyboard Svg</string>
    </property>
   </action>
   <action name="actionRecord_Keyboard">
@@ -439,6 +454,36 @@
    </property>
    <property name="toolTip">
     <string>Record keyboard inputs</string>
+   </property>
+  </action>
+  <action name="actionLoad_Keyboard">
+   <property name="icon">
+    <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
+     <normaloff>:/Icons/folder-open-document.png</normaloff>:/Icons/folder-open-document.png</iconset>
+   </property>
+   <property name="text">
+    <string>Load Keyboard...</string>
+   </property>
+  </action>
+  <action name="actionSave_Keyboard_as">
+   <property name="icon">
+    <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
+     <normaloff>:/Icons/disk--pencil.png</normaloff>:/Icons/disk--pencil.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save Keyboard as...</string>
+   </property>
+  </action>
+  <action name="actionSave_Keyboard">
+   <property name="icon">
+    <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
+     <normaloff>:/Icons/disk.png</normaloff>:/Icons/disk.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save Keyboard</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
  </widget>

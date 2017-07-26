@@ -18,6 +18,7 @@
 // ======================================================================
 
 #include "ui_MainWindow.h"
+#include "Serialization.h"
 #include "MainWindow.h"
 #include "KeyboardGraphicsView.h"
 #include "KeyboardGraphicsScene.h"
@@ -167,7 +168,7 @@ void MainWindow::on_actionQuit_triggered()
     QApplication::quit();
 }
 
-void MainWindow::on_actionLoad_Keyboard_Svg_triggered()
+void MainWindow::on_actionImport_Keyboard_Svg_triggered()
 {
     QSettings settings;
     const QString& sLastKeyboardSvg = settings.value("lastKeyboardSvg").toString();
@@ -179,7 +180,7 @@ void MainWindow::on_actionLoad_Keyboard_Svg_triggered()
     }
 }
 
-void MainWindow::on_actionLoad_Default_Keyboard_Svg_triggered()
+void MainWindow::on_actionImport_Default_Keyboard_Svg_triggered()
 {
     _pKeyboardModel->loadKeyboardSvg(":/Svgs/ergodox.svg");
     QSettings settings;
@@ -342,6 +343,63 @@ void MainWindow::on_actionKeyboard_Window_triggered()
     pGraphicsView->setParent(pSubWindow);
     pGraphicsView->setScene(_pKeyboardGraphicsScene);
     pSubWindow->showMaximized();
+}
+
+void MainWindow::on_actionLoad_Keyboard_triggered()
+{
+    QSettings settings;
+    const QString& sLastKeyboard = settings.value("lastKeyboard").toString();
+    const QString& sKeyboardFileName = QFileDialog::getOpenFileName(this, tr("Keyboard"), sLastKeyboard, "*.kbd");
+    if (!sKeyboardFileName.isEmpty())
+    {
+        settings.setValue("lastKeyboard", sKeyboardFileName);
+
+        if (Serialization::Load(_pKeyboardModel, sKeyboardFileName))
+        {
+            const QString sMsg = tr("Keyboard loaded from file %1").arg(sKeyboardFileName);
+            std::cout << sMsg.toStdString() << std::endl;
+        }
+    }
+}
+
+void MainWindow::on_actionSave_Keyboard_as_triggered()
+{
+    QSettings settings;
+    QString sKeyboardFileName;
+    {
+        const QString& sLastKeyboard = settings.value("lastKeyboard").toString();
+        QFileDialog saveDlg(this, tr("Keyboard"), sLastKeyboard, "*.kbd");
+        saveDlg.setDefaultSuffix("kbd");
+        saveDlg.setAcceptMode(QFileDialog::AcceptSave);
+        if (saveDlg.exec())
+        {
+            sKeyboardFileName = saveDlg.selectedFiles().front();
+            settings.setValue("lastKeyboard", sKeyboardFileName);
+        }
+    }
+
+    if (!sKeyboardFileName.isEmpty())
+    {
+        _pUi->actionSave_Keyboard->trigger();
+    }
+}
+
+void MainWindow::on_actionSave_Keyboard_triggered()
+{
+    QSettings settings;
+    const QString& sLastKeyboard = settings.value("lastKeyboard").toString();
+    if (!sLastKeyboard.isEmpty())
+    {
+        if (Serialization::Save(_pKeyboardModel, sLastKeyboard))
+        {
+            const QString sMsg = tr("Keyboard saved to file %1").arg(sLastKeyboard);
+            std::cout << sMsg.toStdString() << std::endl;
+        }
+    }
+    else
+    {
+        _pUi->actionSave_Keyboard_as->trigger();
+    }
 }
 
 void MainWindow::delayedRestoreState()

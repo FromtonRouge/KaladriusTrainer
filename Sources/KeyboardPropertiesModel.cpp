@@ -96,6 +96,16 @@ void KeyboardPropertiesModel::loadKeyboardSvg(const QString& sSvgFilePath)
             node = node.nextSibling();
         }
 
+        auto pSvgFile = new QStandardItem(QIcon(":/Icons/keyboard-full.png"), tr("Svg"));
+        pSvgFile->setData(SvgFile, PropertyTypeRole);
+        pSvgFile->setEditable(false);
+        auto pSvgFileValue = new QStandardItem();
+        pSvgFileValue->setData(SvgFile, PropertyTypeRole);
+        pSvgFileValue->setEditable(false);
+        pSvgFileValue->setData(_sKeyboardSvgFilePath, Qt::EditRole);
+        pSvgFileValue->setToolTip(_sKeyboardSvgFilePath);
+        appendRow({pSvgFile, pSvgFileValue}); // rowsInserted() signal sent here
+
         auto pKeysRoot = new QStandardItem(QIcon(":/Icons/keyboard-full.png"), tr("Keys"));
         pKeysRoot->setData(KeycapsRoot, PropertyTypeRole);
         pKeysRoot->setEditable(false);
@@ -143,8 +153,7 @@ void KeyboardPropertiesModel::loadKeyboardSvg(const QString& sSvgFilePath)
 
             // Keycap attributes item
             {
-                auto pCurrentParentItem = pKeycapItem;
-                auto addAttribute = [&pCurrentParentItem](const QString& sName, const QVariant& value) -> QStandardItem*
+                auto addAttribute = [](QStandardItem* pParentItem, const QString& sName, const QVariant& value) -> QStandardItem*
                 {
                     auto pAttrCol0 = new QStandardItem(QIcon(":/Icons/document-attribute.png"), sName);
                     pAttrCol0->setData(Attribute, PropertyTypeRole);
@@ -152,17 +161,17 @@ void KeyboardPropertiesModel::loadKeyboardSvg(const QString& sSvgFilePath)
                     auto pAttrCol1 = new QStandardItem();
                     pAttrCol1->setData(value, Qt::EditRole);
                     pAttrCol1->setData(Attribute, PropertyTypeRole);
-                    pCurrentParentItem->appendRow({pAttrCol0, pAttrCol1}); // no signal sent
+                    pParentItem->appendRow({pAttrCol0, pAttrCol1}); // no signal sent
                     return pAttrCol0;
                 };
 
-                pCurrentParentItem = addAttribute(tr("Label"), sKeyId);
-                addAttribute(tr("Font"), QFont("Arial", 7));
-                addAttribute(tr("X"), qreal(0));
-                addAttribute(tr("Y"), qreal(0));
-
-                pCurrentParentItem = pKeycapItem;
-                addAttribute(tr("Color"), QColor());
+                auto pLabelItem = addAttribute(pKeycapItem, tr("Label"), sKeyId);
+                QFont defaultFont;
+                defaultFont.setPixelSize(12);
+                addAttribute(pLabelItem, tr("Font"), defaultFont);
+                addAttribute(pLabelItem, tr("X"), qreal(0));
+                addAttribute(pLabelItem, tr("Y"), qreal(0));
+                addAttribute(pKeycapItem, tr("Color"), QColor());
             }
 
             auto pEmptyItem = new QStandardItem();

@@ -46,14 +46,17 @@ public:
 
 protected slots:
     void on_actionQuit_triggered();
-    void on_actionLoad_Keyboard_Svg_triggered();
-    void on_actionLoad_Default_Keyboard_Svg_triggered();
+    void on_actionImport_Keyboard_Svg_triggered();
+    void on_actionImport_Default_Keyboard_Svg_triggered();
     void on_actionImport_Dictionaries_triggered();
     void on_actionReload_Dictionaries_triggered();
     void on_actionWrite_Markdown_Files_To_triggered();
     void on_actionWrite_Markdown_Files_triggered();
     void on_actionAbout_triggered();
     void on_actionKeyboard_Window_triggered();
+    void on_actionLoad_Keyboard_triggered();
+    void on_actionSave_Keyboard_as_triggered();
+    void on_actionSave_Keyboard_triggered();
     void delayedRestoreState();
 
 private:
