@@ -33,6 +33,21 @@ DiffModel::~DiffModel()
 
 }
 
+void DiffModel::setSourceModel(QAbstractItemModel* pSourceModel)
+{
+    if (sourceModel())
+    {
+        sourceModel()->disconnect(this);
+    }
+
+    QIdentityProxyModel::setSourceModel(pSourceModel);
+
+    if (pSourceModel)
+    {
+        connect(pSourceModel, SIGNAL(modelAboutToBeReset()), this, SLOT(onSourceModelAboutToBeReset()));
+    }
+}
+
 bool DiffModel::setData(const QModelIndex& index, const QVariant& value, int iRole)
 {
     const QModelIndex& sourceIndex = mapToSource(index);
@@ -187,4 +202,9 @@ bool DiffModel::hasDifferentValues(const QModelIndex& proxyIndex) const
     }
 
     return false;
+}
+
+void DiffModel::onSourceModelAboutToBeReset()
+{
+    clearMapping();
 }

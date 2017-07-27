@@ -31,6 +31,7 @@ public:
     DiffModel(QObject* pParent = nullptr);
     ~DiffModel();
 
+    virtual void setSourceModel(QAbstractItemModel* pSourceModel) override;
     virtual bool setData(const QModelIndex& index, const QVariant& value, int iRole) override;
 
     void clearMapping();
@@ -41,6 +42,9 @@ public:
     void removeSourceIndex(const QModelIndex& sourceIndex);
 
     bool hasDifferentValues(const QModelIndex& proxyIndex) const;
+
+private slots:
+    void onSourceModelAboutToBeReset();
 
 private:
     typedef QStringList Path;
