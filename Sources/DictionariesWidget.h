@@ -44,6 +44,7 @@ protected slots:
     void on_lineEdit_textChanged();
     void on_comboBox_currentIndexChanged(int iCurrent);
     void applyFilter();
+    void onDictionariesLoaded();
 
 private:
     void saveExpandedIndexes();
@@ -51,6 +52,7 @@ private:
 
 private:
     QScopedPointer<Ui::DictionariesWidget> _pUi;
+    DictionariesModel* _pDictionariesModel;
     QSortFilterProxyModel* _pSortFilterDictionary;
     QSortFilterProxyModel* _pSortFilterNoEntries;
     QSortFilterProxyModel* _pSortFilterSearch;

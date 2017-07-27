@@ -208,18 +208,20 @@ void MainWindow::on_actionReload_Dictionaries_triggered()
     {
         _dictionaries.clear();
         QDir dir(sLastImportDirectory);
-        QSet<QString> dictionariesFiles;
-        dictionariesFiles.insert("shelton_tables.c");
-        dictionariesFiles.insert("user_tables.c");
-        const auto& entries = dir.entryInfoList(QStringList() << "*.c");
+        QStringList filters = QStringList()  << "shelton_tables.c" << "user_tables.c";
+        const auto& entries = dir.entryInfoList(filters);
+        if (entries.isEmpty())
+        {
+            const QString sMsg = tr("Can't found files %1 in directory %2").arg(filters.join(", ")).arg(sLastImportDirectory);
+            std::cerr << sMsg.toStdString() << std::endl;
+            return;
+        }
+
         for (const auto& entry : entries)
         {
-            if (dictionariesFiles.contains(entry.fileName()))
-            {
-                DictionaryParser parser(entry.absoluteFilePath());
-                parser.parse();
-                _dictionaries.unite(parser.getDictionaries());
-            }
+            DictionaryParser parser(entry.absoluteFilePath());
+            parser.parse();
+            _dictionaries.unite(parser.getDictionaries());
         }
 
         _pDictionariesModel->setDictionaries(_dictionaries);

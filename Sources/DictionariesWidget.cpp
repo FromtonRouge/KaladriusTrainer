@@ -84,6 +84,7 @@ struct NoEntriesFilter : public QSortFilterProxyModel
 DictionariesWidget::DictionariesWidget(QWidget* pParent)
     : QWidget(pParent)
     , _pUi(new Ui::DictionariesWidget())
+    , _pDictionariesModel(nullptr)
     , _pSortFilterDictionary(new DictionaryFilter(this))
     , _pSortFilterNoEntries(new NoEntriesFilter(this))
     , _pSortFilterSearch(new AcceptTopRowsFilter(this))
@@ -119,28 +120,18 @@ DictionariesWidget::~DictionariesWidget()
 void DictionariesWidget::setDictionariesModel(DictionariesModel* pModel)
 {
     _bBuildingDictionaries = true;
-    QSettings settings;
-    const QString sSettingPath = QString("%1/selectedDictionary").arg(objectName());
-    const int iSelectedDictionary = settings.value(sSettingPath, 0).toInt();
 
-    QStringList dictionaries;
-    dictionaries << tr("All Dictionaries");
-    const int iRows = pModel->rowCount();
-    for (int iRow = 0; iRow < iRows; ++iRow)
+    if (_pDictionariesModel)
     {
-        const QModelIndex& index = pModel->index(iRow, 0);
-        dictionaries << index.data().toString();
+        _pDictionariesModel->disconnect(this);
     }
-    _pUi->comboBox->addItems(dictionaries);
 
-    _pSortFilterDictionary->setSourceModel(pModel);
-    _pSortFilterAlphabeticalOrder->sort(0);
-    _pUi->treeView->resizeColumnToContents(0);
+    _pDictionariesModel = pModel;
 
-    _pUi->comboBox->setCurrentIndex(iSelectedDictionary);
-    if (iSelectedDictionary == 0)
+    if (_pDictionariesModel)
     {
-        restoreExpandedIndexes();
+        connect(_pDictionariesModel, SIGNAL(dictionariesLoaded()), this, SLOT(onDictionariesLoaded()));
+        onDictionariesLoaded();
     }
 
     _bBuildingDictionaries = false;
@@ -210,6 +201,34 @@ void DictionariesWidget::applyFilter()
     }
 
     _sPreviousFilter = sFilter;
+}
+
+void DictionariesWidget::onDictionariesLoaded()
+{
+    QSettings settings;
+    const QString sSettingPath = QString("%1/selectedDictionary").arg(objectName());
+    const int iSelectedDictionary = settings.value(sSettingPath, 0).toInt();
+
+    QStringList dictionaries;
+    dictionaries << tr("All Dictionaries");
+    const int iRows = _pDictionariesModel->rowCount();
+    for (int iRow = 0; iRow < iRows; ++iRow)
+    {
+        const QModelIndex& index = _pDictionariesModel->index(iRow, 0);
+        dictionaries << index.data().toString();
+    }
+    _pUi->comboBox->clear();
+    _pUi->comboBox->addItems(dictionaries);
+
+    _pSortFilterDictionary->setSourceModel(_pDictionariesModel);
+    _pSortFilterAlphabeticalOrder->sort(0);
+    _pUi->treeView->resizeColumnToContents(0);
+
+    _pUi->comboBox->setCurrentIndex(iSelectedDictionary);
+    if (iSelectedDictionary == 0)
+    {
+        restoreExpandedIndexes();
+    }
 }
 
 void DictionariesWidget::saveExpandedIndexes()

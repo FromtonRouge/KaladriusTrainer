@@ -24,6 +24,11 @@
 
 class DictionariesModel : public QStandardItemModel
 {
+    Q_OBJECT
+
+signals:
+    void dictionariesLoaded();
+
 public:
     DictionariesModel(QObject* pParent = nullptr);
     ~DictionariesModel();

@@ -65,4 +65,5 @@ void DictionariesModel::setDictionaries(const Dictionaries &dictionaries)
             }
         }
     }
+    emit dictionariesLoaded();
 }
