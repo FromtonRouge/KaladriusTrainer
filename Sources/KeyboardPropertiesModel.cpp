@@ -30,6 +30,7 @@
 KeyboardPropertiesModel::KeyboardPropertiesModel(QObject* pParent)
     : QStandardItemModel(pParent)
 {
+    connect(this, SIGNAL(modelReset()), this, SLOT(onModelReset()));
 }
 
 KeyboardPropertiesModel::~KeyboardPropertiesModel()
@@ -46,20 +47,35 @@ QModelIndex KeyboardPropertiesModel::getParentKeycap(const QModelIndex& indexInK
     return indexKeycap;
 }
 
-void KeyboardPropertiesModel::loadKeyboardSvg(const QString& sSvgFilePath)
+void KeyboardPropertiesModel::loadKeyboardSvgFile(const QString& sSvgFilePath)
 {
-    _sKeyboardSvgFilePath = sSvgFilePath;
-
-    clear(); // modelReset() signal sent here
-    setHorizontalHeaderLabels(QStringList() << tr("Name") << tr("Value"));
-
-    QDomDocument document;
-    QFile fileKeyboard(_sKeyboardSvgFilePath);
+    QByteArray svgContent;
+    QFile fileKeyboard(sSvgFilePath);
     if (fileKeyboard.open(QFile::ReadOnly))
     {
-        document.setContent(&fileKeyboard);
+        svgContent = fileKeyboard.readAll();
         fileKeyboard.close();
     }
+
+    if (svgContent.isEmpty())
+    {
+        const QString sMsg = tr("Can't load svg file %1").arg(sSvgFilePath);
+        std::cerr << sMsg.toStdString() << std::endl;
+    }
+    else
+    {
+        loadKeyboardSvg(svgContent);
+    }
+}
+
+void KeyboardPropertiesModel::loadKeyboardSvg(const QByteArray& svgContent)
+{
+    _svgContent = svgContent;
+
+    clear(); // modelReset() signal sent here
+
+    QDomDocument document;
+    document.setContent(_svgContent);
 
     if (document.hasChildNodes())
     {
@@ -95,16 +111,6 @@ void KeyboardPropertiesModel::loadKeyboardSvg(const QString& sSvgFilePath)
             }
             node = node.nextSibling();
         }
-
-        auto pSvgFile = new QStandardItem(QIcon(":/Icons/keyboard-full.png"), tr("Svg"));
-        pSvgFile->setData(SvgFile, PropertyTypeRole);
-        pSvgFile->setEditable(false);
-        auto pSvgFileValue = new QStandardItem();
-        pSvgFileValue->setData(SvgFile, PropertyTypeRole);
-        pSvgFileValue->setEditable(false);
-        pSvgFileValue->setData(_sKeyboardSvgFilePath, Qt::EditRole);
-        pSvgFileValue->setToolTip(_sKeyboardSvgFilePath);
-        appendRow({pSvgFile, pSvgFileValue}); // rowsInserted() signal sent here
 
         auto pKeysRoot = new QStandardItem(QIcon(":/Icons/keyboard-full.png"), tr("Keys"));
         pKeysRoot->setData(KeycapsRoot, PropertyTypeRole);
@@ -185,7 +191,16 @@ void KeyboardPropertiesModel::loadKeyboardSvg(const QString& sSvgFilePath)
         pEmptyItem->setEditable(false);
         pEmptyItem->setSelectable(false);
         appendRow({pKeysRoot, pEmptyItem}); // rowsInserted() signal sent here
+        emit keyboardLoaded();
     }
+    else
+    {
+        const QString sMsg = tr("Empty document");
+        std::cerr << sMsg.toStdString() << std::endl;
+    }
+}
 
-    emit keyboardLoaded();
+void KeyboardPropertiesModel::onModelReset()
+{
+    setHorizontalHeaderLabels(QStringList() << tr("Name") << tr("Value"));
 }

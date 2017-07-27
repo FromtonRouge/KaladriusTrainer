@@ -71,7 +71,7 @@ void KeyboardGraphicsScene::onModelReset()
    clear();
    delete _pSvgRenderer;
    auto pKeyboardPropertiesModel = qobject_cast<KeyboardPropertiesModel*>(_pUndoableKeyboardModel->sourceModel());
-   _pSvgRenderer = new QSvgRenderer(pKeyboardPropertiesModel->getKeyboardSvgPath(), this);
+   _pSvgRenderer = new QSvgRenderer(pKeyboardPropertiesModel->getSvgContent(), this);
 }
 
 void KeyboardGraphicsScene::onRowsInserted(const QModelIndex& parent, int iFirst, int iLast)

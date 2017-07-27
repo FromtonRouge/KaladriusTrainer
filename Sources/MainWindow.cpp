@@ -111,7 +111,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Load keyboard svg
     const QString& sLastKeyboardSvg = settings.value("lastKeyboardSvg", ":/Svgs/ergodox.svg").toString();
-    _pKeyboardModel->loadKeyboardSvg(sLastKeyboardSvg);
+    _pKeyboardModel->loadKeyboardSvgFile(sLastKeyboardSvg);
     _pUi->actionKeyboard_Window->trigger();
 }
 
@@ -175,14 +175,14 @@ void MainWindow::on_actionImport_Keyboard_Svg_triggered()
     const QString& sKeyboardSvg = QFileDialog::getOpenFileName(this, tr("Keyboard Svg"), sLastKeyboardSvg, "*.svg");
     if (!sKeyboardSvg.isEmpty())
     {
-        _pKeyboardModel->loadKeyboardSvg(sKeyboardSvg);
+        _pKeyboardModel->loadKeyboardSvgFile(sKeyboardSvg);
         settings.setValue("lastKeyboardSvg", sKeyboardSvg);
     }
 }
 
 void MainWindow::on_actionImport_Default_Keyboard_Svg_triggered()
 {
-    _pKeyboardModel->loadKeyboardSvg(":/Svgs/ergodox.svg");
+    _pKeyboardModel->loadKeyboardSvgFile(":/Svgs/ergodox.svg");
     QSettings settings;
     settings.setValue("lastKeyboardSvg", ":/Svgs/ergodox.svg");
 }

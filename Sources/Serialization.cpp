@@ -30,6 +30,34 @@
 #include <iostream>
 #include <string>
 
+// QByteArray
+BOOST_CLASS_VERSION(QByteArray, 0)
+namespace boost
+{
+    namespace serialization
+    {
+        template<class Archive> void serialize(Archive& ar, QByteArray& obj,  const unsigned int fileVersion)
+        {
+            split_free(ar, obj, fileVersion);
+        }
+
+        template<class Archive> void save(Archive& ar, const QByteArray& obj,  const unsigned int fileVersion)
+        {
+            int iSize = obj.size();
+            ar << make_nvp("size", iSize);
+            ar << make_nvp("bytes", make_binary_object((void*)obj.data(), iSize));
+        }
+
+        template<class Archive> void load(Archive& ar, QByteArray& obj,  const unsigned int fileVersion)
+        {
+            int iSize = 0;
+            ar >> make_nvp("size", iSize);
+            obj.resize(iSize);
+            ar >> make_nvp("bytes", make_binary_object(obj.data(), iSize));
+        }
+    }
+}
+
 // QStandardItem
 BOOST_CLASS_VERSION(QStandardItem, 0)
 namespace boost
@@ -46,9 +74,7 @@ namespace boost
             QByteArray bytes;
             QDataStream ds(&bytes, QIODevice::WriteOnly);
             obj.write(ds);
-            int i = bytes.size();
-            ar << make_nvp("data_size", i);
-            ar << make_nvp("data", make_binary_object(bytes.data(), bytes.size()));
+            ar << make_nvp("data", bytes);
 
             const int iRows = obj.rowCount();
             const int iColumns = obj.columnCount();
@@ -66,13 +92,9 @@ namespace boost
 
         template<class Archive> void load(Archive& ar, QStandardItem& obj,  const unsigned int fileVersion)
         {
-            int i;
-            ar >> make_nvp("data_size", i);
-
-            QByteArray byteArray(i, 0);
-            char* bytes = byteArray.data();
-            ar >> make_nvp("data", make_binary_object(bytes, i));
-            QDataStream ds(&byteArray, QIODevice::ReadOnly);
+            QByteArray bytes;
+            ar >> make_nvp("data", bytes);
+            QDataStream ds(&bytes, QIODevice::ReadOnly);
             obj.read(ds);
 
             int iRows = 0;
@@ -107,6 +129,8 @@ namespace Serialization
         boost::archive::xml_oarchive oa(ofs);
         try
         {
+            const QByteArray& svg = pModel->getSvgContent();
+            oa << BOOST_SERIALIZATION_NVP(svg);
             oa << BOOST_SERIALIZATION_NVP(pRootItem);
         }
         catch (const std::exception& e)
@@ -123,7 +147,11 @@ namespace Serialization
         boost::archive::xml_iarchive ia(ifs);
         try
         {
+            QByteArray svg;
+            ia >> BOOST_SERIALIZATION_NVP(svg);
+            pModel->setSvgContent(svg);
             pModel->clear();
+
             auto pRootItem = pModel->invisibleRootItem();
             ia >> BOOST_SERIALIZATION_NVP(*pRootItem);
         }
