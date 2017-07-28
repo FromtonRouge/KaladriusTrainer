@@ -150,7 +150,6 @@ namespace Serialization
             QByteArray svg;
             ia >> BOOST_SERIALIZATION_NVP(svg);
             pModel->setSvgContent(svg);
-            pModel->clear();
 
             auto pRootItem = pModel->invisibleRootItem();
             ia >> BOOST_SERIALIZATION_NVP(*pRootItem);

@@ -109,9 +109,18 @@ MainWindow::MainWindow(QWidget *parent)
     QSettings settings;
     restoreGeometry(settings.value("geometry").toByteArray());
 
-    // Load keyboard svg
-    const QString& sLastKeyboardSvg = settings.value("lastKeyboardSvg", ":/Svgs/ergodox.svg").toString();
-    _pKeyboardModel->loadKeyboardSvgFile(sLastKeyboardSvg);
+    // Load last .kbd file if any
+    const QString& sLastKeyboard = settings.value("lastKeyboard").toString();
+    if (!sLastKeyboard.isEmpty() && QFile::exists(sLastKeyboard))
+    {
+        loadKeyboard(sLastKeyboard);
+    }
+    else
+    {
+        // Load last svg file if any
+        const QString& sLastKeyboardSvg = settings.value("lastKeyboardSvg", ":/Svgs/ergodox.svg").toString();
+        _pKeyboardModel->loadKeyboardSvgFile(sLastKeyboardSvg);
+    }
     _pUi->actionKeyboard_Window->trigger();
 }
 
@@ -135,6 +144,17 @@ void MainWindow::toLogs(const QString& sText, int iWarningLevel)
     {
         _pUi->dockWidgetLogs->setVisible(true);
         _pUi->dockWidgetLogs->raise();
+    }
+}
+
+void MainWindow::loadKeyboard(const QString& sKeyboardFileName)
+{
+    if (Serialization::Load(_pKeyboardModel, sKeyboardFileName))
+    {
+        QSettings settings;
+        settings.setValue("lastKeyboard", sKeyboardFileName);
+        const QString sMsg = tr("Keyboard loaded from file %1").arg(sKeyboardFileName);
+        std::cout << sMsg.toStdString() << std::endl;
     }
 }
 
@@ -354,13 +374,7 @@ void MainWindow::on_actionLoad_Keyboard_triggered()
     const QString& sKeyboardFileName = QFileDialog::getOpenFileName(this, tr("Keyboard"), sLastKeyboard, "*.kbd");
     if (!sKeyboardFileName.isEmpty())
     {
-        settings.setValue("lastKeyboard", sKeyboardFileName);
-
-        if (Serialization::Load(_pKeyboardModel, sKeyboardFileName))
-        {
-            const QString sMsg = tr("Keyboard loaded from file %1").arg(sKeyboardFileName);
-            std::cout << sMsg.toStdString() << std::endl;
-        }
+        loadKeyboard(sKeyboardFileName);
     }
 }
 

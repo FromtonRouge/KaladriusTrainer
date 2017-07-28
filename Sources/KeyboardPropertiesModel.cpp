@@ -30,7 +30,7 @@
 KeyboardPropertiesModel::KeyboardPropertiesModel(QObject* pParent)
     : QStandardItemModel(pParent)
 {
-    connect(this, SIGNAL(modelReset()), this, SLOT(onModelReset()));
+    setHorizontalHeaderLabels(QStringList() << tr("Name") << tr("Value"));
 }
 
 KeyboardPropertiesModel::~KeyboardPropertiesModel()
@@ -198,9 +198,12 @@ void KeyboardPropertiesModel::loadKeyboardSvg(const QByteArray& svgContent)
         const QString sMsg = tr("Empty document");
         std::cerr << sMsg.toStdString() << std::endl;
     }
+    setHorizontalHeaderLabels(QStringList() << tr("Name") << tr("Value"));
 }
 
-void KeyboardPropertiesModel::onModelReset()
+void KeyboardPropertiesModel::setSvgContent(const QByteArray& svgContent)
 {
+    _svgContent = svgContent;
+    clear();
     setHorizontalHeaderLabels(QStringList() << tr("Name") << tr("Value"));
 }
