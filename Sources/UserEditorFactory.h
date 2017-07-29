@@ -17,31 +17,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "MainWindow.h"
-#include "ProjectConfig.h"
-#include "UserEditorFactory.h"
-#include <QtWidgets/QApplication>
-#include <QtCore/QCommandLineParser>
+#pragma once
 
-int main(int argc, char *argv[])
+#include <QtWidgets/QItemEditorFactory>
+
+class UserEditorFactory : public QItemEditorFactory
 {
-    // Application settings
-    QApplication a(argc, argv);
-    QApplication::setOrganizationName("FromtonRouge");
-    QApplication::setApplicationName(PROJECT_APPLICATION_NAME);
-    QApplication::setApplicationVersion(QString("v%1.%2.%3").arg(PROJECT_VERSION_MAJOR).arg(PROJECT_VERSION_MINOR).arg(PROJECT_VERSION_PATCH));
+public:
+    UserEditorFactory();
+    ~UserEditorFactory();
 
-    // Command line options (--help, --version)
-    QCommandLineParser parser;
-    parser.setApplicationDescription(QObject::tr("Programmer Steno learning tool"));
-    parser.addHelpOption();
-    parser.addVersionOption();
-    parser.process(a);
+    virtual QWidget* createEditor(int iUserType, QWidget* pParent) const override;
+};
 
-    // Default factory for all item delegates
-    QItemEditorFactory::setDefaultFactory(new UserEditorFactory());
-
-    MainWindow w;
-    w.show();
-    return a.exec();
-}
