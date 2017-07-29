@@ -22,6 +22,7 @@
 #include "FontEditor.h"
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QDoubleSpinBox>
+#include <QtWidgets/QApplication>
 #include <cfloat>
 
 UserEditorFactory::UserEditorFactory()
@@ -59,6 +60,11 @@ QWidget* UserEditorFactory::createEditor(int iUserType, QWidget* pParent) const
             pDoubleSpinBox->setFrame(false);
             pDoubleSpinBox->setMinimum(-DBL_MAX);
             pDoubleSpinBox->setMaximum(DBL_MAX);
+            QObject::connect(pDoubleSpinBox, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
+                             [=]() {
+                QEvent userEvent(QEvent::User);
+                QApplication::sendEvent(pDoubleSpinBox, &userEvent);
+            });
             return pDoubleSpinBox;
         }
     }
