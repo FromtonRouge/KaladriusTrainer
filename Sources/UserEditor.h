@@ -19,29 +19,16 @@
 
 #pragma once
 
-#include "UserEditor.h"
-#include <QtGui/QFont>
+#include <QtWidgets/QWidget>
 
-class QPushButton;
-class QFontComboBox;
-class FontEditor : public UserEditor
+class UserEditor : public QWidget
 {
     Q_OBJECT
-    Q_PROPERTY(QFont font READ getFont WRITE setFont USER true)
 
 public:
-    FontEditor(QWidget* pParent = nullptr);
-    ~FontEditor();
-
-    const QFont& getFont() const {return _font;}
-    void setFont(const QFont& font);
+    UserEditor(QWidget* pParent = nullptr);
+    ~UserEditor();
 
 protected slots:
-    void onPushButton();
-    void onFontChanged(const QFont& font);
-
-private:
-    QFont _font;
-    QFontComboBox* _pFontComboBox;
-    QPushButton* _pPushButton;
+    void apply();
 };

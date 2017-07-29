@@ -21,10 +21,9 @@
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QColorDialog>
-#include <QtWidgets/QApplication>
 
 ColorEditor::ColorEditor(QWidget* pParent)
-    : QWidget(pParent)
+    : UserEditor(pParent)
 {
     auto pLayout = new QHBoxLayout();
     pLayout->setContentsMargins(0, 0, 0, 0);
@@ -57,9 +56,6 @@ void ColorEditor::onPushButton()
     if (dlg.exec())
     {
         _color = dlg.selectedColor();
-
-        // Send a user event, it can be interpreted in a custom QStyledItemDelegate to commit data
-        QEvent userEvent(QEvent::User);
-        QApplication::sendEvent(this, &userEvent);
+        apply();
     }
 }

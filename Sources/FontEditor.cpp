@@ -22,10 +22,9 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QFontDialog>
 #include <QtWidgets/QFontComboBox>
-#include <QtWidgets/QApplication>
 
 FontEditor::FontEditor(QWidget* pParent)
-    : QWidget(pParent)
+    : UserEditor(pParent)
 {
     auto pLayout = new QHBoxLayout();
     pLayout->setContentsMargins(0, 0, 0, 0);
@@ -62,17 +61,12 @@ void FontEditor::onPushButton()
     if (dlg.exec())
     {
         _font = dlg.selectedFont();
-
-        // Send a user event, it can be interpreted in a custom QStyledItemDelegate to commit data
-        QEvent userEvent(QEvent::User);
-        QApplication::sendEvent(this, &userEvent);
+        apply();
     }
 }
 
 void FontEditor::onFontChanged(const QFont& font)
 {
     _font = font;
-    // Send a user event, it can be interpreted in a custom QStyledItemDelegate to commit data
-    QEvent userEvent(QEvent::User);
-    QApplication::sendEvent(this, &userEvent);
+    apply();
 }

@@ -19,11 +19,11 @@
 
 #pragma once
 
-#include <QtWidgets/QWidget>
+#include "UserEditor.h"
 #include <QtGui/QColor>
 
 class QPushButton;
-class ColorEditor : public QWidget
+class ColorEditor : public UserEditor
 {
     Q_OBJECT
     Q_PROPERTY(QColor color READ getColor WRITE setColor USER true)

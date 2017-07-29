@@ -17,31 +17,22 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
-
 #include "UserEditor.h"
-#include <QtGui/QFont>
+#include <QtWidgets/QApplication>
 
-class QPushButton;
-class QFontComboBox;
-class FontEditor : public UserEditor
+UserEditor::UserEditor(QWidget* pParent)
+    : QWidget(pParent)
 {
-    Q_OBJECT
-    Q_PROPERTY(QFont font READ getFont WRITE setFont USER true)
+}
 
-public:
-    FontEditor(QWidget* pParent = nullptr);
-    ~FontEditor();
+UserEditor::~UserEditor()
+{
 
-    const QFont& getFont() const {return _font;}
-    void setFont(const QFont& font);
+}
 
-protected slots:
-    void onPushButton();
-    void onFontChanged(const QFont& font);
-
-private:
-    QFont _font;
-    QFontComboBox* _pFontComboBox;
-    QPushButton* _pPushButton;
-};
+void UserEditor::apply()
+{
+    // Send a user event, it will be interpreted in UserItemDelegate to commit data
+    QEvent userEvent(QEvent::User);
+    QApplication::sendEvent(this, &userEvent);
+}
