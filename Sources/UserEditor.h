@@ -20,15 +20,23 @@
 #pragma once
 
 #include <QtWidgets/QWidget>
+#include <QtCore/QVariant>
 
 class UserEditor : public QWidget
 {
     Q_OBJECT
+    Q_PROPERTY(QVariant value READ getValue WRITE setValue USER true)
 
 public:
     UserEditor(QWidget* pParent = nullptr);
     ~UserEditor();
 
+    const QVariant& getValue() const {return _value;}
+    virtual void setValue(const QVariant& value) {_value = value;}
+
 protected slots:
     void apply();
+
+protected:
+    QVariant _value;
 };

@@ -47,26 +47,27 @@ FontEditor::~FontEditor()
 
 }
 
-void FontEditor::setFont(const QFont& font)
+void FontEditor::setValue(const QVariant& value)
 {
-    _font = font;
-    QString sText(tr("...").arg(_font.family()));
-    _pFontComboBox->setCurrentFont(_font);
+    _value = value;
+    const QFont& font = _value.value<QFont>();
+    QString sText(tr("...").arg(font.family()));
+    _pFontComboBox->setCurrentFont(font);
     _pPushButton->setText(sText);
 }
 
 void FontEditor::onPushButton()
 {
-    QFontDialog dlg(_font, this);
+    QFontDialog dlg(_value.value<QFont>(), this);
     if (dlg.exec())
     {
-        _font = dlg.selectedFont();
+        _value = dlg.selectedFont();
         apply();
     }
 }
 
 void FontEditor::onFontChanged(const QFont& font)
 {
-    _font = font;
+    _value = font;
     apply();
 }

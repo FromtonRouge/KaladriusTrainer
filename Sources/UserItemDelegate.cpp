@@ -17,24 +17,30 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "UserItemDelegate.h"
+#include <QtWidgets/QWidget>
+#include <QtCore/QEvent>
 
-#include "UserEditor.h"
-
-class QPushButton;
-class ColorEditor : public UserEditor
+UserItemDelegate::UserItemDelegate(QObject* pParent)
 {
-    Q_OBJECT
 
-public:
-    ColorEditor(QWidget* pParent = nullptr);
-    ~ColorEditor();
+}
 
-    virtual void setValue(const QVariant& value) override;
+UserItemDelegate::~UserItemDelegate()
+{
 
-protected slots:
-    void onPushButton();
+}
 
-private:
-    QPushButton* _pPushButton;
-};
+bool UserItemDelegate::eventFilter(QObject* pObject, QEvent* pEvent)
+{
+    if (pEvent->type() == QEvent::User)
+    {
+        QWidget* pWidget = qobject_cast<QWidget*>(pObject);
+        if (pWidget)
+        {
+            emit commitData(pWidget);
+            return true;
+        }
+    }
+    QStyledItemDelegate::eventFilter(pObject, pEvent);
+}

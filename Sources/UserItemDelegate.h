@@ -19,22 +19,13 @@
 
 #pragma once
 
-#include "UserEditor.h"
+#include <QtWidgets/QStyledItemDelegate>
 
-class QPushButton;
-class ColorEditor : public UserEditor
+class UserItemDelegate : public QStyledItemDelegate
 {
-    Q_OBJECT
-
 public:
-    ColorEditor(QWidget* pParent = nullptr);
-    ~ColorEditor();
+    UserItemDelegate(QObject* pParent = nullptr);
+    ~UserItemDelegate();
 
-    virtual void setValue(const QVariant& value) override;
-
-protected slots:
-    void onPushButton();
-
-private:
-    QPushButton* _pPushButton;
+    virtual bool eventFilter(QObject* pObject, QEvent* pEvent) override;
 };

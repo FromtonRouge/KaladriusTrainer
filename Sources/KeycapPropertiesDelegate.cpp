@@ -24,7 +24,7 @@
 #include <QtCore/QMetaProperty>
 
 KeycapPropertiesDelegate::KeycapPropertiesDelegate(QObject* pParent)
-    : QStyledItemDelegate(pParent)
+    : UserItemDelegate(pParent)
 {
 
 }
@@ -32,20 +32,6 @@ KeycapPropertiesDelegate::KeycapPropertiesDelegate(QObject* pParent)
 KeycapPropertiesDelegate::~KeycapPropertiesDelegate()
 {
 
-}
-
-bool KeycapPropertiesDelegate::eventFilter(QObject* pObject, QEvent* pEvent)
-{
-    if (pEvent->type() == QEvent::User)
-    {
-        QWidget* pWidget = qobject_cast<QWidget*>(pObject);
-        if (pWidget)
-        {
-            emit commitData(pWidget);
-            return true;
-        }
-    }
-    QStyledItemDelegate::eventFilter(pObject, pEvent);
 }
 
 void KeycapPropertiesDelegate::setModelData(QWidget* pEditor, QAbstractItemModel* pModel, const QModelIndex& index) const
@@ -58,14 +44,14 @@ void KeycapPropertiesDelegate::setModelData(QWidget* pEditor, QAbstractItemModel
         const QVariant& newValue = pEditor->property(name);
         if (oldValue != newValue)
         {
-            QStyledItemDelegate::setModelData(pEditor, pModel, index);
+            UserItemDelegate::setModelData(pEditor, pModel, index);
         }
     }
 }
 
 void KeycapPropertiesDelegate::initStyleOption(QStyleOptionViewItem* pOption, const QModelIndex& index) const
 {
-    QStyledItemDelegate::initStyleOption(pOption, index);
+    UserItemDelegate::initStyleOption(pOption, index);
 
     if (index.flags().testFlag(Qt::ItemIsEditable))
     {

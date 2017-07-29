@@ -19,15 +19,14 @@
 
 #pragma once
 
-#include <QtWidgets/QStyledItemDelegate>
+#include "UserItemDelegate.h"
 
-class KeycapPropertiesDelegate : public QStyledItemDelegate
+class KeycapPropertiesDelegate : public UserItemDelegate
 {
 public:
     KeycapPropertiesDelegate(QObject* pParent = nullptr);
     ~KeycapPropertiesDelegate();
 
-    virtual bool eventFilter(QObject* pObject, QEvent* pEvent) override;
     virtual void setModelData(QWidget* pEditor, QAbstractItemModel* pModel, const QModelIndex& index) const override;
     virtual void initStyleOption(QStyleOptionViewItem* pOption, const QModelIndex& index) const override;
 };

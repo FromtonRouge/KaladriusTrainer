@@ -38,24 +38,25 @@ ColorEditor::~ColorEditor()
 {
 }
 
-void ColorEditor::setColor(const QColor& color)
+void ColorEditor::setValue(const QVariant& value)
 {
-    _color = color;
+    _value = value;
+    const QColor& color = _value.value<QColor>();
     QString sColorname;
-    if (_color.isValid())
+    if (color.isValid())
     {
         sColorname = color.name();
-        _pPushButton->setStyleSheet(QString("QPushButton { background-color: %1; color: %2}").arg(_color.name(QColor::HexArgb)).arg(_color.lightnessF() > 0.5 ? "black" : "white"));
+        _pPushButton->setStyleSheet(QString("QPushButton { background-color: %1; color: %2}").arg(color.name(QColor::HexArgb)).arg(color.lightnessF() > 0.5 ? "black" : "white"));
     }
     _pPushButton->setText(tr("%1Pick color...").arg(sColorname.isEmpty() ? "" : tr("[%1] ").arg(sColorname)));
 }
 
 void ColorEditor::onPushButton()
 {
-    QColorDialog dlg(_color, this);
+    QColorDialog dlg(_value.value<QColor>(), this);
     if (dlg.exec())
     {
-        _color = dlg.selectedColor();
+        _value = dlg.selectedColor();
         apply();
     }
 }

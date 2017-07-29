@@ -20,28 +20,24 @@
 #pragma once
 
 #include "UserEditor.h"
-#include <QtGui/QFont>
 
 class QPushButton;
 class QFontComboBox;
 class FontEditor : public UserEditor
 {
     Q_OBJECT
-    Q_PROPERTY(QFont font READ getFont WRITE setFont USER true)
 
 public:
     FontEditor(QWidget* pParent = nullptr);
     ~FontEditor();
 
-    const QFont& getFont() const {return _font;}
-    void setFont(const QFont& font);
+    virtual void setValue(const QVariant& value) override;
 
 protected slots:
     void onPushButton();
     void onFontChanged(const QFont& font);
 
 private:
-    QFont _font;
     QFontComboBox* _pFontComboBox;
     QPushButton* _pPushButton;
 };
