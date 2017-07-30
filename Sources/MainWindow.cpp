@@ -21,6 +21,7 @@
 #include "Serialization.h"
 #include "Application.h"
 #include "MainWindow.h"
+#include "Iostream.h"
 #include "KeyboardGraphicsView.h"
 #include "KeyboardGraphicsScene.h"
 #include "KeyboardPropertiesModel.h"
@@ -48,7 +49,6 @@
 #include <QtCore/QTextStream>
 #include <QtCore/QTimer>
 #include <functional>
-#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -153,8 +153,7 @@ void MainWindow::loadKeyboard(const QString& sKeyboardFileName)
     {
         QSettings settings;
         settings.setValue("lastKeyboard", sKeyboardFileName);
-        const QString sMsg = tr("Keyboard loaded from file %1").arg(sKeyboardFileName);
-        std::cout << sMsg.toStdString() << std::endl;
+        COUT(tr("Keyboard loaded from file %1").arg(sKeyboardFileName));
     }
 }
 
@@ -232,8 +231,7 @@ void MainWindow::on_actionReload_Dictionaries_triggered()
         const auto& entries = dir.entryInfoList(filters);
         if (entries.isEmpty())
         {
-            const QString sMsg = tr("Can't found files %1 in directory %2").arg(filters.join(", ")).arg(sLastImportDirectory);
-            std::cerr << sMsg.toStdString() << std::endl;
+            CERR(tr("Can't found files %1 in directory %2").arg(filters.join(", ")).arg(sLastImportDirectory));
             return;
         }
 
@@ -408,8 +406,7 @@ void MainWindow::on_actionSave_Keyboard_triggered()
     {
         if (Serialization::Save(_pKeyboardModel, sLastKeyboard))
         {
-            const QString sMsg = tr("Keyboard saved to file %1").arg(sLastKeyboard);
-            std::cout << sMsg.toStdString() << std::endl;
+            COUT(tr("Keyboard saved to file %1").arg(sLastKeyboard));
         }
     }
     else

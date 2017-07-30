@@ -18,6 +18,7 @@
 // ======================================================================
 
 #include "KeyboardPropertiesModel.h"
+#include "Iostream.h"
 #include <QtXml/QDomDocument>
 #include <QtGui/QStandardItem>
 #include <QtGui/QFont>
@@ -25,7 +26,6 @@
 #include <QtCore/QFile>
 #include <QtCore/QStringList>
 #include <QtCore/QRegularExpression>
-#include <iostream>
 
 KeyboardPropertiesModel::KeyboardPropertiesModel(QObject* pParent)
     : QStandardItemModel(pParent)
@@ -59,8 +59,7 @@ void KeyboardPropertiesModel::loadKeyboardSvgFile(const QString& sSvgFilePath)
 
     if (svgContent.isEmpty())
     {
-        const QString sMsg = tr("Can't load svg file %1").arg(sSvgFilePath);
-        std::cerr << sMsg.toStdString() << std::endl;
+        CERR(tr("Can't load svg file %1").arg(sSvgFilePath));
     }
     else
     {
@@ -195,8 +194,7 @@ void KeyboardPropertiesModel::loadKeyboardSvg(const QByteArray& svgContent)
     }
     else
     {
-        const QString sMsg = tr("Empty document");
-        std::cerr << sMsg.toStdString() << std::endl;
+        CERR(tr("Empty document"));
     }
     setHorizontalHeaderLabels(QStringList() << tr("Name") << tr("Value"));
 }
