@@ -18,12 +18,30 @@
 // ======================================================================
 
 #include "Application.h"
-#include "MainWindow.h"
+#include "ProjectConfig.h"
+#include "UserEditorFactory.h"
+#include <QtCore/QCommandLineParser>
 
-int main(int argc, char *argv[])
+Application::Application(int& argc, char** argv)
+    : QApplication(argc, argv)
 {
-    Application a(argc, argv);
-    MainWindow w;
-    w.show();
-    return a.exec();
+    // Application settings
+    setOrganizationName("FromtonRouge");
+    setApplicationName(PROJECT_APPLICATION_NAME);
+    setApplicationVersion(QString("v%1.%2.%3").arg(PROJECT_VERSION_MAJOR).arg(PROJECT_VERSION_MINOR).arg(PROJECT_VERSION_PATCH));
+
+    // Command line options (--help, --version)
+    QCommandLineParser parser;
+    parser.setApplicationDescription(QObject::tr("Programmer Steno learning tool"));
+    parser.addHelpOption();
+    parser.addVersionOption();
+    parser.process(*this);
+
+    // Default factory for all item delegates
+    QItemEditorFactory::setDefaultFactory(new UserEditorFactory());
+}
+
+Application::~Application()
+{
+
 }

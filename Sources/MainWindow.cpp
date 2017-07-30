@@ -19,6 +19,7 @@
 
 #include "ui_MainWindow.h"
 #include "Serialization.h"
+#include "Application.h"
 #include "MainWindow.h"
 #include "KeyboardGraphicsView.h"
 #include "KeyboardGraphicsScene.h"
@@ -26,7 +27,6 @@
 #include "UndoableProxyModel.h"
 #include "DictionariesModel.h"
 #include "DictionaryParser.h"
-#include <QtWidgets/QApplication>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMdiSubWindow>
 #include <QtWidgets/QMessageBox>
@@ -185,7 +185,7 @@ bool MainWindow::event(QEvent *pEvent)
 
 void MainWindow::on_actionQuit_triggered()
 {
-    QApplication::quit();
+    Application::quit();
 }
 
 void MainWindow::on_actionImport_Keyboard_Svg_triggered()
@@ -346,8 +346,8 @@ void MainWindow::on_actionAbout_triggered()
     messageBox.setWindowTitle(tr("About"));
     messageBox.setTextFormat(Qt::RichText);
 
-    QString sText = tr("%1 %2").arg(QApplication::applicationName()).arg(QApplication::applicationVersion());
-    sText += tr("<p>Author: %1</p>").arg(QApplication::organizationName());
+    QString sText = tr("%1 %2").arg(Application::applicationName()).arg(Application::applicationVersion());
+    sText += tr("<p>Author: %1</p>").arg(Application::organizationName());
     sText += tr("<p>Some icons by <a href='http://p.yusukekamiyamane.com/'>Yusuke Kamiyamane</a>. Licensed under a <a href='http://creativecommons.org/licenses/by/3.0/'>Creative Commons Attribution 3.0 License</a>.</p>");
     sText += tr("<p>Application icon by <a href='http://chromatix.deviantart.com/'>Chromatix</a>. Licensed under a <a href='http://creativecommons.org/licenses/by-nc-nd/4.0/'>Creative Commons Attribution-Noncommercial-NoDerivate 4.0 License</a>.</p>");
     sText += tr("<p>Record icon made by <a href='http://www.freepik.com/'>Freepik</a> from <a href='http://www.flaticon.com/'>www.flaticon.com</a>.</p>");

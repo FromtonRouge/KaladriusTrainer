@@ -17,13 +17,20 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "Application.h"
-#include "MainWindow.h"
+#pragma once
 
-int main(int argc, char *argv[])
+#include <QtWidgets/QApplication>
+
+#if defined(qApp)
+#undef qApp
+#endif
+#define qApp (static_cast<Application*>(QApplication::instance()))
+
+class Application : public QApplication
 {
-    Application a(argc, argv);
-    MainWindow w;
-    w.show();
-    return a.exec();
-}
+    Q_OBJECT
+
+public:
+    Application(int& argc, char** argv);
+    ~Application();
+};
