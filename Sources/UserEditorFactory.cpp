@@ -58,6 +58,7 @@ QWidget* UserEditorFactory::createEditor(int iUserType, QWidget* pParent) const
         {
             auto pDoubleSpinBox = new QDoubleSpinBox(pParent);
             pDoubleSpinBox->setFrame(false);
+            pDoubleSpinBox->setSingleStep(0.1);
             pDoubleSpinBox->setMinimum(-DBL_MAX);
             pDoubleSpinBox->setMaximum(DBL_MAX);
             QObject::connect(pDoubleSpinBox, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
