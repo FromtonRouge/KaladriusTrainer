@@ -24,7 +24,7 @@
 
 class KeycapGraphicsItem;
 class UndoableProxyModel;
-class KeyboardPropertiesTreeView;
+class KeyboardTreeView;
 class QSvgRenderer;
 class QItemSelectionModel;
 class QItemSelection;
@@ -40,7 +40,7 @@ public:
     ~KeyboardGraphicsScene();
 
     UndoableProxyModel* getUndoableKeyboardModel() const {return _pUndoableKeyboardModel;}
-    void setKeyboardProperties(KeyboardPropertiesTreeView* pTreeView);
+    void setKeyboardProperties(KeyboardTreeView* pTreeView);
     KeycapGraphicsItem* getKeycapItem(const QString& sKeycapId) const;
     KeycapGraphicsItem* getKeycapItem(const QModelIndex& indexKeycap) const;
 

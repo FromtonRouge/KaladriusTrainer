@@ -17,16 +17,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "KeycapPropertiesTreeView.h"
-#include "KeycapPropertiesDelegate.h"
-#include "KeyboardPropertiesTreeView.h"
-#include "KeyboardPropertiesModel.h"
+#include "KeycapTreeView.h"
+#include "KeycapDelegate.h"
+#include "KeyboardTreeView.h"
+#include "KeyboardModel.h"
 #include "UndoableProxyModel.h"
 #include "DiffModel.h"
 #include <QtWidgets/QHeaderView>
 #include <QtCore/QItemSelectionModel>
 
-KeycapPropertiesTreeView::KeycapPropertiesTreeView(QWidget* pParent)
+KeycapTreeView::KeycapTreeView(QWidget* pParent)
     : QTreeView(pParent)
     , _pUndoableKeyboardModel(nullptr)
     , _pItemSelectionModel(nullptr)
@@ -37,16 +37,16 @@ KeycapPropertiesTreeView::KeycapPropertiesTreeView(QWidget* pParent)
     setEditTriggers(AllEditTriggers);
     header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     delete itemDelegate();
-    setItemDelegate(new KeycapPropertiesDelegate(this));
+    setItemDelegate(new KeycapDelegate(this));
     setModel(_pDiffModel);
 }
 
-KeycapPropertiesTreeView::~KeycapPropertiesTreeView()
+KeycapTreeView::~KeycapTreeView()
 {
 
 }
 
-void KeycapPropertiesTreeView::setKeyboardProperties(KeyboardPropertiesTreeView* pTreeView)
+void KeycapTreeView::setKeyboardProperties(KeyboardTreeView* pTreeView)
 {
     _pUndoableKeyboardModel = qobject_cast<UndoableProxyModel*>(pTreeView->model());
     _pItemSelectionModel = pTreeView->selectionModel();
@@ -54,7 +54,7 @@ void KeycapPropertiesTreeView::setKeyboardProperties(KeyboardPropertiesTreeView*
     updateRootIndexFromSelection();
 }
 
-void KeycapPropertiesTreeView::updateRootIndexFromSelection(const QItemSelection& selected, const QItemSelection& deselected)
+void KeycapTreeView::updateRootIndexFromSelection(const QItemSelection& selected, const QItemSelection& deselected)
 {
     if (selected.isEmpty() && deselected.isEmpty())
     {
@@ -66,12 +66,12 @@ void KeycapPropertiesTreeView::updateRootIndexFromSelection(const QItemSelection
                 _pDiffModel->setSourceModel(_pUndoableKeyboardModel);
             }
 
-            auto pKeyboardModel = qobject_cast<KeyboardPropertiesModel*>(_pUndoableKeyboardModel->sourceModel());
+            auto pKeyboardModel = qobject_cast<KeyboardModel*>(_pUndoableKeyboardModel->sourceModel());
             _pDiffModel->clearMapping();
             for (const auto& index : allSelectedIndexes)
             {
-                const int iPropertyType = index.data(KeyboardPropertiesModel::PropertyTypeRole).toInt();
-                if (iPropertyType >= KeyboardPropertiesModel::Keycap)
+                const int iPropertyType = index.data(KeyboardModel::PropertyTypeRole).toInt();
+                if (iPropertyType >= KeyboardModel::Keycap)
                 {
                     const QModelIndex& indexKeycapInKeyboardModel = pKeyboardModel->getParentKeycap(index);
                     _pDiffModel->addSourceIndex(_pUndoableKeyboardModel->mapFromSource(indexKeycapInKeyboardModel));
@@ -116,7 +116,7 @@ void KeycapPropertiesTreeView::updateRootIndexFromSelection(const QItemSelection
     }
 }
 
-void KeycapPropertiesTreeView::onKeyboardPropertiesSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected)
+void KeycapTreeView::onKeyboardPropertiesSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected)
 {
     updateRootIndexFromSelection(selected, deselected);
 }

@@ -19,14 +19,29 @@
 
 #pragma once
 
-#include "UserItemDelegate.h"
+#include <QtWidgets/QTreeView>
 
-class KeycapPropertiesDelegate : public UserItemDelegate
+class DiffModel;
+class UndoableProxyModel;
+class KeyboardTreeView;
+class KeycapTreeView : public QTreeView
 {
-public:
-    KeycapPropertiesDelegate(QObject* pParent = nullptr);
-    ~KeycapPropertiesDelegate();
+    Q_OBJECT
 
-    virtual void setModelData(QWidget* pEditor, QAbstractItemModel* pModel, const QModelIndex& index) const override;
-    virtual void initStyleOption(QStyleOptionViewItem* pOption, const QModelIndex& index) const override;
+public:
+    KeycapTreeView(QWidget* pParent = nullptr);
+    ~KeycapTreeView();
+
+    void setKeyboardProperties(KeyboardTreeView* pTreeView);
+
+private slots:
+    void onKeyboardPropertiesSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected);
+
+private:
+    void updateRootIndexFromSelection(const QItemSelection& selected = QItemSelection(), const QItemSelection& deselected = QItemSelection());
+
+private:
+    DiffModel* _pDiffModel;
+    UndoableProxyModel* _pUndoableKeyboardModel;
+    QItemSelectionModel* _pItemSelectionModel;
 };

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>KeycapPropertiesWidget</class>
- <widget class="QWidget" name="KeycapPropertiesWidget">
+ <class>KeycapWidget</class>
+ <widget class="QWidget" name="KeycapWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -27,15 +27,15 @@
     <number>0</number>
    </property>
    <item row="0" column="0">
-    <widget class="KeycapPropertiesTreeView" name="treeView"/>
+    <widget class="KeycapTreeView" name="treeView"/>
    </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KeycapPropertiesTreeView</class>
+   <class>KeycapTreeView</class>
    <extends>QTreeView</extends>
-   <header>KeycapPropertiesTreeView.h</header>
+   <header>KeycapTreeView.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

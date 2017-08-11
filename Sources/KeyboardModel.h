@@ -22,7 +22,7 @@
 #include <QtGui/QStandardItemModel>
 #include <QtCore/QByteArray>
 
-class KeyboardPropertiesModel : public QStandardItemModel
+class KeyboardModel : public QStandardItemModel
 {
     Q_OBJECT
 
@@ -48,8 +48,8 @@ public:
     };
 
 public:
-    KeyboardPropertiesModel(QObject* pParent = nullptr);
-    ~KeyboardPropertiesModel();
+    KeyboardModel(QObject* pParent = nullptr);
+    ~KeyboardModel();
 
     static QModelIndex getParentKeycap(const QModelIndex& indexInKeycapHierarchy);
     void loadKeyboardSvgFile(const QString& sSvgFilePath);

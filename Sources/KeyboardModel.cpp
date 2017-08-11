@@ -17,7 +17,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "KeyboardPropertiesModel.h"
+#include "KeyboardModel.h"
 #include "Iostream.h"
 #include <QtXml/QDomDocument>
 #include <QtGui/QStandardItem>
@@ -27,17 +27,17 @@
 #include <QtCore/QStringList>
 #include <QtCore/QRegularExpression>
 
-KeyboardPropertiesModel::KeyboardPropertiesModel(QObject* pParent)
+KeyboardModel::KeyboardModel(QObject* pParent)
     : QStandardItemModel(pParent)
 {
     setHorizontalHeaderLabels(QStringList() << tr("Name") << tr("Value"));
 }
 
-KeyboardPropertiesModel::~KeyboardPropertiesModel()
+KeyboardModel::~KeyboardModel()
 {
 }
 
-QModelIndex KeyboardPropertiesModel::getParentKeycap(const QModelIndex& indexInKeycapHierarchy)
+QModelIndex KeyboardModel::getParentKeycap(const QModelIndex& indexInKeycapHierarchy)
 {
     QModelIndex indexKeycap = indexInKeycapHierarchy;
     while (indexKeycap.isValid() && (indexKeycap.data(PropertyTypeRole).toInt() != Keycap))
@@ -47,7 +47,7 @@ QModelIndex KeyboardPropertiesModel::getParentKeycap(const QModelIndex& indexInK
     return indexKeycap;
 }
 
-void KeyboardPropertiesModel::loadKeyboardSvgFile(const QString& sSvgFilePath)
+void KeyboardModel::loadKeyboardSvgFile(const QString& sSvgFilePath)
 {
     QByteArray svgContent;
     QFile fileKeyboard(sSvgFilePath);
@@ -67,7 +67,7 @@ void KeyboardPropertiesModel::loadKeyboardSvgFile(const QString& sSvgFilePath)
     }
 }
 
-void KeyboardPropertiesModel::loadKeyboardSvg(const QByteArray& svgContent)
+void KeyboardModel::loadKeyboardSvg(const QByteArray& svgContent)
 {
     _svgContent = svgContent;
 
@@ -199,7 +199,7 @@ void KeyboardPropertiesModel::loadKeyboardSvg(const QByteArray& svgContent)
     setHorizontalHeaderLabels(QStringList() << tr("Name") << tr("Value"));
 }
 
-void KeyboardPropertiesModel::setSvgContent(const QByteArray& svgContent)
+void KeyboardModel::setSvgContent(const QByteArray& svgContent)
 {
     _svgContent = svgContent;
     clear();

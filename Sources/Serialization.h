@@ -19,10 +19,10 @@
 
 #pragma once
 
-class KeyboardPropertiesModel;
+class KeyboardModel;
 class QString;
 namespace Serialization
 {
-    bool Save(KeyboardPropertiesModel* pModel, const QString& sFilePath);
-    bool Load(KeyboardPropertiesModel* pModel, const QString& sFilePath);
+    bool Save(KeyboardModel* pModel, const QString& sFilePath);
+    bool Load(KeyboardModel* pModel, const QString& sFilePath);
 }

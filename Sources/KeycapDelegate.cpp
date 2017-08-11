@@ -17,24 +17,24 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "KeycapPropertiesDelegate.h"
+#include "KeycapDelegate.h"
 #include "DiffModel.h"
 #include <QtGui/QFont>
 #include <QtCore/QEvent>
 #include <QtCore/QMetaProperty>
 
-KeycapPropertiesDelegate::KeycapPropertiesDelegate(QObject* pParent)
+KeycapDelegate::KeycapDelegate(QObject* pParent)
     : UserItemDelegate(pParent)
 {
 
 }
 
-KeycapPropertiesDelegate::~KeycapPropertiesDelegate()
+KeycapDelegate::~KeycapDelegate()
 {
 
 }
 
-void KeycapPropertiesDelegate::setModelData(QWidget* pEditor, QAbstractItemModel* pModel, const QModelIndex& index) const
+void KeycapDelegate::setModelData(QWidget* pEditor, QAbstractItemModel* pModel, const QModelIndex& index) const
 {
     // Set model data only if the value has really changed
     QByteArray name = pEditor->metaObject()->userProperty().name();
@@ -49,7 +49,7 @@ void KeycapPropertiesDelegate::setModelData(QWidget* pEditor, QAbstractItemModel
     }
 }
 
-void KeycapPropertiesDelegate::initStyleOption(QStyleOptionViewItem* pOption, const QModelIndex& index) const
+void KeycapDelegate::initStyleOption(QStyleOptionViewItem* pOption, const QModelIndex& index) const
 {
     UserItemDelegate::initStyleOption(pOption, index);
 

@@ -18,9 +18,9 @@
 // ======================================================================
 
 #include "KeyboardGraphicsScene.h"
-#include "KeyboardPropertiesModel.h"
+#include "KeyboardModel.h"
 #include "UndoableProxyModel.h"
-#include "KeyboardPropertiesTreeView.h"
+#include "KeyboardTreeView.h"
 #include "KeycapGraphicsItem.h"
 #include <QtSvg/QSvgRenderer>
 #include <QtGui/QFont>
@@ -40,7 +40,7 @@ KeyboardGraphicsScene::~KeyboardGraphicsScene()
 {
 }
 
-void KeyboardGraphicsScene::setKeyboardProperties(KeyboardPropertiesTreeView* pTreeView)
+void KeyboardGraphicsScene::setKeyboardProperties(KeyboardTreeView* pTreeView)
 {
     _pUndoableKeyboardModel = qobject_cast<UndoableProxyModel*>(pTreeView->model());
     connect(_pUndoableKeyboardModel, SIGNAL(modelReset()), this, SLOT(onModelReset()));
@@ -70,8 +70,8 @@ void KeyboardGraphicsScene::onModelReset()
    _dictKeycaps.clear();
    clear();
    delete _pSvgRenderer;
-   auto pKeyboardPropertiesModel = qobject_cast<KeyboardPropertiesModel*>(_pUndoableKeyboardModel->sourceModel());
-   _pSvgRenderer = new QSvgRenderer(pKeyboardPropertiesModel->getSvgContent(), this);
+   auto pKeyboardModel = qobject_cast<KeyboardModel*>(_pUndoableKeyboardModel->sourceModel());
+   _pSvgRenderer = new QSvgRenderer(pKeyboardModel->getSvgContent(), this);
 }
 
 void KeyboardGraphicsScene::onRowsInserted(const QModelIndex& parent, int iFirst, int iLast)
@@ -90,9 +90,9 @@ void KeyboardGraphicsScene::onRowsInserted(const QModelIndex& parent, int iFirst
                 {
                     const QModelIndex& indexKeycap = indexInserted.child(iKeycap, 0);
                     const QString& sKeycapId = indexKeycap.data().toString();
-                    const qreal& dRotationAngle = indexKeycap.data(KeyboardPropertiesModel::RotationAngleRole).toReal();
-                    const QPointF& rotationOrigin = indexKeycap.data(KeyboardPropertiesModel::RotationOriginRole).toPointF();
-                    const QRectF& rectOuterBorder = indexKeycap.data(KeyboardPropertiesModel::OuterBorderRole).toRectF();
+                    const qreal& dRotationAngle = indexKeycap.data(KeyboardModel::RotationAngleRole).toReal();
+                    const QPointF& rotationOrigin = indexKeycap.data(KeyboardModel::RotationOriginRole).toPointF();
+                    const QRectF& rectOuterBorder = indexKeycap.data(KeyboardModel::OuterBorderRole).toRectF();
                     auto pKeycapGraphicsItem = new KeycapGraphicsItem(  sKeycapId,
                                                                         dRotationAngle,
                                                                         rotationOrigin,
@@ -129,7 +129,7 @@ void KeyboardGraphicsScene::onDataChanged(const QModelIndex& topLeft, const QMod
     if (roles.isEmpty() || roles.contains(Qt::EditRole))
     {
         const QModelIndex& parent = topLeft.parent();
-        const QModelIndex& indexKeycap = KeyboardPropertiesModel::getParentKeycap(parent);
+        const QModelIndex& indexKeycap = KeyboardModel::getParentKeycap(parent);
         if (!indexKeycap.isValid())
         {
             return;
@@ -188,7 +188,7 @@ void KeyboardGraphicsScene::onKeyboardPropertiesSelectionChanged(const QItemSele
     {
         if (deselectedIndex.column() == 0)
         {
-            auto pKeycapItem = getKeycapItem(KeyboardPropertiesModel::getParentKeycap(deselectedIndex));
+            auto pKeycapItem = getKeycapItem(KeyboardModel::getParentKeycap(deselectedIndex));
             if (pKeycapItem)
             {
                 pKeycapItem->setSelected(false);
@@ -202,7 +202,7 @@ void KeyboardGraphicsScene::onKeyboardPropertiesSelectionChanged(const QItemSele
     {
         if (selectedIndex.column() == 0)
         {
-            auto pKeycapItem = getKeycapItem(KeyboardPropertiesModel::getParentKeycap(selectedIndex));
+            auto pKeycapItem = getKeycapItem(KeyboardModel::getParentKeycap(selectedIndex));
             if (pKeycapItem)
             {
                 pKeycapItem->setSelected(true);

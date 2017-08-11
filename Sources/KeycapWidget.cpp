@@ -17,27 +17,23 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "KeycapWidget.h"
+#include "KeyboardTreeView.h"
+#include "ui_KeycapWidget.h"
 
-#include <QtWidgets/QWidget>
-#include <QtCore/QScopedPointer>
-
-namespace Ui
+KeycapWidget::KeycapWidget(QWidget* pParent)
+    : QWidget(pParent)
+    , _pUi(new Ui::KeycapWidget)
 {
-    class KeycapPropertiesWidget;
+    _pUi->setupUi(this);
 }
 
-class KeyboardPropertiesTreeView;
-class KeycapPropertiesWidget : public QWidget
+KeycapWidget::~KeycapWidget()
 {
-    Q_OBJECT
 
-public:
-    KeycapPropertiesWidget(QWidget* pParent = nullptr);
-    ~KeycapPropertiesWidget();
+}
 
-    void setKeyboardProperties(KeyboardPropertiesTreeView* pTreeView);
-
-private:
-    QScopedPointer<Ui::KeycapPropertiesWidget> _pUi;
-};
+void KeycapWidget::setKeyboardProperties(KeyboardTreeView* pTreeView)
+{
+    _pUi->treeView->setKeyboardProperties(pTreeView);
+}

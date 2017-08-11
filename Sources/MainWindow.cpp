@@ -24,7 +24,7 @@
 #include "Iostream.h"
 #include "KeyboardGraphicsView.h"
 #include "KeyboardGraphicsScene.h"
-#include "KeyboardPropertiesModel.h"
+#include "KeyboardModel.h"
 #include "UndoableProxyModel.h"
 #include "DictionariesModel.h"
 #include "DictionaryParser.h"
@@ -56,7 +56,7 @@ MainWindow::MainWindow(QWidget *parent)
     , _pOldStreambufCout(std::cout.rdbuf())
     , _pOldStreambufCerr(std::cerr.rdbuf())
     , _pDictionariesModel(new DictionariesModel(this))
-    , _pKeyboardModel(new KeyboardPropertiesModel(this))
+    , _pKeyboardModel(new KeyboardModel(this))
     , _pUndoableKeyboardModel(new UndoableProxyModel(this))
     , _pKeyboardGraphicsScene(new KeyboardGraphicsScene(this))
     , _pUndoStack(new QUndoStack(this))

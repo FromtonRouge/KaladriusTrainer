@@ -19,21 +19,14 @@
 
 #pragma once
 
-#include <QtWidgets/QTreeView>
+#include "UserItemDelegate.h"
 
-class KeyboardPropertiesTreeView : public QTreeView
+class KeycapDelegate : public UserItemDelegate
 {
-    Q_OBJECT
-
 public:
-    KeyboardPropertiesTreeView(QWidget* pParent = nullptr);
-    ~KeyboardPropertiesTreeView();
+    KeycapDelegate(QObject* pParent = nullptr);
+    ~KeycapDelegate();
 
-    virtual void setModel(QAbstractItemModel* pModel) override;
-
-public slots:
-    void onGraphicsSceneSelectionChanged();
-
-private slots:
-    void onRowsInserted(const QModelIndex& parent, int iFirst, int iLast);
+    virtual void setModelData(QWidget* pEditor, QAbstractItemModel* pModel, const QModelIndex& index) const override;
+    virtual void initStyleOption(QStyleOptionViewItem* pOption, const QModelIndex& index) const override;
 };

@@ -21,27 +21,19 @@
 
 #include <QtWidgets/QTreeView>
 
-class DiffModel;
-class UndoableProxyModel;
-class KeyboardPropertiesTreeView;
-class KeycapPropertiesTreeView : public QTreeView
+class KeyboardTreeView : public QTreeView
 {
     Q_OBJECT
 
 public:
-    KeycapPropertiesTreeView(QWidget* pParent = nullptr);
-    ~KeycapPropertiesTreeView();
+    KeyboardTreeView(QWidget* pParent = nullptr);
+    ~KeyboardTreeView();
 
-    void setKeyboardProperties(KeyboardPropertiesTreeView* pTreeView);
+    virtual void setModel(QAbstractItemModel* pModel) override;
+
+public slots:
+    void onGraphicsSceneSelectionChanged();
 
 private slots:
-    void onKeyboardPropertiesSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected);
-
-private:
-    void updateRootIndexFromSelection(const QItemSelection& selected = QItemSelection(), const QItemSelection& deselected = QItemSelection());
-
-private:
-    DiffModel* _pDiffModel;
-    UndoableProxyModel* _pUndoableKeyboardModel;
-    QItemSelectionModel* _pItemSelectionModel;
+    void onRowsInserted(const QModelIndex& parent, int iFirst, int iLast);
 };

@@ -18,7 +18,7 @@
 // ======================================================================
 
 #include "Serialization.h"
-#include "KeyboardPropertiesModel.h"
+#include "KeyboardModel.h"
 #include <QtCore/QDataStream>
 #include <QtCore/QByteArray>
 #include <boost/archive/xml_oarchive.hpp>
@@ -122,7 +122,7 @@ namespace boost
 
 namespace Serialization
 {
-    bool Save(KeyboardPropertiesModel* pModel, const QString& sFilePath)
+    bool Save(KeyboardModel* pModel, const QString& sFilePath)
     {
         auto pRootItem = pModel->invisibleRootItem();
         std::ofstream ofs(sFilePath.toStdString());
@@ -141,7 +141,7 @@ namespace Serialization
         return true;
     }
 
-    bool Load(KeyboardPropertiesModel* pModel, const QString& sFilePath)
+    bool Load(KeyboardModel* pModel, const QString& sFilePath)
     {
         std::ifstream ifs(sFilePath.toStdString());
         boost::archive::xml_iarchive ia(ifs);

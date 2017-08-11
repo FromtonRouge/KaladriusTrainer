@@ -42,7 +42,7 @@
      <x>0</x>
      <y>0</y>
      <width>737</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -269,7 +269,7 @@
       <number>0</number>
      </property>
      <item row="0" column="0">
-      <widget class="KeyboardPropertiesTreeView" name="treeViewKeyboardProperties"/>
+      <widget class="KeyboardTreeView" name="treeViewKeyboardProperties"/>
      </item>
     </layout>
    </widget>
@@ -296,7 +296,7 @@
       <number>0</number>
      </property>
      <item row="0" column="0">
-      <widget class="KeycapPropertiesWidget" name="widgetKeycapProperties" native="true"/>
+      <widget class="KeycapWidget" name="widgetKeycapProperties" native="true"/>
      </item>
     </layout>
    </widget>
@@ -493,14 +493,14 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>KeyboardPropertiesTreeView</class>
+   <class>KeyboardTreeView</class>
    <extends>QTreeView</extends>
-   <header>KeyboardPropertiesTreeView.h</header>
+   <header>KeyboardTreeView.h</header>
   </customwidget>
   <customwidget>
-   <class>KeycapPropertiesWidget</class>
+   <class>KeycapWidget</class>
    <extends>QWidget</extends>
-   <header>KeycapPropertiesWidget.h</header>
+   <header>KeycapWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

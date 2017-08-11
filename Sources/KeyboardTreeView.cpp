@@ -17,14 +17,14 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "KeyboardPropertiesTreeView.h"
-#include "KeycapPropertiesDelegate.h"
+#include "KeyboardTreeView.h"
+#include "KeycapDelegate.h"
 #include "KeyboardGraphicsScene.h"
 #include "KeycapGraphicsItem.h"
 #include <QtWidgets/QHeaderView>
 #include <QtCore/QItemSelectionModel>
 
-KeyboardPropertiesTreeView::KeyboardPropertiesTreeView(QWidget* pParent)
+KeyboardTreeView::KeyboardTreeView(QWidget* pParent)
     : QTreeView(pParent)
 {
     setAlternatingRowColors(true);
@@ -33,14 +33,14 @@ KeyboardPropertiesTreeView::KeyboardPropertiesTreeView(QWidget* pParent)
     header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
     delete itemDelegate();
-    setItemDelegate(new KeycapPropertiesDelegate(this));
+    setItemDelegate(new KeycapDelegate(this));
 }
 
-KeyboardPropertiesTreeView::~KeyboardPropertiesTreeView()
+KeyboardTreeView::~KeyboardTreeView()
 {
 }
 
-void KeyboardPropertiesTreeView::setModel(QAbstractItemModel* pModel)
+void KeyboardTreeView::setModel(QAbstractItemModel* pModel)
 {
     if (model())
     {
@@ -55,7 +55,7 @@ void KeyboardPropertiesTreeView::setModel(QAbstractItemModel* pModel)
     }
 }
 
-void KeyboardPropertiesTreeView::onGraphicsSceneSelectionChanged()
+void KeyboardTreeView::onGraphicsSceneSelectionChanged()
 {
     auto pGraphicsScene = qobject_cast<KeyboardGraphicsScene*>(sender());
     if (pGraphicsScene)
@@ -93,7 +93,7 @@ void KeyboardPropertiesTreeView::onGraphicsSceneSelectionChanged()
     }
 }
 
-void KeyboardPropertiesTreeView::onRowsInserted(const QModelIndex& parent, int iFirst, int iLast)
+void KeyboardTreeView::onRowsInserted(const QModelIndex& parent, int iFirst, int iLast)
 {
     bool bResizeColumn = false;
     for (int iRow = iFirst; iRow <= iLast; ++iRow)
