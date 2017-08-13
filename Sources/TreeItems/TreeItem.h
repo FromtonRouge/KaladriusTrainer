@@ -27,6 +27,10 @@ struct TreeItem : public QStandardItem
     {
         Empty = UserType,
         Keyboard,
+        Keys,
+        Keycap,
+        Attribute,
+        AttributeValue,
     };
 
     virtual int type() const override = 0;

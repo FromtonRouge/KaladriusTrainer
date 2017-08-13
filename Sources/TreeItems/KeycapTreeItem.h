@@ -21,13 +21,10 @@
 
 #include "TreeItems/TreeItem.h"
 
-class KeycapsTreeItem;
-class KeyboardTreeItem : public TreeItem
+class KeycapTreeItem : public TreeItem
 {
 public:
-    KeyboardTreeItem();
-    ~KeyboardTreeItem();
-    virtual int type() const override {return Keyboard;}
-
-    KeycapsTreeItem* getKeys() const;
+    KeycapTreeItem(const QString& sKeycapId = QString());
+    ~KeycapTreeItem();
+    virtual int type() const override {return Keycap;}
 };

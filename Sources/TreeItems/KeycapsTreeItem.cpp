@@ -17,17 +17,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "KeycapsTreeItem.h"
 
-#include "TreeItems/TreeItem.h"
-
-class KeycapsTreeItem;
-class KeyboardTreeItem : public TreeItem
+KeycapsTreeItem::KeycapsTreeItem()
 {
-public:
-    KeyboardTreeItem();
-    ~KeyboardTreeItem();
-    virtual int type() const override {return Keyboard;}
+    setIcon(QIcon(":/Icons/keyboard-full.png"));
+    setText(QObject::tr("Keycaps"));
+    setEditable(false);
+}
 
-    KeycapsTreeItem* getKeys() const;
-};
+KeycapsTreeItem::~KeycapsTreeItem()
+{
+
+}

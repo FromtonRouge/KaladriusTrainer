@@ -23,6 +23,7 @@
 #include "KeyboardModel.h"
 #include "UndoableProxyModel.h"
 #include "DiffModel.h"
+#include "TreeItems/TreeItem.h"
 #include <QtWidgets/QHeaderView>
 #include <QtCore/QItemSelectionModel>
 
@@ -71,7 +72,7 @@ void KeycapTreeView::updateRootIndexFromSelection(const QItemSelection& selected
             for (const auto& index : allSelectedIndexes)
             {
                 const int iPropertyType = index.data(KeyboardModel::PropertyTypeRole).toInt();
-                if (iPropertyType >= KeyboardModel::Keycap)
+                if (iPropertyType >= TreeItem::Keycap)
                 {
                     const QModelIndex& indexKeycapInKeyboardModel = pKeyboardModel->getParentKeycap(index);
                     _pDiffModel->addSourceIndex(_pUndoableKeyboardModel->mapFromSource(indexKeycapInKeyboardModel));

@@ -17,17 +17,14 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "AttributeValueTreeItem.h"
 
-#include "TreeItems/TreeItem.h"
-
-class KeycapsTreeItem;
-class KeyboardTreeItem : public TreeItem
+AttributeValueTreeItem::AttributeValueTreeItem(const QVariant& value)
 {
-public:
-    KeyboardTreeItem();
-    ~KeyboardTreeItem();
-    virtual int type() const override {return Keyboard;}
+    setData(value, Qt::EditRole);
+}
 
-    KeycapsTreeItem* getKeys() const;
-};
+AttributeValueTreeItem::~AttributeValueTreeItem()
+{
+
+}

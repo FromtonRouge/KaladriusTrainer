@@ -18,16 +18,24 @@
 // ======================================================================
 
 #include "KeyboardTreeItem.h"
+#include "KeycapsTreeItem.h"
 #include <QtGui/QIcon>
 
 KeyboardTreeItem::KeyboardTreeItem()
 {
     setIcon(QIcon(":/Icons/keyboard-full.png"));
-    setText(QObject::tr("Keys"));
+    setText(QObject::tr("Keyboard"));
     setEditable(false);
+
+    appendRow({new KeycapsTreeItem(), new EmptyTreeItem()});
 }
 
 KeyboardTreeItem::~KeyboardTreeItem()
 {
 
+}
+
+KeycapsTreeItem*KeyboardTreeItem::getKeys() const
+{
+    return static_cast<KeycapsTreeItem*>(child(0));
 }

@@ -30,14 +30,6 @@ signals:
     void keyboardLoaded();
 
 public:
-    enum PropertyType
-    {
-        SvgFile,
-        KeycapsRoot,
-        Keycap,
-        Attribute
-    };
-
     enum UserRole
     {
         PropertyTypeRole = Qt::UserRole + 1, ///< int.
@@ -51,6 +43,7 @@ public:
     KeyboardModel(QObject* pParent = nullptr);
     ~KeyboardModel();
 
+    virtual QVariant data(const QModelIndex& index, int iRole) const override;
     static QModelIndex getParentKeycap(const QModelIndex& indexInKeycapHierarchy);
     void loadKeyboardSvgFile(const QString& sSvgFilePath);
     void loadKeyboardSvg(const QByteArray& svgContent);

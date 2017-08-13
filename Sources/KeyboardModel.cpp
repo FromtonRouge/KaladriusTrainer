@@ -19,9 +19,12 @@
 
 #include "KeyboardModel.h"
 #include "TreeItems/KeyboardTreeItem.h"
+#include "TreeItems/KeycapsTreeItem.h"
+#include "TreeItems/KeycapTreeItem.h"
+#include "TreeItems/AttributeTreeItem.h"
+#include "TreeItems/AttributeValueTreeItem.h"
 #include "Iostream.h"
 #include <QtXml/QDomDocument>
-#include <QtGui/QStandardItem>
 #include <QtGui/QFont>
 #include <QtCore/QRectF>
 #include <QtCore/QFile>
@@ -38,10 +41,29 @@ KeyboardModel::~KeyboardModel()
 {
 }
 
+QVariant KeyboardModel::data(const QModelIndex& index, int iRole) const
+{
+    QVariant result;
+    switch (iRole)
+    {
+    case PropertyTypeRole:
+        {
+            result = itemFromIndex(index)->type();
+            break;
+        }
+    default:
+        {
+            result = QStandardItemModel::data(index, iRole);
+            break;
+        }
+    }
+    return result;
+}
+
 QModelIndex KeyboardModel::getParentKeycap(const QModelIndex& indexInKeycapHierarchy)
 {
     QModelIndex indexKeycap = indexInKeycapHierarchy;
-    while (indexKeycap.isValid() && (indexKeycap.data(PropertyTypeRole).toInt() != Keycap))
+    while (indexKeycap.isValid() && (indexKeycap.data(PropertyTypeRole).toInt() != TreeItem::Keycap))
     {
         indexKeycap = indexKeycap.parent();
     }
@@ -112,9 +134,7 @@ void KeyboardModel::loadKeyboardSvg(const QByteArray& svgContent)
             node = node.nextSibling();
         }
 
-        auto pKeysRoot = new KeyboardTreeItem();
-        pKeysRoot->setData(KeycapsRoot, PropertyTypeRole);
-
+        auto pKeyboardTreeItem = new KeyboardTreeItem();
         for (const auto& element : elements)
         {
             const QString& sKeyId = element.attribute("id");
@@ -134,12 +154,11 @@ void KeyboardModel::loadKeyboardSvg(const QByteArray& svgContent)
                 }
             }
 
-            auto pKeycapItem = new QStandardItem(QIcon(":/Icons/keyboard.png"), sKeyId);
-            pKeycapItem->setData(Keycap, PropertyTypeRole);
+            auto pKeycapTreeItem = new KeycapTreeItem(sKeyId);
             if (rotateTransform.size() == 3)
             {
-                pKeycapItem->setData(rotateTransform[0], RotationAngleRole);
-                pKeycapItem->setData(QPointF(rotateTransform[1], rotateTransform[2]), RotationOriginRole);
+                pKeycapTreeItem->setData(rotateTransform[0], RotationAngleRole);
+                pKeycapTreeItem->setData(QPointF(rotateTransform[1], rotateTransform[2]), RotationOriginRole);
             }
 
             // Get the child outer border rect element
@@ -151,38 +170,31 @@ void KeyboardModel::loadKeyboardSvg(const QByteArray& svgContent)
                 rectOuterBorder.setY(rectElement.attribute("y").toDouble());
                 rectOuterBorder.setWidth(rectElement.attribute("width").toDouble());
                 rectOuterBorder.setHeight(rectElement.attribute("height").toDouble());
-                pKeycapItem->setData(rectOuterBorder, int(UserRole::OuterBorderRole));
+                pKeycapTreeItem->setData(rectOuterBorder, int(UserRole::OuterBorderRole));
             }
-
-            pKeycapItem->setEditable(false);
 
             // Keycap attributes item
             {
-                auto addAttribute = [](QStandardItem* pParentItem, const QString& sName, const QVariant& value) -> QStandardItem*
+                auto addAttribute = [](QStandardItem* pParentItem, const QString& sName, const QVariant& value) -> AttributeTreeItem*
                 {
-                    auto pAttrCol0 = new QStandardItem(QIcon(":/Icons/document-attribute.png"), sName);
-                    pAttrCol0->setData(Attribute, PropertyTypeRole);
-                    pAttrCol0->setEditable(false);
-                    auto pAttrCol1 = new QStandardItem();
-                    pAttrCol1->setData(value, Qt::EditRole);
-                    pAttrCol1->setData(Attribute, PropertyTypeRole);
-                    pParentItem->appendRow({pAttrCol0, pAttrCol1}); // no signal sent
-                    return pAttrCol0;
+                    auto pAttribute = new AttributeTreeItem(sName);
+                    pParentItem->appendRow({pAttribute, new AttributeValueTreeItem(value)}); // no signal sent
+                    return pAttribute;
                 };
 
-                auto pLabelItem = addAttribute(pKeycapItem, tr("Label"), sKeyId);
+                auto pLabelItem = addAttribute(pKeycapTreeItem, tr("Label"), sKeyId);
                 QFont defaultFont;
                 defaultFont.setPixelSize(12);
                 addAttribute(pLabelItem, tr("Font"), defaultFont);
                 addAttribute(pLabelItem, tr("X"), qreal(0));
                 addAttribute(pLabelItem, tr("Y"), qreal(0));
-                addAttribute(pKeycapItem, tr("Color"), QColor());
+                addAttribute(pKeycapTreeItem, tr("Color"), QColor());
             }
 
-            pKeysRoot->appendRow({pKeycapItem, new EmptyTreeItem()}); // no signal sent
+            pKeyboardTreeItem->getKeys()->appendRow({pKeycapTreeItem, new EmptyTreeItem()}); // no signal sent
         }
 
-        appendRow({pKeysRoot, new EmptyTreeItem()}); // rowsInserted() signal sent here
+        appendRow({pKeyboardTreeItem, new EmptyTreeItem()}); // rowsInserted() signal sent here
         emit keyboardLoaded();
     }
     else
