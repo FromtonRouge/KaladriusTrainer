@@ -40,12 +40,13 @@ endif()
 # Qt5 directory looks like this C:\Qt\5.9.1\msvc2015_64\lib\cmake\Qt5
 find_package(Qt5 COMPONENTS Core Gui Widgets Svg Xml REQUIRED)
 
-file(GLOB SOURCES ./Sources/*.cpp)
+file(GLOB_RECURSE SOURCES ./Sources/*.cpp)
+file(GLOB_RECURSE HEADERS ./Sources/*.h)
 file(GLOB QRCS ./Resources/*.qrc)
 file(GLOB RCS ./Resources/*.rc)
 include_directories(./Sources)
 
-add_executable(${PROJECT_NAME} WIN32 ${SOURCES} ${QRCS} ${RCS})
+add_executable(${PROJECT_NAME} WIN32 ${SOURCES} ${HEADERS} ${QRCS} ${RCS})
 target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Svg Qt5::Xml)
 
 if (Boost_FOUND)

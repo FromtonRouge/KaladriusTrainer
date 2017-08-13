@@ -18,6 +18,7 @@
 // ======================================================================
 
 #include "KeyboardModel.h"
+#include "TreeItems/KeyboardTreeItem.h"
 #include "Iostream.h"
 #include <QtXml/QDomDocument>
 #include <QtGui/QStandardItem>
@@ -111,9 +112,8 @@ void KeyboardModel::loadKeyboardSvg(const QByteArray& svgContent)
             node = node.nextSibling();
         }
 
-        auto pKeysRoot = new QStandardItem(QIcon(":/Icons/keyboard-full.png"), tr("Keys"));
+        auto pKeysRoot = new KeyboardTreeItem();
         pKeysRoot->setData(KeycapsRoot, PropertyTypeRole);
-        pKeysRoot->setEditable(false);
 
         for (const auto& element : elements)
         {
@@ -179,17 +179,10 @@ void KeyboardModel::loadKeyboardSvg(const QByteArray& svgContent)
                 addAttribute(pKeycapItem, tr("Color"), QColor());
             }
 
-            auto pEmptyItem = new QStandardItem();
-            pEmptyItem->setEditable(false);
-            pEmptyItem->setSelectable(false);
-
-            pKeysRoot->appendRow({pKeycapItem, pEmptyItem}); // no signal sent
+            pKeysRoot->appendRow({pKeycapItem, new EmptyTreeItem()}); // no signal sent
         }
 
-        auto pEmptyItem  = new QStandardItem();
-        pEmptyItem->setEditable(false);
-        pEmptyItem->setSelectable(false);
-        appendRow({pKeysRoot, pEmptyItem}); // rowsInserted() signal sent here
+        appendRow({pKeysRoot, new EmptyTreeItem()}); // rowsInserted() signal sent here
         emit keyboardLoaded();
     }
     else
