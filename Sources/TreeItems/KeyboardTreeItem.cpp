@@ -35,7 +35,7 @@ KeyboardTreeItem::~KeyboardTreeItem()
 
 }
 
-KeycapsTreeItem*KeyboardTreeItem::getKeys() const
+KeycapsTreeItem*KeyboardTreeItem::getKeycaps() const
 {
     return static_cast<KeycapsTreeItem*>(child(0));
 }

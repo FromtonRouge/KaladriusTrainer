@@ -29,5 +29,5 @@ public:
     ~KeyboardTreeItem();
     virtual int type() const override {return Keyboard;}
 
-    KeycapsTreeItem* getKeys() const;
+    KeycapsTreeItem* getKeycaps() const;
 };

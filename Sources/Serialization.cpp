@@ -19,6 +19,11 @@
 
 #include "Serialization.h"
 #include "KeyboardModel.h"
+#include "TreeItems/KeyboardTreeItem.h"
+#include "TreeItems/KeycapsTreeItem.h"
+#include "TreeItems/KeycapTreeItem.h"
+#include "TreeItems/AttributeTreeItem.h"
+#include "TreeItems/AttributeValueTreeItem.h"
 #include <QtCore/QDataStream>
 #include <QtCore/QByteArray>
 #include <boost/archive/xml_oarchive.hpp>
@@ -58,64 +63,89 @@ namespace boost
     }
 }
 
-// QStandardItem
-BOOST_CLASS_VERSION(QStandardItem, 0)
+// KeycapTreeItem
+BOOST_CLASS_VERSION(KeycapTreeItem, 0)
 namespace boost
 {
     namespace serialization
     {
-        template<class Archive> void serialize(Archive& ar, QStandardItem& obj,  const unsigned int fileVersion)
+        template<class Archive> void serialize(Archive& ar, KeycapTreeItem& obj,  const unsigned int fileVersion)
         {
             split_free(ar, obj, fileVersion);
         }
 
-        template<class Archive> void save(Archive& ar, const QStandardItem& obj,  const unsigned int fileVersion)
+        template<class Archive> void save(Archive& ar, const KeycapTreeItem& obj,  const unsigned int fileVersion)
         {
-            QByteArray bytes;
-            QDataStream ds(&bytes, QIODevice::WriteOnly);
-            obj.write(ds);
-            ar << make_nvp("data", bytes);
+            // TODO
+        }
 
-            const int iRows = obj.rowCount();
-            const int iColumns = obj.columnCount();
-            ar << make_nvp("rows", iRows);
-            ar << make_nvp("columns", iColumns);
-            for (int iRow = 0; iRow < iRows; ++iRow)
+        template<class Archive> void load(Archive& ar, KeycapTreeItem& obj,  const unsigned int fileVersion)
+        {
+            // TODO
+        }
+    }
+}
+
+// KeycapsTreeItem
+BOOST_CLASS_VERSION(KeycapsTreeItem, 0)
+namespace boost
+{
+    namespace serialization
+    {
+        template<class Archive> void serialize(Archive& ar, KeycapsTreeItem& obj,  const unsigned int fileVersion)
+        {
+            split_free(ar, obj, fileVersion);
+        }
+
+        template<class Archive> void save(Archive& ar, const KeycapsTreeItem& obj,  const unsigned int fileVersion)
+        {
+            const int iKeycaps = obj.rowCount();
+            ar << make_nvp("keycaps_count", iKeycaps);
+            for (int iKeycap = 0; iKeycap < iKeycaps; ++iKeycap)
             {
-                for (int iColumn = 0; iColumn < iColumns; ++iColumn)
-                {
-                    QStandardItem* pCell = obj.child(iRow, iColumn);
-                    ar << make_nvp("cell", pCell);
-                }
+                auto pKeycapTreeItem = static_cast<KeycapTreeItem*>(obj.child(iKeycap));
+                ar << make_nvp("keycap", pKeycapTreeItem);
             }
         }
 
-        template<class Archive> void load(Archive& ar, QStandardItem& obj,  const unsigned int fileVersion)
+        template<class Archive> void load(Archive& ar, KeycapsTreeItem& obj,  const unsigned int fileVersion)
         {
-            QByteArray bytes;
-            ar >> make_nvp("data", bytes);
-            QDataStream ds(&bytes, QIODevice::ReadOnly);
-            obj.read(ds);
-
-            int iRows = 0;
-            int iColumns = 0;
-            ar >> make_nvp("rows", iRows);
-            ar >> make_nvp("columns", iColumns);
-            for (int iRow = 0; iRow < iRows; ++iRow)
+            int iKeycaps = 0;
+            ar >> make_nvp("keycaps_count", iKeycaps);
+            for (int iKeycap = 0; iKeycap < iKeycaps; ++iKeycap)
             {
-                QList<QStandardItem*> cells;
-                for (int iColumn = 0; iColumn < iColumns; ++iColumn)
+                KeycapTreeItem* pKeycapTreeItem = nullptr;
+                ar >> make_nvp("keycap", pKeycapTreeItem);
+                if (pKeycapTreeItem)
                 {
-                    QStandardItem* pCell = nullptr;
-                    ar >> make_nvp("cell", pCell);
-                    cells << pCell;
-                }
-
-                if (!cells.isEmpty())
-                {
-                    obj.appendRow(cells);
+                    obj.appendRow({pKeycapTreeItem, new EmptyTreeItem()});
                 }
             }
+        }
+    }
+}
+
+// KeyboardTreeItem
+BOOST_CLASS_VERSION(KeyboardTreeItem, 0)
+namespace boost
+{
+    namespace serialization
+    {
+        template<class Archive> void serialize(Archive& ar, KeyboardTreeItem& obj,  const unsigned int fileVersion)
+        {
+            split_free(ar, obj, fileVersion);
+        }
+
+        template<class Archive> void save(Archive& ar, const KeyboardTreeItem& obj,  const unsigned int fileVersion)
+        {
+            auto pKeycapsTreeItem = obj.getKeycaps();
+            ar << make_nvp("keycaps", pKeycapsTreeItem);
+        }
+
+        template<class Archive> void load(Archive& ar, KeyboardTreeItem& obj,  const unsigned int fileVersion)
+        {
+            auto pKeycapsTreeItem = obj.getKeycaps();
+            ar >> make_nvp("keycaps", *pKeycapsTreeItem);
         }
     }
 }
@@ -124,14 +154,15 @@ namespace Serialization
 {
     bool Save(KeyboardModel* pModel, const QString& sFilePath)
     {
-        auto pRootItem = pModel->invisibleRootItem();
         std::ofstream ofs(sFilePath.toStdString());
         boost::archive::xml_oarchive oa(ofs);
         try
         {
             const QByteArray& svg = pModel->getSvgContent();
             oa << BOOST_SERIALIZATION_NVP(svg);
-            oa << BOOST_SERIALIZATION_NVP(pRootItem);
+
+            auto pKeyboardTreeItem = pModel->getKeyboardTreeItem();
+            oa << BOOST_SERIALIZATION_NVP(pKeyboardTreeItem);
         }
         catch (const std::exception& e)
         {
@@ -151,8 +182,9 @@ namespace Serialization
             ia >> BOOST_SERIALIZATION_NVP(svg);
             pModel->setSvgContent(svg);
 
-            auto pRootItem = pModel->invisibleRootItem();
-            ia >> BOOST_SERIALIZATION_NVP(*pRootItem);
+            KeyboardTreeItem* pKeyboardTreeItem;
+            ia >> BOOST_SERIALIZATION_NVP(pKeyboardTreeItem);
+            pModel->setKeyboardTreeItem(pKeyboardTreeItem);
         }
         catch (const std::exception& e)
         {

@@ -173,7 +173,7 @@ void KeyboardModel::loadKeyboardSvg(const QByteArray& svgContent)
                 pKeycapTreeItem->setData(rectOuterBorder, int(UserRole::OuterBorderRole));
             }
 
-            pKeyboardTreeItem->getKeys()->appendRow({pKeycapTreeItem, new EmptyTreeItem()}); // no signal sent
+            pKeyboardTreeItem->getKeycaps()->appendRow({pKeycapTreeItem, new EmptyTreeItem()}); // no signal sent
         }
 
         appendRow({pKeyboardTreeItem, new EmptyTreeItem()}); // rowsInserted() signal sent here
@@ -190,5 +190,26 @@ void KeyboardModel::setSvgContent(const QByteArray& svgContent)
 {
     _svgContent = svgContent;
     clear();
+    setHorizontalHeaderLabels(QStringList() << tr("Name") << tr("Value"));
+}
+
+KeyboardTreeItem* KeyboardModel::getKeyboardTreeItem() const
+{
+    if (hasChildren())
+    {
+        const auto& matches = match(index(0,0), TreeItemTypeRole, TreeItem::Keyboard, 1, Qt::MatchExactly);
+        if (!matches.isEmpty())
+        {
+            return static_cast<KeyboardTreeItem*>(itemFromIndex(matches.front()));
+        }
+    }
+    return nullptr;
+}
+
+void KeyboardModel::setKeyboardTreeItem(KeyboardTreeItem* pKeyboardTreeItem)
+{
+    clear();
+    appendRow({pKeyboardTreeItem, new EmptyTreeItem()});
+    emit keyboardLoaded();
     setHorizontalHeaderLabels(QStringList() << tr("Name") << tr("Value"));
 }
