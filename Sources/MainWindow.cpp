@@ -196,6 +196,7 @@ void MainWindow::on_actionImport_Keyboard_Svg_triggered()
     {
         _pKeyboardModel->loadKeyboardSvgFile(sKeyboardSvg);
         settings.setValue("lastKeyboardSvg", sKeyboardSvg);
+        settings.setValue("lastKeyboard", QString());
     }
 }
 
@@ -204,6 +205,7 @@ void MainWindow::on_actionImport_Default_Keyboard_Svg_triggered()
     _pKeyboardModel->loadKeyboardSvgFile(":/Svgs/ergodox.svg");
     QSettings settings;
     settings.setValue("lastKeyboardSvg", ":/Svgs/ergodox.svg");
+    settings.setValue("lastKeyboard", QString());
 }
 
 void MainWindow::on_actionImport_Dictionaries_triggered()
