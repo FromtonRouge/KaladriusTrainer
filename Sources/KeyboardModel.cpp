@@ -173,24 +173,6 @@ void KeyboardModel::loadKeyboardSvg(const QByteArray& svgContent)
                 pKeycapTreeItem->setData(rectOuterBorder, int(UserRole::OuterBorderRole));
             }
 
-            // Keycap attributes item
-            {
-                auto addAttribute = [](QStandardItem* pParentItem, const QString& sName, const QVariant& value) -> AttributeTreeItem*
-                {
-                    auto pAttribute = new AttributeTreeItem(sName);
-                    pParentItem->appendRow({pAttribute, new AttributeValueTreeItem(value)}); // no signal sent
-                    return pAttribute;
-                };
-
-                auto pLabelItem = addAttribute(pKeycapTreeItem, tr("Label"), sKeyId);
-                QFont defaultFont;
-                defaultFont.setPixelSize(12);
-                addAttribute(pLabelItem, tr("Font"), defaultFont);
-                addAttribute(pLabelItem, tr("X"), qreal(0));
-                addAttribute(pLabelItem, tr("Y"), qreal(0));
-                addAttribute(pKeycapTreeItem, tr("Color"), QColor());
-            }
-
             pKeyboardTreeItem->getKeys()->appendRow({pKeycapTreeItem, new EmptyTreeItem()}); // no signal sent
         }
 

@@ -18,12 +18,34 @@
 // ======================================================================
 
 #include "KeycapTreeItem.h"
+#include "AttributeTreeItem.h"
+#include "AttributeValueTreeItem.h"
+#include <QtGui/QFont>
+#include <QtGui/QColor>
 
 KeycapTreeItem::KeycapTreeItem(const QString& sKeycapId)
 {
     setIcon(QIcon(":/Icons/keyboard.png"));
     setText(sKeycapId);
     setEditable(false);
+
+    // Keycap attributes item
+    {
+        auto addAttribute = [](TreeItem* pParentItem, const QString& sName, const QVariant& value) -> AttributeTreeItem*
+        {
+            auto pAttribute = new AttributeTreeItem(sName);
+            pParentItem->appendRow({pAttribute, new AttributeValueTreeItem(value)});
+            return pAttribute;
+        };
+
+        auto pLabelItem = addAttribute(this, QObject::tr("Label"), sKeycapId);
+        QFont defaultFont;
+        defaultFont.setPixelSize(12);
+        addAttribute(pLabelItem, QObject::tr("Font"), defaultFont);
+        addAttribute(pLabelItem, QObject::tr("X"), qreal(0));
+        addAttribute(pLabelItem, QObject::tr("Y"), qreal(0));
+        addAttribute(this, QObject::tr("Color"), QColor());
+    }
 }
 
 KeycapTreeItem::~KeycapTreeItem()
