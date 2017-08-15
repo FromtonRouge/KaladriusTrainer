@@ -22,6 +22,7 @@
 #include "UndoableProxyModel.h"
 #include "KeyboardTreeView.h"
 #include "KeycapGraphicsItem.h"
+#include "TreeItems/TreeItem.h"
 #include <QtSvg/QSvgRenderer>
 #include <QtGui/QFont>
 #include <QtCore/QItemSelectionModel>
@@ -81,39 +82,43 @@ void KeyboardGraphicsScene::onRowsInserted(const QModelIndex& parent, int iFirst
         const QModelIndex& indexInserted = _pUndoableKeyboardModel->index(iRow, 0, parent);
         if (!parent.isValid())
         {
-            // Inserting a top level item
-            if (indexInserted.data().toString() == tr("Keys"))
+            // Search for the Keycaps index
+            const auto& matches = _pUndoableKeyboardModel->match(indexInserted, KeyboardModel::TreeItemTypeRole, TreeItem::Keycaps, 1, Qt::MatchExactly|Qt::MatchRecursive);
+            if (matches.isEmpty())
             {
-                // Parsing all keycaps under "Keys"
-                const int iKeycaps = _pUndoableKeyboardModel->rowCount(indexInserted);
-                for (int iKeycap = 0; iKeycap < iKeycaps; ++iKeycap)
+                return;
+            }
+
+            // Parsing all keycaps
+            const QModelIndex& indexKeycaps = matches.front();
+            const int iKeycaps = _pUndoableKeyboardModel->rowCount(indexKeycaps);
+            for (int iKeycap = 0; iKeycap < iKeycaps; ++iKeycap)
+            {
+                const QModelIndex& indexKeycap = indexKeycaps.child(iKeycap, 0);
+                const QString& sKeycapId = indexKeycap.data().toString();
+                const qreal& dRotationAngle = indexKeycap.data(KeyboardModel::RotationAngleRole).toReal();
+                const QPointF& rotationOrigin = indexKeycap.data(KeyboardModel::RotationOriginRole).toPointF();
+                const QRectF& rectOuterBorder = indexKeycap.data(KeyboardModel::OuterBorderRole).toRectF();
+                auto pKeycapGraphicsItem = new KeycapGraphicsItem(  sKeycapId,
+                                                                    dRotationAngle,
+                                                                    rotationOrigin,
+                                                                    rectOuterBorder,
+                                                                    _pSvgRenderer);
+
+                addItem(pKeycapGraphicsItem);
+                _dictKeycaps.insert(sKeycapId, pKeycapGraphicsItem);
+
+                std::function<void (const QModelIndex&)> traverse = [&](const QModelIndex& index)
                 {
-                    const QModelIndex& indexKeycap = indexInserted.child(iKeycap, 0);
-                    const QString& sKeycapId = indexKeycap.data().toString();
-                    const qreal& dRotationAngle = indexKeycap.data(KeyboardModel::RotationAngleRole).toReal();
-                    const QPointF& rotationOrigin = indexKeycap.data(KeyboardModel::RotationOriginRole).toPointF();
-                    const QRectF& rectOuterBorder = indexKeycap.data(KeyboardModel::OuterBorderRole).toRectF();
-                    auto pKeycapGraphicsItem = new KeycapGraphicsItem(  sKeycapId,
-                                                                        dRotationAngle,
-                                                                        rotationOrigin,
-                                                                        rectOuterBorder,
-                                                                        _pSvgRenderer);
-
-                    addItem(pKeycapGraphicsItem);
-                    _dictKeycaps.insert(sKeycapId, pKeycapGraphicsItem);
-
-                    std::function<void (const QModelIndex&)> traverse = [&](const QModelIndex& index)
+                    const int iColumns = _pUndoableKeyboardModel->columnCount();
+                    onDataChanged(index, index.sibling(index.row(), iColumns-1), {});
+                    const int iRows = _pUndoableKeyboardModel->rowCount(index);
+                    for (int iRow = 0; iRow < iRows; ++iRow)
                     {
-                        const int iColumns = _pUndoableKeyboardModel->columnCount();
-                        onDataChanged(index, index.sibling(index.row(), iColumns-1), {});
-                        const int iRows = _pUndoableKeyboardModel->rowCount(index);
-                        for (int iRow = 0; iRow < iRows; ++iRow)
-                        {
-                            traverse(index.child(iRow, 0));
-                        }
-                    };
-                    traverse(indexKeycap);
-                }
+                        traverse(index.child(iRow, 0));
+                    }
+                };
+                traverse(indexKeycap);
             }
         }
     }

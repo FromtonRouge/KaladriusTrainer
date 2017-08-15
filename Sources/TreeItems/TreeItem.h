@@ -27,7 +27,7 @@ struct TreeItem : public QStandardItem
     {
         Empty = UserType,
         Keyboard,
-        Keys,
+        Keycaps,
         Keycap,
         Attribute,
         AttributeValue,

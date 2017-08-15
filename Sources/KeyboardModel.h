@@ -32,7 +32,7 @@ signals:
 public:
     enum UserRole
     {
-        PropertyTypeRole = Qt::UserRole + 1, ///< int.
+        TreeItemTypeRole = Qt::UserRole + 1, ///< int.
         RotationAngleRole, ///< qreal.
         RotationOriginRole, ///< qreal.
         OuterBorderRole, ///< QRectF.

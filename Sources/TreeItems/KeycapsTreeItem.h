@@ -26,5 +26,5 @@ class KeycapsTreeItem : public TreeItem
 public:
     KeycapsTreeItem();
     ~KeycapsTreeItem();
-    virtual int type() const override {return Keys;}
+    virtual int type() const override {return Keycaps;}
 };

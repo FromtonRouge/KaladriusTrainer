@@ -18,9 +18,11 @@
 // ======================================================================
 
 #include "KeyboardTreeView.h"
+#include "KeyboardModel.h"
 #include "KeycapDelegate.h"
 #include "KeyboardGraphicsScene.h"
 #include "KeycapGraphicsItem.h"
+#include "TreeItems/TreeItem.h"
 #include <QtWidgets/QHeaderView>
 #include <QtCore/QItemSelectionModel>
 
@@ -101,12 +103,17 @@ void KeyboardTreeView::onRowsInserted(const QModelIndex& parent, int iFirst, int
         const QModelIndex& indexInserted = model()->index(iRow, 0, parent);
         if (!parent.isValid())
         {
-            // Inserting a top level item
-            if (indexInserted.data().toString() == tr("Keys"))
+            // Search for the Keycaps index
+            const auto& matches = model()->match(indexInserted, KeyboardModel::TreeItemTypeRole, TreeItem::Keycaps, 1, Qt::MatchExactly|Qt::MatchRecursive);
+            if (matches.isEmpty())
             {
-                bResizeColumn = true;
-                expand(indexInserted);
+                return;
             }
+
+
+            bResizeColumn = true;
+            expand(indexInserted);
+            expand(matches.front());
         }
     }
 

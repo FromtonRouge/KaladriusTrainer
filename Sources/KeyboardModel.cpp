@@ -46,7 +46,7 @@ QVariant KeyboardModel::data(const QModelIndex& index, int iRole) const
     QVariant result;
     switch (iRole)
     {
-    case PropertyTypeRole:
+    case TreeItemTypeRole:
         {
             result = itemFromIndex(index)->type();
             break;
@@ -63,7 +63,7 @@ QVariant KeyboardModel::data(const QModelIndex& index, int iRole) const
 QModelIndex KeyboardModel::getParentKeycap(const QModelIndex& indexInKeycapHierarchy)
 {
     QModelIndex indexKeycap = indexInKeycapHierarchy;
-    while (indexKeycap.isValid() && (indexKeycap.data(PropertyTypeRole).toInt() != TreeItem::Keycap))
+    while (indexKeycap.isValid() && (indexKeycap.data(TreeItemTypeRole).toInt() != TreeItem::Keycap))
     {
         indexKeycap = indexKeycap.parent();
     }
