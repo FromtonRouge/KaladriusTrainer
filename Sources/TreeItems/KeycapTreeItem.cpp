@@ -26,7 +26,7 @@
 KeycapTreeItem::KeycapTreeItem(const QString& sKeycapId)
 {
     setIcon(QIcon(":/Icons/keyboard.png"));
-    setText(sKeycapId);
+    setKeycapId(sKeycapId);
     setEditable(false);
 
     auto addAttribute = [](TreeItem* pParentItem, const QString& sName, const QVariant& value) -> AttributeTreeItem*
@@ -48,4 +48,14 @@ KeycapTreeItem::KeycapTreeItem(const QString& sKeycapId)
 KeycapTreeItem::~KeycapTreeItem()
 {
 
+}
+
+QString KeycapTreeItem::getKeycapId() const
+{
+    return text();
+}
+
+void KeycapTreeItem::setKeycapId(const QString& sKeycapId)
+{
+    setText(sKeycapId);
 }

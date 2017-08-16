@@ -22,10 +22,9 @@
 #include "TreeItems/KeyboardTreeItem.h"
 #include "TreeItems/KeycapsTreeItem.h"
 #include "TreeItems/KeycapTreeItem.h"
-#include "TreeItems/AttributeTreeItem.h"
-#include "TreeItems/AttributeValueTreeItem.h"
 #include <QtCore/QDataStream>
 #include <QtCore/QByteArray>
+#include <QtCore/QVariant>
 #include <boost/archive/xml_oarchive.hpp>
 #include <boost/archive/xml_iarchive.hpp>
 #include <boost/serialization/split_free.hpp>
@@ -63,6 +62,35 @@ namespace boost
     }
 }
 
+// QVariant
+BOOST_CLASS_VERSION(QVariant, 0)
+namespace boost
+{
+    namespace serialization
+    {
+        template<class Archive> void serialize(Archive& ar, QVariant& obj,  const unsigned int fileVersion)
+        {
+            split_free(ar, obj, fileVersion);
+        }
+
+        template<class Archive> void save(Archive& ar, const QVariant& obj,  const unsigned int fileVersion)
+        {
+            QByteArray data;
+            QDataStream dataStream(&data, QIODevice::WriteOnly);
+            dataStream << obj;
+            ar << make_nvp("variant", data);
+        }
+
+        template<class Archive> void load(Archive& ar, QVariant& obj,  const unsigned int fileVersion)
+        {
+            QByteArray data;
+            ar >> make_nvp("variant", data);
+            QDataStream dataStream(data);
+            dataStream >> obj;
+        }
+    }
+}
+
 // KeycapTreeItem
 BOOST_CLASS_VERSION(KeycapTreeItem, 0)
 namespace boost
@@ -76,12 +104,79 @@ namespace boost
 
         template<class Archive> void save(Archive& ar, const KeycapTreeItem& obj,  const unsigned int fileVersion)
         {
-            // TODO
+            // Save keycap id
+            const std::string& sId = obj.getKeycapId().toStdString();
+            ar << make_nvp("id", sId);
+
+            // Save keycap roles
+            QVariant value;
+            value = obj.data(KeyboardModel::RotationAngleRole);
+            ar << make_nvp("rotation_angle", value);
+            value = obj.data(KeyboardModel::RotationOriginRole);
+            ar << make_nvp("rotation_origin", value);
+            value = obj.data(KeyboardModel::OuterBorderRole);
+            ar << make_nvp("outer_border", value);
+
+            // Save keycap hierarchy
+            auto pLabelTreeItem = obj.child(0, 0);
+            auto pValueTreeItem = obj.child(0, 1);
+            value = pValueTreeItem->data(Qt::EditRole);
+            ar << make_nvp("label", value);
+
+            pValueTreeItem = pLabelTreeItem->child(0, 1);
+            value = pValueTreeItem->data(Qt::EditRole);
+            ar << make_nvp("label_font", value);
+
+            pValueTreeItem = pLabelTreeItem->child(1, 1);
+            value = pValueTreeItem->data(Qt::EditRole);
+            ar << make_nvp("label_x", value);
+
+            pValueTreeItem = pLabelTreeItem->child(2, 1);
+            value = pValueTreeItem->data(Qt::EditRole);
+            ar << make_nvp("label_y", value);
+
+            pValueTreeItem = obj.child(1, 1);
+            value = pValueTreeItem->data(Qt::EditRole);
+            ar << make_nvp("color", value);
         }
 
         template<class Archive> void load(Archive& ar, KeycapTreeItem& obj,  const unsigned int fileVersion)
         {
-            // TODO
+            // Load keycap id
+            std::string sId;
+            ar >> make_nvp("id", sId);
+            obj.setKeycapId(QString::fromStdString(sId));
+
+            // Load keycap roles
+            QVariant value;
+            ar >> make_nvp("rotation_angle", value);
+            obj.setData(value, KeyboardModel::RotationAngleRole);
+            ar >> make_nvp("rotation_origin", value);
+            obj.setData(value, KeyboardModel::RotationOriginRole);
+            ar >> make_nvp("outer_border", value);
+            obj.setData(value, KeyboardModel::OuterBorderRole);
+
+            // Load keycap hierarchy data
+            auto pLabelTreeItem = obj.child(0, 0);
+            auto pValueTreeItem = obj.child(0, 1);
+            ar >> make_nvp("label", value);
+            pValueTreeItem->setData(value, Qt::EditRole);
+
+            pValueTreeItem = pLabelTreeItem->child(0, 1);
+            ar >> make_nvp("label_font", value);
+            pValueTreeItem->setData(value, Qt::EditRole);
+
+            pValueTreeItem = pLabelTreeItem->child(1, 1);
+            ar >> make_nvp("label_x", value);
+            pValueTreeItem->setData(value, Qt::EditRole);
+
+            pValueTreeItem = pLabelTreeItem->child(2, 1);
+            ar >> make_nvp("label_y", value);
+            pValueTreeItem->setData(value, Qt::EditRole);
+
+            pValueTreeItem = obj.child(1, 1);
+            ar >> make_nvp("color", value);
+            pValueTreeItem->setData(value, Qt::EditRole);
         }
     }
 }

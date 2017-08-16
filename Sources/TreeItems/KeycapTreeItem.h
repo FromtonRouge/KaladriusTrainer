@@ -27,4 +27,6 @@ public:
     KeycapTreeItem(const QString& sKeycapId = QString());
     ~KeycapTreeItem();
     virtual int type() const override {return Keycap;}
+    QString getKeycapId() const;
+    void setKeycapId(const QString& sKeycapId);
 };
