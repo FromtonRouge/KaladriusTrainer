@@ -195,15 +195,8 @@ void KeyboardModel::setSvgContent(const QByteArray& svgContent)
 
 KeyboardTreeItem* KeyboardModel::getKeyboardTreeItem() const
 {
-    if (hasChildren())
-    {
-        const auto& matches = match(index(0,0), TreeItemTypeRole, TreeItem::Keyboard, 1, Qt::MatchExactly);
-        if (!matches.isEmpty())
-        {
-            return static_cast<KeyboardTreeItem*>(itemFromIndex(matches.front()));
-        }
-    }
-    return nullptr;
+    const QModelIndex& indexKeyboard = getKeyboardIndex();
+    return indexKeyboard.isValid() ? static_cast<KeyboardTreeItem*>(itemFromIndex(indexKeyboard)) : nullptr;
 }
 
 void KeyboardModel::setKeyboardTreeItem(KeyboardTreeItem* pKeyboardTreeItem)
@@ -212,4 +205,31 @@ void KeyboardModel::setKeyboardTreeItem(KeyboardTreeItem* pKeyboardTreeItem)
     appendRow({pKeyboardTreeItem, new EmptyTreeItem()});
     emit keyboardLoaded();
     setHorizontalHeaderLabels(QStringList() << tr("Name") << tr("Value"));
+}
+
+QModelIndex KeyboardModel::getKeyboardIndex() const
+{
+    if (hasChildren())
+    {
+        const auto& matches = match(index(0,0), TreeItemTypeRole, TreeItem::Keyboard, 1, Qt::MatchExactly);
+        if (!matches.isEmpty())
+        {
+            return matches.front();
+        }
+    }
+    return QModelIndex();
+}
+
+QModelIndex KeyboardModel::getKeycapsIndex() const
+{
+    const QModelIndex& indexKeyboard = getKeyboardIndex();
+    if (indexKeyboard.isValid() && hasChildren(indexKeyboard))
+    {
+        const auto& matches = match(indexKeyboard.child(0,0), TreeItemTypeRole, TreeItem::Keycaps, 1, Qt::MatchExactly);
+        if (!matches.isEmpty())
+        {
+            return matches.front();
+        }
+    }
+    return QModelIndex();
 }

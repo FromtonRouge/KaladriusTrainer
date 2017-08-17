@@ -21,6 +21,7 @@
 #include "KeyboardGraphicsScene.h"
 #include "KeycapGraphicsItem.h"
 #include "UndoableProxyModel.h"
+#include "KeyboardModel.h"
 #include <QtWidgets/QMenu>
 #include <QtGui/QContextMenuEvent>
 #include <QtGui/QKeyEvent>
@@ -118,20 +119,25 @@ void KeyboardGraphicsView::keyReleaseEvent(QKeyEvent* pEvent)
                 auto pKeyboardScene = qobject_cast<KeyboardGraphicsScene*>(scene());
                 if (pKeyboardScene)
                 {
-                    auto pKeyboardModel = pKeyboardScene->getUndoableKeyboardModel();
-                    pKeyboardModel->getUndoStack()->beginMacro(tr("%1 indexes changed to %2").arg(selectedKeycaps.size()).arg(sKey));
-                    const QModelIndex& start = pKeyboardModel->index(0, 0, pKeyboardModel->index(0, 0));
-                    for (const auto& sKeycap : selectedKeycaps)
+                    auto pUndoableKeyboardModel = pKeyboardScene->getUndoableKeyboardModel();
+                    auto pKeyboardModel = qobject_cast<KeyboardModel*>(pUndoableKeyboardModel->sourceModel());
+                    pUndoableKeyboardModel->getUndoStack()->beginMacro(tr("%1 indexes changed to %2").arg(selectedKeycaps.size()).arg(sKey));
+                    const QModelIndex& indexKeycaps = pUndoableKeyboardModel->mapFromSource(pKeyboardModel->getKeycapsIndex());
+                    if (pUndoableKeyboardModel->hasChildren(indexKeycaps))
                     {
-                        const auto& matches = pKeyboardModel->match(start, Qt::DisplayRole, sKeycap, 1, Qt::MatchExactly);
-                        if (!matches.isEmpty())
+                        const QModelIndex& start = indexKeycaps.child(0,0);
+                        for (const auto& sKeycap : selectedKeycaps)
                         {
-                            const QModelIndex& index = matches.front();
-                            const QModelIndex& indexLabelValue = index.child(0,1);
-                            pKeyboardModel->setData(indexLabelValue, sKey, Qt::EditRole);
+                            const auto& matches = pUndoableKeyboardModel->match(start, Qt::DisplayRole, sKeycap, 1, Qt::MatchExactly);
+                            if (!matches.isEmpty())
+                            {
+                                const QModelIndex& index = matches.front();
+                                const QModelIndex& indexLabelValue = index.child(0,1);
+                                pUndoableKeyboardModel->setData(indexLabelValue, sKey, Qt::EditRole);
+                            }
                         }
                     }
-                    pKeyboardModel->getUndoStack()->endMacro();
+                    pUndoableKeyboardModel->getUndoStack()->endMacro();
                 }
             }
         }
