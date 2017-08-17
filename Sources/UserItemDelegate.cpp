@@ -42,5 +42,5 @@ bool UserItemDelegate::eventFilter(QObject* pObject, QEvent* pEvent)
             return true;
         }
     }
-    QStyledItemDelegate::eventFilter(pObject, pEvent);
+    return QStyledItemDelegate::eventFilter(pObject, pEvent);
 }
