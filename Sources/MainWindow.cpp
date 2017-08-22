@@ -86,8 +86,6 @@ MainWindow::MainWindow(QWidget *parent)
     pRedoAction->setShortcut(QKeySequence("Ctrl+Y"));
     _pUi->menuEdit->addAction(pRedoAction);
 
-    _pUi->actionReload_Dictionaries->trigger();
-
     _pUi->widgetDictionaries1->setDictionariesModel(_pDictionariesModel);
     _pUi->widgetDictionaries2->setDictionariesModel(_pDictionariesModel);
     _pUi->widgetDictionaries3->setDictionariesModel(_pDictionariesModel);
@@ -216,24 +214,14 @@ void MainWindow::on_actionImport_Dictionaries_triggered()
     if (!sDirectory.isEmpty())
     {
         settings.setValue("lastImportDirectory", sDirectory);
-        _pUi->actionReload_Dictionaries->trigger();
-    }
-}
 
-void MainWindow::on_actionReload_Dictionaries_triggered()
-{
-    statusBar()->clearMessage();
-    QSettings settings;
-    const QString& sLastImportDirectory = settings.value("lastImportDirectory").toString();
-    if (!sLastImportDirectory.isEmpty())
-    {
         _dictionaries.clear();
-        QDir dir(sLastImportDirectory);
+        QDir dir(sDirectory);
         QStringList filters = QStringList()  << "shelton_tables.c" << "user_tables.c";
         const auto& entries = dir.entryInfoList(filters);
         if (entries.isEmpty())
         {
-            CERR(tr("Can't found files %1 in directory %2").arg(filters.join(", ")).arg(sLastImportDirectory));
+            CERR(tr("Can't found files %1 in directory %2").arg(filters.join(", ")).arg(sDirectory));
             return;
         }
 
@@ -246,7 +234,7 @@ void MainWindow::on_actionReload_Dictionaries_triggered()
 
         _pDictionariesModel->setDictionaries(_dictionaries);
 
-        statusBar()->showMessage(tr("%1 dictionaries loaded").arg(_dictionaries.size()));
+        COUT((tr("%1 dictionaries loaded").arg(_dictionaries.size())));
     }
 }
 
@@ -264,7 +252,6 @@ void MainWindow::on_actionWrite_Markdown_Files_To_triggered()
 
 void MainWindow::on_actionWrite_Markdown_Files_triggered()
 {
-    statusBar()->clearMessage();
     QSettings settings;
     const QString& sDirectory = settings.value("lastMarkdownFilesDirectory").toString();
     if (!sDirectory.isEmpty())
@@ -334,7 +321,7 @@ void MainWindow::on_actionWrite_Markdown_Files_triggered()
                 }
                 fileAllDictionaries.close();
             }
-            statusBar()->showMessage(tr("%1 markdown files written").arg(_dictionaries.size()));
+            COUT(tr("%1 markdown files written").arg(_dictionaries.size()));
         }
     }
 }

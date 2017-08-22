@@ -49,7 +49,6 @@ protected slots:
     void on_actionImport_Keyboard_Svg_triggered();
     void on_actionImport_Default_Keyboard_Svg_triggered();
     void on_actionImport_Dictionaries_triggered();
-    void on_actionReload_Dictionaries_triggered();
     void on_actionWrite_Markdown_Files_To_triggered();
     void on_actionWrite_Markdown_Files_triggered();
     void on_actionAbout_triggered();
