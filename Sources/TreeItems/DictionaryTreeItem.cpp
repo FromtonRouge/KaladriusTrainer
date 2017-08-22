@@ -17,27 +17,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "KeyboardTreeItem.h"
-#include "KeycapsTreeItem.h"
-#include "DictionariesTreeItem.h"
-#include <QtGui/QIcon>
+#include "DictionaryTreeItem.h"
 
-KeyboardTreeItem::KeyboardTreeItem()
+DictionaryTreeItem::DictionaryTreeItem()
 {
-    setIcon(QIcon(":/Icons/keyboard-full.png"));
-    setText(QObject::tr("Keyboard"));
+    setIcon(QIcon(":/Icons/book-brown.png"));
+    setText(QObject::tr("Dictionary"));
     setEditable(false);
-
-    appendRow({new KeycapsTreeItem(), new EmptyTreeItem()});
-    appendRow({new DictionariesTreeItem(), new EmptyTreeItem()});
 }
 
-KeyboardTreeItem::~KeyboardTreeItem()
+DictionaryTreeItem::~DictionaryTreeItem()
 {
 
-}
-
-KeycapsTreeItem*KeyboardTreeItem::getKeycaps() const
-{
-    return static_cast<KeycapsTreeItem*>(child(0));
 }

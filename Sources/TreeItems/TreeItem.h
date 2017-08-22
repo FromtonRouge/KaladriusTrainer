@@ -31,6 +31,8 @@ struct TreeItem : public QStandardItem
         Keycap,
         Attribute,
         AttributeValue,
+        Dictionaries,
+        Dictionary,
     };
 
     virtual int type() const override = 0;
