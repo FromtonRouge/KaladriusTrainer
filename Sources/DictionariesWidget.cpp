@@ -207,7 +207,7 @@ void DictionariesWidget::onDictionariesLoaded()
 {
     QSettings settings;
     const QString sSettingPath = QString("%1/selectedDictionary").arg(objectName());
-    const int iSelectedDictionary = settings.value(sSettingPath, 0).toInt();
+    int iSelectedDictionary = qMax(settings.value(sSettingPath, 0).toInt(), 0);
 
     QStringList dictionaries;
     dictionaries << tr("All Dictionaries");
@@ -224,7 +224,14 @@ void DictionariesWidget::onDictionariesLoaded()
     _pSortFilterAlphabeticalOrder->sort(0);
     _pUi->treeView->resizeColumnToContents(0);
 
+    // Out of range check
+    if (iSelectedDictionary >= _pUi->comboBox->count())
+    {
+        iSelectedDictionary = 0;
+    }
+
     _pUi->comboBox->setCurrentIndex(iSelectedDictionary);
+
     if (iSelectedDictionary == 0)
     {
         restoreExpandedIndexes();
