@@ -206,6 +206,39 @@ void MainWindow::on_actionImport_Default_Keyboard_Svg_triggered()
     settings.setValue("lastKeyboard", QString());
 }
 
+void MainWindow::on_actionLoad_Dictionaries_triggered()
+{
+    QSettings settings;
+    const QString& sLastDictionariesFile = settings.value("lastDictionariesFile").toString();
+    const QString& sDictionariesFile = QFileDialog::getOpenFileName(this, tr("Dictionaries"), sLastDictionariesFile, "*.dicts");
+    if (!sDictionariesFile.isEmpty())
+    {
+        if (Serialization::Load(_pDictionariesModel, sDictionariesFile))
+        {
+            settings.setValue("lastDictionariesFile", sDictionariesFile);
+            COUT(tr("Dictionaries loaded from file %1").arg(sDictionariesFile));
+        }
+    }
+}
+
+void MainWindow::on_actionSave_Dictionaries_as_triggered()
+{
+    QSettings settings;
+    const QString& sLastDictionariesFile = settings.value("lastDictionariesFile").toString();
+    QFileDialog saveDlg(this, tr("Dictionaries"), sLastDictionariesFile, "*.dicts");
+    saveDlg.setDefaultSuffix("dicts");
+    saveDlg.setAcceptMode(QFileDialog::AcceptSave);
+    if (saveDlg.exec())
+    {
+        const QString& sDictionariesFile = saveDlg.selectedFiles().front();
+        if (Serialization::Save(_pDictionariesModel, sDictionariesFile))
+        {
+            settings.setValue("lastDictionariesFile", sDictionariesFile);
+            COUT(tr("Dictionaries saved to file %1").arg(sDictionariesFile));
+        }
+    }
+}
+
 void MainWindow::on_actionImport_Dictionaries_triggered()
 {
     QSettings settings;
@@ -369,16 +402,14 @@ void MainWindow::on_actionSave_Keyboard_as_triggered()
 {
     QSettings settings;
     QString sKeyboardFileName;
+    const QString& sLastKeyboard = settings.value("lastKeyboard").toString();
+    QFileDialog saveDlg(this, tr("Keyboard"), sLastKeyboard, "*.kbd");
+    saveDlg.setDefaultSuffix("kbd");
+    saveDlg.setAcceptMode(QFileDialog::AcceptSave);
+    if (saveDlg.exec())
     {
-        const QString& sLastKeyboard = settings.value("lastKeyboard").toString();
-        QFileDialog saveDlg(this, tr("Keyboard"), sLastKeyboard, "*.kbd");
-        saveDlg.setDefaultSuffix("kbd");
-        saveDlg.setAcceptMode(QFileDialog::AcceptSave);
-        if (saveDlg.exec())
-        {
-            sKeyboardFileName = saveDlg.selectedFiles().front();
-            settings.setValue("lastKeyboard", sKeyboardFileName);
-        }
+        sKeyboardFileName = saveDlg.selectedFiles().front();
+        settings.setValue("lastKeyboard", sKeyboardFileName);
     }
 
     if (!sKeyboardFileName.isEmpty())

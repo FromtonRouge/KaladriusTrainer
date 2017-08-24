@@ -19,6 +19,7 @@
 
 #include "Serialization.h"
 #include "KeyboardModel.h"
+#include "DictionariesModel.h"
 #include "TreeItems/KeyboardTreeItem.h"
 #include "TreeItems/KeycapsTreeItem.h"
 #include "TreeItems/KeycapTreeItem.h"
@@ -258,13 +259,13 @@ namespace Serialization
 
             auto pKeyboardTreeItem = pModel->getKeyboardTreeItem();
             oa << BOOST_SERIALIZATION_NVP(pKeyboardTreeItem);
+            return true;
         }
         catch (const std::exception& e)
         {
             std::cerr << e.what() << std::endl;
-            return false;
         }
-        return true;
+        return false;
     }
 
     bool Load(KeyboardModel* pModel, const QString& sFilePath)
@@ -280,12 +281,42 @@ namespace Serialization
             KeyboardTreeItem* pKeyboardTreeItem;
             ia >> BOOST_SERIALIZATION_NVP(pKeyboardTreeItem);
             pModel->setKeyboardTreeItem(pKeyboardTreeItem);
+            return true;
         }
         catch (const std::exception& e)
         {
             std::cerr << e.what() << std::endl;
-            return false;
         }
-        return true;
+        return false;
+    }
+
+    bool Save(DictionariesModel* pModel, const QString& sFilePath)
+    {
+        std::ofstream ofs(sFilePath.toStdString());
+        boost::archive::xml_oarchive oa(ofs);
+        try
+        {
+            // TODO
+        }
+        catch (const std::exception& e)
+        {
+            std::cerr << e.what() << std::endl;
+        }
+        return false;
+    }
+
+    bool Load(DictionariesModel* pModel, const QString& sFilePath)
+    {
+        std::ifstream ifs(sFilePath.toStdString());
+        boost::archive::xml_iarchive ia(ifs);
+        try
+        {
+            // TODO
+        }
+        catch (const std::exception& e)
+        {
+            std::cerr << e.what() << std::endl;
+        }
+        return false;
     }
 }

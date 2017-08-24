@@ -20,9 +20,13 @@
 #pragma once
 
 class KeyboardModel;
+class DictionariesModel;
 class QString;
 namespace Serialization
 {
     bool Save(KeyboardModel* pModel, const QString& sFilePath);
     bool Load(KeyboardModel* pModel, const QString& sFilePath);
+
+    bool Save(DictionariesModel* pModel, const QString& sFilePath);
+    bool Load(DictionariesModel* pModel, const QString& sFilePath);
 }
