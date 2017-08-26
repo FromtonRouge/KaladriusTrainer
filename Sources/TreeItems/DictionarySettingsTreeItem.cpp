@@ -17,16 +17,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "DictionaryTreeItem.h"
+#include "DictionarySettingsTreeItem.h"
 
-DictionaryTreeItem::DictionaryTreeItem()
+DictionarySettingsTreeItem::DictionarySettingsTreeItem()
 {
     setIcon(QIcon(":/Icons/book-brown.png"));
-    setText(QObject::tr("Dictionary"));
+    setText(QObject::tr("Dictionary Settings"));
     setEditable(false);
 }
 
-DictionaryTreeItem::~DictionaryTreeItem()
+DictionarySettingsTreeItem::~DictionarySettingsTreeItem()
 {
 
 }

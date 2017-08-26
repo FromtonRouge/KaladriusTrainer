@@ -21,7 +21,7 @@
 
 #include "TreeItems/TreeItem.h"
 
-class KeycapsTreeItem;
+class ListTreeItem;
 class KeyboardTreeItem : public TreeItem
 {
 public:
@@ -29,5 +29,5 @@ public:
     ~KeyboardTreeItem();
     virtual int type() const override {return Keyboard;}
 
-    KeycapsTreeItem* getKeycaps() const;
+    ListTreeItem* getKeycaps() const;
 };

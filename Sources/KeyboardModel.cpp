@@ -19,10 +19,10 @@
 
 #include "KeyboardModel.h"
 #include "TreeItems/KeyboardTreeItem.h"
-#include "TreeItems/KeycapsTreeItem.h"
 #include "TreeItems/KeycapTreeItem.h"
 #include "TreeItems/AttributeTreeItem.h"
 #include "TreeItems/AttributeValueTreeItem.h"
+#include "TreeItems/ListTreeItem.h"
 #include "Iostream.h"
 #include <QtXml/QDomDocument>
 #include <QtGui/QFont>
@@ -225,7 +225,7 @@ QModelIndex KeyboardModel::getKeycapsIndex() const
     const QModelIndex& indexKeyboard = getKeyboardIndex();
     if (indexKeyboard.isValid() && hasChildren(indexKeyboard))
     {
-        const auto& matches = match(indexKeyboard.child(0,0), TreeItemTypeRole, TreeItem::Keycaps, 1, Qt::MatchExactly);
+        const auto& matches = match(indexKeyboard.child(0,0), TreeItemTypeRole, TreeItem::List, 1, Qt::MatchExactly);
         if (!matches.isEmpty())
         {
             return matches.front();

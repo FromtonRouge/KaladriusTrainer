@@ -82,8 +82,16 @@ void KeyboardGraphicsScene::onRowsInserted(const QModelIndex& parent, int iFirst
         const QModelIndex& indexInserted = _pUndoableKeyboardModel->index(iRow, 0, parent);
         if (!parent.isValid())
         {
-            // Search for the Keycaps index
-            const auto& matches = _pUndoableKeyboardModel->match(indexInserted, KeyboardModel::TreeItemTypeRole, TreeItem::Keycaps, 1, Qt::MatchExactly|Qt::MatchRecursive);
+            // Search for the Keyboard index first
+            auto matches = _pUndoableKeyboardModel->match(indexInserted, KeyboardModel::TreeItemTypeRole, TreeItem::Keyboard, 1, Qt::MatchExactly);
+            if (matches.isEmpty())
+            {
+                return;
+            }
+
+            // Search for the first list element under the keyboard
+            const QModelIndex& indexKeyboard = matches.front();
+            matches = _pUndoableKeyboardModel->match(indexKeyboard.child(0, 0), KeyboardModel::TreeItemTypeRole, TreeItem::List, 1, Qt::MatchExactly);
             if (matches.isEmpty())
             {
                 return;

@@ -97,23 +97,23 @@ void KeyboardTreeView::onGraphicsSceneSelectionChanged()
 
 void KeyboardTreeView::onRowsInserted(const QModelIndex& parent, int iFirst, int iLast)
 {
+    auto pKeyboardModel = static_cast<KeyboardModel*>(model());
     bool bResizeColumn = false;
     for (int iRow = iFirst; iRow <= iLast; ++iRow)
     {
-        const QModelIndex& indexInserted = model()->index(iRow, 0, parent);
+        const QModelIndex& indexInserted = pKeyboardModel->index(iRow, 0, parent);
         if (!parent.isValid())
         {
             // Search for the Keycaps index
-            const auto& matches = model()->match(indexInserted, KeyboardModel::TreeItemTypeRole, TreeItem::Keycaps, 1, Qt::MatchExactly|Qt::MatchRecursive);
-            if (matches.isEmpty())
+            const auto& indexKeycaps = pKeyboardModel->getKeycapsIndex();
+            if (!indexKeycaps.isValid())
             {
                 return;
             }
 
-
             bResizeColumn = true;
             expand(indexInserted);
-            expand(matches.front());
+            expand(indexKeycaps);
         }
     }
 

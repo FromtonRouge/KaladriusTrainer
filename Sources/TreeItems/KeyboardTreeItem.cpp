@@ -18,8 +18,7 @@
 // ======================================================================
 
 #include "KeyboardTreeItem.h"
-#include "KeycapsTreeItem.h"
-#include "DictionariesTreeItem.h"
+#include "ListTreeItem.h"
 #include <QtGui/QIcon>
 
 KeyboardTreeItem::KeyboardTreeItem()
@@ -28,8 +27,11 @@ KeyboardTreeItem::KeyboardTreeItem()
     setText(QObject::tr("Keyboard"));
     setEditable(false);
 
-    appendRow({new KeycapsTreeItem(), new EmptyTreeItem()});
-    appendRow({new DictionariesTreeItem(), new EmptyTreeItem()});
+    auto pKeycapsListItem = new ListTreeItem(QIcon(":/Icons/keyboard-full.png"), QObject::tr("Keycaps"));
+    appendRow({pKeycapsListItem, new EmptyTreeItem()});
+
+    auto pDictionaries = new ListTreeItem(QIcon(":/Icons/book-open.png"), QObject::tr("Dictionaries Settings"));
+    appendRow({pDictionaries, new EmptyTreeItem()});
 }
 
 KeyboardTreeItem::~KeyboardTreeItem()
@@ -37,7 +39,7 @@ KeyboardTreeItem::~KeyboardTreeItem()
 
 }
 
-KeycapsTreeItem*KeyboardTreeItem::getKeycaps() const
+ListTreeItem* KeyboardTreeItem::getKeycaps() const
 {
-    return static_cast<KeycapsTreeItem*>(child(0));
+    return static_cast<ListTreeItem*>(child(0));
 }

@@ -17,14 +17,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "ListTreeItem.h"
 
-#include "TreeItems/TreeItem.h"
-
-class DictionaryTreeItem : public TreeItem
+ListTreeItem::ListTreeItem(const QIcon& icon, const QString& sName)
 {
-public:
-    DictionaryTreeItem();
-    ~DictionaryTreeItem();
-    virtual int type() const override {return Dictionary;}
-};
+    setIcon(icon);
+    setText(sName);
+    setEditable(false);
+}
+
+ListTreeItem::~ListTreeItem()
+{
+}

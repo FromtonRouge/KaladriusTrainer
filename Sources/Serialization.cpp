@@ -21,8 +21,8 @@
 #include "KeyboardModel.h"
 #include "DictionariesModel.h"
 #include "TreeItems/KeyboardTreeItem.h"
-#include "TreeItems/KeycapsTreeItem.h"
 #include "TreeItems/KeycapTreeItem.h"
+#include "TreeItems/ListTreeItem.h"
 #include <QtCore/QDataStream>
 #include <QtCore/QByteArray>
 #include <QtCore/QVariant>
@@ -31,6 +31,9 @@
 #include <boost/serialization/split_free.hpp>
 #include <boost/serialization/binary_object.hpp>
 #include <boost/serialization/string.hpp>
+#include <boost/serialization/base_object.hpp>
+#include <boost/serialization/nvp.hpp>
+#include <boost/serialization/export.hpp>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -92,14 +95,42 @@ namespace boost
     }
 }
 
+// QStandardItem
+BOOST_CLASS_VERSION(QStandardItem, 0)
+namespace boost
+{
+    namespace serialization
+    {
+        template<class Archive> void serialize(Archive& ar, QStandardItem& obj,  const unsigned int fileVersion)
+        {
+        }
+    }
+}
+
+// TreeItem
+BOOST_CLASS_VERSION(TreeItem, 0)
+BOOST_CLASS_EXPORT(TreeItem) // For serializing from a base pointer
+namespace boost
+{
+    namespace serialization
+    {
+        template<class Archive> void serialize(Archive& ar, TreeItem& obj,  const unsigned int fileVersion)
+        {
+            ar & make_nvp("base", base_object<QStandardItem>(obj));
+        }
+    }
+}
+
 // KeycapTreeItem
 BOOST_CLASS_VERSION(KeycapTreeItem, 0)
+BOOST_CLASS_EXPORT(KeycapTreeItem) // For serializing from a base pointer
 namespace boost
 {
     namespace serialization
     {
         template<class Archive> void serialize(Archive& ar, KeycapTreeItem& obj,  const unsigned int fileVersion)
         {
+            ar & make_nvp("base", base_object<TreeItem>(obj));
             split_free(ar, obj, fileVersion);
         }
 
@@ -182,39 +213,41 @@ namespace boost
     }
 }
 
-// KeycapsTreeItem
-BOOST_CLASS_VERSION(KeycapsTreeItem, 0)
+// ListTreeItem
+BOOST_CLASS_VERSION(ListTreeItem, 0)
+BOOST_CLASS_EXPORT(ListTreeItem) // For serializing from a base pointer
 namespace boost
 {
     namespace serialization
     {
-        template<class Archive> void serialize(Archive& ar, KeycapsTreeItem& obj,  const unsigned int fileVersion)
+        template<class Archive> void serialize(Archive& ar, ListTreeItem& obj,  const unsigned int fileVersion)
         {
+            ar & make_nvp("base", base_object<TreeItem>(obj));
             split_free(ar, obj, fileVersion);
         }
 
-        template<class Archive> void save(Archive& ar, const KeycapsTreeItem& obj,  const unsigned int fileVersion)
+        template<class Archive> void save(Archive& ar, const ListTreeItem& obj,  const unsigned int fileVersion)
         {
-            const int iKeycaps = obj.rowCount();
-            ar << make_nvp("keycaps_count", iKeycaps);
-            for (int iKeycap = 0; iKeycap < iKeycaps; ++iKeycap)
+            const int iCount = obj.rowCount();
+            ar << make_nvp("count", iCount);
+            for (int iKeycap = 0; iKeycap < iCount; ++iKeycap)
             {
-                auto pKeycapTreeItem = static_cast<KeycapTreeItem*>(obj.child(iKeycap));
-                ar << make_nvp("keycap", pKeycapTreeItem);
+                auto pTreeItem = obj.child(iKeycap);
+                ar << make_nvp("item", pTreeItem);
             }
         }
 
-        template<class Archive> void load(Archive& ar, KeycapsTreeItem& obj,  const unsigned int fileVersion)
+        template<class Archive> void load(Archive& ar, ListTreeItem& obj,  const unsigned int fileVersion)
         {
-            int iKeycaps = 0;
-            ar >> make_nvp("keycaps_count", iKeycaps);
-            for (int iKeycap = 0; iKeycap < iKeycaps; ++iKeycap)
+            int iCount = 0;
+            ar >> make_nvp("count", iCount);
+            for (int iKeycap = 0; iKeycap < iCount; ++iKeycap)
             {
-                KeycapTreeItem* pKeycapTreeItem = nullptr;
-                ar >> make_nvp("keycap", pKeycapTreeItem);
-                if (pKeycapTreeItem)
+                QStandardItem* pTreeItem = nullptr;
+                ar >> make_nvp("item", pTreeItem);
+                if (pTreeItem)
                 {
-                    obj.appendRow({pKeycapTreeItem, new EmptyTreeItem()});
+                    obj.appendRow({pTreeItem, new EmptyTreeItem()});
                 }
             }
         }
@@ -229,18 +262,19 @@ namespace boost
     {
         template<class Archive> void serialize(Archive& ar, KeyboardTreeItem& obj,  const unsigned int fileVersion)
         {
+            ar & make_nvp("base", base_object<TreeItem>(obj));
             split_free(ar, obj, fileVersion);
         }
 
         template<class Archive> void save(Archive& ar, const KeyboardTreeItem& obj,  const unsigned int fileVersion)
         {
-            auto pKeycapsTreeItem = obj.getKeycaps();
-            ar << make_nvp("keycaps", pKeycapsTreeItem);
+            ListTreeItem* pKeycapsTreeItem = obj.getKeycaps();
+            ar << make_nvp("keycaps", *pKeycapsTreeItem);
         }
 
         template<class Archive> void load(Archive& ar, KeyboardTreeItem& obj,  const unsigned int fileVersion)
         {
-            auto pKeycapsTreeItem = obj.getKeycaps();
+            ListTreeItem* pKeycapsTreeItem = obj.getKeycaps();
             ar >> make_nvp("keycaps", *pKeycapsTreeItem);
         }
     }

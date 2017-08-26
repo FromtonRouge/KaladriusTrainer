@@ -26,13 +26,12 @@ struct TreeItem : public QStandardItem
     enum Type
     {
         Empty = UserType,
+        List,
         Keyboard,
-        Keycaps,
         Keycap,
         Attribute,
         AttributeValue,
-        Dictionaries,
-        Dictionary,
+        DictionarySettings,
     };
 
     virtual int type() const override = 0;

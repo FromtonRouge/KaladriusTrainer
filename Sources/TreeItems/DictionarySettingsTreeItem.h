@@ -17,16 +17,14 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "DictionariesTreeItem.h"
+#pragma once
 
-DictionariesTreeItem::DictionariesTreeItem()
+#include "TreeItems/TreeItem.h"
+
+class DictionarySettingsTreeItem : public TreeItem
 {
-    setIcon(QIcon(":/Icons/book-open.png"));
-    setText(QObject::tr("Dictionaries"));
-    setEditable(false);
-}
-
-DictionariesTreeItem::~DictionariesTreeItem()
-{
-
-}
+public:
+    DictionarySettingsTreeItem();
+    ~DictionarySettingsTreeItem();
+    virtual int type() const override {return DictionarySettings;}
+};
