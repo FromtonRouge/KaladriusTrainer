@@ -206,35 +206,35 @@ void MainWindow::on_actionImport_Default_Keyboard_Svg_triggered()
     settings.setValue("lastKeyboard", QString());
 }
 
-void MainWindow::on_actionLoad_Dictionaries_triggered()
+void MainWindow::on_actionLoad_Theory_triggered()
 {
     QSettings settings;
-    const QString& sLastDictionariesFile = settings.value("lastDictionariesFile").toString();
-    const QString& sDictionariesFile = QFileDialog::getOpenFileName(this, tr("Dictionaries"), sLastDictionariesFile, "*.dicts");
-    if (!sDictionariesFile.isEmpty())
+    const QString& sLastTheoryFile = settings.value("lastTheoryFile").toString();
+    const QString& sTheoryFile = QFileDialog::getOpenFileName(this, tr("Theory"), sLastTheoryFile, "*.theory");
+    if (!sTheoryFile.isEmpty())
     {
-        if (Serialization::Load(_pDictionariesModel, sDictionariesFile))
+        if (Serialization::Load(_pDictionariesModel, sTheoryFile))
         {
-            settings.setValue("lastDictionariesFile", sDictionariesFile);
-            COUT(tr("Dictionaries loaded from file %1").arg(sDictionariesFile));
+            settings.setValue("lastTheoryFile", sTheoryFile);
+            COUT(tr("Theory loaded from file %1").arg(sTheoryFile));
         }
     }
 }
 
-void MainWindow::on_actionSave_Dictionaries_as_triggered()
+void MainWindow::on_actionSave_Theory_as_triggered()
 {
     QSettings settings;
-    const QString& sLastDictionariesFile = settings.value("lastDictionariesFile").toString();
-    QFileDialog saveDlg(this, tr("Dictionaries"), sLastDictionariesFile, "*.dicts");
-    saveDlg.setDefaultSuffix("dicts");
+    const QString& sLastTheoryFile = settings.value("lastTheoryFile").toString();
+    QFileDialog saveDlg(this, tr("Theory"), sLastTheoryFile, "*.theory");
+    saveDlg.setDefaultSuffix("theory");
     saveDlg.setAcceptMode(QFileDialog::AcceptSave);
     if (saveDlg.exec())
     {
-        const QString& sDictionariesFile = saveDlg.selectedFiles().front();
-        if (Serialization::Save(_pDictionariesModel, sDictionariesFile))
+        const QString& sTheoryFile = saveDlg.selectedFiles().front();
+        if (Serialization::Save(_pDictionariesModel, sTheoryFile))
         {
-            settings.setValue("lastDictionariesFile", sDictionariesFile);
-            COUT(tr("Dictionaries saved to file %1").arg(sDictionariesFile));
+            settings.setValue("lastTheoryFile", sTheoryFile);
+            COUT(tr("Theory saved to file %1").arg(sTheoryFile));
         }
     }
 }

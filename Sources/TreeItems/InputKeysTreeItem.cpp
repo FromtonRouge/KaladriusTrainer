@@ -17,30 +17,18 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "InputKeysTreeItem.h"
+#include <QtGui/QIcon>
 
-#include <QtGui/QStandardItem>
-
-struct TreeItem : public QStandardItem
+InputKeysTreeItem::InputKeysTreeItem(const QString& sInputKeys)
 {
-    enum Type
-    {
-        Empty = UserType,
-        List,
-        Keyboard,
-        Keycap,
-        Attribute,
-        AttributeValue,
-        DictionarySettings,
-        OutputText,
-        InputKeys,
-    };
+    setIcon(QIcon(":/Icons/keyboard-full.png"));
+    setText(sInputKeys);
+    setEditable(false);
+    setToolTip(QObject::tr("Keys on the steno keyboard"));
+}
 
-    virtual int type() const override = 0;
-};
-
-struct EmptyTreeItem : public TreeItem
+InputKeysTreeItem::~InputKeysTreeItem()
 {
-    EmptyTreeItem() {setEditable(false); setSelectable(false);}
-    virtual int type() const override {return Empty;}
-};
+
+}

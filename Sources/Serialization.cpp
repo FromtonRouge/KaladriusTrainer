@@ -121,6 +121,21 @@ namespace boost
     }
 }
 
+// EmptyTreeItem
+BOOST_CLASS_VERSION(EmptyTreeItem, 0)
+BOOST_CLASS_EXPORT(EmptyTreeItem) // For serializing from a base pointer
+namespace boost
+{
+    namespace serialization
+    {
+        template<class Archive> void serialize(Archive& ar, EmptyTreeItem& obj,  const unsigned int fileVersion)
+        {
+            ar & make_nvp("base", base_object<TreeItem>(obj));
+        }
+    }
+}
+
+
 // KeycapTreeItem
 BOOST_CLASS_VERSION(KeycapTreeItem, 0)
 BOOST_CLASS_EXPORT(KeycapTreeItem) // For serializing from a base pointer
@@ -228,27 +243,39 @@ namespace boost
 
         template<class Archive> void save(Archive& ar, const ListTreeItem& obj,  const unsigned int fileVersion)
         {
-            const int iCount = obj.rowCount();
-            ar << make_nvp("count", iCount);
-            for (int iKeycap = 0; iKeycap < iCount; ++iKeycap)
+            const int iRows = obj.rowCount();
+            const int iColumns = obj.columnCount();
+            ar << make_nvp("rows", iRows);
+            ar << make_nvp("columns", iColumns);
+            for (int iRow = 0; iRow < iRows; ++iRow)
             {
-                auto pTreeItem = obj.child(iKeycap);
-                ar << make_nvp("item", pTreeItem);
+                for (int iColumn = 0; iColumn < iColumns; ++iColumn)
+                {
+                    auto pTreeItem = obj.child(iRow, iColumn);
+                    ar << make_nvp("item", pTreeItem);
+                }
             }
         }
 
         template<class Archive> void load(Archive& ar, ListTreeItem& obj,  const unsigned int fileVersion)
         {
-            int iCount = 0;
-            ar >> make_nvp("count", iCount);
-            for (int iKeycap = 0; iKeycap < iCount; ++iKeycap)
+            int iRows = 0;
+            int iColumns = 0;
+            ar >> make_nvp("rows", iRows);
+            ar >> make_nvp("columns", iColumns);
+            for (int iRow = 0; iRow < iRows; ++iRow)
             {
-                QStandardItem* pTreeItem = nullptr;
-                ar >> make_nvp("item", pTreeItem);
-                if (pTreeItem)
+                QList<QStandardItem*> items;
+                for (int iColumn = 0; iColumn < iColumns; ++iColumn)
                 {
-                    obj.appendRow({pTreeItem, new EmptyTreeItem()});
+                    QStandardItem* pTreeItem = nullptr;
+                    ar >> make_nvp("item", pTreeItem);
+                    if (pTreeItem)
+                    {
+                        items << pTreeItem;
+                    }
                 }
+                obj.appendRow(items);
             }
         }
     }

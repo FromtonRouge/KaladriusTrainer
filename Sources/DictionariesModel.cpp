@@ -18,7 +18,9 @@
 // ======================================================================
 
 #include "DictionariesModel.h"
-#include <QtGui/QStandardItem>
+#include "TreeItems/ListTreeItem.h"
+#include "TreeItems/OutputTextTreeItem.h"
+#include "TreeItems/InputKeysTreeItem.h"
 
 DictionariesModel::DictionariesModel(QObject* pParent)
     : QStandardItemModel(pParent)
@@ -37,31 +39,16 @@ void DictionariesModel::setDictionaries(const Dictionaries &dictionaries)
     setHorizontalHeaderLabels(QStringList() << tr("Text") << tr("Keys"));
     for (const auto& dictionary : dictionaries)
     {
-        const QString& sName = dictionary.getName();
-        QStandardItem* pDictionaryItem = new QStandardItem(QIcon(":/Icons/book-brown.png"),sName);
-        pDictionaryItem->setEditable(false);
-        QStandardItem* pEmptyItem = new QStandardItem();
-        pEmptyItem->setEditable(false);
-        appendRow(QList<QStandardItem*>() << pDictionaryItem << pEmptyItem);
+        auto pDictionaryItem = new ListTreeItem(QIcon(":/Icons/book-brown.png"), dictionary.getName());
+        appendRow({pDictionaryItem, new EmptyTreeItem()});
         const auto& entries = dictionary.getKeyBitsToEntry();
         for (const Dictionary::Entry& entry : entries)
         {
             if (entry.bits.any())
             {
-                QString sIcon(":/Icons/edit.png");
-                QString sText = entry.keycodesAsUserString;
-                if (sText.isEmpty())
-                {
-                    sIcon = (":/Icons/question.png");
-                    sText = "<no_entry>";
-                }
-                QStandardItem* pTextItem = new QStandardItem(QIcon(sIcon), sText);
-                pTextItem->setEditable(false);
-                pTextItem->setToolTip(tr("Output text"));
-                QStandardItem* pKeysItem = new QStandardItem(QIcon(":/Icons/keyboard-full.png"), dictionary.getKeysLabels(entry));
-                pKeysItem->setEditable(false);
-                pKeysItem->setToolTip(tr("Keys on the steno keyboard"));
-                pDictionaryItem->appendRow(QList<QStandardItem*>() << pTextItem << pKeysItem);
+                auto pTextItem = new OutputTextTreeItem(entry.keycodesAsUserString);
+                auto pInputKeysItem = new InputKeysTreeItem(dictionary.getKeysLabels(entry));
+                pDictionaryItem->appendRow({pTextItem, pInputKeysItem});
             }
         }
     }

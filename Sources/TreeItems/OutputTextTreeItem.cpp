@@ -17,30 +17,26 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "OutputTextTreeItem.h"
+#include <QtGui/QIcon>
 
-#include <QtGui/QStandardItem>
-
-struct TreeItem : public QStandardItem
+OutputTextTreeItem::OutputTextTreeItem(const QString& sOutputText)
 {
-    enum Type
+    setEditable(false);
+    setToolTip(QObject::tr("Output text"));
+
+    QString sIcon(":/Icons/edit.png");
+    QString sText = sOutputText;
+    if (sText.isEmpty())
     {
-        Empty = UserType,
-        List,
-        Keyboard,
-        Keycap,
-        Attribute,
-        AttributeValue,
-        DictionarySettings,
-        OutputText,
-        InputKeys,
-    };
+        sIcon = (":/Icons/question.png");
+        sText = "<no_entry>";
+    }
+    setIcon(QIcon(sIcon));
+    setText(sText);
+}
 
-    virtual int type() const override = 0;
-};
-
-struct EmptyTreeItem : public TreeItem
+OutputTextTreeItem::~OutputTextTreeItem()
 {
-    EmptyTreeItem() {setEditable(false); setSelectable(false);}
-    virtual int type() const override {return Empty;}
-};
+
+}
