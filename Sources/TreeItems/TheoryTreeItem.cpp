@@ -36,3 +36,8 @@ TheoryTreeItem::~TheoryTreeItem()
 {
 
 }
+
+ListTreeItem* TheoryTreeItem::getDictionaries() const
+{
+    return static_cast<ListTreeItem*>(child(2));
+}

@@ -28,4 +28,9 @@ class TheoryTreeView : public QTreeView
 public:
     TheoryTreeView(QWidget* pParent = nullptr);
     ~TheoryTreeView();
+
+    virtual void setModel(QAbstractItemModel* pModel) override;
+
+private slots:
+    void onRowsInserted(const QModelIndex& parent, int iFirst, int iLast);
 };

@@ -21,10 +21,12 @@
 
 #include "TreeItems/TreeItem.h"
 
+class ListTreeItem;
 class TheoryTreeItem : public TreeItem
 {
 public:
     TheoryTreeItem();
     ~TheoryTreeItem();
     virtual int type() const override {return Theory;}
+    ListTreeItem* getDictionaries() const;
 };

@@ -18,6 +18,7 @@
 // ======================================================================
 
 #include "KeyboardTreeView.h"
+#include "UndoableProxyModel.h"
 #include "KeyboardModel.h"
 #include "KeycapDelegate.h"
 #include "KeyboardGraphicsScene.h"
@@ -97,23 +98,24 @@ void KeyboardTreeView::onGraphicsSceneSelectionChanged()
 
 void KeyboardTreeView::onRowsInserted(const QModelIndex& parent, int iFirst, int iLast)
 {
-    auto pKeyboardModel = static_cast<KeyboardModel*>(model());
+    auto pUndoableProxyModel = qobject_cast<UndoableProxyModel*>(model());
+    auto pKeyboardModel = qobject_cast<KeyboardModel*>(pUndoableProxyModel->sourceModel());
     bool bResizeColumn = false;
     for (int iRow = iFirst; iRow <= iLast; ++iRow)
     {
-        const QModelIndex& indexInserted = pKeyboardModel->index(iRow, 0, parent);
         if (!parent.isValid())
         {
             // Search for the Keycaps index
-            const auto& indexKeycaps = pKeyboardModel->getKeycapsIndex();
-            if (!indexKeycaps.isValid())
+            const auto& sourceIndexKeycaps = pKeyboardModel->getKeycapsIndex();
+            if (!sourceIndexKeycaps.isValid())
             {
                 return;
             }
 
             bResizeColumn = true;
-            expand(indexInserted);
-            expand(indexKeycaps);
+
+            expand(pUndoableProxyModel->index(iRow, 0, parent));
+            expand(pUndoableProxyModel->mapFromSource(sourceIndexKeycaps));
         }
     }
 

@@ -33,3 +33,23 @@ TheoryTreeView::~TheoryTreeView()
 {
 
 }
+
+void TheoryTreeView::setModel(QAbstractItemModel* pModel)
+{
+    if (model())
+    {
+        model()->disconnect(this);
+    }
+
+    QTreeView::setModel(pModel);
+
+    if (pModel)
+    {
+        connect(pModel, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(onRowsInserted(QModelIndex,int,int)));
+        expandToDepth(1);
+    }
+}
+
+void TheoryTreeView::onRowsInserted(const QModelIndex& parent, int iFirst, int iLast)
+{
+}

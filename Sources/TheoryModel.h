@@ -19,8 +19,10 @@
 
 #pragma once
 
+#include "Dictionary.h"
 #include <QtGui/QStandardItemModel>
 
+class TheoryTreeItem;
 class TheoryModel : public QStandardItemModel
 {
     Q_OBJECT
@@ -28,4 +30,7 @@ class TheoryModel : public QStandardItemModel
 public:
     TheoryModel(QObject* pParent = nullptr);
     ~TheoryModel();
+    void setDictionaries(const Dictionaries& dictionaries);
+    TheoryTreeItem* getTheoryTreeItem() const;
+    QModelIndex getTheoryIndex() const;
 };

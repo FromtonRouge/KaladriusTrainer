@@ -276,6 +276,7 @@ void MainWindow::on_actionImport_Dictionaries_triggered()
         }
 
         _pDictionariesModel->setDictionaries(_dictionaries);
+        _pTheoryModel->setDictionaries(_dictionaries);
 
         COUT((tr("%1 dictionaries loaded").arg(_dictionaries.size())));
     }

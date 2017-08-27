@@ -20,6 +20,9 @@
 #include "TheoryModel.h"
 #include "TreeItems/TreeItem.h"
 #include "TreeItems/TheoryTreeItem.h"
+#include "TreeItems/ListTreeItem.h"
+#include "TreeItems/OutputTextTreeItem.h"
+#include "TreeItems/InputKeysTreeItem.h"
 
 TheoryModel::TheoryModel(QObject* pParent)
     : QStandardItemModel(pParent)
@@ -31,4 +34,45 @@ TheoryModel::TheoryModel(QObject* pParent)
 TheoryModel::~TheoryModel()
 {
 
+}
+
+void TheoryModel::setDictionaries(const Dictionaries& dictionaries)
+{
+    auto pTheoryTreeItem = getTheoryTreeItem();
+    auto pDictionaries = pTheoryTreeItem->getDictionaries();
+    if (pDictionaries->hasChildren())
+    {
+        pDictionaries->removeRows(0, pDictionaries->rowCount());
+    }
+
+    for (const auto& dictionary : dictionaries)
+    {
+        auto pDictionaryItem = new ListTreeItem(QIcon(":/Icons/book-brown.png"), dictionary.getName());
+        pDictionaries->appendRow({pDictionaryItem, new EmptyTreeItem()});
+        const auto& entries = dictionary.getKeyBitsToEntry();
+        for (const Dictionary::Entry& entry : entries)
+        {
+            if (entry.bits.any())
+            {
+                auto pTextItem = new OutputTextTreeItem(entry.keycodesAsUserString);
+                auto pInputKeysItem = new InputKeysTreeItem(dictionary.getKeysLabels(entry));
+                pDictionaryItem->appendRow({pTextItem, pInputKeysItem});
+            }
+        }
+    }
+}
+
+TheoryTreeItem*TheoryModel::getTheoryTreeItem() const
+{
+    const QModelIndex& indexTheory = getTheoryIndex();
+    return indexTheory.isValid() ? static_cast<TheoryTreeItem*>(itemFromIndex(indexTheory)) : nullptr;
+}
+
+QModelIndex TheoryModel::getTheoryIndex() const
+{
+    if (hasChildren())
+    {
+        return index(0, 0);
+    }
+    return QModelIndex();
 }
