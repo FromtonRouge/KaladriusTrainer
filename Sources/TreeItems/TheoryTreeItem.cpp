@@ -17,38 +17,22 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "KeycapTreeItem.h"
-#include "AttributeTreeItem.h"
-#include "AttributeValueTreeItem.h"
-#include <QtGui/QFont>
-#include <QtGui/QColor>
+#include "TheoryTreeItem.h"
+#include "ListTreeItem.h"
+#include <QtGui/QIcon>
 
-KeycapTreeItem::KeycapTreeItem(const QString& sKeycapId)
+TheoryTreeItem::TheoryTreeItem()
 {
-    setIcon(QIcon(":/Icons/keyboard.png"));
-    setKeycapId(sKeycapId);
+    setIcon(QIcon(":/Icons/graduation-hat.png"));
+    setText(QObject::tr("Theory"));
     setEditable(false);
 
-    auto pLabelItem = addAttribute(QObject::tr("Label"), sKeycapId);
-    QFont defaultFont;
-    defaultFont.setPixelSize(12);
-    pLabelItem->addAttribute(QObject::tr("Font"), defaultFont);
-    pLabelItem->addAttribute(QObject::tr("X"), qreal(0));
-    pLabelItem->addAttribute(QObject::tr("Y"), qreal(0));
-    addAttribute(QObject::tr("Color"), QColor());
+    addAttribute(QObject::tr("Name"), QString());
+    addAttribute(QObject::tr("Description"), QString());
+    appendRow({new ListTreeItem(QIcon(":/Icons/books-brown.png"), QObject::tr("Dictionaries")), new EmptyTreeItem()});
 }
 
-KeycapTreeItem::~KeycapTreeItem()
+TheoryTreeItem::~TheoryTreeItem()
 {
 
-}
-
-QString KeycapTreeItem::getKeycapId() const
-{
-    return text();
-}
-
-void KeycapTreeItem::setKeycapId(const QString& sKeycapId)
-{
-    setText(sKeycapId);
 }

@@ -19,5 +19,7 @@
         <file>Svgs/rec-button.svg</file>
         <file>Icons/control-record.png</file>
         <file>Icons/folder-open-document.png</file>
+        <file>Icons/graduation-hat.png</file>
+        <file>Icons/books-brown.png</file>
     </qresource>
 </RCC>

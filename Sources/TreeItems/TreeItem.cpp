@@ -17,38 +17,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "KeycapTreeItem.h"
+#include "TreeItem.h"
 #include "AttributeTreeItem.h"
 #include "AttributeValueTreeItem.h"
-#include <QtGui/QFont>
-#include <QtGui/QColor>
 
-KeycapTreeItem::KeycapTreeItem(const QString& sKeycapId)
+AttributeTreeItem* TreeItem::addAttribute(const QString& sName, const QVariant& value)
 {
-    setIcon(QIcon(":/Icons/keyboard.png"));
-    setKeycapId(sKeycapId);
-    setEditable(false);
-
-    auto pLabelItem = addAttribute(QObject::tr("Label"), sKeycapId);
-    QFont defaultFont;
-    defaultFont.setPixelSize(12);
-    pLabelItem->addAttribute(QObject::tr("Font"), defaultFont);
-    pLabelItem->addAttribute(QObject::tr("X"), qreal(0));
-    pLabelItem->addAttribute(QObject::tr("Y"), qreal(0));
-    addAttribute(QObject::tr("Color"), QColor());
-}
-
-KeycapTreeItem::~KeycapTreeItem()
-{
-
-}
-
-QString KeycapTreeItem::getKeycapId() const
-{
-    return text();
-}
-
-void KeycapTreeItem::setKeycapId(const QString& sKeycapId)
-{
-    setText(sKeycapId);
+    AttributeTreeItem* pAttribute = new AttributeTreeItem(sName);
+    appendRow({pAttribute, new AttributeValueTreeItem(value)});
+    return pAttribute;
 }

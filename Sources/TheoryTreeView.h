@@ -17,38 +17,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "KeycapTreeItem.h"
-#include "AttributeTreeItem.h"
-#include "AttributeValueTreeItem.h"
-#include <QtGui/QFont>
-#include <QtGui/QColor>
+#pragma once
 
-KeycapTreeItem::KeycapTreeItem(const QString& sKeycapId)
+#include <QtWidgets/QTreeView>
+
+class TheoryTreeView : public QTreeView
 {
-    setIcon(QIcon(":/Icons/keyboard.png"));
-    setKeycapId(sKeycapId);
-    setEditable(false);
+    Q_OBJECT
 
-    auto pLabelItem = addAttribute(QObject::tr("Label"), sKeycapId);
-    QFont defaultFont;
-    defaultFont.setPixelSize(12);
-    pLabelItem->addAttribute(QObject::tr("Font"), defaultFont);
-    pLabelItem->addAttribute(QObject::tr("X"), qreal(0));
-    pLabelItem->addAttribute(QObject::tr("Y"), qreal(0));
-    addAttribute(QObject::tr("Color"), QColor());
-}
-
-KeycapTreeItem::~KeycapTreeItem()
-{
-
-}
-
-QString KeycapTreeItem::getKeycapId() const
-{
-    return text();
-}
-
-void KeycapTreeItem::setKeycapId(const QString& sKeycapId)
-{
-    setText(sKeycapId);
-}
+public:
+    TheoryTreeView(QWidget* pParent = nullptr);
+    ~TheoryTreeView();
+};

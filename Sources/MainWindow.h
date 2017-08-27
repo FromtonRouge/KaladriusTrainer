@@ -35,6 +35,7 @@ class QUndoStack;
 class UndoableProxyModel;
 class DictionariesModel;
 class KeyboardModel;
+class TheoryModel;
 class KeyboardGraphicsScene;
 class MainWindow : public QMainWindow
 {
@@ -78,6 +79,8 @@ private:
     DictionariesModel* _pDictionariesModel;
     KeyboardModel* _pKeyboardModel;
     UndoableProxyModel* _pUndoableKeyboardModel;
+    TheoryModel* _pTheoryModel;
+    UndoableProxyModel* _pUndoableTheoryModel;
     KeyboardGraphicsScene* _pKeyboardGraphicsScene; ///< Only 1 scene and potentialy N views on this scene.
     QUndoStack* _pUndoStack;
 };

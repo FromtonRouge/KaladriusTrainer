@@ -17,38 +17,18 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "KeycapTreeItem.h"
-#include "AttributeTreeItem.h"
-#include "AttributeValueTreeItem.h"
-#include <QtGui/QFont>
-#include <QtGui/QColor>
+#include "TheoryModel.h"
+#include "TreeItems/TreeItem.h"
+#include "TreeItems/TheoryTreeItem.h"
 
-KeycapTreeItem::KeycapTreeItem(const QString& sKeycapId)
+TheoryModel::TheoryModel(QObject* pParent)
+    : QStandardItemModel(pParent)
 {
-    setIcon(QIcon(":/Icons/keyboard.png"));
-    setKeycapId(sKeycapId);
-    setEditable(false);
-
-    auto pLabelItem = addAttribute(QObject::tr("Label"), sKeycapId);
-    QFont defaultFont;
-    defaultFont.setPixelSize(12);
-    pLabelItem->addAttribute(QObject::tr("Font"), defaultFont);
-    pLabelItem->addAttribute(QObject::tr("X"), qreal(0));
-    pLabelItem->addAttribute(QObject::tr("Y"), qreal(0));
-    addAttribute(QObject::tr("Color"), QColor());
+    setHorizontalHeaderLabels(QStringList() << tr("Name") << tr("Value"));
+    appendRow({new TheoryTreeItem(), new EmptyTreeItem()});
 }
 
-KeycapTreeItem::~KeycapTreeItem()
+TheoryModel::~TheoryModel()
 {
 
-}
-
-QString KeycapTreeItem::getKeycapId() const
-{
-    return text();
-}
-
-void KeycapTreeItem::setKeycapId(const QString& sKeycapId)
-{
-    setText(sKeycapId);
 }

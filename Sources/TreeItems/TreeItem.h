@@ -21,6 +21,7 @@
 
 #include <QtGui/QStandardItem>
 
+class AttributeTreeItem;
 struct TreeItem : public QStandardItem
 {
     enum Type
@@ -32,11 +33,13 @@ struct TreeItem : public QStandardItem
         Attribute,
         AttributeValue,
         DictionarySettings,
+        Theory,
         OutputText,
         InputKeys,
     };
 
     virtual int type() const override = 0;
+    AttributeTreeItem* addAttribute(const QString& sName, const QVariant& value);
 };
 
 struct EmptyTreeItem : public TreeItem

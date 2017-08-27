@@ -25,6 +25,7 @@
 #include "KeyboardGraphicsView.h"
 #include "KeyboardGraphicsScene.h"
 #include "KeyboardModel.h"
+#include "TheoryModel.h"
 #include "UndoableProxyModel.h"
 #include "DictionariesModel.h"
 #include "DictionaryParser.h"
@@ -58,6 +59,8 @@ MainWindow::MainWindow(QWidget *parent)
     , _pDictionariesModel(new DictionariesModel(this))
     , _pKeyboardModel(new KeyboardModel(this))
     , _pUndoableKeyboardModel(new UndoableProxyModel(this))
+    , _pTheoryModel(new TheoryModel(this))
+    , _pUndoableTheoryModel(new UndoableProxyModel(this))
     , _pKeyboardGraphicsScene(new KeyboardGraphicsScene(this))
     , _pUndoStack(new QUndoStack(this))
 {
@@ -75,6 +78,8 @@ MainWindow::MainWindow(QWidget *parent)
     _pUi->listViewUndo->setStack(_pUndoStack);
     _pUndoableKeyboardModel->setSourceModel(_pKeyboardModel);
     _pUndoableKeyboardModel->setUndoStack(_pUndoStack);
+    _pUndoableTheoryModel->setSourceModel(_pTheoryModel);
+    _pUndoableTheoryModel->setUndoStack(_pUndoStack);
 
     QAction* pUndoAction = _pUndoStack->createUndoAction(this);
     pUndoAction->setIcon(QIcon(":/Icons/arrow-curve-180-left.png"));
@@ -95,13 +100,18 @@ MainWindow::MainWindow(QWidget *parent)
     _pKeyboardGraphicsScene->setKeyboardProperties(_pUi->treeViewKeyboardProperties);
     _pUi->widgetKeycapProperties->setKeyboardProperties(_pUi->treeViewKeyboardProperties);
 
+    _pUi->treeViewTheory->setModel(_pUndoableTheoryModel);
+
     // Default dock states
+    _pUi->dockWidgetTheory->hide();
     _pUi->dockWidgetKeyboardProperties->hide();
     _pUi->dockWidgetKeycapProperties->hide();
     _pUi->dockWidgetDictionaries3->hide();
     _pUi->dockWidgetDictionaries4->hide();
     _pUi->dockWidgetLogs->hide();
     _pUi->dockWidgetUndo->hide();
+
+    showMaximized();
 
     // Restore geometry
     QSettings settings;
