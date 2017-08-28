@@ -60,6 +60,7 @@ void TheoryModel::setDictionaries(const Dictionaries& dictionaries)
             }
         }
     }
+    emit dictionariesLoaded();
 }
 
 TheoryTreeItem*TheoryModel::getTheoryTreeItem() const
@@ -73,6 +74,16 @@ QModelIndex TheoryModel::getTheoryIndex() const
     if (hasChildren())
     {
         return index(0, 0);
+    }
+    return QModelIndex();
+}
+
+QModelIndex TheoryModel::getDictionariesIndex() const
+{
+    const QModelIndex& indexTheory = getTheoryIndex();
+    if (indexTheory.isValid())
+    {
+        return indexTheory.child(2, 0);
     }
     return QModelIndex();
 }

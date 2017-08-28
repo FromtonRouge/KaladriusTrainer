@@ -22,7 +22,7 @@
 #include <QtCore/QSettings>
 #include <QtCore/QList>
 #include "DictionariesWidget.h"
-#include "DictionariesModel.h"
+#include "TheoryModel.h"
 #include "ui_DictionariesWidget.h"
 
 /**
@@ -84,7 +84,7 @@ struct NoEntriesFilter : public QSortFilterProxyModel
 DictionariesWidget::DictionariesWidget(QWidget* pParent)
     : QWidget(pParent)
     , _pUi(new Ui::DictionariesWidget())
-    , _pDictionariesModel(nullptr)
+    , _pTheoryModel(nullptr)
     , _pSortFilterDictionary(new DictionaryFilter(this))
     , _pSortFilterNoEntries(new NoEntriesFilter(this))
     , _pSortFilterSearch(new AcceptTopRowsFilter(this))
@@ -117,20 +117,20 @@ DictionariesWidget::~DictionariesWidget()
     }
 }
 
-void DictionariesWidget::setDictionariesModel(DictionariesModel* pModel)
+void DictionariesWidget::setTheoryModel(TheoryModel* pModel)
 {
     _bBuildingDictionaries = true;
 
-    if (_pDictionariesModel)
+    if (_pTheoryModel)
     {
-        _pDictionariesModel->disconnect(this);
+        _pTheoryModel->disconnect(this);
     }
 
-    _pDictionariesModel = pModel;
+    _pTheoryModel = pModel;
 
-    if (_pDictionariesModel)
+    if (_pTheoryModel)
     {
-        connect(_pDictionariesModel, SIGNAL(dictionariesLoaded()), this, SLOT(onDictionariesLoaded()));
+        connect(_pTheoryModel, SIGNAL(dictionariesLoaded()), this, SLOT(onDictionariesLoaded()));
         onDictionariesLoaded();
     }
 
@@ -152,6 +152,11 @@ void DictionariesWidget::on_comboBox_currentIndexChanged(int iCurrent)
     pFilter->selectedDictionary = iCurrent - 1;
 
     const auto pModel = _pUi->treeView->model();
+
+    // TODO
+    const QModelIndex& sourceIndexDictionaries = _pTheoryModel->getDictionariesIndex();
+    Q_ASSERT(sourceIndexDictionaries.isValid());
+
     if (pFilter->selectedDictionary < 0)
     {
         _pUi->treeView->setRootIsDecorated(true);
@@ -211,16 +216,18 @@ void DictionariesWidget::onDictionariesLoaded()
 
     QStringList dictionaries;
     dictionaries << tr("All Dictionaries");
-    const int iRows = _pDictionariesModel->rowCount();
+    const QModelIndex& indexDictionaries = _pTheoryModel->getDictionariesIndex();
+    Q_ASSERT(indexDictionaries.isValid());
+    const int iRows = _pTheoryModel->rowCount(indexDictionaries);
     for (int iRow = 0; iRow < iRows; ++iRow)
     {
-        const QModelIndex& index = _pDictionariesModel->index(iRow, 0);
+        const QModelIndex& index = _pTheoryModel->index(iRow, 0, indexDictionaries);
         dictionaries << index.data().toString();
     }
     _pUi->comboBox->clear();
     _pUi->comboBox->addItems(dictionaries);
 
-    _pSortFilterDictionary->setSourceModel(_pDictionariesModel);
+    _pSortFilterDictionary->setSourceModel(_pTheoryModel);
     _pSortFilterAlphabeticalOrder->sort(0);
     _pUi->treeView->resizeColumnToContents(0);
 

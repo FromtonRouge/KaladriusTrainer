@@ -33,7 +33,6 @@ namespace Ui
 
 class QUndoStack;
 class UndoableProxyModel;
-class DictionariesModel;
 class KeyboardModel;
 class TheoryModel;
 class KeyboardGraphicsScene;
@@ -76,7 +75,6 @@ private:
 	boost::iostreams::stream_buffer<StreamSink> _streamBufferCerr;
 	std::streambuf* _pOldStreambufCerr;
     Dictionaries _dictionaries;
-    DictionariesModel* _pDictionariesModel;
     KeyboardModel* _pKeyboardModel;
     UndoableProxyModel* _pUndoableKeyboardModel;
     TheoryModel* _pTheoryModel;

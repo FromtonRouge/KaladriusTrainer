@@ -27,10 +27,14 @@ class TheoryModel : public QStandardItemModel
 {
     Q_OBJECT
 
+signals:
+    void dictionariesLoaded();
+
 public:
     TheoryModel(QObject* pParent = nullptr);
     ~TheoryModel();
     void setDictionaries(const Dictionaries& dictionaries);
     TheoryTreeItem* getTheoryTreeItem() const;
     QModelIndex getTheoryIndex() const;
+    QModelIndex getDictionariesIndex() const;
 };

@@ -27,7 +27,6 @@
 #include "KeyboardModel.h"
 #include "TheoryModel.h"
 #include "UndoableProxyModel.h"
-#include "DictionariesModel.h"
 #include "DictionaryParser.h"
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMdiSubWindow>
@@ -56,7 +55,6 @@ MainWindow::MainWindow(QWidget *parent)
     , _pUi(new Ui::MainWindow)
     , _pOldStreambufCout(std::cout.rdbuf())
     , _pOldStreambufCerr(std::cerr.rdbuf())
-    , _pDictionariesModel(new DictionariesModel(this))
     , _pKeyboardModel(new KeyboardModel(this))
     , _pUndoableKeyboardModel(new UndoableProxyModel(this))
     , _pTheoryModel(new TheoryModel(this))
@@ -91,10 +89,10 @@ MainWindow::MainWindow(QWidget *parent)
     pRedoAction->setShortcut(QKeySequence("Ctrl+Y"));
     _pUi->menuEdit->addAction(pRedoAction);
 
-    _pUi->widgetDictionaries1->setDictionariesModel(_pDictionariesModel);
-    _pUi->widgetDictionaries2->setDictionariesModel(_pDictionariesModel);
-    _pUi->widgetDictionaries3->setDictionariesModel(_pDictionariesModel);
-    _pUi->widgetDictionaries4->setDictionariesModel(_pDictionariesModel);
+    _pUi->widgetDictionaries1->setTheoryModel(_pTheoryModel);
+    _pUi->widgetDictionaries2->setTheoryModel(_pTheoryModel);
+    _pUi->widgetDictionaries3->setTheoryModel(_pTheoryModel);
+    _pUi->widgetDictionaries4->setTheoryModel(_pTheoryModel);
 
     _pUi->treeViewKeyboardProperties->setModel(_pUndoableKeyboardModel);
     _pKeyboardGraphicsScene->setKeyboardProperties(_pUi->treeViewKeyboardProperties);
@@ -223,7 +221,7 @@ void MainWindow::on_actionLoad_Theory_triggered()
     const QString& sTheoryFile = QFileDialog::getOpenFileName(this, tr("Theory"), sLastTheoryFile, "*.theory");
     if (!sTheoryFile.isEmpty())
     {
-        if (Serialization::Load(_pDictionariesModel, sTheoryFile))
+        if (Serialization::Load(_pTheoryModel, sTheoryFile))
         {
             settings.setValue("lastTheoryFile", sTheoryFile);
             COUT(tr("Theory loaded from file %1").arg(sTheoryFile));
@@ -241,7 +239,7 @@ void MainWindow::on_actionSave_Theory_as_triggered()
     if (saveDlg.exec())
     {
         const QString& sTheoryFile = saveDlg.selectedFiles().front();
-        if (Serialization::Save(_pDictionariesModel, sTheoryFile))
+        if (Serialization::Save(_pTheoryModel, sTheoryFile))
         {
             settings.setValue("lastTheoryFile", sTheoryFile);
             COUT(tr("Theory saved to file %1").arg(sTheoryFile));
@@ -275,7 +273,6 @@ void MainWindow::on_actionImport_Dictionaries_triggered()
             _dictionaries.unite(parser.getDictionaries());
         }
 
-        _pDictionariesModel->setDictionaries(_dictionaries);
         _pTheoryModel->setDictionaries(_dictionaries);
 
         COUT((tr("%1 dictionaries loaded").arg(_dictionaries.size())));

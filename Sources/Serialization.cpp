@@ -19,7 +19,7 @@
 
 #include "Serialization.h"
 #include "KeyboardModel.h"
-#include "DictionariesModel.h"
+#include "TheoryModel.h"
 #include "TreeItems/KeyboardTreeItem.h"
 #include "TreeItems/KeycapTreeItem.h"
 #include "TreeItems/ListTreeItem.h"
@@ -351,7 +351,7 @@ namespace Serialization
         return false;
     }
 
-    bool Save(DictionariesModel* pModel, const QString& sFilePath)
+    bool Save(TheoryModel* pModel, const QString& sFilePath)
     {
         std::ofstream ofs(sFilePath.toStdString());
         boost::archive::xml_oarchive oa(ofs);
@@ -366,7 +366,7 @@ namespace Serialization
         return false;
     }
 
-    bool Load(DictionariesModel* pModel, const QString& sFilePath)
+    bool Load(TheoryModel* pModel, const QString& sFilePath)
     {
         std::ifstream ifs(sFilePath.toStdString());
         boost::archive::xml_iarchive ia(ifs);

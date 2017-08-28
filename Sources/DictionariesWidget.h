@@ -28,7 +28,7 @@ namespace Ui
 }
 
 class QSortFilterProxyModel;
-class DictionariesModel;
+class TheoryModel;
 class QTimer;
 class DictionariesWidget : public QWidget
 {
@@ -38,7 +38,7 @@ public:
     DictionariesWidget(QWidget* pParent = nullptr);
     ~DictionariesWidget();
 
-    void setDictionariesModel(DictionariesModel* pModel);
+    void setTheoryModel(TheoryModel* pModel);
 
 protected slots:
     void on_lineEdit_textChanged();
@@ -52,7 +52,7 @@ private:
 
 private:
     QScopedPointer<Ui::DictionariesWidget> _pUi;
-    DictionariesModel* _pDictionariesModel;
+    TheoryModel* _pTheoryModel;
     QSortFilterProxyModel* _pSortFilterDictionary;
     QSortFilterProxyModel* _pSortFilterNoEntries;
     QSortFilterProxyModel* _pSortFilterSearch;
