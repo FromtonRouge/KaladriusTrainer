@@ -17,13 +17,14 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
+#include "DictionariesWidget.h"
+#include "DictionariesModel.h"
+#include "TheoryModel.h"
+#include "ui_DictionariesWidget.h"
 #include <QtCore/QSortFilterProxyModel>
 #include <QtCore/QTimer>
 #include <QtCore/QSettings>
 #include <QtCore/QList>
-#include "DictionariesWidget.h"
-#include "TheoryModel.h"
-#include "ui_DictionariesWidget.h"
 
 /**
  * Accept dictionary selected by the combo box.
@@ -85,6 +86,7 @@ DictionariesWidget::DictionariesWidget(QWidget* pParent)
     : QWidget(pParent)
     , _pUi(new Ui::DictionariesWidget())
     , _pTheoryModel(nullptr)
+    , _pDictionariesModel(new DictionariesModel(this))
     , _pSortFilterDictionary(new DictionaryFilter(this))
     , _pSortFilterNoEntries(new NoEntriesFilter(this))
     , _pSortFilterSearch(new AcceptTopRowsFilter(this))
@@ -95,6 +97,7 @@ DictionariesWidget::DictionariesWidget(QWidget* pParent)
 {
     _pUi->setupUi(this);
     _pUi->treeView->setAlternatingRowColors(true);
+    _pSortFilterDictionary->setSourceModel(_pDictionariesModel);
     _pSortFilterNoEntries->setSourceModel(_pSortFilterDictionary);
     _pSortFilterSearch->setSourceModel(_pSortFilterNoEntries);
     _pSortFilterSearch->setFilterCaseSensitivity(Qt::CaseInsensitive);
@@ -227,7 +230,7 @@ void DictionariesWidget::onDictionariesLoaded()
     _pUi->comboBox->clear();
     _pUi->comboBox->addItems(dictionaries);
 
-    _pSortFilterDictionary->setSourceModel(_pTheoryModel);
+    _pDictionariesModel->setSourceModel(_pTheoryModel);
     _pSortFilterAlphabeticalOrder->sort(0);
     _pUi->treeView->resizeColumnToContents(0);
 

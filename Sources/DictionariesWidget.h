@@ -27,8 +27,9 @@ namespace Ui
     class DictionariesWidget;
 }
 
-class QSortFilterProxyModel;
 class TheoryModel;
+class DictionariesModel;
+class QSortFilterProxyModel;
 class QTimer;
 class DictionariesWidget : public QWidget
 {
@@ -53,6 +54,7 @@ private:
 private:
     QScopedPointer<Ui::DictionariesWidget> _pUi;
     TheoryModel* _pTheoryModel;
+    DictionariesModel* _pDictionariesModel;
     QSortFilterProxyModel* _pSortFilterDictionary;
     QSortFilterProxyModel* _pSortFilterNoEntries;
     QSortFilterProxyModel* _pSortFilterSearch;
