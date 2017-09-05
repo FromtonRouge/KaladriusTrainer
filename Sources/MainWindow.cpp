@@ -238,7 +238,7 @@ void MainWindow::on_actionSave_Theory_as_triggered()
     saveDlg.setAcceptMode(QFileDialog::AcceptSave);
     if (saveDlg.exec())
     {
-        const QString& sTheoryFile = saveDlg.selectedFiles().front();
+        const QString sTheoryFile = saveDlg.selectedFiles().front();
         if (Serialization::Save(_pTheoryModel, sTheoryFile))
         {
             settings.setValue("lastTheoryFile", sTheoryFile);

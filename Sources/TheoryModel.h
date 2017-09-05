@@ -35,6 +35,7 @@ public:
     ~TheoryModel();
     void setDictionaries(const Dictionaries& dictionaries);
     TheoryTreeItem* getTheoryTreeItem() const;
+    void setTheoryTreeItem(TheoryTreeItem* pTheoryTreeItem);
     QModelIndex getTheoryIndex() const;
     QModelIndex getDictionariesIndex() const;
 };

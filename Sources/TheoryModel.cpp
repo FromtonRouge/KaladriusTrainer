@@ -69,6 +69,14 @@ TheoryTreeItem*TheoryModel::getTheoryTreeItem() const
     return indexTheory.isValid() ? static_cast<TheoryTreeItem*>(itemFromIndex(indexTheory)) : nullptr;
 }
 
+void TheoryModel::setTheoryTreeItem(TheoryTreeItem* pTheoryTreeItem)
+{
+    clear();
+    appendRow({pTheoryTreeItem, new EmptyTreeItem()});
+    emit dictionariesLoaded();
+    setHorizontalHeaderLabels(QStringList() << tr("Name") << tr("Value"));
+}
+
 QModelIndex TheoryModel::getTheoryIndex() const
 {
     if (hasChildren())

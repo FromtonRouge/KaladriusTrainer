@@ -23,6 +23,9 @@
 #include "TreeItems/KeyboardTreeItem.h"
 #include "TreeItems/KeycapTreeItem.h"
 #include "TreeItems/ListTreeItem.h"
+#include "TreeItems/TheoryTreeItem.h"
+#include "TreeItems/AttributeTreeItem.h"
+#include "TreeItems/AttributeValueTreeItem.h"
 #include <QtCore/QDataStream>
 #include <QtCore/QByteArray>
 #include <QtCore/QVariant>
@@ -49,19 +52,20 @@ namespace boost
             split_free(ar, obj, fileVersion);
         }
 
-        template<class Archive> void save(Archive& ar, const QByteArray& obj,  const unsigned int fileVersion)
+        template<class Archive> void save(Archive& ar, const QByteArray& obj,  const unsigned int)
         {
             int iSize = obj.size();
             ar << make_nvp("size", iSize);
-            ar << make_nvp("bytes", make_binary_object((void*)obj.data(), iSize));
+            void* pBinaryData = const_cast<void*>(static_cast<const void*>(obj.data()));
+            ar << make_nvp("bytes", make_binary_object(pBinaryData, size_t(iSize)));
         }
 
-        template<class Archive> void load(Archive& ar, QByteArray& obj,  const unsigned int fileVersion)
+        template<class Archive> void load(Archive& ar, QByteArray& obj,  const unsigned int)
         {
             int iSize = 0;
             ar >> make_nvp("size", iSize);
             obj.resize(iSize);
-            ar >> make_nvp("bytes", make_binary_object(obj.data(), iSize));
+            ar >> make_nvp("bytes", make_binary_object(obj.data(), size_t(iSize)));
         }
     }
 }
@@ -77,7 +81,7 @@ namespace boost
             split_free(ar, obj, fileVersion);
         }
 
-        template<class Archive> void save(Archive& ar, const QVariant& obj,  const unsigned int fileVersion)
+        template<class Archive> void save(Archive& ar, const QVariant& obj,  const unsigned int)
         {
             QByteArray data;
             QDataStream dataStream(&data, QIODevice::WriteOnly);
@@ -85,7 +89,7 @@ namespace boost
             ar << make_nvp("variant", data);
         }
 
-        template<class Archive> void load(Archive& ar, QVariant& obj,  const unsigned int fileVersion)
+        template<class Archive> void load(Archive& ar, QVariant& obj,  const unsigned int)
         {
             QByteArray data;
             ar >> make_nvp("variant", data);
@@ -101,7 +105,7 @@ namespace boost
 {
     namespace serialization
     {
-        template<class Archive> void serialize(Archive& ar, QStandardItem& obj,  const unsigned int fileVersion)
+        template<class Archive> void serialize(Archive&, QStandardItem&,  const unsigned int)
         {
         }
     }
@@ -114,7 +118,7 @@ namespace boost
 {
     namespace serialization
     {
-        template<class Archive> void serialize(Archive& ar, TreeItem& obj,  const unsigned int fileVersion)
+        template<class Archive> void serialize(Archive& ar, TreeItem& obj,  const unsigned int)
         {
             ar & make_nvp("base", base_object<QStandardItem>(obj));
         }
@@ -128,7 +132,7 @@ namespace boost
 {
     namespace serialization
     {
-        template<class Archive> void serialize(Archive& ar, EmptyTreeItem& obj,  const unsigned int fileVersion)
+        template<class Archive> void serialize(Archive& ar, EmptyTreeItem& obj,  const unsigned int)
         {
             ar & make_nvp("base", base_object<TreeItem>(obj));
         }
@@ -149,7 +153,7 @@ namespace boost
             split_free(ar, obj, fileVersion);
         }
 
-        template<class Archive> void save(Archive& ar, const KeycapTreeItem& obj,  const unsigned int fileVersion)
+        template<class Archive> void save(Archive& ar, const KeycapTreeItem& obj,  const unsigned int)
         {
             // Save keycap id
             const std::string& sId = obj.getKeycapId().toStdString();
@@ -187,7 +191,7 @@ namespace boost
             ar << make_nvp("color", value);
         }
 
-        template<class Archive> void load(Archive& ar, KeycapTreeItem& obj,  const unsigned int fileVersion)
+        template<class Archive> void load(Archive& ar, KeycapTreeItem& obj,  const unsigned int)
         {
             // Load keycap id
             std::string sId;
@@ -241,7 +245,7 @@ namespace boost
             split_free(ar, obj, fileVersion);
         }
 
-        template<class Archive> void save(Archive& ar, const ListTreeItem& obj,  const unsigned int fileVersion)
+        template<class Archive> void save(Archive& ar, const ListTreeItem& obj,  const unsigned int)
         {
             const int iRows = obj.rowCount();
             const int iColumns = obj.columnCount();
@@ -257,7 +261,7 @@ namespace boost
             }
         }
 
-        template<class Archive> void load(Archive& ar, ListTreeItem& obj,  const unsigned int fileVersion)
+        template<class Archive> void load(Archive& ar, ListTreeItem& obj,  const unsigned int)
         {
             int iRows = 0;
             int iColumns = 0;
@@ -293,16 +297,58 @@ namespace boost
             split_free(ar, obj, fileVersion);
         }
 
-        template<class Archive> void save(Archive& ar, const KeyboardTreeItem& obj,  const unsigned int fileVersion)
+        template<class Archive> void save(Archive& ar, const KeyboardTreeItem& obj,  const unsigned int)
         {
             ListTreeItem* pKeycapsTreeItem = obj.getKeycaps();
             ar << make_nvp("keycaps", *pKeycapsTreeItem);
         }
 
-        template<class Archive> void load(Archive& ar, KeyboardTreeItem& obj,  const unsigned int fileVersion)
+        template<class Archive> void load(Archive& ar, KeyboardTreeItem& obj,  const unsigned int)
         {
             ListTreeItem* pKeycapsTreeItem = obj.getKeycaps();
             ar >> make_nvp("keycaps", *pKeycapsTreeItem);
+        }
+    }
+}
+
+// TheoryTreeItem
+BOOST_CLASS_VERSION(TheoryTreeItem, 0)
+namespace boost
+{
+    namespace serialization
+    {
+        template<class Archive> void serialize(Archive& ar, TheoryTreeItem& obj,  const unsigned int fileVersion)
+        {
+            ar & make_nvp("base", base_object<TreeItem>(obj));
+            split_free(ar, obj, fileVersion);
+        }
+
+        template<class Archive> void save(Archive& ar, const TheoryTreeItem& obj,  const unsigned int)
+        {
+            QVariant value;
+            value = obj.getName()->getValue()->data(Qt::EditRole);
+            ar << make_nvp("name", value);
+
+            value = obj.getDescription()->getValue()->data(Qt::EditRole);
+            ar << make_nvp("description", value);
+
+            ListTreeItem* pDictionaries = obj.getDictionaries();
+            ar << make_nvp("dictionaries", *pDictionaries);
+        }
+
+        template<class Archive> void load(Archive& ar, TheoryTreeItem& obj,  const unsigned int)
+        {
+            QVariant value;
+            auto pValue = obj.getName()->getValue();
+            ar >> make_nvp("name", value);
+            pValue->setData(value, Qt::EditRole);
+
+            pValue = obj.getDescription()->getValue();
+            ar >> make_nvp("description", value);
+            pValue->setData(value, Qt::EditRole);
+
+            ListTreeItem* pDictionaries = obj.getDictionaries();
+            ar >> make_nvp("dictionaries", *pDictionaries);
         }
     }
 }
@@ -357,7 +403,8 @@ namespace Serialization
         boost::archive::xml_oarchive oa(ofs);
         try
         {
-            // TODO
+            auto pTheoryTreeItem = pModel->getTheoryTreeItem();
+            oa << BOOST_SERIALIZATION_NVP(pTheoryTreeItem);
         }
         catch (const std::exception& e)
         {
@@ -372,7 +419,9 @@ namespace Serialization
         boost::archive::xml_iarchive ia(ifs);
         try
         {
-            // TODO
+            TheoryTreeItem* pTheoryTreeItem;
+            ia >> BOOST_SERIALIZATION_NVP(pTheoryTreeItem);
+            pModel->setTheoryTreeItem(pTheoryTreeItem);
         }
         catch (const std::exception& e)
         {

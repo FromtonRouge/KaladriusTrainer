@@ -28,5 +28,7 @@ public:
     TheoryTreeItem();
     ~TheoryTreeItem();
     virtual int type() const override {return Theory;}
+    AttributeTreeItem* getName() const;
+    AttributeTreeItem* getDescription() const;
     ListTreeItem* getDictionaries() const;
 };

@@ -19,6 +19,7 @@
 
 #include "TheoryTreeItem.h"
 #include "ListTreeItem.h"
+#include "AttributeTreeItem.h"
 #include <QtGui/QIcon>
 
 TheoryTreeItem::TheoryTreeItem()
@@ -35,6 +36,16 @@ TheoryTreeItem::TheoryTreeItem()
 TheoryTreeItem::~TheoryTreeItem()
 {
 
+}
+
+AttributeTreeItem*TheoryTreeItem::getName() const
+{
+    return static_cast<AttributeTreeItem*>(child(0));
+}
+
+AttributeTreeItem*TheoryTreeItem::getDescription() const
+{
+    return static_cast<AttributeTreeItem*>(child(1));
 }
 
 ListTreeItem* TheoryTreeItem::getDictionaries() const
