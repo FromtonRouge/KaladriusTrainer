@@ -20,10 +20,10 @@
 #pragma once
 
 #include "Dictionary.h"
-#include <QtGui/QStandardItemModel>
+#include "TreeItemModel.h"
 
 class TheoryTreeItem;
-class TheoryModel : public QStandardItemModel
+class TheoryModel : public TreeItemModel
 {
     Q_OBJECT
 

@@ -36,6 +36,7 @@ struct TreeItem : public QStandardItem
         Theory,
         OutputText,
         InputKeys,
+        Dictionary
     };
 
     virtual int type() const override = 0;

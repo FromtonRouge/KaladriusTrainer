@@ -17,16 +17,25 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "DictionaryTreeItem.h"
+#include "ListTreeItem.h"
+#include <QtGui/QIcon>
 
-#include "TreeItems/TreeItem.h"
-
-class OutputTextTreeItem : public TreeItem
+DictionaryTreeItem::DictionaryTreeItem(const QString& sText)
 {
-public:
-    OutputTextTreeItem(const QString& sOutputText = QString());
-    ~OutputTextTreeItem();
-    QString getOutputText() const;
-    void setOutputText(const QString& sOutputText);
-    virtual int type() const override {return OutputText;}
-};
+    setIcon(QIcon(":/Icons/book-brown.png"));
+    setText(sText);
+    setEditable(false);
+
+    auto pEntriesTreeItem = new ListTreeItem(QIcon(":/Icons/book-brown.png"), QObject::tr("Entries"));
+    appendRow({pEntriesTreeItem, new EmptyTreeItem()});
+}
+
+DictionaryTreeItem::~DictionaryTreeItem()
+{
+}
+
+ListTreeItem* DictionaryTreeItem::getEntries() const
+{
+    return static_cast<ListTreeItem*>(child(0, 0));
+}

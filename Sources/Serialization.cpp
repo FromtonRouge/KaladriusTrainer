@@ -24,6 +24,9 @@
 #include "TreeItems/KeycapTreeItem.h"
 #include "TreeItems/ListTreeItem.h"
 #include "TreeItems/TheoryTreeItem.h"
+#include "TreeItems/DictionaryTreeItem.h"
+#include "TreeItems/OutputTextTreeItem.h"
+#include "TreeItems/InputKeysTreeItem.h"
 #include "TreeItems/AttributeTreeItem.h"
 #include "TreeItems/AttributeValueTreeItem.h"
 #include <QtCore/QDataStream>
@@ -161,11 +164,11 @@ namespace boost
 
             // Save keycap roles
             QVariant value;
-            value = obj.data(KeyboardModel::RotationAngleRole);
+            value = obj.data(RotationAngleRole);
             ar << make_nvp("rotation_angle", value);
-            value = obj.data(KeyboardModel::RotationOriginRole);
+            value = obj.data(RotationOriginRole);
             ar << make_nvp("rotation_origin", value);
-            value = obj.data(KeyboardModel::OuterBorderRole);
+            value = obj.data(OuterBorderRole);
             ar << make_nvp("outer_border", value);
 
             // Save keycap hierarchy
@@ -201,11 +204,11 @@ namespace boost
             // Load keycap roles
             QVariant value;
             ar >> make_nvp("rotation_angle", value);
-            obj.setData(value, KeyboardModel::RotationAngleRole);
+            obj.setData(value, RotationAngleRole);
             ar >> make_nvp("rotation_origin", value);
-            obj.setData(value, KeyboardModel::RotationOriginRole);
+            obj.setData(value, RotationOriginRole);
             ar >> make_nvp("outer_border", value);
-            obj.setData(value, KeyboardModel::OuterBorderRole);
+            obj.setData(value, OuterBorderRole);
 
             // Load keycap hierarchy data
             auto pLabelTreeItem = obj.child(0, 0);
@@ -311,6 +314,96 @@ namespace boost
     }
 }
 
+// OutputTextTreeItem
+BOOST_CLASS_VERSION(OutputTextTreeItem, 0)
+BOOST_CLASS_EXPORT(OutputTextTreeItem) // For serializing from a base pointer
+namespace boost
+{
+    namespace serialization
+    {
+        template<class Archive> void serialize(Archive& ar, OutputTextTreeItem& obj,  const unsigned int fileVersion)
+        {
+            ar & make_nvp("base", base_object<TreeItem>(obj));
+            split_free(ar, obj, fileVersion);
+        }
+
+        template<class Archive> void save(Archive& ar, const OutputTextTreeItem& obj,  const unsigned int)
+        {
+            std::string sText = obj.getOutputText().toStdString();
+            ar << make_nvp("output", sText);
+        }
+
+        template<class Archive> void load(Archive& ar, OutputTextTreeItem& obj,  const unsigned int)
+        {
+            std::string sText;
+            ar >> make_nvp("output", sText);
+            obj.setOutputText(QString::fromStdString(sText));
+        }
+    }
+}
+
+// InputKeysTreeItem
+BOOST_CLASS_VERSION(InputKeysTreeItem, 0)
+BOOST_CLASS_EXPORT(InputKeysTreeItem) // For serializing from a base pointer
+namespace boost
+{
+    namespace serialization
+    {
+        template<class Archive> void serialize(Archive& ar, InputKeysTreeItem& obj,  const unsigned int fileVersion)
+        {
+            ar & make_nvp("base", base_object<TreeItem>(obj));
+            split_free(ar, obj, fileVersion);
+        }
+
+        template<class Archive> void save(Archive& ar, const InputKeysTreeItem& obj,  const unsigned int)
+        {
+            std::string sText = obj.text().toStdString();
+            ar << make_nvp("keys", sText);
+        }
+
+        template<class Archive> void load(Archive& ar, InputKeysTreeItem& obj,  const unsigned int)
+        {
+            std::string sText;
+            ar >> make_nvp("keys", sText);
+            obj.setText(QString::fromStdString(sText));
+        }
+    }
+}
+
+// DictionaryTreeItem
+BOOST_CLASS_VERSION(DictionaryTreeItem, 0)
+BOOST_CLASS_EXPORT(DictionaryTreeItem) // For serializing from a base pointer
+namespace boost
+{
+    namespace serialization
+    {
+        template<class Archive> void serialize(Archive& ar, DictionaryTreeItem& obj,  const unsigned int fileVersion)
+        {
+            ar & make_nvp("base", base_object<TreeItem>(obj));
+            split_free(ar, obj, fileVersion);
+        }
+
+        template<class Archive> void save(Archive& ar, const DictionaryTreeItem& obj,  const unsigned int)
+        {
+            std::string sText = obj.text().toStdString();
+            ar << make_nvp("name", sText);
+
+            ListTreeItem* pEntriesTreeItem = obj.getEntries();
+            ar << make_nvp("entries", *pEntriesTreeItem);
+        }
+
+        template<class Archive> void load(Archive& ar, DictionaryTreeItem& obj,  const unsigned int)
+        {
+            std::string sText;
+            ar >> make_nvp("name", sText);
+            obj.setText(QString::fromStdString(sText));
+
+            ListTreeItem* pEntriesTreeItem = obj.getEntries();
+            ar >> make_nvp("entries", *pEntriesTreeItem);
+        }
+    }
+}
+
 // TheoryTreeItem
 BOOST_CLASS_VERSION(TheoryTreeItem, 0)
 namespace boost
@@ -405,6 +498,7 @@ namespace Serialization
         {
             auto pTheoryTreeItem = pModel->getTheoryTreeItem();
             oa << BOOST_SERIALIZATION_NVP(pTheoryTreeItem);
+            return true;
         }
         catch (const std::exception& e)
         {
@@ -422,6 +516,7 @@ namespace Serialization
             TheoryTreeItem* pTheoryTreeItem;
             ia >> BOOST_SERIALIZATION_NVP(pTheoryTreeItem);
             pModel->setTheoryTreeItem(pTheoryTreeItem);
+            return true;
         }
         catch (const std::exception& e)
         {

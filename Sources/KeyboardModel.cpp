@@ -32,32 +32,13 @@
 #include <QtCore/QRegularExpression>
 
 KeyboardModel::KeyboardModel(QObject* pParent)
-    : QStandardItemModel(pParent)
+    : TreeItemModel(pParent)
 {
     setHorizontalHeaderLabels(QStringList() << tr("Name") << tr("Value"));
 }
 
 KeyboardModel::~KeyboardModel()
 {
-}
-
-QVariant KeyboardModel::data(const QModelIndex& index, int iRole) const
-{
-    QVariant result;
-    switch (iRole)
-    {
-    case TreeItemTypeRole:
-        {
-            result = itemFromIndex(index)->type();
-            break;
-        }
-    default:
-        {
-            result = QStandardItemModel::data(index, iRole);
-            break;
-        }
-    }
-    return result;
 }
 
 QModelIndex KeyboardModel::getParentKeycap(const QModelIndex& indexInKeycapHierarchy)
@@ -170,7 +151,7 @@ void KeyboardModel::loadKeyboardSvg(const QByteArray& svgContent)
                 rectOuterBorder.setY(rectElement.attribute("y").toDouble());
                 rectOuterBorder.setWidth(rectElement.attribute("width").toDouble());
                 rectOuterBorder.setHeight(rectElement.attribute("height").toDouble());
-                pKeycapTreeItem->setData(rectOuterBorder, int(UserRole::OuterBorderRole));
+                pKeycapTreeItem->setData(rectOuterBorder, int(OuterBorderRole));
             }
 
             pKeyboardTreeItem->getKeycaps()->appendRow({pKeycapTreeItem, new EmptyTreeItem()}); // no signal sent

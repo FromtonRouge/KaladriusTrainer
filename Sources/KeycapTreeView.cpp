@@ -71,7 +71,7 @@ void KeycapTreeView::updateRootIndexFromSelection(const QItemSelection& selected
             _pDiffModel->clearMapping();
             for (const auto& index : allSelectedIndexes)
             {
-                const int iPropertyType = index.data(KeyboardModel::TreeItemTypeRole).toInt();
+                const int iPropertyType = index.data(TreeItemTypeRole).toInt();
                 if (iPropertyType >= TreeItem::Keycap)
                 {
                     const QModelIndex& indexKeycapInKeyboardModel = pKeyboardModel->getParentKeycap(index);

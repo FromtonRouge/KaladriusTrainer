@@ -23,9 +23,10 @@
 #include "TreeItems/ListTreeItem.h"
 #include "TreeItems/OutputTextTreeItem.h"
 #include "TreeItems/InputKeysTreeItem.h"
+#include "TreeItems/DictionaryTreeItem.h"
 
 TheoryModel::TheoryModel(QObject* pParent)
-    : QStandardItemModel(pParent)
+    : TreeItemModel(pParent)
 {
     setHorizontalHeaderLabels(QStringList() << tr("Name") << tr("Value"));
     appendRow({new TheoryTreeItem(), new EmptyTreeItem()});
@@ -47,8 +48,9 @@ void TheoryModel::setDictionaries(const Dictionaries& dictionaries)
 
     for (const auto& dictionary : dictionaries)
     {
-        auto pDictionaryItem = new ListTreeItem(QIcon(":/Icons/book-brown.png"), dictionary.getName());
+        auto pDictionaryItem = new DictionaryTreeItem(dictionary.getName());
         pDictionaries->appendRow({pDictionaryItem, new EmptyTreeItem()});
+        auto pEntriesItem = pDictionaryItem->getEntries();
         const auto& entries = dictionary.getKeyBitsToEntry();
         for (const Dictionary::Entry& entry : entries)
         {
@@ -56,7 +58,7 @@ void TheoryModel::setDictionaries(const Dictionaries& dictionaries)
             {
                 auto pTextItem = new OutputTextTreeItem(entry.keycodesAsUserString);
                 auto pInputKeysItem = new InputKeysTreeItem(dictionary.getKeysLabels(entry));
-                pDictionaryItem->appendRow({pTextItem, pInputKeysItem});
+                pEntriesItem->appendRow({pTextItem, pInputKeysItem});
             }
         }
     }

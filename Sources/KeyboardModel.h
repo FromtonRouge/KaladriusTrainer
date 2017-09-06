@@ -19,11 +19,11 @@
 
 #pragma once
 
-#include <QtGui/QStandardItemModel>
+#include "TreeItemModel.h"
 #include <QtCore/QByteArray>
 
 class KeyboardTreeItem;
-class KeyboardModel : public QStandardItemModel
+class KeyboardModel : public TreeItemModel
 {
     Q_OBJECT
 
@@ -31,20 +31,9 @@ signals:
     void keyboardLoaded();
 
 public:
-    enum UserRole
-    {
-        TreeItemTypeRole = Qt::UserRole + 1, ///< int.
-        RotationAngleRole, ///< qreal.
-        RotationOriginRole, ///< qreal.
-        OuterBorderRole, ///< QRectF.
-        MaxUserRole
-    };
-
-public:
     KeyboardModel(QObject* pParent = nullptr);
     ~KeyboardModel();
 
-    virtual QVariant data(const QModelIndex& index, int iRole) const override;
     static QModelIndex getParentKeycap(const QModelIndex& indexInKeycapHierarchy);
     void loadKeyboardSvgFile(const QString& sSvgFilePath);
     void loadKeyboardSvg(const QByteArray& svgContent);

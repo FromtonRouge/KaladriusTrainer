@@ -83,7 +83,7 @@ void KeyboardGraphicsScene::onRowsInserted(const QModelIndex& parent, int iFirst
         if (!parent.isValid())
         {
             // Search for the Keyboard index first
-            auto matches = _pUndoableKeyboardModel->match(indexInserted, KeyboardModel::TreeItemTypeRole, TreeItem::Keyboard, 1, Qt::MatchExactly);
+            auto matches = _pUndoableKeyboardModel->match(indexInserted, TreeItemTypeRole, TreeItem::Keyboard, 1, Qt::MatchExactly);
             if (matches.isEmpty())
             {
                 return;
@@ -91,7 +91,7 @@ void KeyboardGraphicsScene::onRowsInserted(const QModelIndex& parent, int iFirst
 
             // Search for the first list element under the keyboard
             const QModelIndex& indexKeyboard = matches.front();
-            matches = _pUndoableKeyboardModel->match(indexKeyboard.child(0, 0), KeyboardModel::TreeItemTypeRole, TreeItem::List, 1, Qt::MatchExactly);
+            matches = _pUndoableKeyboardModel->match(indexKeyboard.child(0, 0), TreeItemTypeRole, TreeItem::List, 1, Qt::MatchExactly);
             if (matches.isEmpty())
             {
                 return;
@@ -104,9 +104,9 @@ void KeyboardGraphicsScene::onRowsInserted(const QModelIndex& parent, int iFirst
             {
                 const QModelIndex& indexKeycap = indexKeycaps.child(iKeycap, 0);
                 const QString& sKeycapId = indexKeycap.data().toString();
-                const qreal& dRotationAngle = indexKeycap.data(KeyboardModel::RotationAngleRole).toReal();
-                const QPointF& rotationOrigin = indexKeycap.data(KeyboardModel::RotationOriginRole).toPointF();
-                const QRectF& rectOuterBorder = indexKeycap.data(KeyboardModel::OuterBorderRole).toRectF();
+                const qreal& dRotationAngle = indexKeycap.data(RotationAngleRole).toReal();
+                const QPointF& rotationOrigin = indexKeycap.data(RotationOriginRole).toPointF();
+                const QRectF& rectOuterBorder = indexKeycap.data(OuterBorderRole).toRectF();
                 auto pKeycapGraphicsItem = new KeycapGraphicsItem(  sKeycapId,
                                                                     dRotationAngle,
                                                                     rotationOrigin,

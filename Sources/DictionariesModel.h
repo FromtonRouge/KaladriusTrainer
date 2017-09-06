@@ -35,6 +35,6 @@ public:
     virtual QModelIndex index(int iRow, int iColumn, const QModelIndex& parent) const override;
 
 private:
-    QModelIndex _sourceIndexDictionaries;
+    QPersistentModelIndex _sourceIndexDictionaries;
 };
 

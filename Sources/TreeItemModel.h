@@ -19,14 +19,16 @@
 
 #pragma once
 
+#include "ItemDataRole.h"
 #include "TreeItems/TreeItem.h"
+#include <QtGui/QStandardItemModel>
 
-class OutputTextTreeItem : public TreeItem
+class TreeItemModel : public QStandardItemModel
 {
+    Q_OBJECT
+
 public:
-    OutputTextTreeItem(const QString& sOutputText = QString());
-    ~OutputTextTreeItem();
-    QString getOutputText() const;
-    void setOutputText(const QString& sOutputText);
-    virtual int type() const override {return OutputText;}
+    TreeItemModel(QObject* pParent = nullptr);
+    ~TreeItemModel();
+    virtual QVariant data(const QModelIndex& index, int iRole) const override;
 };

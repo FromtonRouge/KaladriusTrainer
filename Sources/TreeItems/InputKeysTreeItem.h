@@ -24,7 +24,7 @@
 class InputKeysTreeItem : public TreeItem
 {
 public:
-    InputKeysTreeItem(const QString& sInputKeys);
+    InputKeysTreeItem(const QString& sInputKeys = QString());
     ~InputKeysTreeItem();
     virtual int type() const override {return InputKeys;}
 };

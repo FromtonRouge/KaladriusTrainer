@@ -19,14 +19,13 @@
 
 #pragma once
 
-#include "TreeItems/TreeItem.h"
+#include <QtCore/qnamespace.h>
 
-class OutputTextTreeItem : public TreeItem
+enum ItemDataRole
 {
-public:
-    OutputTextTreeItem(const QString& sOutputText = QString());
-    ~OutputTextTreeItem();
-    QString getOutputText() const;
-    void setOutputText(const QString& sOutputText);
-    virtual int type() const override {return OutputText;}
+    TreeItemTypeRole = Qt::UserRole + 1, ///< int. TreeItem::Type
+    RotationAngleRole, ///< qreal.
+    RotationOriginRole, ///< qreal.
+    OuterBorderRole, ///< QRectF.
+    MaxItemDataRole
 };

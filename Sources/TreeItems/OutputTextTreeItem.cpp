@@ -24,7 +24,21 @@ OutputTextTreeItem::OutputTextTreeItem(const QString& sOutputText)
 {
     setEditable(false);
     setToolTip(QObject::tr("Output text"));
+    setOutputText(sOutputText);
+}
 
+OutputTextTreeItem::~OutputTextTreeItem()
+{
+
+}
+
+QString OutputTextTreeItem::getOutputText() const
+{
+    return text();
+}
+
+void OutputTextTreeItem::setOutputText(const QString& sOutputText)
+{
     QString sIcon(":/Icons/edit.png");
     QString sText = sOutputText;
     if (sText.isEmpty())
@@ -34,9 +48,4 @@ OutputTextTreeItem::OutputTextTreeItem(const QString& sOutputText)
     }
     setIcon(QIcon(sIcon));
     setText(sText);
-}
-
-OutputTextTreeItem::~OutputTextTreeItem()
-{
-
 }

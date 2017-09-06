@@ -17,16 +17,34 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "TreeItemModel.h"
 
-#include "TreeItems/TreeItem.h"
-
-class OutputTextTreeItem : public TreeItem
+TreeItemModel::TreeItemModel(QObject* pParent)
+    : QStandardItemModel(pParent)
 {
-public:
-    OutputTextTreeItem(const QString& sOutputText = QString());
-    ~OutputTextTreeItem();
-    QString getOutputText() const;
-    void setOutputText(const QString& sOutputText);
-    virtual int type() const override {return OutputText;}
-};
+
+}
+
+TreeItemModel::~TreeItemModel()
+{
+
+}
+
+QVariant TreeItemModel::data(const QModelIndex& index, int iRole) const
+{
+    QVariant result;
+    switch (iRole)
+    {
+    case TreeItemTypeRole:
+        {
+            result = itemFromIndex(index)->type();
+            break;
+        }
+    default:
+        {
+            result = QStandardItemModel::data(index, iRole);
+            break;
+        }
+    }
+    return result;
+}

@@ -21,12 +21,12 @@
 
 #include "TreeItems/TreeItem.h"
 
-class OutputTextTreeItem : public TreeItem
+class ListTreeItem;
+class DictionaryTreeItem : public TreeItem
 {
 public:
-    OutputTextTreeItem(const QString& sOutputText = QString());
-    ~OutputTextTreeItem();
-    QString getOutputText() const;
-    void setOutputText(const QString& sOutputText);
-    virtual int type() const override {return OutputText;}
+    DictionaryTreeItem(const QString& sText = QString());
+    ~DictionaryTreeItem();
+    virtual int type() const override {return Dictionary;}
+    ListTreeItem* getEntries() const;
 };

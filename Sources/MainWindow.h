@@ -63,6 +63,7 @@ protected slots:
 private:
     void toLogs(const QString& sText, int iWarningLevel = 0);
     void loadKeyboard(const QString& sKeyboardFileName);
+    void loadTheory(const QString& sTheoryFileName);
 
 protected:
     virtual void closeEvent(QCloseEvent* pEvent) override;

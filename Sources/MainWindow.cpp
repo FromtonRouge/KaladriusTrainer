@@ -89,6 +89,14 @@ MainWindow::MainWindow(QWidget *parent)
     pRedoAction->setShortcut(QKeySequence("Ctrl+Y"));
     _pUi->menuEdit->addAction(pRedoAction);
 
+    // Load last .theory file if any
+    QSettings settings;
+    const QString& sLastTheory = settings.value("lastTheory").toString();
+    if (!sLastTheory.isEmpty() && QFile::exists(sLastTheory))
+    {
+        loadTheory(sLastTheory);
+    }
+
     _pUi->widgetDictionaries1->setTheoryModel(_pTheoryModel);
     _pUi->widgetDictionaries2->setTheoryModel(_pTheoryModel);
     _pUi->widgetDictionaries3->setTheoryModel(_pTheoryModel);
@@ -112,7 +120,6 @@ MainWindow::MainWindow(QWidget *parent)
     showMaximized();
 
     // Restore geometry
-    QSettings settings;
     restoreGeometry(settings.value("geometry").toByteArray());
 
     // Load last .kbd file if any
@@ -127,6 +134,7 @@ MainWindow::MainWindow(QWidget *parent)
         const QString& sLastKeyboardSvg = settings.value("lastKeyboardSvg", ":/Svgs/ergodox.svg").toString();
         _pKeyboardModel->loadKeyboardSvgFile(sLastKeyboardSvg);
     }
+
     _pUi->actionKeyboard_Window->trigger();
 }
 
@@ -160,6 +168,16 @@ void MainWindow::loadKeyboard(const QString& sKeyboardFileName)
         QSettings settings;
         settings.setValue("lastKeyboard", sKeyboardFileName);
         COUT(tr("Keyboard loaded from file %1").arg(sKeyboardFileName));
+    }
+}
+
+void MainWindow::loadTheory(const QString& sTheoryFileName)
+{
+    if (Serialization::Load(_pTheoryModel, sTheoryFileName))
+    {
+        QSettings settings;
+        settings.setValue("lastTheory", sTheoryFileName);
+        COUT(tr("Theory loaded from file %1").arg(sTheoryFileName));
     }
 }
 
@@ -217,22 +235,18 @@ void MainWindow::on_actionImport_Default_Keyboard_Svg_triggered()
 void MainWindow::on_actionLoad_Theory_triggered()
 {
     QSettings settings;
-    const QString& sLastTheoryFile = settings.value("lastTheoryFile").toString();
+    const QString& sLastTheoryFile = settings.value("lastTheory").toString();
     const QString& sTheoryFile = QFileDialog::getOpenFileName(this, tr("Theory"), sLastTheoryFile, "*.theory");
     if (!sTheoryFile.isEmpty())
     {
-        if (Serialization::Load(_pTheoryModel, sTheoryFile))
-        {
-            settings.setValue("lastTheoryFile", sTheoryFile);
-            COUT(tr("Theory loaded from file %1").arg(sTheoryFile));
-        }
+        loadTheory(sTheoryFile);
     }
 }
 
 void MainWindow::on_actionSave_Theory_as_triggered()
 {
     QSettings settings;
-    const QString& sLastTheoryFile = settings.value("lastTheoryFile").toString();
+    const QString& sLastTheoryFile = settings.value("lastTheory").toString();
     QFileDialog saveDlg(this, tr("Theory"), sLastTheoryFile, "*.theory");
     saveDlg.setDefaultSuffix("theory");
     saveDlg.setAcceptMode(QFileDialog::AcceptSave);
@@ -241,7 +255,7 @@ void MainWindow::on_actionSave_Theory_as_triggered()
         const QString sTheoryFile = saveDlg.selectedFiles().front();
         if (Serialization::Save(_pTheoryModel, sTheoryFile))
         {
-            settings.setValue("lastTheoryFile", sTheoryFile);
+            settings.setValue("lastTheory", sTheoryFile);
             COUT(tr("Theory saved to file %1").arg(sTheoryFile));
         }
     }

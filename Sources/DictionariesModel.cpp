@@ -48,7 +48,19 @@ bool DictionariesModel::hasChildren(const QModelIndex& parent) const
     auto pSourceModel = sourceModel();
     if (pSourceModel)
     {
-        return pSourceModel->hasChildren(!parent.isValid()? _sourceIndexDictionaries : parent);
+        if (parent.isValid())
+        {
+            if (parent.data(TreeItemTypeRole).toInt() == TreeItem::Dictionary)
+            {
+                const QModelIndex& sourceIndexDictionary = mapToSource(parent);
+                const QModelIndex& sourceIndexEntries = sourceIndexDictionary.child(0,0);
+                return pSourceModel->hasChildren(sourceIndexEntries);
+            }
+        }
+        else
+        {
+            return pSourceModel->hasChildren(_sourceIndexDictionaries);
+        }
     }
     return false;
 }
@@ -58,7 +70,19 @@ int DictionariesModel::rowCount(const QModelIndex& parent) const
     auto pSourceModel = sourceModel();
     if (pSourceModel)
     {
-        return pSourceModel->rowCount(!parent.isValid()? _sourceIndexDictionaries : parent);
+        if (parent.isValid())
+        {
+            if (parent.data(TreeItemTypeRole).toInt() == TreeItem::Dictionary)
+            {
+                const QModelIndex& sourceIndexDictionary = mapToSource(parent);
+                const QModelIndex& sourceIndexEntries = sourceIndexDictionary.child(0,0);
+                return pSourceModel->rowCount(sourceIndexEntries);
+            }
+        }
+        else
+        {
+            return pSourceModel->rowCount(_sourceIndexDictionaries);
+        }
     }
     return 0;
 }
@@ -68,7 +92,19 @@ QModelIndex DictionariesModel::index(int iRow, int iColumn, const QModelIndex& p
     auto pSourceModel = sourceModel();
     if (pSourceModel)
     {
-        return pSourceModel->index(iRow, iColumn, !parent.isValid()? _sourceIndexDictionaries : parent);
+        if (parent.isValid())
+        {
+            if (parent.data(TreeItemTypeRole).toInt() == TreeItem::Dictionary)
+            {
+                const QModelIndex& sourceIndexDictionary = mapToSource(parent);
+                const QModelIndex& sourceIndexEntries = sourceIndexDictionary.child(0,0);
+                return pSourceModel->index(iRow, iColumn, sourceIndexEntries);
+            }
+        }
+        else
+        {
+            return pSourceModel->index(iRow, iColumn, _sourceIndexDictionaries);
+        }
     }
     return QModelIndex();
 }
