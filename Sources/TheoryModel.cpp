@@ -37,6 +37,28 @@ TheoryModel::~TheoryModel()
 
 }
 
+QVariant TheoryModel::data(const QModelIndex& index, int iRole) const
+{
+    QVariant result;
+    switch (iRole)
+    {
+    case EntriesIndexRole:
+        {
+            if (index.data(TreeItemTypeRole).toInt() == TreeItem::Dictionary)
+            {
+                result = index.child(1, 0);
+            }
+            break;
+        }
+    default:
+        {
+            result = TreeItemModel::data(index, iRole);
+            break;
+        }
+    }
+    return result;
+}
+
 void TheoryModel::setDictionaries(const Dictionaries& dictionaries)
 {
     auto pTheoryTreeItem = getTheoryTreeItem();
@@ -48,7 +70,7 @@ void TheoryModel::setDictionaries(const Dictionaries& dictionaries)
 
     for (const auto& dictionary : dictionaries)
     {
-        auto pDictionaryItem = new DictionaryTreeItem(dictionary.getName());
+        auto pDictionaryItem = new DictionaryTreeItem(dictionary.getName(), dictionary.getBitsCount());
         pDictionaries->appendRow({pDictionaryItem, new EmptyTreeItem()});
         auto pEntriesItem = pDictionaryItem->getEntries();
         const auto& entries = dictionary.getKeyBitsToEntry();
@@ -57,7 +79,7 @@ void TheoryModel::setDictionaries(const Dictionaries& dictionaries)
             if (entry.bits.any())
             {
                 auto pTextItem = new OutputTextTreeItem(entry.keycodesAsUserString);
-                auto pInputKeysItem = new InputKeysTreeItem(dictionary.getKeysLabels(entry));
+                auto pInputKeysItem = new InputKeysTreeItem(dictionary.getKeysLabels(entry), uint(entry.bits.to_ulong()));
                 pEntriesItem->appendRow({pTextItem, pInputKeysItem});
             }
         }

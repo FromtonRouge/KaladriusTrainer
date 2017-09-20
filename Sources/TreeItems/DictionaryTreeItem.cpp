@@ -21,11 +21,13 @@
 #include "ListTreeItem.h"
 #include <QtGui/QIcon>
 
-DictionaryTreeItem::DictionaryTreeItem(const QString& sText)
+DictionaryTreeItem::DictionaryTreeItem(const QString& sText, uint uiBitsCount)
 {
     setIcon(QIcon(":/Icons/book-brown.png"));
     setText(sText);
     setEditable(false);
+
+    addAttribute(QObject::tr("Bits Count"), uiBitsCount);
 
     auto pEntriesTreeItem = new ListTreeItem(QIcon(":/Icons/book-brown.png"), QObject::tr("Entries"));
     appendRow({pEntriesTreeItem, new EmptyTreeItem()});
@@ -37,5 +39,5 @@ DictionaryTreeItem::~DictionaryTreeItem()
 
 ListTreeItem* DictionaryTreeItem::getEntries() const
 {
-    return static_cast<ListTreeItem*>(child(0, 0));
+    return static_cast<ListTreeItem*>(child(1, 0));
 }

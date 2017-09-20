@@ -42,12 +42,12 @@ Dictionary::Entry::Entry(const Keycodes& keycodes, uint nBitsCount, uint nKeyBit
 
 Dictionary::Dictionary(const QString& sName, 
                        const QString& sMarkdownFileName,
-                       uint nSize, 
+                       uint uiSize,
                        const KeysLabels& keysLabels, 
                        const KeyBitsReadingOrder& keyBitsReadingOrder)
     : _sName(sName)
     , _sMarkdownFileName(sMarkdownFileName)
-    , _uiBitsCount(static_cast<uint>(std::floor(std::log2(nSize + 1))))
+    , _uiBitsCount(static_cast<uint>(std::floor(std::log2(uiSize + 1))))
     , _keysLabels(keysLabels)
     , _keyBitsReadingOrder(keyBitsReadingOrder)
 {

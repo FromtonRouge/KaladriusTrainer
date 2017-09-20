@@ -51,11 +51,12 @@ public:
 public:
     Dictionary(const QString& sName = QString(),
                const QString& sMarkdownFileName = QString(),
-               uint nSize = 0,
+               uint uiSize = 0,
                const KeysLabels& keysLabels = KeysLabels(),
                const KeyBitsReadingOrder& keyBitsReadingOrder = KeyBitsReadingOrder());
     ~Dictionary();
 
+    uint getBitsCount() const {return _uiBitsCount;}
     const QString& getName() const { return _sName; }
     const QString& getMarkdownFileName() const { return _sMarkdownFileName; }
     void addEntry(const Keycodes& keycodes, uint uiKeyBits);

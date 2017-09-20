@@ -18,17 +18,29 @@
 // ======================================================================
 
 #include "InputKeysTreeItem.h"
+#include "ItemDataRole.h"
 #include <QtGui/QIcon>
 
-InputKeysTreeItem::InputKeysTreeItem(const QString& sInputKeys)
+InputKeysTreeItem::InputKeysTreeItem(const QString& sInputKeys, uint uiBits)
 {
     setIcon(QIcon(":/Icons/keyboard-full.png"));
     setText(sInputKeys);
+    setKeyBits(uiBits);
     setEditable(false);
-    setToolTip(QObject::tr("Keys on the steno keyboard"));
 }
 
 InputKeysTreeItem::~InputKeysTreeItem()
 {
 
+}
+
+void InputKeysTreeItem::setKeyBits(uint uiBits)
+{
+    setData(uiBits, InputKeyBitsRole);
+    setToolTip(QObject::tr("Keys on the steno keyboard [%1]").arg(uiBits));
+}
+
+uint InputKeysTreeItem::getKeyBits() const
+{
+    return data(InputKeyBitsRole).toUInt();
 }

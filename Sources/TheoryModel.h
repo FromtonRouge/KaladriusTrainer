@@ -33,6 +33,7 @@ signals:
 public:
     TheoryModel(QObject* pParent = nullptr);
     ~TheoryModel();
+    virtual QVariant data(const QModelIndex& index, int iRole) const override;
     void setDictionaries(const Dictionaries& dictionaries);
     TheoryTreeItem* getTheoryTreeItem() const;
     void setTheoryTreeItem(TheoryTreeItem* pTheoryTreeItem);

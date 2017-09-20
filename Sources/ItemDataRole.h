@@ -27,5 +27,7 @@ enum ItemDataRole
     RotationAngleRole, ///< qreal.
     RotationOriginRole, ///< qreal.
     OuterBorderRole, ///< QRectF.
+    InputKeyBitsRole, ///< uint.
+    EntriesIndexRole, ///< QModelIndex.
     MaxItemDataRole
 };

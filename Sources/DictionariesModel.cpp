@@ -53,7 +53,7 @@ bool DictionariesModel::hasChildren(const QModelIndex& parent) const
             if (parent.data(TreeItemTypeRole).toInt() == TreeItem::Dictionary)
             {
                 const QModelIndex& sourceIndexDictionary = mapToSource(parent);
-                const QModelIndex& sourceIndexEntries = sourceIndexDictionary.child(0,0);
+                const QModelIndex& sourceIndexEntries = sourceIndexDictionary.data(EntriesIndexRole).toModelIndex();
                 return pSourceModel->hasChildren(sourceIndexEntries);
             }
         }
@@ -75,7 +75,7 @@ int DictionariesModel::rowCount(const QModelIndex& parent) const
             if (parent.data(TreeItemTypeRole).toInt() == TreeItem::Dictionary)
             {
                 const QModelIndex& sourceIndexDictionary = mapToSource(parent);
-                const QModelIndex& sourceIndexEntries = sourceIndexDictionary.child(0,0);
+                const QModelIndex& sourceIndexEntries = sourceIndexDictionary.data(EntriesIndexRole).toModelIndex();
                 return pSourceModel->rowCount(sourceIndexEntries);
             }
         }
@@ -97,7 +97,7 @@ QModelIndex DictionariesModel::index(int iRow, int iColumn, const QModelIndex& p
             if (parent.data(TreeItemTypeRole).toInt() == TreeItem::Dictionary)
             {
                 const QModelIndex& sourceIndexDictionary = mapToSource(parent);
-                const QModelIndex& sourceIndexEntries = sourceIndexDictionary.child(0,0);
+                const QModelIndex& sourceIndexEntries = sourceIndexDictionary.data(EntriesIndexRole).toModelIndex();
                 return pSourceModel->index(iRow, iColumn, sourceIndexEntries);
             }
         }

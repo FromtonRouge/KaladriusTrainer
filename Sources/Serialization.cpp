@@ -359,6 +359,9 @@ namespace boost
         {
             std::string sText = obj.text().toStdString();
             ar << make_nvp("keys", sText);
+
+            uint uiBits = obj.getKeyBits();
+            ar << make_nvp("bits", uiBits);
         }
 
         template<class Archive> void load(Archive& ar, InputKeysTreeItem& obj,  const unsigned int)
@@ -366,6 +369,10 @@ namespace boost
             std::string sText;
             ar >> make_nvp("keys", sText);
             obj.setText(QString::fromStdString(sText));
+
+            uint uiBits = 0;
+            ar >> make_nvp("bits", uiBits);
+            obj.setKeyBits(uiBits);
         }
     }
 }
@@ -388,6 +395,10 @@ namespace boost
             std::string sText = obj.text().toStdString();
             ar << make_nvp("name", sText);
 
+            QVariant value;
+            value = obj.child(0, 1)->data(Qt::EditRole);
+            ar << make_nvp("bits_count", value);
+
             ListTreeItem* pEntriesTreeItem = obj.getEntries();
             ar << make_nvp("entries", *pEntriesTreeItem);
         }
@@ -397,6 +408,10 @@ namespace boost
             std::string sText;
             ar >> make_nvp("name", sText);
             obj.setText(QString::fromStdString(sText));
+
+            QVariant value;
+            ar >> make_nvp("bits_count", value);
+            obj.child(0, 1)->setData(value, Qt::EditRole);
 
             ListTreeItem* pEntriesTreeItem = obj.getEntries();
             ar >> make_nvp("entries", *pEntriesTreeItem);
