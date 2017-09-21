@@ -30,7 +30,7 @@ KeyboardTreeItem::KeyboardTreeItem()
     auto pKeycapsListItem = new ListTreeItem(QIcon(":/Icons/keyboard-full.png"), QObject::tr("Keycaps"));
     appendRow({pKeycapsListItem, new EmptyTreeItem()});
 
-    auto pDictionaries = new ListTreeItem(QIcon(":/Icons/book-open.png"), QObject::tr("Dictionaries Settings"));
+    auto pDictionaries = new ListTreeItem(QIcon(":/Icons/book-open.png"), QObject::tr("Linked Dictionaries"));
     appendRow({pDictionaries, new EmptyTreeItem()});
 }
 

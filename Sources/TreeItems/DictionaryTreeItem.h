@@ -25,8 +25,9 @@ class ListTreeItem;
 class DictionaryTreeItem : public TreeItem
 {
 public:
-    DictionaryTreeItem(const QString& sText = QString(), uint uiBitsCount = 0);
+    DictionaryTreeItem(const QString& sText = QString(), const QVector<QString>& keysLabels = {});
     ~DictionaryTreeItem();
     virtual int type() const override {return Dictionary;}
+    ListTreeItem* getKeys() const;
     ListTreeItem* getEntries() const;
 };

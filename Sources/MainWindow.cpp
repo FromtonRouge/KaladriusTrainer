@@ -332,7 +332,7 @@ void MainWindow::on_actionWrite_Markdown_Files_triggered()
                     const auto& entry = entries[i];
                     if (entry.hasKeycodes())
                     {
-                        const QString& sKeysLabels = dictionary.getKeysLabels(entry);
+                        const QString& sKeysLabels = dictionary.getKeysLabelsInReadingOrder(entry);
                         const QString& sKeycodes = entry.keycodesAsUserString;
                         keycodesToKeysLabels.insert(sKeycodes, sKeysLabels);
                     }

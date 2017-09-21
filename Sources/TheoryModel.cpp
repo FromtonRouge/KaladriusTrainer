@@ -70,7 +70,7 @@ void TheoryModel::setDictionaries(const Dictionaries& dictionaries)
 
     for (const auto& dictionary : dictionaries)
     {
-        auto pDictionaryItem = new DictionaryTreeItem(dictionary.getName(), dictionary.getBitsCount());
+        auto pDictionaryItem = new DictionaryTreeItem(dictionary.getName(), dictionary.getKeysLabels());
         pDictionaries->appendRow({pDictionaryItem, new EmptyTreeItem()});
         auto pEntriesItem = pDictionaryItem->getEntries();
         const auto& entries = dictionary.getKeyBitsToEntry();
@@ -79,7 +79,7 @@ void TheoryModel::setDictionaries(const Dictionaries& dictionaries)
             if (entry.bits.any())
             {
                 auto pTextItem = new OutputTextTreeItem(entry.keycodesAsUserString);
-                auto pInputKeysItem = new InputKeysTreeItem(dictionary.getKeysLabels(entry), uint(entry.bits.to_ulong()));
+                auto pInputKeysItem = new InputKeysTreeItem(dictionary.getKeysLabelsInReadingOrder(entry), uint(entry.bits.to_ulong()));
                 pEntriesItem->appendRow({pTextItem, pInputKeysItem});
             }
         }

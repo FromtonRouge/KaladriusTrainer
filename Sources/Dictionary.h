@@ -62,7 +62,8 @@ public:
     void addEntry(const Keycodes& keycodes, uint uiKeyBits);
     const auto& getKeyBitsToEntry() const { return _keyBitsToEntry; }
     const auto& getEntryToKeyBits() const { return _entryToKeyBits; }
-    QString getKeysLabels(const Entry& entry, const QString& sSep = QString("|")) const;
+    QString getKeysLabelsInReadingOrder(const Entry& entry, const QString& sSep = QString("|")) const;
+    const KeysLabels& getKeysLabels() const {return _keysLabels;}
 
 private:
     QString _sName;

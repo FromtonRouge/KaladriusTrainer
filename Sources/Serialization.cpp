@@ -142,6 +142,33 @@ namespace boost
     }
 }
 
+// AttributeValueTreeItem
+BOOST_CLASS_VERSION(AttributeValueTreeItem, 0)
+BOOST_CLASS_EXPORT(AttributeValueTreeItem) // For serializing from a base pointer
+namespace boost
+{
+    namespace serialization
+    {
+        template<class Archive> void serialize(Archive& ar, AttributeValueTreeItem& obj,  const unsigned int fileVersion)
+        {
+            ar & make_nvp("base", base_object<TreeItem>(obj));
+            split_free(ar, obj, fileVersion);
+        }
+
+        template<class Archive> void save(Archive& ar, const AttributeValueTreeItem& obj,  const unsigned int)
+        {
+            const QVariant& value = obj.data(Qt::EditRole);
+            ar << make_nvp("value", value);
+        }
+
+        template<class Archive> void load(Archive& ar, AttributeValueTreeItem& obj,  const unsigned int)
+        {
+            QVariant value;
+            ar >> make_nvp("value", value);
+            obj.setData(value, Qt::EditRole);
+        }
+    }
+}
 
 // KeycapTreeItem
 BOOST_CLASS_VERSION(KeycapTreeItem, 0)
@@ -395,9 +422,8 @@ namespace boost
             std::string sText = obj.text().toStdString();
             ar << make_nvp("name", sText);
 
-            QVariant value;
-            value = obj.child(0, 1)->data(Qt::EditRole);
-            ar << make_nvp("bits_count", value);
+            ListTreeItem* pKeysTreeItem = obj.getKeys();
+            ar << make_nvp("keys", *pKeysTreeItem);
 
             ListTreeItem* pEntriesTreeItem = obj.getEntries();
             ar << make_nvp("entries", *pEntriesTreeItem);
@@ -409,9 +435,8 @@ namespace boost
             ar >> make_nvp("name", sText);
             obj.setText(QString::fromStdString(sText));
 
-            QVariant value;
-            ar >> make_nvp("bits_count", value);
-            obj.child(0, 1)->setData(value, Qt::EditRole);
+            ListTreeItem* pKeysTreeItem = obj.getKeys();
+            ar >> make_nvp("keys", *pKeysTreeItem);
 
             ListTreeItem* pEntriesTreeItem = obj.getEntries();
             ar >> make_nvp("entries", *pEntriesTreeItem);

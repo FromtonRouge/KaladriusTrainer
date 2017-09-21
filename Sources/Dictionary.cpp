@@ -64,20 +64,20 @@ void Dictionary::addEntry(const Keycodes& keycodes, uint nKeyBits)
     _keyBitsToEntry << entry;
 }
 
-QString Dictionary::getKeysLabels(const Entry& entry, const QString& sSep) const
+QString Dictionary::getKeysLabelsInReadingOrder(const Entry& entry, const QString& sSep) const
 {
     QStringList result;
-    if (entry.bits.size() == _keysLabels.size())
+    if (int(entry.bits.size()) == _keysLabels.size())
     {
         for (Entry::KeyBits::size_type i = 0; i < entry.bits.size(); ++i)
         {
             int iReadIndex = static_cast<int>(i);
-            if (!_keyBitsReadingOrder.isEmpty() && _keyBitsReadingOrder.size() == entry.bits.size())
+            if (!_keyBitsReadingOrder.isEmpty() && _keyBitsReadingOrder.size() == int(entry.bits.size()))
             {
                 iReadIndex = _keyBitsReadingOrder[iReadIndex];
             }
 
-            const bool bEnabled = entry.bits.test(iReadIndex);
+            const bool bEnabled = entry.bits.test(size_t(iReadIndex));
             if (bEnabled)
             {
                 result << _keysLabels[iReadIndex];
