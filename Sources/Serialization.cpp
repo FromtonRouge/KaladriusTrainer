@@ -29,6 +29,7 @@
 #include "TreeItems/InputKeysTreeItem.h"
 #include "TreeItems/AttributeTreeItem.h"
 #include "TreeItems/AttributeValueTreeItem.h"
+#include "TreeItems/ArrayTreeItem.h"
 #include <QtCore/QDataStream>
 #include <QtCore/QByteArray>
 #include <QtCore/QVariant>
@@ -142,30 +143,65 @@ namespace boost
     }
 }
 
-// AttributeValueTreeItem
-BOOST_CLASS_VERSION(AttributeValueTreeItem, 0)
-BOOST_CLASS_EXPORT(AttributeValueTreeItem) // For serializing from a base pointer
+// ArrayTreeItem
+BOOST_CLASS_VERSION(ArrayTreeItem, 0)
+BOOST_CLASS_EXPORT(ArrayTreeItem) // For serializing from a base pointer
 namespace boost
 {
     namespace serialization
     {
-        template<class Archive> void serialize(Archive& ar, AttributeValueTreeItem& obj,  const unsigned int fileVersion)
+        template<class Archive> void serialize(Archive& ar, ArrayTreeItem& obj,  const unsigned int fileVersion)
         {
             ar & make_nvp("base", base_object<TreeItem>(obj));
             split_free(ar, obj, fileVersion);
         }
 
-        template<class Archive> void save(Archive& ar, const AttributeValueTreeItem& obj,  const unsigned int)
+        template<class Archive> void save(Archive& ar, const ArrayTreeItem& obj,  const unsigned int)
         {
-            const QVariant& value = obj.data(Qt::EditRole);
-            ar << make_nvp("value", value);
+            const int iRows = obj.rowCount();
+            const int iColumns = obj.columnCount();
+            ar << make_nvp("rows", iRows);
+            ar << make_nvp("columns", iColumns);
+
+            QVariant value;
+            for (int iRow = 0; iRow < iRows; ++iRow)
+            {
+                for (int iColumn = 0; iColumn < iColumns; ++iColumn)
+                {
+                    if (iColumn != 0)
+                    {
+                        auto pTreeItem = obj.child(iRow, iColumn);
+                        value = pTreeItem->data(Qt::EditRole);
+                        ar << make_nvp("value", value);
+                    }
+                }
+            }
         }
 
-        template<class Archive> void load(Archive& ar, AttributeValueTreeItem& obj,  const unsigned int)
+        template<class Archive> void load(Archive& ar, ArrayTreeItem& obj,  const unsigned int)
         {
+            int iRows = 0;
+            int iColumns = 0;
+            ar >> make_nvp("rows", iRows);
+            ar >> make_nvp("columns", iColumns);
             QVariant value;
-            ar >> make_nvp("value", value);
-            obj.setData(value, Qt::EditRole);
+            for (int iRow = 0; iRow < iRows; ++iRow)
+            {
+                QList<QStandardItem*> items;
+                for (int iColumn = 0; iColumn < iColumns; ++iColumn)
+                {
+                    if (iColumn == 0)
+                    {
+                        items << new ArrayElementTreeItem();
+                    }
+                    else
+                    {
+                        ar >> make_nvp("value", value);
+                        items << new AttributeValueTreeItem(value);
+                    }
+                }
+                obj.appendRow(items);
+            }
         }
     }
 }
@@ -422,7 +458,7 @@ namespace boost
             std::string sText = obj.text().toStdString();
             ar << make_nvp("name", sText);
 
-            ListTreeItem* pKeysTreeItem = obj.getKeys();
+            ArrayTreeItem* pKeysTreeItem = obj.getKeys();
             ar << make_nvp("keys", *pKeysTreeItem);
 
             ListTreeItem* pEntriesTreeItem = obj.getEntries();
@@ -435,7 +471,7 @@ namespace boost
             ar >> make_nvp("name", sText);
             obj.setText(QString::fromStdString(sText));
 
-            ListTreeItem* pKeysTreeItem = obj.getKeys();
+            ArrayTreeItem* pKeysTreeItem = obj.getKeys();
             ar >> make_nvp("keys", *pKeysTreeItem);
 
             ListTreeItem* pEntriesTreeItem = obj.getEntries();

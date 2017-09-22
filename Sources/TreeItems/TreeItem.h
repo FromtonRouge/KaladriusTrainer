@@ -28,6 +28,8 @@ struct TreeItem : public QStandardItem
     {
         Empty = UserType,
         List,
+        Array,
+        ArrayElement,
         Keyboard,
         Keycap,
         Attribute,
@@ -40,7 +42,7 @@ struct TreeItem : public QStandardItem
     };
 
     virtual int type() const override = 0;
-    AttributeTreeItem* addAttribute(const QString& sName, const QVariant& value);
+    virtual AttributeTreeItem* addAttribute(const QString& sName, const QVariant& value);
 };
 
 struct EmptyTreeItem : public TreeItem

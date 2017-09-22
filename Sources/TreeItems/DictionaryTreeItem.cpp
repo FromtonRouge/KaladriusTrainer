@@ -19,6 +19,7 @@
 
 #include "DictionaryTreeItem.h"
 #include "ListTreeItem.h"
+#include "ArrayTreeItem.h"
 #include <QtGui/QIcon>
 
 DictionaryTreeItem::DictionaryTreeItem(const QString& sText, const QVector<QString>& keysLabels)
@@ -27,11 +28,10 @@ DictionaryTreeItem::DictionaryTreeItem(const QString& sText, const QVector<QStri
     setText(sText);
     setEditable(false);
 
-    // Should be a dynamic list
-    auto pKeysTreeItem = new ListTreeItem(QIcon(":/Icons/keyboard-full.png"), QObject::tr("Keys"));
-    for (int i = 0; i < keysLabels.size(); ++i)
+    auto pKeysTreeItem = new ArrayTreeItem(QIcon(":/Icons/keyboard-full.png"), QObject::tr("Keys"));
+    for (const QString& sKeyLabel : keysLabels)
     {
-        pKeysTreeItem->addAttribute(QString("[%1]").arg(i), keysLabels[i]);
+        pKeysTreeItem->addElement(sKeyLabel);
     }
     appendRow({pKeysTreeItem, new EmptyTreeItem()});
 
@@ -43,9 +43,9 @@ DictionaryTreeItem::~DictionaryTreeItem()
 {
 }
 
-ListTreeItem*DictionaryTreeItem::getKeys() const
+ArrayTreeItem* DictionaryTreeItem::getKeys() const
 {
-    return static_cast<ListTreeItem*>(child(0, 0));
+    return static_cast<ArrayTreeItem*>(child(0, 0));
 }
 
 ListTreeItem* DictionaryTreeItem::getEntries() const

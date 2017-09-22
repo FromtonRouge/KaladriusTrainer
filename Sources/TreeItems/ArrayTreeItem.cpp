@@ -17,47 +17,29 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "TreeItemModel.h"
+#include "ArrayTreeItem.h"
+#include "AttributeValueTreeItem.h"
 
-TreeItemModel::TreeItemModel(QObject* pParent)
-    : QStandardItemModel(pParent)
+ArrayTreeItem::ArrayTreeItem(const QIcon& icon, const QString& sName)
 {
-
+    setIcon(icon);
+    setText(sName);
+    setEditable(false);
 }
 
-TreeItemModel::~TreeItemModel()
+ArrayTreeItem::~ArrayTreeItem()
 {
-
 }
 
-QVariant TreeItemModel::data(const QModelIndex& index, int iRole) const
+ArrayElementTreeItem* ArrayTreeItem::addAttribute(const QString& ignored, const QVariant& value)
 {
-    QVariant result;
-    switch (iRole)
-    {
-    case Qt::DisplayRole:
-        {
-            const int iType = itemFromIndex(index)->type();
-            if (iType == TreeItem::ArrayElement)
-            {
-                result = QString("[%1]").arg(index.row());
-            }
-            else
-            {
-                result = QStandardItemModel::data(index, iRole);
-            }
-            break;
-        }
-    case TreeItemTypeRole:
-        {
-            result = itemFromIndex(index)->type();
-            break;
-        }
-    default:
-        {
-            result = QStandardItemModel::data(index, iRole);
-            break;
-        }
-    }
-    return result;
+    Q_UNUSED(ignored);
+    auto pAttribute = new ArrayElementTreeItem();
+    appendRow({pAttribute, new AttributeValueTreeItem(value)});
+    return pAttribute;
+}
+
+ArrayElementTreeItem*ArrayTreeItem::addElement(const QVariant& value)
+{
+    return addAttribute(QString(), value);
 }

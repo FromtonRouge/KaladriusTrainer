@@ -17,47 +17,27 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "TreeItemModel.h"
+#pragma once
 
-TreeItemModel::TreeItemModel(QObject* pParent)
-    : QStandardItemModel(pParent)
+#include "TreeItems/AttributeTreeItem.h"
+#include <QtGui/QIcon>
+
+class ArrayElementTreeItem : public AttributeTreeItem
 {
+public:
+    ArrayElementTreeItem() {}
+    ~ArrayElementTreeItem() {}
+    virtual int type() const override {return ArrayElement;}
+};
 
-}
-
-TreeItemModel::~TreeItemModel()
+class ArrayTreeItem : public TreeItem
 {
+public:
+    ArrayTreeItem(const QIcon& icon = QIcon(), const QString& sName = QString());
+    ~ArrayTreeItem();
+    virtual int type() const override {return Array;}
+    ArrayElementTreeItem* addElement(const QVariant& value);
 
-}
-
-QVariant TreeItemModel::data(const QModelIndex& index, int iRole) const
-{
-    QVariant result;
-    switch (iRole)
-    {
-    case Qt::DisplayRole:
-        {
-            const int iType = itemFromIndex(index)->type();
-            if (iType == TreeItem::ArrayElement)
-            {
-                result = QString("[%1]").arg(index.row());
-            }
-            else
-            {
-                result = QStandardItemModel::data(index, iRole);
-            }
-            break;
-        }
-    case TreeItemTypeRole:
-        {
-            result = itemFromIndex(index)->type();
-            break;
-        }
-    default:
-        {
-            result = QStandardItemModel::data(index, iRole);
-            break;
-        }
-    }
-    return result;
-}
+private:
+    virtual ArrayElementTreeItem* addAttribute(const QString& ignored, const QVariant& value) override;
+};
