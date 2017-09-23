@@ -21,5 +21,6 @@
         <file>Icons/folder-open-document.png</file>
         <file>Icons/graduation-hat.png</file>
         <file>Icons/books-brown.png</file>
+        <file>Icons/chain.png</file>
     </qresource>
 </RCC>

@@ -26,6 +26,7 @@
 #include "TreeItems/TreeItem.h"
 #include <QtWidgets/QHeaderView>
 #include <QtCore/QItemSelectionModel>
+#include <QtWidgets/QAction>
 
 KeyboardTreeView::KeyboardTreeView(QWidget* pParent)
     : QTreeView(pParent)
@@ -37,6 +38,11 @@ KeyboardTreeView::KeyboardTreeView(QWidget* pParent)
 
     delete itemDelegate();
     setItemDelegate(new KeycapDelegate(this));
+
+    _pActionLinkTheory = new QAction(QIcon(":/Icons/chain.png"), tr("Link Theory"), this);
+    connect(_pActionLinkTheory, SIGNAL(triggered()), this, SLOT(onLinkTheory()));
+    addAction(_pActionLinkTheory);
+    setContextMenuPolicy(Qt::ActionsContextMenu);
 }
 
 KeyboardTreeView::~KeyboardTreeView()
@@ -123,4 +129,15 @@ void KeyboardTreeView::onRowsInserted(const QModelIndex& parent, int iFirst, int
     {
         resizeColumnToContents(0);
     }
+}
+
+void KeyboardTreeView::onLinkTheory()
+{
+    // TODO: Add a child node with the name of the loaded theory
+    // and all dictionaries + keys bindings
+}
+
+void KeyboardTreeView::currentChanged(const QModelIndex& current, const QModelIndex& previous)
+{
+    QTreeView::currentChanged(current, previous);
 }

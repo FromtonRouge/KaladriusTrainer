@@ -30,4 +30,5 @@ public:
     virtual int type() const override {return Keyboard;}
 
     ListTreeItem* getKeycaps() const;
+    ListTreeItem* getLinkedTheories() const;
 };

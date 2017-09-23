@@ -21,6 +21,7 @@
 
 #include <QtWidgets/QTreeView>
 
+class QAction;
 class KeyboardTreeView : public QTreeView
 {
     Q_OBJECT
@@ -36,4 +37,11 @@ public slots:
 
 private slots:
     void onRowsInserted(const QModelIndex& parent, int iFirst, int iLast);
+    void onLinkTheory();
+
+protected:
+    virtual void currentChanged(const QModelIndex& current, const QModelIndex& previous) override;
+
+private:
+    QAction* _pActionLinkTheory;
 };

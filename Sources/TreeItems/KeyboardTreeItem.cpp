@@ -30,8 +30,8 @@ KeyboardTreeItem::KeyboardTreeItem()
     auto pKeycapsListItem = new ListTreeItem(QIcon(":/Icons/keyboard-full.png"), QObject::tr("Keycaps"));
     appendRow({pKeycapsListItem, new EmptyTreeItem()});
 
-    auto pDictionaries = new ListTreeItem(QIcon(":/Icons/book-open.png"), QObject::tr("Linked Dictionaries"));
-    appendRow({pDictionaries, new EmptyTreeItem()});
+    auto pLinkedTheories = new ListTreeItem(QIcon(":/Icons/book-open.png"), QObject::tr("Linked Theories"));
+    appendRow({pLinkedTheories, new EmptyTreeItem()});
 }
 
 KeyboardTreeItem::~KeyboardTreeItem()
@@ -42,4 +42,9 @@ KeyboardTreeItem::~KeyboardTreeItem()
 ListTreeItem* KeyboardTreeItem::getKeycaps() const
 {
     return static_cast<ListTreeItem*>(child(0));
+}
+
+ListTreeItem*KeyboardTreeItem::getLinkedTheories() const
+{
+    return static_cast<ListTreeItem*>(child(1));
 }
