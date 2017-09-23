@@ -98,12 +98,14 @@ QModelIndex DictionariesModel::index(int iRow, int iColumn, const QModelIndex& p
             {
                 const QModelIndex& sourceIndexDictionary = mapToSource(parent);
                 const QModelIndex& sourceIndexEntries = sourceIndexDictionary.data(EntriesIndexRole).toModelIndex();
-                return pSourceModel->index(iRow, iColumn, sourceIndexEntries);
+                const QModelIndex& sourceIndex = pSourceModel->index(iRow, iColumn, sourceIndexEntries);
+                return createIndex(iRow, iColumn, sourceIndex.internalPointer());
             }
         }
         else
         {
-            return pSourceModel->index(iRow, iColumn, _sourceIndexDictionaries);
+            const QModelIndex& sourceIndex = pSourceModel->index(iRow, iColumn, _sourceIndexDictionaries);
+            return createIndex(iRow, iColumn, sourceIndex.internalPointer());
         }
     }
     return QModelIndex();
