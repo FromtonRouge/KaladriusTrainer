@@ -19,7 +19,8 @@
 
 #include "ListTreeItem.h"
 
-ListTreeItem::ListTreeItem(const QIcon& icon, const QString& sName)
+ListTreeItem::ListTreeItem(const QIcon& icon, const QString& sName, int iType)
+    : _iType(iType)
 {
     setIcon(icon);
     setText(sName);

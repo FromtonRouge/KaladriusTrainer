@@ -25,8 +25,10 @@
 #include "KeycapGraphicsItem.h"
 #include "TreeItems/TreeItem.h"
 #include <QtWidgets/QHeaderView>
-#include <QtCore/QItemSelectionModel>
 #include <QtWidgets/QAction>
+#include <QtWidgets/QMenu>
+#include <QtGui/QContextMenuEvent>
+#include <QtCore/QItemSelectionModel>
 
 KeyboardTreeView::KeyboardTreeView(QWidget* pParent)
     : QTreeView(pParent)
@@ -42,7 +44,6 @@ KeyboardTreeView::KeyboardTreeView(QWidget* pParent)
     _pActionLinkTheory = new QAction(QIcon(":/Icons/chain.png"), tr("Link Theory"), this);
     connect(_pActionLinkTheory, SIGNAL(triggered()), this, SLOT(onLinkTheory()));
     addAction(_pActionLinkTheory);
-    setContextMenuPolicy(Qt::ActionsContextMenu);
 }
 
 KeyboardTreeView::~KeyboardTreeView()
@@ -133,11 +134,48 @@ void KeyboardTreeView::onRowsInserted(const QModelIndex& parent, int iFirst, int
 
 void KeyboardTreeView::onLinkTheory()
 {
-    // TODO: Add a child node with the name of the loaded theory
+    // TODO: Add a child node (LinkedTheoryTreeItem) with the name of the loaded theory
     // and all dictionaries + keys bindings
 }
 
 void KeyboardTreeView::currentChanged(const QModelIndex& current, const QModelIndex& previous)
 {
     QTreeView::currentChanged(current, previous);
+
+    if (current.isValid())
+    {
+        const int iType = current.data(TreeItemTypeRole).toInt();
+        switch (iType)
+        {
+        case TreeItem::LinkedTheories:
+        case TreeItem::Keyboard:
+            {
+                _pActionLinkTheory->setEnabled(true);
+                break;
+            }
+        default:
+            {
+                _pActionLinkTheory->setEnabled(false);
+                break;
+            }
+        }
+    }
+}
+
+void KeyboardTreeView::contextMenuEvent(QContextMenuEvent* pEvent)
+{
+    QMenu menu;
+
+    for (QAction* pAction : actions())
+    {
+        if (pAction->isEnabled())
+        {
+            menu.addAction(pAction);
+        }
+    }
+
+    if (!menu.isEmpty())
+    {
+        menu.exec(pEvent->globalPos());
+    }
 }

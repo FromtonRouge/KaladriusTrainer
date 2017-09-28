@@ -34,8 +34,8 @@ struct TreeItem : public QStandardItem
         Keycap,
         Attribute,
         AttributeValue,
-        DictionarySettings,
         Theory,
+        LinkedTheories,
         OutputText,
         InputKeys,
         Dictionary

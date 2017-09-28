@@ -41,6 +41,7 @@ private slots:
 
 protected:
     virtual void currentChanged(const QModelIndex& current, const QModelIndex& previous) override;
+    virtual void contextMenuEvent(QContextMenuEvent* pEvent) override;
 
 private:
     QAction* _pActionLinkTheory;
