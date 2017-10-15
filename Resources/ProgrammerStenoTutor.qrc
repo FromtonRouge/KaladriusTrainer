@@ -22,5 +22,6 @@
         <file>Icons/graduation-hat.png</file>
         <file>Icons/books-brown.png</file>
         <file>Icons/chain.png</file>
+        <file>Icons/cross.png</file>
     </qresource>
 </RCC>

@@ -46,6 +46,12 @@ KeyboardTreeView::KeyboardTreeView(QWidget* pParent)
     _pActionLinkTheory = new QAction(QIcon(":/Icons/chain.png"), tr("Link Theory"), this);
     connect(_pActionLinkTheory, SIGNAL(triggered()), this, SLOT(onLinkTheory()));
     addAction(_pActionLinkTheory);
+
+    _pActionRemove = new QAction(QIcon(":/Icons/cross.png"), tr("Remove"), this);
+    _pActionRemove->setShortcut(QKeySequence::Delete);
+    connect(_pActionRemove, SIGNAL(triggered()), this, SLOT(onRemove()));
+    addAction(_pActionRemove);
+    _pActionRemove->setDisabled(true);
 }
 
 KeyboardTreeView::~KeyboardTreeView()
@@ -153,6 +159,17 @@ void KeyboardTreeView::onLinkTheory()
     }
 }
 
+void KeyboardTreeView::onRemove()
+{
+    const QModelIndex& current = currentIndex();
+    if (current.isValid())
+    {
+        const QModelIndex& currentName = current.sibling(current.row(), 0);
+        auto pUndoableProxyModel = qobject_cast<UndoableProxyModel*>(model());
+        pUndoableProxyModel->removeRow(currentName.row(), currentName.parent());
+    }
+}
+
 void KeyboardTreeView::currentChanged(const QModelIndex& current, const QModelIndex& previous)
 {
     QTreeView::currentChanged(current, previous);
@@ -167,8 +184,14 @@ void KeyboardTreeView::currentChanged(const QModelIndex& current, const QModelIn
                 _pActionLinkTheory->setEnabled(true);
                 break;
             }
+        case TreeItem::LinkedTheory:
+            {
+                _pActionRemove->setEnabled(true);
+                break;
+            }
         default:
             {
+                _pActionRemove->setEnabled(false);
                 _pActionLinkTheory->setEnabled(false);
                 break;
             }

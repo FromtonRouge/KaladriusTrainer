@@ -19,32 +19,26 @@
 
 #pragma once
 
-#include <QtWidgets/QTreeView>
+#include <QtWidgets/QUndoCommand>
+#include <QtCore/QPersistentModelIndex>
+#include <QtCore/QByteArray>
 
-class QAction;
-class KeyboardTreeView : public QTreeView
+class QAbstractItemModel;
+class RemoveBranchCommand : public QUndoCommand
 {
-    Q_OBJECT
-
 public:
-    KeyboardTreeView(QWidget* pParent = nullptr);
-    ~KeyboardTreeView();
+    RemoveBranchCommand(int iRow,
+                        const QModelIndex& parent,
+                        QAbstractItemModel* pModel,
+                        QUndoCommand* pParent = nullptr);
+    ~RemoveBranchCommand();
 
-    virtual void setModel(QAbstractItemModel* pModel) override;
-
-public slots:
-    void onGraphicsSceneSelectionChanged();
-
-private slots:
-    void onRowsInserted(const QModelIndex& parent, int iFirst, int iLast);
-    void onLinkTheory();
-    void onRemove();
-
-protected:
-    virtual void currentChanged(const QModelIndex& current, const QModelIndex& previous) override;
-    virtual void contextMenuEvent(QContextMenuEvent* pEvent) override;
+    virtual void redo() override;
+    virtual void undo() override;
 
 private:
-    QAction* _pActionLinkTheory;
-    QAction* _pActionRemove;
+    int _iRow;
+    QPersistentModelIndex _parent;
+    QAbstractItemModel* _pModel;
+    QByteArray _branchData;
 };

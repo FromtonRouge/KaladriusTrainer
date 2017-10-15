@@ -55,6 +55,25 @@ QVariant TreeItemModel::data(const QModelIndex& index, int iRole) const
             result = itemFromIndex(index)->type();
             break;
         }
+    case BranchRole:
+        {
+            QList<QStandardItem*> items;
+            const int iColumns = columnCount();
+            for (int iColumn = 0; iColumn < iColumns; ++iColumn)
+            {
+                auto pItem = itemFromIndex(index.sibling(index.row(), iColumn));
+                if (pItem)
+                {
+                    items << pItem;
+                }
+            }
+
+            if (!items.isEmpty())
+            {
+                result = Serialization::Save(items);
+            }
+            break;
+        }
     default:
         {
             result = QStandardItemModel::data(index, iRole);

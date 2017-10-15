@@ -20,6 +20,7 @@
 #include "UndoableProxyModel.h"
 #include "SetDataCommand.h"
 #include "InsertBranchCommand.h"
+#include "RemoveBranchCommand.h"
 #include <QtCore/QMimeData>
 
 UndoableProxyModel::UndoableProxyModel(QObject* pParent)
@@ -43,6 +44,21 @@ bool UndoableProxyModel::setData(const QModelIndex& index, const QVariant& value
     }
 
     return QIdentityProxyModel::setData(index, value, iRole);
+}
+
+bool UndoableProxyModel::removeRows(int iRow, int iCount, const QModelIndex& parent)
+{
+    if (_pUndoStack)
+    {
+        _pUndoStack->beginMacro(QObject::tr("%1 branche(s) removed").arg(iCount));
+        for (int i = iRow + iCount - 1; i >= iRow; --i)
+        {
+            _pUndoStack->push(new RemoveBranchCommand(i, mapToSource(parent), sourceModel()));
+        }
+        _pUndoStack->endMacro();
+        return true;
+    }
+    return QIdentityProxyModel::removeRows(iRow, iCount, parent);
 }
 
 QModelIndex UndoableProxyModel::insertBranch(int iRow, const QModelIndex& parent, const QByteArray& branch)
