@@ -19,6 +19,10 @@
 
 #pragma once
 
+#include <QtCore/QByteArray>
+#include <QtCore/QList>
+
+class QStandardItem;
 class KeyboardModel;
 class TheoryModel;
 class QString;
@@ -29,4 +33,7 @@ namespace Serialization
 
     bool Save(TheoryModel* pModel, const QString& sFilePath);
     bool Load(TheoryModel* pModel, const QString& sFilePath);
+
+    QByteArray Save(const QList<QStandardItem*>& itemsRow);
+    QList<QStandardItem*> Load(const QByteArray& branchData);
 }

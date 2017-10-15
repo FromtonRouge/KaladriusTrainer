@@ -36,9 +36,10 @@ struct TreeItem : public QStandardItem
         AttributeValue,
         Theory,
         LinkedTheories,
+        LinkedTheory,
         OutputText,
         InputKeys,
-        Dictionary
+        Dictionary,
     };
 
     virtual int type() const override = 0;

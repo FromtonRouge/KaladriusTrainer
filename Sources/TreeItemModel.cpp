@@ -18,6 +18,8 @@
 // ======================================================================
 
 #include "TreeItemModel.h"
+#include "Serialization.h"
+#include <QtCore/QMimeData>
 
 TreeItemModel::TreeItemModel(QObject* pParent)
     : QStandardItemModel(pParent)
@@ -60,4 +62,28 @@ QVariant TreeItemModel::data(const QModelIndex& index, int iRole) const
         }
     }
     return result;
+}
+
+bool TreeItemModel::dropMimeData(const QMimeData* pMimeData, Qt::DropAction action, int iRow, int iColumn, const QModelIndex& parent)
+{
+    static const char* szMimeType = "application/x.treeitemmodel.serialized-branch";
+    if (pMimeData->hasFormat(szMimeType))
+    {
+        auto pParentItem = itemFromIndex(parent);
+        if (!pParentItem)
+        {
+            return false;
+        }
+
+        auto branchData = pMimeData->data(szMimeType);
+        const auto& items = Serialization::Load(branchData);
+        if (items.isEmpty())
+        {
+            return false;
+        }
+
+        pParentItem->insertRow(iRow, items);
+        return true;
+    }
+    return QStandardItemModel::dropMimeData(pMimeData, action, iRow, iColumn, parent);
 }

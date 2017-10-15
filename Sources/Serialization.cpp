@@ -30,18 +30,26 @@
 #include "TreeItems/AttributeTreeItem.h"
 #include "TreeItems/AttributeValueTreeItem.h"
 #include "TreeItems/ArrayTreeItem.h"
+#include "TreeItems/LinkedTheoryTreeItem.h"
 #include <QtCore/QDataStream>
 #include <QtCore/QByteArray>
 #include <QtCore/QVariant>
 #include <boost/archive/xml_oarchive.hpp>
 #include <boost/archive/xml_iarchive.hpp>
+#include <boost/archive/binary_oarchive.hpp>
+#include <boost/archive/binary_iarchive.hpp>
 #include <boost/serialization/split_free.hpp>
 #include <boost/serialization/binary_object.hpp>
 #include <boost/serialization/string.hpp>
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/export.hpp>
+#include <boost/iostreams/device/array.hpp>
+#include <boost/iostreams/device/back_inserter.hpp>
+#include <boost/iostreams/stream.hpp>
+#include <vector>
 #include <fstream>
+#include <sstream>
 #include <iostream>
 #include <string>
 
@@ -351,6 +359,29 @@ namespace boost
     }
 }
 
+// LinkedTheoryTreeItem
+BOOST_CLASS_VERSION(LinkedTheoryTreeItem, 0)
+BOOST_CLASS_EXPORT(LinkedTheoryTreeItem) // For serializing from a base pointer
+namespace boost
+{
+    namespace serialization
+    {
+        template<class Archive> void serialize(Archive& ar, LinkedTheoryTreeItem& obj,  const unsigned int fileVersion)
+        {
+            ar & make_nvp("base", base_object<TreeItem>(obj));
+            split_free(ar, obj, fileVersion);
+        }
+
+        template<class Archive> void save(Archive& ar, const LinkedTheoryTreeItem& obj,  const unsigned int)
+        {
+        }
+
+        template<class Archive> void load(Archive& ar, LinkedTheoryTreeItem& obj,  const unsigned int)
+        {
+        }
+    }
+}
+
 // KeyboardTreeItem
 BOOST_CLASS_VERSION(KeyboardTreeItem, 0)
 namespace boost
@@ -599,5 +630,56 @@ namespace Serialization
             std::cerr << e.what() << std::endl;
         }
         return false;
+    }
+
+    QByteArray Save(const QList<QStandardItem*>& itemsRow)
+    {
+        typedef std::vector<char> CharBuffer;
+        typedef boost::iostreams::back_insert_device<CharBuffer> BackInsertCharBuffer;
+        CharBuffer data;
+        BackInsertCharBuffer backInsertBuffer(data);
+        boost::iostreams::stream<BackInsertCharBuffer> os(backInsertBuffer);
+        boost::archive::binary_oarchive oa(os);
+        try
+        {
+            const int iItemsCount = itemsRow.count();
+            oa << boost::serialization::make_nvp("count", iItemsCount);
+            for (int i = 0; i < iItemsCount; ++i)
+            {
+                oa << boost::serialization::make_nvp("item", itemsRow[i]);
+            }
+            os.flush();
+            return QByteArray(&data[0], int(data.size()));
+        }
+        catch (const std::exception& e)
+        {
+            std::cerr << e.what() << std::endl;
+        }
+        return QByteArray();
+    }
+
+    QList<QStandardItem*> Load(const QByteArray& branchData)
+    {
+        using namespace boost::iostreams;
+        QList<QStandardItem*> itemsRow;
+        array_source source(branchData.data(), branchData.size());
+        stream<array_source> is(source);
+        boost::archive::binary_iarchive ia(is);
+        try
+        {
+            int iItemsCount = 0;
+            ia >> boost::serialization::make_nvp("count", iItemsCount);
+            for (int i = 0; i < iItemsCount; ++i)
+            {
+                QStandardItem* pItem = nullptr;
+                ia >> boost::serialization::make_nvp("item", pItem);
+                itemsRow << pItem;
+            }
+        }
+        catch (const std::exception& e)
+        {
+            std::cerr << e.what() << std::endl;
+        }
+        return itemsRow;
     }
 }

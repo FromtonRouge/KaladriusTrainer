@@ -23,7 +23,9 @@
 #include "KeycapDelegate.h"
 #include "KeyboardGraphicsScene.h"
 #include "KeycapGraphicsItem.h"
+#include "Serialization.h"
 #include "TreeItems/TreeItem.h"
+#include "TreeItems/LinkedTheoryTreeItem.h"
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QMenu>
@@ -136,6 +138,19 @@ void KeyboardTreeView::onLinkTheory()
 {
     // TODO: Add a child node (LinkedTheoryTreeItem) with the name of the loaded theory
     // and all dictionaries + keys bindings
+    const QModelIndex& current = currentIndex();
+    if (current.isValid())
+    {
+        const QModelIndex& currentName = current.sibling(current.row(), 0);
+        auto pUndoableProxyModel = qobject_cast<UndoableProxyModel*>(model());
+        const int iInsertRow = pUndoableProxyModel->rowCount(currentName);
+
+        auto pLinkedTheory = new LinkedTheoryTreeItem();
+        const QByteArray& branch = Serialization::Save({pLinkedTheory});
+        const QModelIndex& indexBranch = pUndoableProxyModel->insertBranch(iInsertRow, currentName, branch);
+        Q_ASSERT(indexBranch.isValid());
+        setCurrentIndex(indexBranch);
+    }
 }
 
 void KeyboardTreeView::currentChanged(const QModelIndex& current, const QModelIndex& previous)
@@ -148,7 +163,6 @@ void KeyboardTreeView::currentChanged(const QModelIndex& current, const QModelIn
         switch (iType)
         {
         case TreeItem::LinkedTheories:
-        case TreeItem::Keyboard:
             {
                 _pActionLinkTheory->setEnabled(true);
                 break;

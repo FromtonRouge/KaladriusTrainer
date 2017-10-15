@@ -17,45 +17,37 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "UndoableProxyModel.h"
-#include "SetDataCommand.h"
 #include "InsertBranchCommand.h"
 #include <QtCore/QMimeData>
+#include <QtCore/QAbstractItemModel>
 
-UndoableProxyModel::UndoableProxyModel(QObject* pParent)
-    : QIdentityProxyModel(pParent)
-    , _pUndoStack(nullptr)
+InsertBranchCommand::InsertBranchCommand(int iRow,
+                                         const QModelIndex& parent,
+                                         const QByteArray& branchData,
+                                         QAbstractItemModel* pModel,
+                                         QUndoCommand* pParent)
+    : QUndoCommand(pParent)
+    , _iRow(iRow)
+    , _parent(parent)
+    , _branchData(branchData)
+    , _pModel(pModel)
+{
+    setText(QObject::tr("1 branch inserted"));
+}
+
+InsertBranchCommand::~InsertBranchCommand()
 {
 
 }
 
-UndoableProxyModel::~UndoableProxyModel()
+void InsertBranchCommand::redo()
 {
-
+    auto pMimeData = new QMimeData();
+    pMimeData->setData("application/x.treeitemmodel.serialized-branch", _branchData);
+    _pModel->dropMimeData(pMimeData, Qt::CopyAction, _iRow, 0, _parent);
 }
 
-bool UndoableProxyModel::setData(const QModelIndex& index, const QVariant& value, int iRole)
+void InsertBranchCommand::undo()
 {
-    if (_pUndoStack)
-    {
-        _pUndoStack->push(new SetDataCommand(index, value, iRole));
-        return true;
-    }
-
-    return QIdentityProxyModel::setData(index, value, iRole);
-}
-
-QModelIndex UndoableProxyModel::insertBranch(int iRow, const QModelIndex& parent, const QByteArray& branch)
-{
-    if (_pUndoStack)
-    {
-        _pUndoStack->push(new InsertBranchCommand(iRow, mapToSource(parent), branch, sourceModel()));
-    }
-    else
-    {
-        auto pMimeData = new QMimeData();
-        pMimeData->setData("application/x.treeitemmodel.serialized-branch", branch);
-        dropMimeData(pMimeData, Qt::CopyAction, iRow, 0, parent);
-    }
-    return index(iRow, 0, parent);
+    _pModel->removeRow(_iRow, _parent);
 }

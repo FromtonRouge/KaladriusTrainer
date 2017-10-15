@@ -19,17 +19,11 @@
 
 #pragma once
 
-#include "ItemDataRole.h"
 #include "TreeItems/TreeItem.h"
-#include <QtGui/QStandardItemModel>
 
-class TreeItemModel : public QStandardItemModel
+class LinkedTheoryTreeItem : public TreeItem
 {
-    Q_OBJECT
-
 public:
-    TreeItemModel(QObject* pParent = nullptr);
-    ~TreeItemModel();
-    virtual QVariant data(const QModelIndex& index, int iRole) const override;
-    virtual bool dropMimeData(const QMimeData* pMimedata, Qt::DropAction action, int iRow, int iColumn, const QModelIndex& parent) override;
+    LinkedTheoryTreeItem();
+    virtual int type() const override {return LinkedTheory;}
 };

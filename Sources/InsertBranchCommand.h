@@ -19,17 +19,27 @@
 
 #pragma once
 
-#include "ItemDataRole.h"
-#include "TreeItems/TreeItem.h"
-#include <QtGui/QStandardItemModel>
+#include <QtWidgets/QUndoCommand>
+#include <QtCore/QPersistentModelIndex>
+#include <QtCore/QByteArray>
 
-class TreeItemModel : public QStandardItemModel
+class QAbstractItemModel;
+class InsertBranchCommand : public QUndoCommand
 {
-    Q_OBJECT
-
 public:
-    TreeItemModel(QObject* pParent = nullptr);
-    ~TreeItemModel();
-    virtual QVariant data(const QModelIndex& index, int iRole) const override;
-    virtual bool dropMimeData(const QMimeData* pMimedata, Qt::DropAction action, int iRow, int iColumn, const QModelIndex& parent) override;
+    InsertBranchCommand(int iRow,
+                        const QModelIndex& parent,
+                        const QByteArray& branchData,
+                        QAbstractItemModel* pModel,
+                        QUndoCommand* pParent = nullptr);
+    ~InsertBranchCommand();
+
+    virtual void redo() override;
+    virtual void undo() override;
+
+private:
+    int _iRow;
+    QPersistentModelIndex _parent;
+    QByteArray _branchData;
+    QAbstractItemModel* _pModel;
 };

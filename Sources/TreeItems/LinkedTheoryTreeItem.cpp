@@ -17,19 +17,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "LinkedTheoryTreeItem.h"
 
-#include "ItemDataRole.h"
-#include "TreeItems/TreeItem.h"
-#include <QtGui/QStandardItemModel>
-
-class TreeItemModel : public QStandardItemModel
+LinkedTheoryTreeItem::LinkedTheoryTreeItem()
 {
-    Q_OBJECT
-
-public:
-    TreeItemModel(QObject* pParent = nullptr);
-    ~TreeItemModel();
-    virtual QVariant data(const QModelIndex& index, int iRole) const override;
-    virtual bool dropMimeData(const QMimeData* pMimedata, Qt::DropAction action, int iRow, int iColumn, const QModelIndex& parent) override;
-};
+    setIcon(QIcon(":/Icons/chain.png"));
+    setText(QObject::tr("Linked Theory"));
+    setEditable(false);
+}

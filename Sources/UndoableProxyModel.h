@@ -33,6 +33,7 @@ public:
     void setUndoStack(QUndoStack* pUndoStack) {_pUndoStack = pUndoStack;}
     QUndoStack* getUndoStack() const {return _pUndoStack;}
     virtual bool setData(const QModelIndex& index, const QVariant& value, int iRole) override;
+    QModelIndex insertBranch(int iRow, const QModelIndex& parent, const QByteArray& branch);
 
 private:
     QUndoStack* _pUndoStack;
