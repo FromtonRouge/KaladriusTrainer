@@ -181,6 +181,7 @@ void KeyboardTreeView::currentChanged(const QModelIndex& current, const QModelIn
         {
         case TreeItem::LinkedTheories:
             {
+                _pActionRemove->setEnabled(false);
                 _pActionLinkTheory->setEnabled(true);
                 break;
             }
