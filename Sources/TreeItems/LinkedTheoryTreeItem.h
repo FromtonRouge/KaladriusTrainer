@@ -24,6 +24,6 @@
 class LinkedTheoryTreeItem : public TreeItem
 {
 public:
-    LinkedTheoryTreeItem();
+    LinkedTheoryTreeItem(const QString& sTheoryName = QString("Linked Theory"));
     virtual int type() const override {return LinkedTheory;}
 };

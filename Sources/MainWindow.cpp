@@ -48,36 +48,23 @@
 #include <QtCore/QMultiMap>
 #include <QtCore/QTextStream>
 #include <QtCore/QTimer>
+#include <QtCore/QMap>
 #include <functional>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , _pUi(new Ui::MainWindow)
-    , _pOldStreambufCout(std::cout.rdbuf())
-    , _pOldStreambufCerr(std::cerr.rdbuf())
-    , _pKeyboardModel(new KeyboardModel(this))
-    , _pUndoableKeyboardModel(new UndoableProxyModel(this))
-    , _pTheoryModel(new TheoryModel(this))
-    , _pUndoableTheoryModel(new UndoableProxyModel(this))
     , _pKeyboardGraphicsScene(new KeyboardGraphicsScene(this))
     , _pUndoStack(new QUndoStack(this))
 {
     _pUi->setupUi(this);
 
-    // Setup std::cout redirection
-    _streamBufferCout.open(StreamSink(std::bind(&MainWindow::toLogs, this, std::placeholders::_1, 0)));
-    std::cout.rdbuf(&_streamBufferCout);
-
-    // Setup std::cerr redirection
-    _streamBufferCerr.open(StreamSink(std::bind(&MainWindow::toLogs, this, std::placeholders::_1, 2)));
-    std::cerr.rdbuf(&_streamBufferCerr);
+    connect(qApp, SIGNAL(logs(QString, int)), this, SLOT(logs(QString,int)));
 
     // Undo/redo
     _pUi->listViewUndo->setStack(_pUndoStack);
-    _pUndoableKeyboardModel->setSourceModel(_pKeyboardModel);
-    _pUndoableKeyboardModel->setUndoStack(_pUndoStack);
-    _pUndoableTheoryModel->setSourceModel(_pTheoryModel);
-    _pUndoableTheoryModel->setUndoStack(_pUndoStack);
+    qApp->getUndoableKeyboardModel()->setUndoStack(_pUndoStack);
+    qApp->getUndoableTheoryModel()->setUndoStack(_pUndoStack);
 
     QAction* pUndoAction = _pUndoStack->createUndoAction(this);
     pUndoAction->setIcon(QIcon(":/Icons/arrow-curve-180-left.png"));
@@ -97,16 +84,17 @@ MainWindow::MainWindow(QWidget *parent)
         loadTheory(sLastTheory);
     }
 
-    _pUi->widgetDictionaries1->setTheoryModel(_pTheoryModel);
-    _pUi->widgetDictionaries2->setTheoryModel(_pTheoryModel);
-    _pUi->widgetDictionaries3->setTheoryModel(_pTheoryModel);
-    _pUi->widgetDictionaries4->setTheoryModel(_pTheoryModel);
+    auto pTheoryModel = qApp->getTheoryModel();
+    _pUi->widgetDictionaries1->setTheoryModel(pTheoryModel);
+    _pUi->widgetDictionaries2->setTheoryModel(pTheoryModel);
+    _pUi->widgetDictionaries3->setTheoryModel(pTheoryModel);
+    _pUi->widgetDictionaries4->setTheoryModel(pTheoryModel);
 
-    _pUi->treeViewKeyboardProperties->setModel(_pUndoableKeyboardModel);
+    _pUi->treeViewKeyboardProperties->setModel(qApp->getUndoableKeyboardModel());
     _pKeyboardGraphicsScene->setKeyboardProperties(_pUi->treeViewKeyboardProperties);
     _pUi->widgetKeycapProperties->setKeyboardProperties(_pUi->treeViewKeyboardProperties);
 
-    _pUi->treeViewTheory->setModel(_pUndoableTheoryModel);
+    _pUi->treeViewTheory->setModel(qApp->getUndoableTheoryModel());
 
     // Default dock states
     _pUi->dockWidgetTheory->hide();
@@ -132,7 +120,7 @@ MainWindow::MainWindow(QWidget *parent)
     {
         // Load last svg file if any
         const QString& sLastKeyboardSvg = settings.value("lastKeyboardSvg", ":/Svgs/ergodox.svg").toString();
-        _pKeyboardModel->loadKeyboardSvgFile(sLastKeyboardSvg);
+        qApp->getKeyboardModel()->loadKeyboardSvgFile(sLastKeyboardSvg);
     }
 
     _pUi->actionKeyboard_Window->trigger();
@@ -140,11 +128,9 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-	std::cerr.rdbuf(_pOldStreambufCerr);
-	std::cout.rdbuf(_pOldStreambufCout);
 }
 
-void MainWindow::toLogs(const QString& sText, int iWarningLevel)
+void MainWindow::logs(const QString& sText, int iWarningLevel)
 {
     // Write logs to the text edit with the appropriate color
     QTextCursor cursor(_pUi->textEditLogs->textCursor());
@@ -163,7 +149,7 @@ void MainWindow::toLogs(const QString& sText, int iWarningLevel)
 
 void MainWindow::loadKeyboard(const QString& sKeyboardFileName)
 {
-    if (Serialization::Load(_pKeyboardModel, sKeyboardFileName))
+    if (Serialization::Load(qApp->getKeyboardModel(), sKeyboardFileName))
     {
         QSettings settings;
         settings.setValue("lastKeyboard", sKeyboardFileName);
@@ -173,7 +159,7 @@ void MainWindow::loadKeyboard(const QString& sKeyboardFileName)
 
 void MainWindow::loadTheory(const QString& sTheoryFileName)
 {
-    if (Serialization::Load(_pTheoryModel, sTheoryFileName))
+    if (Serialization::Load(qApp->getTheoryModel(), sTheoryFileName))
     {
         QSettings settings;
         settings.setValue("lastTheory", sTheoryFileName);
@@ -218,7 +204,7 @@ void MainWindow::on_actionImport_Keyboard_Svg_triggered()
     const QString& sKeyboardSvg = QFileDialog::getOpenFileName(this, tr("Keyboard Svg"), sLastKeyboardSvg, "*.svg");
     if (!sKeyboardSvg.isEmpty())
     {
-        _pKeyboardModel->loadKeyboardSvgFile(sKeyboardSvg);
+        qApp->getKeyboardModel()->loadKeyboardSvgFile(sKeyboardSvg);
         settings.setValue("lastKeyboardSvg", sKeyboardSvg);
         settings.setValue("lastKeyboard", QString());
     }
@@ -226,7 +212,7 @@ void MainWindow::on_actionImport_Keyboard_Svg_triggered()
 
 void MainWindow::on_actionImport_Default_Keyboard_Svg_triggered()
 {
-    _pKeyboardModel->loadKeyboardSvgFile(":/Svgs/ergodox.svg");
+    qApp->getKeyboardModel()->loadKeyboardSvgFile(":/Svgs/ergodox.svg");
     QSettings settings;
     settings.setValue("lastKeyboardSvg", ":/Svgs/ergodox.svg");
     settings.setValue("lastKeyboard", QString());
@@ -253,7 +239,7 @@ void MainWindow::on_actionSave_Theory_as_triggered()
     if (saveDlg.exec())
     {
         const QString sTheoryFile = saveDlg.selectedFiles().front();
-        if (Serialization::Save(_pTheoryModel, sTheoryFile))
+        if (Serialization::Save(qApp->getTheoryModel(), sTheoryFile))
         {
             settings.setValue("lastTheory", sTheoryFile);
             COUT(tr("Theory saved to file %1").arg(sTheoryFile));
@@ -287,7 +273,7 @@ void MainWindow::on_actionImport_Dictionaries_triggered()
             _dictionaries.unite(parser.getDictionaries());
         }
 
-        _pTheoryModel->setDictionaries(_dictionaries);
+        qApp->getTheoryModel()->setDictionaries(_dictionaries);
 
         COUT((tr("%1 dictionaries loaded").arg(_dictionaries.size())));
     }
@@ -400,7 +386,7 @@ void MainWindow::on_actionAbout_triggered()
 void MainWindow::on_actionKeyboard_Window_triggered()
 {
     auto pGraphicsView = new KeyboardGraphicsView();
-    connect(_pKeyboardModel, SIGNAL(keyboardLoaded()), pGraphicsView, SLOT(fitKeyboardInView()));
+    connect(qApp->getKeyboardModel(), SIGNAL(keyboardLoaded()), pGraphicsView, SLOT(fitKeyboardInView()));
     connect(_pUi->actionRecord_Keyboard, SIGNAL(triggered(bool)), pGraphicsView, SLOT(recordKeyboardInputs(bool)));
     auto pSubWindow = _pUi->mdiArea->addSubWindow(pGraphicsView);
     pSubWindow->setWindowTitle(tr("Keyboard"));
@@ -446,7 +432,7 @@ void MainWindow::on_actionSave_Keyboard_triggered()
     const QString& sLastKeyboard = settings.value("lastKeyboard").toString();
     if (!sLastKeyboard.isEmpty())
     {
-        if (Serialization::Save(_pKeyboardModel, sLastKeyboard))
+        if (Serialization::Save(qApp->getKeyboardModel(), sLastKeyboard))
         {
             COUT(tr("Keyboard saved to file %1").arg(sLastKeyboard));
         }

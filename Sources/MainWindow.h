@@ -19,12 +19,9 @@
 
 #pragma once
 
-#include "StreamSink.h"
 #include "Dictionary.h"
 #include <QtWidgets/QMainWindow>
 #include <QtCore/QScopedPointer>
-#include <QtCore/QMap>
-#include <boost/iostreams/stream_buffer.hpp>
 
 namespace Ui
 {
@@ -32,9 +29,6 @@ namespace Ui
 }
 
 class QUndoStack;
-class UndoableProxyModel;
-class KeyboardModel;
-class TheoryModel;
 class KeyboardGraphicsScene;
 class MainWindow : public QMainWindow
 {
@@ -59,9 +53,9 @@ protected slots:
     void on_actionSave_Keyboard_as_triggered();
     void on_actionSave_Keyboard_triggered();
     void delayedRestoreState();
+    void logs(const QString& sText, int iWarningLevel = 0);
 
 private:
-    void toLogs(const QString& sText, int iWarningLevel = 0);
     void loadKeyboard(const QString& sKeyboardFileName);
     void loadTheory(const QString& sTheoryFileName);
 
@@ -71,15 +65,7 @@ protected:
 
 private:
     QScopedPointer<Ui::MainWindow> _pUi;
-    boost::iostreams::stream_buffer<StreamSink> _streamBufferCout;
-	std::streambuf* _pOldStreambufCout;
-	boost::iostreams::stream_buffer<StreamSink> _streamBufferCerr;
-	std::streambuf* _pOldStreambufCerr;
     Dictionaries _dictionaries;
-    KeyboardModel* _pKeyboardModel;
-    UndoableProxyModel* _pUndoableKeyboardModel;
-    TheoryModel* _pTheoryModel;
-    UndoableProxyModel* _pUndoableTheoryModel;
     KeyboardGraphicsScene* _pKeyboardGraphicsScene; ///< Only 1 scene and potentialy N views on this scene.
     QUndoStack* _pUndoStack;
 };

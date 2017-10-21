@@ -20,11 +20,29 @@
 #include "Application.h"
 #include "ProjectConfig.h"
 #include "UserEditorFactory.h"
+#include "TheoryModel.h"
+#include "KeyboardModel.h"
+#include "UndoableProxyModel.h"
 #include <QtCore/QCommandLineParser>
+#include <iostream>
 
 Application::Application(int& argc, char** argv)
     : QApplication(argc, argv)
+    , _pOldStreambufCout(std::cout.rdbuf())
+    , _pOldStreambufCerr(std::cerr.rdbuf())
+    , _pTheoryModel(new TheoryModel(this))
+    , _pUndoableTheoryModel(new UndoableProxyModel(this))
+    , _pKeyboardModel(new KeyboardModel(this))
+    , _pUndoableKeyboardModel(new UndoableProxyModel(this))
 {
+    // Setup std::cout redirection
+    _streamBufferCout.open(StreamSink(std::bind(&Application::toLogs, this, std::placeholders::_1, 0)));
+    std::cout.rdbuf(&_streamBufferCout);
+
+    // Setup std::cerr redirection
+    _streamBufferCerr.open(StreamSink(std::bind(&Application::toLogs, this, std::placeholders::_1, 2)));
+    std::cerr.rdbuf(&_streamBufferCerr);
+
     // Application settings
     setOrganizationName("FromtonRouge");
     setApplicationName(PROJECT_APPLICATION_NAME);
@@ -39,9 +57,18 @@ Application::Application(int& argc, char** argv)
 
     // Default factory for all item delegates
     QItemEditorFactory::setDefaultFactory(new UserEditorFactory());
+
+    _pUndoableTheoryModel->setSourceModel(_pTheoryModel);
+    _pUndoableKeyboardModel->setSourceModel(_pKeyboardModel);
 }
 
 Application::~Application()
 {
+    std::cerr.rdbuf(_pOldStreambufCerr);
+    std::cout.rdbuf(_pOldStreambufCout);
+}
 
+void Application::toLogs(const QString& sText, int iWarningLevel)
+{
+    emit logs(sText, iWarningLevel);
 }

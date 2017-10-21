@@ -19,9 +19,9 @@
 
 #include "LinkedTheoryTreeItem.h"
 
-LinkedTheoryTreeItem::LinkedTheoryTreeItem()
+LinkedTheoryTreeItem::LinkedTheoryTreeItem(const QString& sTheoryName)
 {
     setIcon(QIcon(":/Icons/chain.png"));
-    setText(QObject::tr("Linked Theory"));
+    setText(sTheoryName);
     setEditable(false);
 }
