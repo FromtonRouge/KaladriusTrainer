@@ -18,6 +18,7 @@
 // ======================================================================
 
 #include "TheoryModel.h"
+#include "Utils.h"
 #include "TreeItems/TreeItem.h"
 #include "TreeItems/TheoryTreeItem.h"
 #include "TreeItems/ListTreeItem.h"
@@ -118,4 +119,14 @@ QModelIndex TheoryModel::getDictionariesIndex() const
         return indexTheory.child(2, 0);
     }
     return QModelIndex();
+}
+
+QString TheoryModel::getTheoryName() const
+{
+    const QModelIndex& indexTheoryName = Utils::index(this, "Theory/Name", 1);
+    if (indexTheoryName.isValid())
+    {
+        return indexTheoryName.data(Qt::DisplayRole).toString();
+    }
+    return QString();
 }

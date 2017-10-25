@@ -18,7 +18,9 @@
 // ======================================================================
 
 #include "KeyboardTreeView.h"
+#include "Application.h"
 #include "UndoableProxyModel.h"
+#include "TheoryModel.h"
 #include "KeyboardModel.h"
 #include "KeycapDelegate.h"
 #include "KeyboardGraphicsScene.h"
@@ -151,7 +153,8 @@ void KeyboardTreeView::onLinkTheory()
         auto pUndoableProxyModel = qobject_cast<UndoableProxyModel*>(model());
         const int iInsertRow = pUndoableProxyModel->rowCount(currentName);
 
-        auto pLinkedTheory = new LinkedTheoryTreeItem();
+        auto pTheoryModel = qApp->getTheoryModel();
+        auto pLinkedTheory = new LinkedTheoryTreeItem(pTheoryModel->getTheoryName());
         const QByteArray& branch = Serialization::Save({pLinkedTheory});
         const QModelIndex& indexBranch = pUndoableProxyModel->insertBranch(iInsertRow, currentName, branch);
         Q_ASSERT(indexBranch.isValid());

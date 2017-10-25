@@ -374,10 +374,15 @@ namespace boost
 
         template<class Archive> void save(Archive& ar, const LinkedTheoryTreeItem& obj,  const unsigned int)
         {
+            std::string sText = obj.text().toStdString();
+            ar << make_nvp("name", sText);
         }
 
         template<class Archive> void load(Archive& ar, LinkedTheoryTreeItem& obj,  const unsigned int)
         {
+            std::string sText;
+            ar >> make_nvp("name", sText);
+            obj.setText(QString::fromStdString(sText));
         }
     }
 }

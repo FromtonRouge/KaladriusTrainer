@@ -21,7 +21,7 @@
 
 LinkedTheoryTreeItem::LinkedTheoryTreeItem(const QString& sTheoryName)
 {
-    setIcon(QIcon(":/Icons/chain.png"));
+    setIcon(QIcon(":/Icons/graduation-hat.png"));
     setText(sTheoryName);
     setEditable(false);
 }

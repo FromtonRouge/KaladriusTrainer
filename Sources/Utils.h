@@ -19,25 +19,18 @@
 
 #pragma once
 
-#include "Dictionary.h"
-#include "TreeItemModel.h"
+#include <QtCore/QModelIndex>
+#include <QtCore/QString>
 
-class TheoryTreeItem;
-class TheoryModel : public TreeItemModel
+class QAbstractItemModel;
+namespace Utils
 {
-    Q_OBJECT
-
-signals:
-    void dictionariesLoaded();
-
-public:
-    TheoryModel(QObject* pParent = nullptr);
-    ~TheoryModel();
-    virtual QVariant data(const QModelIndex& index, int iRole) const override;
-    void setDictionaries(const Dictionaries& dictionaries);
-    TheoryTreeItem* getTheoryTreeItem() const;
-    void setTheoryTreeItem(TheoryTreeItem* pTheoryTreeItem);
-    QModelIndex getTheoryIndex() const;
-    QModelIndex getDictionariesIndex() const;
-    QString getTheoryName() const;
-};
+    /**
+     * @brief Get index from path
+     * @param sPath Relative path in a tree model eg: "Root/Child1/Child2"
+     */
+    QModelIndex index(const QAbstractItemModel* pModel,
+                      const QString& sPath,
+                      int iColumn = 0,
+                      const QModelIndex& parent = QModelIndex());
+}
