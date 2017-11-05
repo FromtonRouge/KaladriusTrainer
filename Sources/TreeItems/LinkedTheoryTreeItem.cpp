@@ -18,10 +18,14 @@
 // ======================================================================
 
 #include "LinkedTheoryTreeItem.h"
+#include "ListTreeItem.h"
 
 LinkedTheoryTreeItem::LinkedTheoryTreeItem(const QString& sTheoryName)
 {
     setIcon(QIcon(":/Icons/graduation-hat.png"));
     setText(sTheoryName);
     setEditable(false);
+
+    _pLinkedDictionaries = new ListTreeItem(QIcon(":/Icons/books-brown.png"), QObject::tr("Linked Dictionaries"));
+    appendRow({_pLinkedDictionaries, new EmptyTreeItem()});
 }

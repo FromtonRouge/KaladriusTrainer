@@ -27,7 +27,11 @@
 #include "KeycapGraphicsItem.h"
 #include "Serialization.h"
 #include "TreeItems/TreeItem.h"
+#include "TreeItems/DictionaryTreeItem.h"
 #include "TreeItems/LinkedTheoryTreeItem.h"
+#include "TreeItems/LinkedDictionaryTreeItem.h"
+#include "TreeItems/ListTreeItem.h"
+#include "TreeItems/ArrayTreeItem.h"
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QMenu>
@@ -155,10 +159,35 @@ void KeyboardTreeView::onLinkTheory()
 
         auto pTheoryModel = qApp->getTheoryModel();
         auto pLinkedTheory = new LinkedTheoryTreeItem(pTheoryModel->getTheoryName());
+
+        // Add key mappings for each dictionary
+        auto pLinkedDictionaries = pLinkedTheory->getLinkedDictionaries();
+        const QModelIndex& indexDictionaries = pTheoryModel->getDictionariesIndex();
+        const int iDictionaries = pTheoryModel->rowCount(indexDictionaries);
+        for (int iDictionary = 0; iDictionary < iDictionaries; ++iDictionary)
+        {
+            const QModelIndex& indexDictionary = pTheoryModel->index(iDictionary, 0, indexDictionaries);
+            const QString& sDictionaryName = indexDictionary.data(Qt::DisplayRole).toString();
+            auto pLinkedDictionary = new LinkedDictionaryTreeItem(sDictionaryName);
+
+            // Add empty keys bindings
+            auto pLinkedKeys = pLinkedDictionary->getLinkedKeys();
+            auto pDictionary = static_cast<DictionaryTreeItem*>(pTheoryModel->itemFromIndex(indexDictionary));
+            auto pKeys = pDictionary->getKeys();
+            const int iKeys = pKeys->rowCount();
+            for (int iKey = 0; iKey < iKeys; ++iKey)
+            {
+                pLinkedKeys->addElement(QString());
+            }
+
+            pLinkedDictionaries->appendRow({pLinkedDictionary, new EmptyTreeItem()});
+        }
+
         const QByteArray& branch = Serialization::Save({pLinkedTheory});
         const QModelIndex& indexBranch = pUndoableProxyModel->insertBranch(iInsertRow, currentName, branch);
         Q_ASSERT(indexBranch.isValid());
         setCurrentIndex(indexBranch);
+        expand(indexBranch);
     }
 }
 

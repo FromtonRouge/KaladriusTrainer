@@ -17,38 +17,21 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "LinkedDictionaryTreeItem.h"
+#include "ArrayTreeItem.h"
+#include <QtGui/QIcon>
 
-#include <QtGui/QStandardItem>
-
-class AttributeTreeItem;
-struct TreeItem : public QStandardItem
+LinkedDictionaryTreeItem::LinkedDictionaryTreeItem(const QString& sDictionaryName)
 {
-    enum Type
-    {
-        Empty = UserType,
-        List,
-        Array,
-        ArrayElement,
-        Keyboard,
-        Keycap,
-        Attribute,
-        AttributeValue,
-        Theory,
-        LinkedTheories,
-        LinkedTheory,
-        LinkedDictionary,
-        OutputText,
-        InputKeys,
-        Dictionary,
-    };
+    setIcon(QIcon(":/Icons/book-brown.png"));
+    setText(sDictionaryName);
+    setEditable(false);
 
-    virtual int type() const override = 0;
-    virtual AttributeTreeItem* addAttribute(const QString& sName, const QVariant& value);
-};
+    _pLinkedKeysTreeItem = new ArrayTreeItem(QIcon(":/Icons/keyboard-full.png"), QObject::tr("Linked Keys"));
+    appendRow({_pLinkedKeysTreeItem, new EmptyTreeItem()});
+}
 
-struct EmptyTreeItem : public TreeItem
+LinkedDictionaryTreeItem::~LinkedDictionaryTreeItem()
 {
-    EmptyTreeItem() {setEditable(false); setSelectable(false);}
-    virtual int type() const override {return Empty;}
-};
+
+}

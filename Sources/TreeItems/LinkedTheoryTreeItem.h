@@ -21,9 +21,14 @@
 
 #include "TreeItems/TreeItem.h"
 
+class ListTreeItem;
 class LinkedTheoryTreeItem : public TreeItem
 {
 public:
     LinkedTheoryTreeItem(const QString& sTheoryName = QString("Linked Theory"));
     virtual int type() const override {return LinkedTheory;}
+    ListTreeItem* getLinkedDictionaries() const {return _pLinkedDictionaries;}
+
+private:
+    ListTreeItem* _pLinkedDictionaries;
 };

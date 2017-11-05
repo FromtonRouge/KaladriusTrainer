@@ -31,6 +31,7 @@
 #include "TreeItems/AttributeValueTreeItem.h"
 #include "TreeItems/ArrayTreeItem.h"
 #include "TreeItems/LinkedTheoryTreeItem.h"
+#include "TreeItems/LinkedDictionaryTreeItem.h"
 #include <QtCore/QDataStream>
 #include <QtCore/QByteArray>
 #include <QtCore/QVariant>
@@ -359,6 +360,40 @@ namespace boost
     }
 }
 
+// LinkedDictionaryTreeItem
+BOOST_CLASS_VERSION(LinkedDictionaryTreeItem, 0)
+BOOST_CLASS_EXPORT(LinkedDictionaryTreeItem) // For serializing from a base pointer
+namespace boost
+{
+    namespace serialization
+    {
+        template<class Archive> void serialize(Archive& ar, LinkedDictionaryTreeItem& obj,  const unsigned int fileVersion)
+        {
+            ar & make_nvp("base", base_object<TreeItem>(obj));
+            split_free(ar, obj, fileVersion);
+        }
+
+        template<class Archive> void save(Archive& ar, const LinkedDictionaryTreeItem& obj,  const unsigned int)
+        {
+            std::string sText = obj.text().toStdString();
+            ar << make_nvp("name", sText);
+
+            ArrayTreeItem* pLinkedKeysTreeItem = obj.getLinkedKeys();
+            ar << make_nvp("linked_keys", *pLinkedKeysTreeItem);
+        }
+
+        template<class Archive> void load(Archive& ar, LinkedDictionaryTreeItem& obj,  const unsigned int)
+        {
+            std::string sText;
+            ar >> make_nvp("name", sText);
+            obj.setText(QString::fromStdString(sText));
+
+            ArrayTreeItem* pLinkedKeysTreeItem = obj.getLinkedKeys();
+            ar >> make_nvp("linked_keys", *pLinkedKeysTreeItem);
+        }
+    }
+}
+
 // LinkedTheoryTreeItem
 BOOST_CLASS_VERSION(LinkedTheoryTreeItem, 0)
 BOOST_CLASS_EXPORT(LinkedTheoryTreeItem) // For serializing from a base pointer
@@ -376,6 +411,9 @@ namespace boost
         {
             std::string sText = obj.text().toStdString();
             ar << make_nvp("name", sText);
+
+            ListTreeItem* pLinkedDictionaries = obj.getLinkedDictionaries();
+            ar << make_nvp("linked_dictionaries", *pLinkedDictionaries);
         }
 
         template<class Archive> void load(Archive& ar, LinkedTheoryTreeItem& obj,  const unsigned int)
@@ -383,6 +421,9 @@ namespace boost
             std::string sText;
             ar >> make_nvp("name", sText);
             obj.setText(QString::fromStdString(sText));
+
+            ListTreeItem* pLinkedDictionaries = obj.getLinkedDictionaries();
+            ar >> make_nvp("linked_dictionaries", *pLinkedDictionaries);
         }
     }
 }
