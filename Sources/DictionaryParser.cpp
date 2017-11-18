@@ -133,8 +133,8 @@ DictionaryParser::KnownDictionaries DictionaryParser::KNOWN_DICTIONARIES =
     {"g_right_hand_table",          {"Right Hand Shelton Dictionary",   "dict_right_hand.md",          {"R", "N", "L", "G", "C", "H", "T", "S"}, {}}},
     {"g_right_pinky_table",         {"Right Pinky Dictionary",          "dict_right_pinky.md",         {"E", "Y"}, {}}},
     {"g_right_punctuation_table",   {"Right Punctuation Dictionary",    "dict_right_punctuation.md",   {"RP0", "RP1", "RP2", "RP3", "RP4", "RP5", "RP6", "RP7"}, {}}},
-    {"g_thumbs_bigrams_table",      {"Thumbs Bigrams Dictionary",       "dict_thumbs_bigrams.md",      {"E", "O", "A", "U", "I"}, {}}},
-    {"g_thumbs_table",              {"Thumbs Dictionary",               "dict_thumbs.md",              {"E", "O", "A", "U", "I"}, {}}}
+    {"g_thumbs_bigrams_table",      {"Thumbs Bigrams Dictionary",       "dict_thumbs_bigrams.md",      {"E", "O", "A", "Y", "U", "I"}, {}}},
+    {"g_thumbs_table",              {"Thumbs Dictionary",               "dict_thumbs.md",              {"E", "O", "A", "Y", "U", "I"}, {}}}
 };
 
 DictionaryParser::DictionaryParser(const QString& sFilePath)
