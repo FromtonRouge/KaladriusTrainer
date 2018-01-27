@@ -25,13 +25,14 @@
 #include "KeycapDelegate.h"
 #include "KeyboardGraphicsScene.h"
 #include "KeycapGraphicsItem.h"
-#include "Serialization.h"
+#include "Serialization/Serialize.h"
 #include "TreeItems/TreeItem.h"
 #include "TreeItems/DictionaryTreeItem.h"
 #include "TreeItems/LinkedTheoryTreeItem.h"
 #include "TreeItems/LinkedDictionaryTreeItem.h"
 #include "TreeItems/ListTreeItem.h"
 #include "TreeItems/ArrayTreeItem.h"
+#include "Valuetypes.h"
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QMenu>
@@ -177,7 +178,7 @@ void KeyboardTreeView::onLinkTheory()
             const int iKeys = pKeys->rowCount();
             for (int iKey = 0; iKey < iKeys; ++iKey)
             {
-                pLinkedKeys->addElement(QString());
+                pLinkedKeys->addElement(qVariantFromValue(KeycapRef()));
             }
 
             pLinkedDictionaries->appendRow({pLinkedDictionary, new EmptyTreeItem()});
