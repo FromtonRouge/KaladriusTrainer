@@ -99,7 +99,8 @@ struct InternalParser : qi::grammar <Iterator, ascii::space_type, std::vector<As
         keycode = (mod[at_c<0>(_val) = _1] >> '(' >> identifier[at_c<1>(_val) = _1] >> ')') | identifier[at_c<1>(_val) = _1]; // eg: LSFT(_Y) or _Y 
         no_entry = string("NO_ENTRY")[push_back(at_c<0>(_val), _1)];
         entry = identifier >> '(' >> (keycode[push_back(at_c<0>(_val), _1)] % ',') >> ')'; // eg: _3(_Y, _E, _S)
-        any_entry = (no_entry | entry);
+        initializer_list_entry = '{' >> ((keycode[push_back(at_c<0>(_val), _1)] | '0') % ',') >> '}'; // eg: {_E, 0, 0, 0} we ignore 0 digits
+        any_entry = (no_entry | entry | initializer_list_entry);
         dimension = lit('[') >> (int_ | identifier)  >> ']'; // eg: [256] or [MAX_LETTERS]
         type = identifier; // eg: uint16_t, int etc...
 
@@ -117,6 +118,7 @@ struct InternalParser : qi::grammar <Iterator, ascii::space_type, std::vector<As
     qi::rule<Iterator, ascii::space_type, Ast::Entry()> any_entry;
     qi::rule<Iterator, ascii::space_type, Ast::Entry()> no_entry;
     qi::rule<Iterator, ascii::space_type, Ast::Entry()> entry;
+    qi::rule<Iterator, ascii::space_type, Ast::Entry()> initializer_list_entry; // eg: {_E, 0}
     qi::rule<Iterator, ascii::space_type, std::string()> mod;
     qi::rule<Iterator, ascii::space_type, Ast::Keycode()> keycode;
     qi::rule<Iterator, ascii::space_type, std::string()> type;

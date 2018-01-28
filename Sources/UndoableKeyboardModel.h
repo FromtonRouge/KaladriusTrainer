@@ -26,5 +26,6 @@ class UndoableKeyboardModel : public UndoableProxyModel
 public:
     UndoableKeyboardModel(QObject* pParent = nullptr);
 
+    virtual bool setData(const QModelIndex& index, const QVariant& value, int iRole = Qt::EditRole) override;
     virtual bool dropMimeData(const QMimeData* pMimeData, Qt::DropAction action, int iRow, int iColumn, const QModelIndex& parent) override;
 };

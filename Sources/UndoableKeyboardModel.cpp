@@ -19,6 +19,13 @@
 
 #include "UndoableKeyboardModel.h"
 #include "ValueTypes/KeycapRef.h"
+#include "KeyboardModel.h"
+#include "TheoryModel.h"
+#include "Application.h"
+#include "ItemDataRole.h"
+#include "Utils.h"
+#include "TreeItems/TreeItem.h"
+#include <QtWidgets/QUndoStack>
 #include <QtCore/QMimeData>
 #include <QtCore/QByteArray>
 #include <QtCore/QDataStream>
@@ -27,6 +34,72 @@ UndoableKeyboardModel::UndoableKeyboardModel(QObject* pParent)
     : UndoableProxyModel(pParent)
 {
 
+}
+
+bool UndoableKeyboardModel::setData(const QModelIndex& index, const QVariant& value, int iRole)
+{
+    switch (iRole)
+    {
+    case Qt::EditRole:
+        {
+            if (value.isValid() && value.userType() == qMetaTypeId<KeycapRef>())
+            {
+                // Check if we are under a linked dictionary branch
+                const QModelIndex& indexLinkedDictionary = Utils::findParent(index, TreeItem::LinkedDictionary);
+                if (indexLinkedDictionary.isValid())
+                {
+                    // Get the keycap id from the keycap reference
+                    const auto& keycapRef = qvariant_cast<KeycapRef>(value);
+                    const QString& sKeycapId = keycapRef.keycapId;
+
+                    auto pSourceModel = qobject_cast<KeyboardModel*>(sourceModel());
+                    if (pSourceModel)
+                    {
+                        const QModelIndex& proxyIndexKeycapsIndex = mapFromSource(pSourceModel->getKeycapsIndex());
+                        if (proxyIndexKeycapsIndex.isValid() && hasChildren(proxyIndexKeycapsIndex))
+                        {
+                            const auto& matches = match(proxyIndexKeycapsIndex.child(0,0), Qt::DisplayRole, sKeycapId, 1, Qt::MatchExactly);
+                            if (!matches.isEmpty())
+                            {
+                                const QModelIndex& proxyIndexKeycap = matches.front();
+                                const QModelIndex& proxyIndexLabelValue = Utils::index(this, "Label", 1, proxyIndexKeycap);
+                                if (proxyIndexLabelValue.isValid())
+                                {
+                                    getUndoStack()->beginMacro(tr("1 keycap linked to theory"));
+
+                                    // Now get the key label in the theory model
+                                    const auto* pTheoryModel = qApp->getTheoryModel();
+                                    const QModelIndex& indexDictionariesInTheoryModel = pTheoryModel->getDictionariesIndex();
+                                    if (indexDictionariesInTheoryModel.isValid())
+                                    {
+                                        const QString& sLinkedDictionaryName = indexLinkedDictionary.data().toString();
+                                        const QModelIndex& indexName = index.sibling(index.row(), 0);
+                                        const QString& sPath = QString("%1/Keys/%2").arg(sLinkedDictionaryName).arg(indexName.data().toString());
+                                        const QModelIndex& indexKeyLabelInTheoryModel = Utils::index(pTheoryModel, sPath, 1, indexDictionariesInTheoryModel);
+                                        if (indexKeyLabelInTheoryModel.isValid())
+                                        {
+                                            setData(proxyIndexLabelValue, indexKeyLabelInTheoryModel.data().toString());
+                                        }
+                                    }
+
+                                    UndoableProxyModel::setData(index, value, iRole);
+                                    getUndoStack()->endMacro();
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            break;
+        }
+    default:
+        {
+            break;
+        }
+    }
+
+    return UndoableProxyModel::setData(index, value, iRole);
 }
 
 bool UndoableKeyboardModel::dropMimeData(const QMimeData* pMimeData, Qt::DropAction action, int iRow, int iColumn, const QModelIndex& parent)

@@ -39,7 +39,7 @@ ArrayElementTreeItem* ArrayTreeItem::addAttribute(const QString& ignored, const 
     return pAttribute;
 }
 
-ArrayElementTreeItem*ArrayTreeItem::addElement(const QVariant& value)
+ArrayElementTreeItem* ArrayTreeItem::addElement(const QVariant& value)
 {
     return addAttribute(QString(), value);
 }

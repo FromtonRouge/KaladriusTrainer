@@ -18,6 +18,7 @@
 // ======================================================================
 
 #include "Utils.h"
+#include "ItemDataRole.h"
 
 namespace Utils
 {
@@ -55,5 +56,22 @@ namespace Utils
         }
 
         return currentParent.sibling(currentParent.row(), iColumn);
+    }
+
+    QModelIndex findParent(const QModelIndex& index, int iTreeItemType)
+    {
+        if (index.isValid())
+        {
+            QModelIndex currentParent = index.parent();
+            while (currentParent.isValid())
+            {
+                if (currentParent.data(TreeItemTypeRole).toInt() == iTreeItemType)
+                {
+                    return currentParent;
+                }
+                currentParent = currentParent.parent();
+            }
+        }
+        return QModelIndex();
     }
 }

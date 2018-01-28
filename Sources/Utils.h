@@ -33,4 +33,11 @@ namespace Utils
                       const QString& sPath,
                       int iColumn = 0,
                       const QModelIndex& parent = QModelIndex());
+
+    /**
+     * @brief Find the first parent with type iTreeItemType
+     * @param iTreeItemType Type as defined in TreeItem.h
+     * @return valid index of the parent if found
+     */
+    QModelIndex findParent(const QModelIndex& index, int iTreeItemType);
 }
