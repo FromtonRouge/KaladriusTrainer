@@ -25,10 +25,17 @@
 #include <QtWidgets/QGraphicsRectItem>
 #include <QtWidgets/QGraphicsScene>
 #include <QtWidgets/QGraphicsSceneMouseEvent>
+#include <QtWidgets/QApplication>
+#include <QtGui/QDrag>
+#include <QtGui/QBitmap>
 #include <QtGui/QFont>
 #include <QtGui/QPainter>
 #include <QtGui/QMatrix>
+#include <QtGui/QPixmap>
 #include <QtSvg/QSvgRenderer>
+#include <QtCore/QMimeData>
+#include <QtCore/QDataStream>
+#include <QtCore/QByteArray>
 #include <QDebug>
 
 KeycapGraphicsItem::KeycapGraphicsItem( const QString& sKeycapId,
@@ -177,6 +184,45 @@ void KeycapGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent* pEvent)
     {
         pEvent->ignore();
     }
+}
+
+void KeycapGraphicsItem::mouseMoveEvent(QGraphicsSceneMouseEvent* pEvent)
+{
+    const QLineF lineFromEventToMouse(pEvent->screenPos(), pEvent->buttonDownScreenPos(Qt::LeftButton));
+    if (lineFromEventToMouse.length() < QApplication::startDragDistance())
+    {
+        return;
+    }
+
+    QDrag* pDrag = new QDrag(pEvent->widget());
+
+    QRectF rect = boundingRect();
+    const int iThickness = 2;
+    rect.adjust(-iThickness, -iThickness, iThickness, iThickness);
+    QPixmap pixmap(rect.size().toSize());
+    pixmap.fill(Qt::white);
+
+    QPainter painter(&pixmap);
+    painter.setRenderHint(QPainter::Antialiasing);
+    QStyleOptionGraphicsItem fakeOptions;
+    paint(&painter, &fakeOptions, 0);
+    painter.end();
+
+    pixmap.setMask(pixmap.createHeuristicMask());
+
+    pDrag->setPixmap(pixmap);
+    pDrag->setHotSpot(rect.center().toPoint());
+
+    // Set our custom mime data
+    QMimeData* pMimeData = new QMimeData();
+    QByteArray data;
+    QDataStream stream(&data, QIODevice::WriteOnly);
+    stream << elementId();
+    pMimeData->setData("application/prs.stenotutor.keycapid", data);
+    pMimeData->setText(elementId());
+    pDrag->setMimeData(pMimeData);
+
+    pDrag->exec();
 }
 
 void KeycapGraphicsItem::centerText()

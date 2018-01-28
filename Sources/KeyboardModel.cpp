@@ -18,6 +18,7 @@
 // ======================================================================
 
 #include "KeyboardModel.h"
+#include "ValueTypes/KeycapRef.h"
 #include "TreeItems/KeyboardTreeItem.h"
 #include "TreeItems/KeycapTreeItem.h"
 #include "TreeItems/AttributeTreeItem.h"
@@ -30,6 +31,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QStringList>
 #include <QtCore/QRegularExpression>
+#include <QtCore/QMimeData>
 
 KeyboardModel::KeyboardModel(QObject* pParent)
     : TreeItemModel(pParent)
@@ -213,4 +215,19 @@ QModelIndex KeyboardModel::getKeycapsIndex() const
         }
     }
     return QModelIndex();
+}
+
+QStringList KeyboardModel::mimeTypes() const
+{
+    return TreeItemModel::mimeTypes() << "application/prs.stenotutor.keycapid";
+}
+
+bool KeyboardModel::canDropMimeData(const QMimeData* pMimeData, Qt::DropAction action, int iRow, int iColumn, const QModelIndex& parent) const
+{
+    if (pMimeData->hasFormat("application/prs.stenotutor.keycapid") && parent.isValid())
+    {
+        const QVariant& value = parent.data(Qt::EditRole);
+        return value.isValid() && value.userType() == qMetaTypeId<KeycapRef>();
+    }
+    return TreeItemModel::canDropMimeData(pMimeData, action, iRow, iColumn, parent);
 }

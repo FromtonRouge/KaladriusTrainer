@@ -22,7 +22,7 @@
 #include "ValueEditors/UserEditorFactory.h"
 #include "TheoryModel.h"
 #include "KeyboardModel.h"
-#include "UndoableProxyModel.h"
+#include "UndoableKeyboardModel.h"
 #include <QtCore/QCommandLineParser>
 #include <iostream>
 
@@ -33,7 +33,7 @@ Application::Application(int& argc, char** argv)
     , _pTheoryModel(new TheoryModel(this))
     , _pUndoableTheoryModel(new UndoableProxyModel(this))
     , _pKeyboardModel(new KeyboardModel(this))
-    , _pUndoableKeyboardModel(new UndoableProxyModel(this))
+    , _pUndoableKeyboardModel(new UndoableKeyboardModel(this))
 {
     // Setup std::cout redirection
     _streamBufferCout.open(StreamSink(std::bind(&Application::toLogs, this, std::placeholders::_1, 0)));

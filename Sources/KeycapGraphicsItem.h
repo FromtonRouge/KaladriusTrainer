@@ -59,6 +59,7 @@ protected:
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant& value) override;
     virtual void paint(QPainter* pPainter, const QStyleOptionGraphicsItem* pOption, QWidget* pWidget) override;
     virtual void mousePressEvent(QGraphicsSceneMouseEvent* pEvent) override;
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* pEvent) override;
 
 private:
     void centerText();

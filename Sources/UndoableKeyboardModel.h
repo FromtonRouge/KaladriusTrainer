@@ -19,23 +19,12 @@
 
 #pragma once
 
-#include <QtCore/QIdentityProxyModel>
+#include "UndoableProxyModel.h"
 
-class QUndoStack;
-class UndoableProxyModel : public QIdentityProxyModel
+class UndoableKeyboardModel : public UndoableProxyModel
 {
-    Q_OBJECT
-
 public:
-    UndoableProxyModel(QObject* pParent = nullptr);
-    ~UndoableProxyModel();
+    UndoableKeyboardModel(QObject* pParent = nullptr);
 
-    void setUndoStack(QUndoStack* pUndoStack) {_pUndoStack = pUndoStack;}
-    QUndoStack* getUndoStack() const {return _pUndoStack;}
-    virtual bool setData(const QModelIndex& index, const QVariant& value, int iRole = Qt::EditRole) override;
-    virtual bool removeRows(int iRow, int iCount, const QModelIndex& parent) override;
-    QModelIndex insertBranch(int iRow, const QModelIndex& parent, const QByteArray& branch);
-
-private:
-    QUndoStack* _pUndoStack;
+    virtual bool dropMimeData(const QMimeData* pMimeData, Qt::DropAction action, int iRow, int iColumn, const QModelIndex& parent) override;
 };

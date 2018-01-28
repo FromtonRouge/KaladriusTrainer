@@ -31,6 +31,7 @@
 class KeyboardModel;
 class TheoryModel;
 class UndoableProxyModel;
+class UndoableKeyboardModel;
 class Application : public QApplication
 {
     Q_OBJECT
@@ -45,7 +46,7 @@ public:
     TheoryModel* getTheoryModel() const {return _pTheoryModel;}
     UndoableProxyModel* getUndoableTheoryModel() const {return _pUndoableTheoryModel;}
     KeyboardModel* getKeyboardModel() const {return _pKeyboardModel;}
-    UndoableProxyModel* getUndoableKeyboardModel() const {return _pUndoableKeyboardModel;}
+    UndoableKeyboardModel* getUndoableKeyboardModel() const {return _pUndoableKeyboardModel;}
 
 private:
     void toLogs(const QString& sText, int iWarningLevel = 0);
@@ -59,5 +60,5 @@ private:
     TheoryModel* _pTheoryModel;
     UndoableProxyModel* _pUndoableTheoryModel;
     KeyboardModel* _pKeyboardModel;
-    UndoableProxyModel* _pUndoableKeyboardModel;
+    UndoableKeyboardModel* _pUndoableKeyboardModel;
 };

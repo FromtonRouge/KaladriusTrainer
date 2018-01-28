@@ -42,6 +42,7 @@
 KeyboardTreeView::KeyboardTreeView(QWidget* pParent)
     : QTreeView(pParent)
 {
+    setAcceptDrops(true);
     setAlternatingRowColors(true);
     setSelectionMode(ExtendedSelection);
     setEditTriggers(AllEditTriggers);

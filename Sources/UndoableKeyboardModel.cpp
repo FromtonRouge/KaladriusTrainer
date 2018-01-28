@@ -17,25 +17,27 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "UndoableKeyboardModel.h"
+#include "ValueTypes/KeycapRef.h"
+#include <QtCore/QMimeData>
+#include <QtCore/QByteArray>
+#include <QtCore/QDataStream>
 
-#include <QtCore/QIdentityProxyModel>
-
-class QUndoStack;
-class UndoableProxyModel : public QIdentityProxyModel
+UndoableKeyboardModel::UndoableKeyboardModel(QObject* pParent)
+    : UndoableProxyModel(pParent)
 {
-    Q_OBJECT
 
-public:
-    UndoableProxyModel(QObject* pParent = nullptr);
-    ~UndoableProxyModel();
+}
 
-    void setUndoStack(QUndoStack* pUndoStack) {_pUndoStack = pUndoStack;}
-    QUndoStack* getUndoStack() const {return _pUndoStack;}
-    virtual bool setData(const QModelIndex& index, const QVariant& value, int iRole = Qt::EditRole) override;
-    virtual bool removeRows(int iRow, int iCount, const QModelIndex& parent) override;
-    QModelIndex insertBranch(int iRow, const QModelIndex& parent, const QByteArray& branch);
-
-private:
-    QUndoStack* _pUndoStack;
-};
+bool UndoableKeyboardModel::dropMimeData(const QMimeData* pMimeData, Qt::DropAction action, int iRow, int iColumn, const QModelIndex& parent)
+{
+    if (pMimeData->hasFormat("application/prs.stenotutor.keycapid") && parent.isValid())
+    {
+        QByteArray data = pMimeData->data("application/prs.stenotutor.keycapid");
+        QDataStream stream(&data, QIODevice::ReadOnly);
+        QString sKeycapId;
+        stream >> sKeycapId;
+        setData(parent, qVariantFromValue(KeycapRef(sKeycapId)));
+    }
+    return UndoableProxyModel::dropMimeData(pMimeData, action, iRow, iColumn, parent);
+}

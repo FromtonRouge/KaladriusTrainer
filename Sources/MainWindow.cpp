@@ -27,6 +27,7 @@
 #include "KeyboardModel.h"
 #include "TheoryModel.h"
 #include "UndoableProxyModel.h"
+#include "UndoableKeyboardModel.h"
 #include "DictionaryParser.h"
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMdiSubWindow>
