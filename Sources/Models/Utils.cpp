@@ -17,8 +17,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "Utils.h"
-#include "ItemDataRole.h"
+#include "Models/Utils.h"
+#include "Models/ItemDataRole.h"
 
 namespace Utils
 {

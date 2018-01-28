@@ -19,7 +19,7 @@
 
 #include "DictionariesWidget.h"
 #include "DictionariesModel.h"
-#include "TheoryModel.h"
+#include "Theories/TheoryModel.h"
 #include "ui_DictionariesWidget.h"
 #include <QtCore/QSortFilterProxyModel>
 #include <QtCore/QTimer>

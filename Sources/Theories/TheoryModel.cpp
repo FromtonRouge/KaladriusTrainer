@@ -18,7 +18,7 @@
 // ======================================================================
 
 #include "TheoryModel.h"
-#include "Utils.h"
+#include "Models/Utils.h"
 #include "TreeItems/TreeItem.h"
 #include "TreeItems/TheoryTreeItem.h"
 #include "TreeItems/ListTreeItem.h"

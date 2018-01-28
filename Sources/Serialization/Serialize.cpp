@@ -19,8 +19,8 @@
 
 #include "Serialize.h"
 #include "Serialization/Qt/Serialize.h"
-#include "KeyboardModel.h"
-#include "TheoryModel.h"
+#include "Keyboards/KeyboardModel.h"
+#include "Theories/TheoryModel.h"
 #include "TreeItems/KeyboardTreeItem.h"
 #include "TreeItems/KeycapTreeItem.h"
 #include "TreeItems/ListTreeItem.h"

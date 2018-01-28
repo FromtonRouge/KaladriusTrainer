@@ -17,12 +17,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "Application.h"
+#include "Main/Application.h"
 #include "ProjectConfig.h"
 #include "ValueEditors/UserEditorFactory.h"
-#include "TheoryModel.h"
-#include "KeyboardModel.h"
-#include "UndoableKeyboardModel.h"
+#include "Theories/TheoryModel.h"
+#include "Keyboards/KeyboardModel.h"
+#include "Keyboards/UndoableKeyboardModel.h"
 #include <QtCore/QCommandLineParser>
 #include <iostream>
 

@@ -20,10 +20,10 @@
 #include "UndoableKeyboardModel.h"
 #include "ValueTypes/KeycapRef.h"
 #include "KeyboardModel.h"
-#include "TheoryModel.h"
-#include "Application.h"
-#include "ItemDataRole.h"
-#include "Utils.h"
+#include "Theories/TheoryModel.h"
+#include "Main/Application.h"
+#include "Models/ItemDataRole.h"
+#include "Models/Utils.h"
 #include "TreeItems/TreeItem.h"
 #include <QtWidgets/QUndoStack>
 #include <QtCore/QMimeData>

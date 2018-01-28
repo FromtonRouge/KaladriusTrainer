@@ -18,13 +18,13 @@
 // ======================================================================
 
 #include "KeyboardTreeView.h"
-#include "Application.h"
-#include "UndoableProxyModel.h"
-#include "TheoryModel.h"
+#include "Main/Application.h"
+#include "Models/UndoableProxyModel.h"
+#include "Theories/TheoryModel.h"
 #include "KeyboardModel.h"
-#include "KeycapDelegate.h"
+#include "Keycaps/KeycapDelegate.h"
 #include "KeyboardGraphicsScene.h"
-#include "KeycapGraphicsItem.h"
+#include "Keycaps/KeycapGraphicsItem.h"
 #include "Serialization/Serialize.h"
 #include "TreeItems/TreeItem.h"
 #include "TreeItems/DictionaryTreeItem.h"

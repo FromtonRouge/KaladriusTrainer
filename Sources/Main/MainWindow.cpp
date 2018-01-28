@@ -19,16 +19,16 @@
 
 #include "ui_MainWindow.h"
 #include "Serialization/Serialize.h"
-#include "Application.h"
+#include "Main/Application.h"
 #include "MainWindow.h"
-#include "Iostream.h"
-#include "KeyboardGraphicsView.h"
-#include "KeyboardGraphicsScene.h"
-#include "KeyboardModel.h"
-#include "TheoryModel.h"
-#include "UndoableProxyModel.h"
-#include "UndoableKeyboardModel.h"
-#include "DictionaryParser.h"
+#include "Streams/Iostream.h"
+#include "Keyboards/KeyboardGraphicsView.h"
+#include "Keyboards/KeyboardGraphicsScene.h"
+#include "Keyboards/KeyboardModel.h"
+#include "Keyboards/UndoableKeyboardModel.h"
+#include "Theories/TheoryModel.h"
+#include "Models/UndoableProxyModel.h"
+#include "Dictionaries/DictionaryParser.h"
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMdiSubWindow>
 #include <QtWidgets/QMessageBox>

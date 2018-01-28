@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "TreeItemModel.h"
+#include "Models/TreeItemModel.h"
 #include <QtCore/QByteArray>
 
 class KeyboardTreeItem;

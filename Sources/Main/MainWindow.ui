@@ -535,18 +535,18 @@
   <customwidget>
    <class>DictionariesWidget</class>
    <extends>QWidget</extends>
-   <header>DictionariesWidget.h</header>
+   <header>Dictionaries/DictionariesWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>KeyboardTreeView</class>
    <extends>QTreeView</extends>
-   <header>KeyboardTreeView.h</header>
+   <header>Keyboards/KeyboardTreeView.h</header>
   </customwidget>
   <customwidget>
    <class>KeycapWidget</class>
    <extends>QWidget</extends>
-   <header>KeycapWidget.h</header>
+   <header>Keycaps/KeycapWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
@@ -557,7 +557,7 @@
   <customwidget>
    <class>TheoryTreeView</class>
    <extends>QTreeView</extends>
-   <header>TheoryTreeView.h</header>
+   <header>Theories/TheoryTreeView.h</header>
   </customwidget>
  </customwidgets>
  <resources>

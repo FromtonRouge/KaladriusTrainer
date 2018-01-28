@@ -17,27 +17,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "Main/Application.h"
+#include "MainWindow.h"
 
-#include "Dictionary.h"
-#include "TreeItemModel.h"
-
-class TheoryTreeItem;
-class TheoryModel : public TreeItemModel
+int main(int argc, char *argv[])
 {
-    Q_OBJECT
-
-signals:
-    void dictionariesLoaded();
-
-public:
-    TheoryModel(QObject* pParent = nullptr);
-    ~TheoryModel();
-    virtual QVariant data(const QModelIndex& index, int iRole) const override;
-    void setDictionaries(const Dictionaries& dictionaries);
-    TheoryTreeItem* getTheoryTreeItem() const;
-    void setTheoryTreeItem(TheoryTreeItem* pTheoryTreeItem);
-    QModelIndex getTheoryIndex() const;
-    QModelIndex getDictionariesIndex() const;
-    QString getTheoryName() const;
-};
+    Application a(argc, argv);
+    MainWindow w;
+    w.show();
+    return a.exec();
+}

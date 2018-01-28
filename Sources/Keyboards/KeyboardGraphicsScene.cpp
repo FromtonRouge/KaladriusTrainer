@@ -19,9 +19,9 @@
 
 #include "KeyboardGraphicsScene.h"
 #include "KeyboardModel.h"
-#include "UndoableProxyModel.h"
+#include "Models/UndoableProxyModel.h"
 #include "KeyboardTreeView.h"
-#include "KeycapGraphicsItem.h"
+#include "Keycaps/KeycapGraphicsItem.h"
 #include "TreeItems/TreeItem.h"
 #include <QtSvg/QSvgRenderer>
 #include <QtGui/QFont>

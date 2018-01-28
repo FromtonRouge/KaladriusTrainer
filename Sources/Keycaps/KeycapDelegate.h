@@ -17,23 +17,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "KeycapWidget.h"
-#include "KeyboardTreeView.h"
-#include "ui_KeycapWidget.h"
+#pragma once
 
-KeycapWidget::KeycapWidget(QWidget* pParent)
-    : QWidget(pParent)
-    , _pUi(new Ui::KeycapWidget)
+#include "ValueEditors/UserItemDelegate.h"
+
+class KeycapDelegate : public UserItemDelegate
 {
-    _pUi->setupUi(this);
-}
+public:
+    KeycapDelegate(QObject* pParent = nullptr);
+    ~KeycapDelegate();
 
-KeycapWidget::~KeycapWidget()
-{
-
-}
-
-void KeycapWidget::setKeyboardProperties(KeyboardTreeView* pTreeView)
-{
-    _pUi->treeView->setKeyboardProperties(pTreeView);
-}
+    virtual void setModelData(QWidget* pEditor, QAbstractItemModel* pModel, const QModelIndex& index) const override;
+    virtual void initStyleOption(QStyleOptionViewItem* pOption, const QModelIndex& index) const override;
+};

@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "StreamSink.h"
+#include "Streams/StreamSink.h"
 #include <QtWidgets/QApplication>
 #include <boost/iostreams/stream_buffer.hpp>
 

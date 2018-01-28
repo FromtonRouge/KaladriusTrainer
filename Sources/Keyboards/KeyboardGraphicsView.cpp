@@ -19,8 +19,8 @@
 
 #include "KeyboardGraphicsView.h"
 #include "KeyboardGraphicsScene.h"
-#include "KeycapGraphicsItem.h"
-#include "UndoableProxyModel.h"
+#include "Keycaps/KeycapGraphicsItem.h"
+#include "Models/UndoableProxyModel.h"
 #include "KeyboardModel.h"
 #include <QtWidgets/QMenu>
 #include <QtGui/QContextMenuEvent>

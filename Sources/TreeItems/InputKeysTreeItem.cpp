@@ -18,7 +18,7 @@
 // ======================================================================
 
 #include "InputKeysTreeItem.h"
-#include "ItemDataRole.h"
+#include "Models/ItemDataRole.h"
 #include <QtGui/QIcon>
 
 InputKeysTreeItem::InputKeysTreeItem(const QString& sInputKeys, uint uiBits)

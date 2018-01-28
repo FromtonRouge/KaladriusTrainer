@@ -19,7 +19,7 @@
 
 #include "KeycapDelegate.h"
 #include "ValueTypes/KeycapRef.h"
-#include "DiffModel.h"
+#include "Models/DiffModel.h"
 #include <QtGui/QFont>
 #include <QtCore/QEvent>
 #include <QtCore/QMetaProperty>

@@ -24,7 +24,7 @@
 #include "TreeItems/AttributeTreeItem.h"
 #include "TreeItems/AttributeValueTreeItem.h"
 #include "TreeItems/ListTreeItem.h"
-#include "Iostream.h"
+#include "Streams/Iostream.h"
 #include <QtXml/QDomDocument>
 #include <QtGui/QFont>
 #include <QtCore/QRectF>

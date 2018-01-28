@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "Dictionary.h"
+#include "Dictionaries/Dictionary.h"
 #include <QtWidgets/QMainWindow>
 #include <QtCore/QScopedPointer>
 

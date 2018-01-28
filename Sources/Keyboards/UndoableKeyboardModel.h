@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "UndoableProxyModel.h"
+#include "Models/UndoableProxyModel.h"
 
 class UndoableKeyboardModel : public UndoableProxyModel
 {
