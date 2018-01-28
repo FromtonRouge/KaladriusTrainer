@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "ValueTypes.h"
+#include "ValueTypes/KeycapRef.h"
 #include <QtCore/QDataStream>
 #include <QtCore/QByteArray>
 #include <QtCore/QVariant>
@@ -95,10 +95,10 @@ namespace boost
 
         template<class Archive> void save(Archive& ar, const QVariant& obj,  const unsigned int)
         {
-            const int iUserType = obj.userType();
-            ar << make_nvp("user_type", iUserType);
+            const int iType = obj.type();
+            ar << make_nvp("type", iType);
 
-            if (iUserType < QVariant::UserType)
+            if (iType != QVariant::UserType)
             {
                 // For standard qt types we just serialize them in a QByteArray
                 QByteArray data;
@@ -106,36 +106,48 @@ namespace boost
                 dataStream << obj;
                 ar << make_nvp("variant", data);
             }
-            else if (iUserType == qMetaTypeId<KeycapRef>())
-            {
-                ar << make_nvp("variant", qvariant_cast<KeycapRef>(obj));
-            }
             else
             {
-                Q_ASSERT_X(false, "Qt/Serialize.h", "Can't save: Unknown QVariant user type");
+                const QString sTypeName(QMetaType::typeName(obj.userType()));
+                ar << make_nvp("user_type_name", sTypeName);
+
+                if (sTypeName == QMetaType::typeName(qMetaTypeId<KeycapRef>()))
+                {
+                    ar << make_nvp("variant", qvariant_cast<KeycapRef>(obj));
+                }
+                else
+                {
+                    Q_ASSERT_X(false, "Qt/Serialize.h", "Can't save: Unknown QVariant user type");
+                }
             }
         }
 
         template<class Archive> void load(Archive& ar, QVariant& obj,  const unsigned int)
         {
-            int iUserType = 0;
-            ar >> make_nvp("user_type", iUserType);
-            if (iUserType < QVariant::UserType)
+            int iType = 0;
+            ar >> make_nvp("type", iType);
+            if (iType != QVariant::UserType)
             {
                 QByteArray data;
                 ar >> make_nvp("variant", data);
                 QDataStream dataStream(data);
                 dataStream >> obj;
             }
-            else if (iUserType == qMetaTypeId<KeycapRef>())
-            {
-                KeycapRef data;
-                ar >> make_nvp("variant", data);
-                obj = qVariantFromValue(data);
-            }
             else
             {
-                Q_ASSERT_X(false, "Qt/Serialize.h", "Can't load: Unknown QVariant user type");
+                QString sTypeName;
+                ar >> make_nvp("user_type_name", sTypeName);
+
+                if (sTypeName == QMetaType::typeName(qMetaTypeId<KeycapRef>()))
+                {
+                    KeycapRef data;
+                    ar >> make_nvp("variant", data);
+                    obj = qVariantFromValue(data);
+                }
+                else
+                {
+                    Q_ASSERT_X(false, "Qt/Serialize.h", "Can't load: Unknown QVariant user type");
+                }
             }
         }
     }

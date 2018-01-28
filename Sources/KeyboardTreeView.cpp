@@ -32,7 +32,7 @@
 #include "TreeItems/LinkedDictionaryTreeItem.h"
 #include "TreeItems/ListTreeItem.h"
 #include "TreeItems/ArrayTreeItem.h"
-#include "Valuetypes.h"
+#include "ValueTypes/KeycapRef.h"
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QMenu>

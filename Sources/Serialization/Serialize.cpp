@@ -52,7 +52,6 @@
 #include <iostream>
 #include <string>
 
-// TreeItem
 BOOST_CLASS_VERSION(TreeItem, 0)
 BOOST_CLASS_EXPORT(TreeItem) // For serializing from a base pointer
 namespace boost
@@ -66,7 +65,6 @@ namespace boost
     }
 }
 
-// EmptyTreeItem
 BOOST_CLASS_VERSION(EmptyTreeItem, 0)
 BOOST_CLASS_EXPORT(EmptyTreeItem) // For serializing from a base pointer
 namespace boost
@@ -80,7 +78,6 @@ namespace boost
     }
 }
 
-// ArrayTreeItem
 BOOST_CLASS_VERSION(ArrayTreeItem, 0)
 BOOST_CLASS_EXPORT(ArrayTreeItem) // For serializing from a base pointer
 namespace boost
@@ -143,7 +140,6 @@ namespace boost
     }
 }
 
-// KeycapTreeItem
 BOOST_CLASS_VERSION(KeycapTreeItem, 0)
 BOOST_CLASS_EXPORT(KeycapTreeItem) // For serializing from a base pointer
 namespace boost
@@ -235,7 +231,6 @@ namespace boost
     }
 }
 
-// ListTreeItem
 BOOST_CLASS_VERSION(ListTreeItem, 0)
 BOOST_CLASS_EXPORT(ListTreeItem) // For serializing from a base pointer
 namespace boost
@@ -288,7 +283,6 @@ namespace boost
     }
 }
 
-// LinkedDictionaryTreeItem
 BOOST_CLASS_VERSION(LinkedDictionaryTreeItem, 0)
 BOOST_CLASS_EXPORT(LinkedDictionaryTreeItem) // For serializing from a base pointer
 namespace boost
@@ -322,7 +316,6 @@ namespace boost
     }
 }
 
-// LinkedTheoryTreeItem
 BOOST_CLASS_VERSION(LinkedTheoryTreeItem, 0)
 BOOST_CLASS_EXPORT(LinkedTheoryTreeItem) // For serializing from a base pointer
 namespace boost
@@ -356,7 +349,6 @@ namespace boost
     }
 }
 
-// KeyboardTreeItem
 BOOST_CLASS_VERSION(KeyboardTreeItem, 0)
 namespace boost
 {
@@ -372,17 +364,22 @@ namespace boost
         {
             ListTreeItem* pKeycapsTreeItem = obj.getKeycaps();
             ar << make_nvp("keycaps", *pKeycapsTreeItem);
+
+            ListTreeItem* pLinkedTheories = obj.getLinkedTheories();
+            ar << make_nvp("linked_theories", *pLinkedTheories);
         }
 
         template<class Archive> void load(Archive& ar, KeyboardTreeItem& obj,  const unsigned int)
         {
             ListTreeItem* pKeycapsTreeItem = obj.getKeycaps();
             ar >> make_nvp("keycaps", *pKeycapsTreeItem);
+
+            ListTreeItem* pLinkedTheories = obj.getLinkedTheories();
+            ar >> make_nvp("linked_theories", *pLinkedTheories);
         }
     }
 }
 
-// OutputTextTreeItem
 BOOST_CLASS_VERSION(OutputTextTreeItem, 0)
 BOOST_CLASS_EXPORT(OutputTextTreeItem) // For serializing from a base pointer
 namespace boost
@@ -410,7 +407,6 @@ namespace boost
     }
 }
 
-// InputKeysTreeItem
 BOOST_CLASS_VERSION(InputKeysTreeItem, 0)
 BOOST_CLASS_EXPORT(InputKeysTreeItem) // For serializing from a base pointer
 namespace boost
@@ -445,7 +441,6 @@ namespace boost
     }
 }
 
-// DictionaryTreeItem
 BOOST_CLASS_VERSION(DictionaryTreeItem, 0)
 BOOST_CLASS_EXPORT(DictionaryTreeItem) // For serializing from a base pointer
 namespace boost
@@ -485,7 +480,6 @@ namespace boost
     }
 }
 
-// TheoryTreeItem
 BOOST_CLASS_VERSION(TheoryTreeItem, 0)
 namespace boost
 {

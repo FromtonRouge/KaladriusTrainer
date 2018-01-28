@@ -19,14 +19,23 @@
 
 #pragma once
 
-#include <QtWidgets/QItemEditorFactory>
+#include "UserEditor.h"
+#include "ValueTypes/KeycapRef.h" // for convenience
 
-class UserEditorFactory : public QItemEditorFactory
+class QComboBox;
+class QAbstractItemModel;
+class KeycapRefEditor : public UserEditor
 {
+    Q_OBJECT
+
 public:
-    UserEditorFactory();
-    ~UserEditorFactory();
+    KeycapRefEditor(QAbstractItemModel* pKeycapsRefModel, QWidget* pParent = nullptr);
 
-    virtual QWidget* createEditor(int iUserType, QWidget* pParent) const override;
+    virtual void setValue(const QVariant& value) override;
+
+private slots:
+    void onCurrentIndexChanged(const QString& sKeycapId);
+
+private:
+    QComboBox* _pComboBox;
 };
-

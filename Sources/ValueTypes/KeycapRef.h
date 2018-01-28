@@ -24,6 +24,7 @@
 
 struct KeycapRef
 {
+    KeycapRef(const QString& sKeycapId = QString()) : keycapId(sKeycapId) {}
     QString keycapId; ///< eg: g24664.
 };
 

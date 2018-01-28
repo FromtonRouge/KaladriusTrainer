@@ -18,6 +18,7 @@
 // ======================================================================
 
 #include "KeycapDelegate.h"
+#include "ValueTypes/KeycapRef.h"
 #include "DiffModel.h"
 #include <QtGui/QFont>
 #include <QtCore/QEvent>
@@ -65,6 +66,26 @@ void KeycapDelegate::initStyleOption(QStyleOptionViewItem* pOption, const QModel
             const QVariant& value = index.data(Qt::EditRole);
             switch (value.type())
             {
+            case QVariant::UserType:
+                {
+                    const int iUserType = value.userType();
+                    if (iUserType == qMetaTypeId<KeycapRef>())
+                    {
+                        const auto& keycapRef = qvariant_cast<KeycapRef>(value);
+                        pOption->text = keycapRef.keycapId;
+                        pOption->features.setFlag(QStyleOptionViewItem::HasDecoration);
+                        if (pOption->text.isEmpty())
+                        {
+                            pOption->icon = QIcon(":/Icons/question.png");
+                            pOption->text = QObject::tr("<no keycap>");
+                        }
+                        else
+                        {
+                            pOption->icon = QIcon(":/Icons/keyboard.png");
+                        }
+                    }
+                    break;
+                }
             case QVariant::Font:
                 {
                     const QFont& font = value.value<QFont>();

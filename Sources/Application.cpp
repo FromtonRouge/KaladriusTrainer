@@ -19,7 +19,7 @@
 
 #include "Application.h"
 #include "ProjectConfig.h"
-#include "UserEditorFactory.h"
+#include "ValueEditors/UserEditorFactory.h"
 #include "TheoryModel.h"
 #include "KeyboardModel.h"
 #include "UndoableProxyModel.h"

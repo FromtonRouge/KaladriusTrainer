@@ -17,4 +17,20 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "ValueTypes.h"
+#pragma once
+
+#include <QtWidgets/QItemEditorFactory>
+#include <QtCore/QScopedPointer>
+
+class QStandardItemModel;
+class UserEditorFactory : public QItemEditorFactory
+{
+public:
+    UserEditorFactory();
+    ~UserEditorFactory();
+
+    virtual QWidget* createEditor(int iUserType, QWidget* pParent) const override;
+
+private:
+    QScopedPointer<QStandardItemModel> _pKeycapsRefModel;
+};

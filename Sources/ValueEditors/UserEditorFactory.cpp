@@ -20,13 +20,20 @@
 #include "UserEditorFactory.h"
 #include "ColorEditor.h"
 #include "FontEditor.h"
+#include "Application.h"
+#include "KeycapRefEditor.h"
+#include "KeyboardModel.h"
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QDoubleSpinBox>
-#include <QtWidgets/QApplication>
+#include <QtWidgets/QStandardItemEditorCreator>
+#include <QtGui/QStandardItemModel>
 #include <cfloat>
 
 UserEditorFactory::UserEditorFactory()
+    : _pKeycapsRefModel(new QStandardItemModel())
 {
+    registerEditor(QVariant::Color, new QStandardItemEditorCreator<ColorEditor>());
+    registerEditor(QVariant::Font, new QStandardItemEditorCreator<FontEditor>());
 }
 
 UserEditorFactory::~UserEditorFactory()
@@ -38,16 +45,6 @@ QWidget* UserEditorFactory::createEditor(int iUserType, QWidget* pParent) const
 {
     switch (iUserType)
     {
-    case QVariant::Font:
-        {
-            auto pFontEditor = new FontEditor(pParent);
-            return pFontEditor;
-        }
-    case QVariant::Color:
-        {
-            auto pColorEditor = new ColorEditor(pParent);
-            return pColorEditor;
-        }
     case QVariant::String:
         {
             auto pLineEdit = new QLineEdit(pParent);
@@ -67,6 +64,37 @@ QWidget* UserEditorFactory::createEditor(int iUserType, QWidget* pParent) const
                 QApplication::sendEvent(pDoubleSpinBox, &userEvent);
             });
             return pDoubleSpinBox;
+        }
+    default:
+        {
+            if (iUserType == qMetaTypeId<KeycapRef>())
+            {
+                auto pKeyboardModel = qApp->getKeyboardModel();
+                if (pKeyboardModel)
+                {
+                    const QModelIndex& indexKeycaps = pKeyboardModel->getKeycapsIndex();
+                    if (indexKeycaps.isValid())
+                    {
+                        if (!_pKeycapsRefModel->hasChildren())
+                        {
+                            _pKeycapsRefModel->appendRow(new QStandardItem(QObject::tr("<no keycap>")));
+                            const int iRows = pKeyboardModel->rowCount(indexKeycaps);
+                            for (int iRow = 0; iRow < iRows; ++iRow)
+                            {
+                                const QModelIndex& indexKeycap = pKeyboardModel->index(iRow, 0, indexKeycaps);
+                                const QString& sKeycapId = indexKeycap.data(Qt::DisplayRole).toString();
+                                _pKeycapsRefModel->appendRow(new QStandardItem(sKeycapId));
+                            }
+                        }
+
+                        return new KeycapRefEditor(_pKeycapsRefModel.data(), pParent);
+                    }
+                }
+            }
+            else
+            {
+                return QItemEditorFactory::createEditor(iUserType, pParent);
+            }
         }
     }
     return nullptr;

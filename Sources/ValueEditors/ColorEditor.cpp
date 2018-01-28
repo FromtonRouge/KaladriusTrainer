@@ -24,10 +24,10 @@
 
 ColorEditor::ColorEditor(QWidget* pParent)
     : UserEditor(pParent)
+    , _pPushButton(new QPushButton(this))
 {
     auto pLayout = new QHBoxLayout();
     pLayout->setContentsMargins(0, 0, 0, 0);
-    _pPushButton = new QPushButton(this);
     _pPushButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     connect(_pPushButton, SIGNAL(clicked(bool)), this, SLOT(onPushButton()));
     pLayout->addWidget(_pPushButton);
