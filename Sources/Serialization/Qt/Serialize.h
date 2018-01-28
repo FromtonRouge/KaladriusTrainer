@@ -30,6 +30,7 @@
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/export.hpp>
 #include <boost/serialization/version.hpp>
+#include <boost/serialization/split_free.hpp>
 
 BOOST_CLASS_VERSION(QByteArray, 0)
 namespace boost
@@ -71,7 +72,8 @@ namespace boost
 
         template<class Archive> void save(Archive& ar, const QString& obj,  const unsigned int)
         {
-            ar << make_nvp("string", obj.toStdString());
+            const std::string& sString = obj.toStdString();
+            ar << make_nvp("string", sString);
         }
 
         template<class Archive> void load(Archive& ar, QString& obj,  const unsigned int)
@@ -113,7 +115,8 @@ namespace boost
 
                 if (sTypeName == QMetaType::typeName(qMetaTypeId<KeycapRef>()))
                 {
-                    ar << make_nvp("variant", qvariant_cast<KeycapRef>(obj));
+                    const auto& keycapRef = qvariant_cast<KeycapRef>(obj);
+                    ar << make_nvp("variant", keycapRef);
                 }
                 else
                 {
