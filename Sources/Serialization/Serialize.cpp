@@ -424,8 +424,8 @@ namespace boost
             std::string sText = obj.text().toStdString();
             ar << make_nvp("keys", sText);
 
-            uint uiBits = obj.getKeyBits();
-            ar << make_nvp("bits", uiBits);
+            const auto& bits = obj.data(InputKeyBitsRole);
+            ar << make_nvp("bits", bits);
         }
 
         template<class Archive> void load(Archive& ar, InputKeysTreeItem& obj,  const unsigned int)
@@ -434,9 +434,9 @@ namespace boost
             ar >> make_nvp("keys", sText);
             obj.setText(QString::fromStdString(sText));
 
-            uint uiBits = 0;
-            ar >> make_nvp("bits", uiBits);
-            obj.setKeyBits(uiBits);
+            QVariant bits;
+            ar >> make_nvp("bits", bits);
+            obj.setData(bits, InputKeyBitsRole);
         }
     }
 }

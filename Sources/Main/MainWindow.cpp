@@ -86,10 +86,16 @@ MainWindow::MainWindow(QWidget *parent)
     }
 
     auto pTheoryModel = qApp->getTheoryModel();
+    auto pKeyboardModel = qApp->getKeyboardModel();
+    connect(pKeyboardModel, SIGNAL(linkedKeycapsStates(QVector<QPair<QString, bool>>)), _pKeyboardGraphicsScene, SLOT(setKeycapsStates(QVector<QPair<QString, bool>>)));
     _pUi->widgetDictionaries1->setTheoryModel(pTheoryModel);
     _pUi->widgetDictionaries2->setTheoryModel(pTheoryModel);
     _pUi->widgetDictionaries3->setTheoryModel(pTheoryModel);
     _pUi->widgetDictionaries4->setTheoryModel(pTheoryModel);
+    connect(_pUi->widgetDictionaries1, SIGNAL(dictionaryEntrySelected(QString, QBitArray)), pKeyboardModel, SLOT(selectLinkedKeys(QString, QBitArray)));
+    connect(_pUi->widgetDictionaries2, SIGNAL(dictionaryEntrySelected(QString, QBitArray)), pKeyboardModel, SLOT(selectLinkedKeys(QString, QBitArray)));
+    connect(_pUi->widgetDictionaries3, SIGNAL(dictionaryEntrySelected(QString, QBitArray)), pKeyboardModel, SLOT(selectLinkedKeys(QString, QBitArray)));
+    connect(_pUi->widgetDictionaries4, SIGNAL(dictionaryEntrySelected(QString, QBitArray)), pKeyboardModel, SLOT(selectLinkedKeys(QString, QBitArray)));
 
     _pUi->treeViewKeyboardProperties->setModel(qApp->getUndoableKeyboardModel());
     _pKeyboardGraphicsScene->setKeyboardProperties(_pUi->treeViewKeyboardProperties);

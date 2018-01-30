@@ -80,7 +80,13 @@ void TheoryModel::setDictionaries(const Dictionaries& dictionaries)
             if (entry.bits.any())
             {
                 auto pTextItem = new OutputTextTreeItem(entry.keycodesAsUserString);
-                auto pInputKeysItem = new InputKeysTreeItem(dictionary.getKeysLabelsInReadingOrder(entry), uint(entry.bits.to_ulong()));
+                const int iSize = int(entry.bits.size());
+                QBitArray bits(iSize);
+                for (int i = 0; i < iSize; ++i)
+                {
+                    bits[i] = entry.bits.test(size_t(i));
+                }
+                auto pInputKeysItem = new InputKeysTreeItem(dictionary.getKeysLabelsInReadingOrder(entry), bits);
                 pEntriesItem->appendRow({pTextItem, pInputKeysItem});
             }
         }

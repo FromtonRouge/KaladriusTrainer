@@ -66,6 +66,20 @@ KeycapGraphicsItem*KeyboardGraphicsScene::getKeycapItem(const QModelIndex& index
     return getKeycapItem(indexKeycap.data().toString());
 }
 
+void KeyboardGraphicsScene::setKeycapsStates(const QVector<QPair<QString, bool> >& keycapsStates)
+{
+    for (const auto& keycapState : keycapsStates)
+    {
+        const QString& sKeycapId = keycapState.first;
+        bool bPressed = keycapState.second;
+        auto pKeycapItem = getKeycapItem(sKeycapId);
+        if (pKeycapItem)
+        {
+            pKeycapItem->setSelected(bPressed);
+        }
+    }
+}
+
 void KeyboardGraphicsScene::onModelReset()
 {
    _dictKeycaps.clear();

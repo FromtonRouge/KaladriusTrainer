@@ -36,6 +36,7 @@
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QMenu>
+#include <QtWidgets/QUndoStack>
 #include <QtGui/QContextMenuEvent>
 #include <QtCore/QItemSelectionModel>
 
@@ -60,6 +61,10 @@ KeyboardTreeView::KeyboardTreeView(QWidget* pParent)
     connect(_pActionRemove, SIGNAL(triggered()), this, SLOT(onRemove()));
     addAction(_pActionRemove);
     _pActionRemove->setDisabled(true);
+
+    _pActionRelabelLinkedKeys = new QAction(QIcon(":/Icons/keyboard.png"), tr("Relabel Linked Keys"), this);
+    connect(_pActionRelabelLinkedKeys, SIGNAL(triggered()), this, SLOT(onRelabelLinkedKeys()));
+    addAction(_pActionRelabelLinkedKeys);
 }
 
 KeyboardTreeView::~KeyboardTreeView()
@@ -201,6 +206,23 @@ void KeyboardTreeView::onRemove()
         const QModelIndex& currentName = current.sibling(current.row(), 0);
         auto pUndoableProxyModel = qobject_cast<UndoableProxyModel*>(model());
         pUndoableProxyModel->removeRow(currentName.row(), currentName.parent());
+    }
+}
+
+void KeyboardTreeView::onRelabelLinkedKeys()
+{
+    const QModelIndex& current = currentIndex();
+    if (current.isValid())
+    {
+        auto pUndoableProxyModel = qobject_cast<UndoableProxyModel*>(model());
+        const int iLinkedKeys = pUndoableProxyModel->rowCount(current);
+        pUndoableProxyModel->getUndoStack()->beginMacro(tr("%1 keycaps relinked").arg(iLinkedKeys));
+        for (int iLinkedKey = 0; iLinkedKey < iLinkedKeys; ++iLinkedKey)
+        {
+            const QModelIndex& indexKeycapRef = current.child(iLinkedKey, 1);
+            pUndoableProxyModel->setData(indexKeycapRef, indexKeycapRef.data(Qt::EditRole));
+        }
+        pUndoableProxyModel->getUndoStack()->endMacro();
     }
 }
 

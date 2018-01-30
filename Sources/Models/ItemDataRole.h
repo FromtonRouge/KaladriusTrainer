@@ -24,6 +24,7 @@
 enum ItemDataRole
 {
     TreeItemTypeRole = Qt::UserRole + 1, ///< int. TreeItem::Type.
+    TreeItemIndexRole, ///< QModelIndex.
     BranchRole, ///< QByteArray.
     RotationAngleRole, ///< qreal.
     RotationOriginRole, ///< qreal.

@@ -25,6 +25,7 @@
 #include "TreeItems/AttributeValueTreeItem.h"
 #include "TreeItems/ListTreeItem.h"
 #include "Streams/Iostream.h"
+#include "Models/Utils.h"
 #include <QtXml/QDomDocument>
 #include <QtGui/QFont>
 #include <QtCore/QRectF>
@@ -32,6 +33,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QRegularExpression>
 #include <QtCore/QMimeData>
+#include <QtCore/QDebug>
 
 KeyboardModel::KeyboardModel(QObject* pParent)
     : TreeItemModel(pParent)
@@ -230,4 +232,40 @@ bool KeyboardModel::canDropMimeData(const QMimeData* pMimeData, Qt::DropAction a
         return value.isValid() && value.userType() == qMetaTypeId<KeycapRef>();
     }
     return TreeItemModel::canDropMimeData(pMimeData, action, iRow, iColumn, parent);
+}
+
+void KeyboardModel::selectLinkedKeys(const QString& sDictionaryName, const QBitArray& inputsKeysBits)
+{
+    const QModelIndex& indexLinkedTheories = getKeyboardTreeItem()->getLinkedTheories()->index();
+    if (indexLinkedTheories.isValid() && hasChildren(indexLinkedTheories))
+    {
+        // Find the first index with the name sDictionaryName
+        const auto& matches = match(indexLinkedTheories.child(0, 0), Qt::DisplayRole, sDictionaryName, 1, Qt::MatchExactly|Qt::MatchRecursive);
+        if (!matches.isEmpty())
+        {
+            const QModelIndex& indexLinkedDictionary = matches.front();
+            const QModelIndex& indexLinkedKeys = Utils::index(this, "Linked Keys", 0, indexLinkedDictionary);
+            if (indexLinkedKeys.isValid())
+            {
+                const int iLinkedKeycaps = rowCount(indexLinkedKeys);
+                if (iLinkedKeycaps == inputsKeysBits.size())
+                {
+                    QVector<QPair<QString, bool>> keycapsStates(inputsKeysBits.size());
+                    for (int iLinkedKeycap = 0; iLinkedKeycap < iLinkedKeycaps; ++iLinkedKeycap)
+                    {
+                        const QModelIndex& indexKeycapId = indexLinkedKeys.child(iLinkedKeycap, 1);
+                        const QVariant& variant = indexKeycapId.data(Qt::EditRole);
+                        if (variant.isValid())
+                        {
+                            const auto& keycapRef = qvariant_cast<KeycapRef>(variant);
+                            keycapsStates[iLinkedKeycap].first = keycapRef.keycapId;
+                            keycapsStates[iLinkedKeycap].second = inputsKeysBits.testBit(iLinkedKeycap);
+                        }
+                    }
+
+                    emit linkedKeycapsStates(keycapsStates);
+                }
+            }
+        }
+    }
 }

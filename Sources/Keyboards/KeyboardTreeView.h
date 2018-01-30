@@ -39,6 +39,7 @@ private slots:
     void onRowsInserted(const QModelIndex& parent, int iFirst, int iLast);
     void onLinkTheory();
     void onRemove();
+    void onRelabelLinkedKeys();
 
 protected:
     virtual void currentChanged(const QModelIndex& current, const QModelIndex& previous) override;
@@ -47,4 +48,5 @@ protected:
 private:
     QAction* _pActionLinkTheory;
     QAction* _pActionRemove;
+    QAction* _pActionRelabelLinkedKeys;
 };

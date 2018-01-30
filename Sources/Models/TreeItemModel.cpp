@@ -55,6 +55,11 @@ QVariant TreeItemModel::data(const QModelIndex& index, int iRole) const
             result = itemFromIndex(index)->type();
             break;
         }
+    case TreeItemIndexRole:
+        {
+            result = index;
+            break;
+        }
     case BranchRole:
         {
             QList<QStandardItem*> items;

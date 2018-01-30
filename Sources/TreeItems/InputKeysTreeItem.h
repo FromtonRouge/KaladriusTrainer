@@ -20,13 +20,14 @@
 #pragma once
 
 #include "TreeItems/TreeItem.h"
+#include <QtCore/QBitArray>
 
 class InputKeysTreeItem : public TreeItem
 {
 public:
-    InputKeysTreeItem(const QString& sInputKeys = QString(), uint uiBits = 0);
+    InputKeysTreeItem(const QString& sInputKeys = QString(), const QBitArray& bits = QBitArray());
     ~InputKeysTreeItem();
     virtual int type() const override {return InputKeys;}
-    void setKeyBits(uint uiBits);
-    uint getKeyBits() const;
+    void setKeyBits(const QBitArray& bits);
+    QBitArray getKeyBits() const;
 };

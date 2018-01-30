@@ -21,6 +21,8 @@
 
 #include <QtWidgets/QGraphicsScene>
 #include <QtCore/QHash>
+#include <QtCore/QVector>
+#include <QtCore/QPair>
 
 class KeycapGraphicsItem;
 class UndoableProxyModel;
@@ -43,6 +45,9 @@ public:
     void setKeyboardProperties(KeyboardTreeView* pTreeView);
     KeycapGraphicsItem* getKeycapItem(const QString& sKeycapId) const;
     KeycapGraphicsItem* getKeycapItem(const QModelIndex& indexKeycap) const;
+
+public slots:
+    void setKeycapsStates(const QVector<QPair<QString, bool>>& keycapsStates);
 
 private slots:
     void onModelReset();

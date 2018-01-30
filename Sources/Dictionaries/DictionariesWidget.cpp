@@ -25,6 +25,7 @@
 #include <QtCore/QTimer>
 #include <QtCore/QSettings>
 #include <QtCore/QList>
+#include <QtCore/QBitArray>
 
 /**
  * Accept dictionary selected by the combo box.
@@ -104,6 +105,7 @@ DictionariesWidget::DictionariesWidget(QWidget* pParent)
     _pSortFilterAlphabeticalOrder->setSourceModel(_pSortFilterSearch);
     _pUi->treeView->setModel(_pSortFilterAlphabeticalOrder);
     _pUi->treeView->setSortingEnabled(true);
+    connect(_pUi->treeView->selectionModel(), SIGNAL(currentChanged(QModelIndex, QModelIndex)), this, SLOT(onCurrentChanged(QModelIndex, QModelIndex)));
     connect(_pTimer, SIGNAL(timeout()), this, SLOT(applyFilter()));
     _pTimer->setSingleShot(true);
     _pTimer->setInterval(500);
@@ -245,6 +247,32 @@ void DictionariesWidget::onDictionariesLoaded()
     if (iSelectedDictionary == 0)
     {
         restoreExpandedIndexes();
+    }
+}
+
+void DictionariesWidget::onCurrentChanged(const QModelIndex& current, const QModelIndex& previous)
+{
+    if (current.isValid())
+    {
+        // Get both the name and value indexes
+        const QModelIndex& indexName = current.sibling(current.row(), 0);
+        const QModelIndex& indexValue = current.sibling(current.row(), 1);
+        const QVariant& variant = indexValue.data(InputKeyBitsRole);
+        if (variant.isValid())
+        {
+            const QBitArray& bits = variant.toBitArray();
+            const QModelIndex& sourceIndexName = indexName.data(TreeItemIndexRole).toModelIndex();
+            if (sourceIndexName.isValid())
+            {
+                // Get the dictionary name for that entry
+                const QString& sDictionaryName = sourceIndexName.parent().parent().data().toString();
+                if (!sDictionaryName.isEmpty())
+                {
+                    // Send signal to the keyboard model
+                    emit dictionaryEntrySelected(sDictionaryName, bits);
+                }
+            }
+        }
     }
 }
 

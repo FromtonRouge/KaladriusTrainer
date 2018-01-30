@@ -23,5 +23,7 @@
         <file>Icons/books-brown.png</file>
         <file>Icons/chain.png</file>
         <file>Icons/cross.png</file>
+        <file>Keyboards/ErgoDox.kbd</file>
+        <file>Theories/Jackdaw.theory</file>
     </qresource>
 </RCC>

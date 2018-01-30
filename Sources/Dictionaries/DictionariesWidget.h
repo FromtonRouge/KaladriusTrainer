@@ -21,6 +21,7 @@
 
 #include <QtWidgets/QWidget>
 #include <QtCore/QScopedPointer>
+#include <QtCore/QBitArray>
 
 namespace Ui
 {
@@ -35,6 +36,9 @@ class DictionariesWidget : public QWidget
 {
     Q_OBJECT
 
+signals:
+    void dictionaryEntrySelected(const QString& sDictionaryName, const QBitArray& inputsKeysBits);
+
 public:
     DictionariesWidget(QWidget* pParent = nullptr);
     ~DictionariesWidget();
@@ -46,6 +50,7 @@ protected slots:
     void on_comboBox_currentIndexChanged(int iCurrent);
     void applyFilter();
     void onDictionariesLoaded();
+    void onCurrentChanged(const QModelIndex& current, const QModelIndex& previous);
 
 private:
     void saveExpandedIndexes();
