@@ -46,6 +46,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QSet>
 #include <QtCore/QFile>
+#include <QtCore/QTemporaryFile>
 #include <QtCore/QMultiMap>
 #include <QtCore/QTextStream>
 #include <QtCore/QTimer>
@@ -59,6 +60,7 @@ MainWindow::MainWindow(QWidget *parent)
     , _pUndoStack(new QUndoStack(this))
 {
     _pUi->setupUi(this);
+    setDockOptions(dockOptions() | DockOption::GroupedDragging);
 
     connect(qApp, SIGNAL(logs(QString, int)), this, SLOT(logs(QString,int)));
 
@@ -83,6 +85,10 @@ MainWindow::MainWindow(QWidget *parent)
     if (!sLastTheory.isEmpty() && QFile::exists(sLastTheory))
     {
         loadTheory(sLastTheory);
+    }
+    else
+    {
+        _pUi->actionLoad_Default_Theory->trigger();
     }
 
     auto pTheoryModel = qApp->getTheoryModel();
@@ -125,9 +131,7 @@ MainWindow::MainWindow(QWidget *parent)
     }
     else
     {
-        // Load last svg file if any
-        const QString& sLastKeyboardSvg = settings.value("lastKeyboardSvg", ":/Svgs/ergodox.svg").toString();
-        qApp->getKeyboardModel()->loadKeyboardSvgFile(sLastKeyboardSvg);
+        _pUi->actionLoad_Default_Keyboard->trigger();
     }
 
     _pUi->actionKeyboard_Window->trigger();
@@ -233,6 +237,16 @@ void MainWindow::on_actionLoad_Theory_triggered()
     if (!sTheoryFile.isEmpty())
     {
         loadTheory(sTheoryFile);
+    }
+}
+
+void MainWindow::on_actionLoad_Default_Theory_triggered()
+{
+    QFile resourceFile(":/Theories/Jackdaw.theory");
+    auto pTemporaryFile = QTemporaryFile::createNativeFile(resourceFile);
+    if (pTemporaryFile)
+    {
+        loadTheory(pTemporaryFile->fileName());
     }
 }
 
@@ -410,6 +424,16 @@ void MainWindow::on_actionLoad_Keyboard_triggered()
     if (!sKeyboardFileName.isEmpty())
     {
         loadKeyboard(sKeyboardFileName);
+    }
+}
+
+void MainWindow::on_actionLoad_Default_Keyboard_triggered()
+{
+    QFile resourceFile(":/Keyboards/ErgoDox.kbd");
+    auto pTemporaryFile = QTemporaryFile::createNativeFile(resourceFile);
+    if (pTemporaryFile)
+    {
+        loadKeyboard(pTemporaryFile->fileName());
     }
 }
 

@@ -43,6 +43,7 @@ protected slots:
     void on_actionImport_Keyboard_Svg_triggered();
     void on_actionImport_Default_Keyboard_Svg_triggered();
     void on_actionLoad_Theory_triggered();
+    void on_actionLoad_Default_Theory_triggered();
     void on_actionSave_Theory_as_triggered();
     void on_actionImport_Dictionaries_triggered();
     void on_actionWrite_Markdown_Files_To_triggered();
@@ -50,6 +51,7 @@ protected slots:
     void on_actionAbout_triggered();
     void on_actionKeyboard_Window_triggered();
     void on_actionLoad_Keyboard_triggered();
+    void on_actionLoad_Default_Keyboard_triggered();
     void on_actionSave_Keyboard_as_triggered();
     void on_actionSave_Keyboard_triggered();
     void delayedRestoreState();

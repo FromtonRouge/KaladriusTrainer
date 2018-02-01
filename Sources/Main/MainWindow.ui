@@ -14,7 +14,7 @@
    <string>Programmer Steno Tutor</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
+   <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
     <normaloff>:/Icons/ProgrammerStenoTutor.png</normaloff>:/Icons/ProgrammerStenoTutor.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
@@ -42,7 +42,7 @@
      <x>0</x>
      <y>0</y>
      <width>737</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -54,10 +54,11 @@
       <string>Theory</string>
      </property>
      <property name="icon">
-      <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
+      <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
        <normaloff>:/Icons/graduation-hat.png</normaloff>:/Icons/graduation-hat.png</iconset>
      </property>
      <addaction name="actionLoad_Theory"/>
+     <addaction name="actionLoad_Default_Theory"/>
      <addaction name="actionSave_Theory_as"/>
      <addaction name="separator"/>
      <addaction name="actionImport_Dictionaries"/>
@@ -70,17 +71,17 @@
       <string>Keyboard</string>
      </property>
      <property name="icon">
-      <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
+      <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
        <normaloff>:/Icons/keyboard-full.png</normaloff>:/Icons/keyboard-full.png</iconset>
      </property>
      <addaction name="actionLoad_Keyboard"/>
+     <addaction name="actionLoad_Default_Keyboard"/>
      <addaction name="actionSave_Keyboard_as"/>
      <addaction name="actionSave_Keyboard"/>
      <addaction name="separator"/>
      <addaction name="actionImport_Default_Keyboard_Svg"/>
      <addaction name="actionImport_Keyboard_Svg"/>
     </widget>
-    <addaction name="separator"/>
     <addaction name="menuKeyboard"/>
     <addaction name="separator"/>
     <addaction name="menuTheory"/>
@@ -381,7 +382,7 @@
   </widget>
   <action name="actionQuit">
    <property name="icon">
-    <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
      <normaloff>:/Icons/door-open-out.png</normaloff>:/Icons/door-open-out.png</iconset>
    </property>
    <property name="text">
@@ -390,7 +391,7 @@
   </action>
   <action name="actionImport_Dictionaries">
    <property name="icon">
-    <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
      <normaloff>:/Icons/book-open-next.png</normaloff>:/Icons/book-open-next.png</iconset>
    </property>
    <property name="text">
@@ -399,7 +400,7 @@
   </action>
   <action name="actionReload_Dictionaries">
    <property name="icon">
-    <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
      <normaloff>:/Icons/book-open-next.png</normaloff>:/Icons/book-open-next.png</iconset>
    </property>
    <property name="text">
@@ -411,7 +412,7 @@
   </action>
   <action name="actionWrite_Markdown_Files_To">
    <property name="icon">
-    <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
      <normaloff>:/Icons/disk--pencil.png</normaloff>:/Icons/disk--pencil.png</iconset>
    </property>
    <property name="text">
@@ -420,7 +421,7 @@
   </action>
   <action name="actionWrite_Markdown_Files">
    <property name="icon">
-    <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
      <normaloff>:/Icons/disk.png</normaloff>:/Icons/disk.png</iconset>
    </property>
    <property name="text">
@@ -432,7 +433,7 @@
   </action>
   <action name="actionKeyboard_Window">
    <property name="icon">
-    <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
      <normaloff>:/Icons/keyboard-full.png</normaloff>:/Icons/keyboard-full.png</iconset>
    </property>
    <property name="text">
@@ -441,7 +442,7 @@
   </action>
   <action name="actionAbout">
    <property name="icon">
-    <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
      <normaloff>:/Icons/question.png</normaloff>:/Icons/question.png</iconset>
    </property>
    <property name="text">
@@ -450,7 +451,7 @@
   </action>
   <action name="actionImport_Keyboard_Svg">
    <property name="icon">
-    <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
      <normaloff>:/Icons/keyboard-full.png</normaloff>:/Icons/keyboard-full.png</iconset>
    </property>
    <property name="text">
@@ -459,7 +460,7 @@
   </action>
   <action name="actionImport_Default_Keyboard_Svg">
    <property name="icon">
-    <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
      <normaloff>:/Icons/keyboard-full.png</normaloff>:/Icons/keyboard-full.png</iconset>
    </property>
    <property name="text">
@@ -471,7 +472,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
      <normaloff>:/Icons/control-record.png</normaloff>:/Icons/control-record.png</iconset>
    </property>
    <property name="text">
@@ -483,7 +484,7 @@
   </action>
   <action name="actionLoad_Keyboard">
    <property name="icon">
-    <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
      <normaloff>:/Icons/folder-open-document.png</normaloff>:/Icons/folder-open-document.png</iconset>
    </property>
    <property name="text">
@@ -492,7 +493,7 @@
   </action>
   <action name="actionSave_Keyboard_as">
    <property name="icon">
-    <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
      <normaloff>:/Icons/disk--pencil.png</normaloff>:/Icons/disk--pencil.png</iconset>
    </property>
    <property name="text">
@@ -501,7 +502,7 @@
   </action>
   <action name="actionSave_Keyboard">
    <property name="icon">
-    <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
      <normaloff>:/Icons/disk.png</normaloff>:/Icons/disk.png</iconset>
    </property>
    <property name="text">
@@ -513,7 +514,7 @@
   </action>
   <action name="actionLoad_Theory">
    <property name="icon">
-    <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
      <normaloff>:/Icons/folder-open-document.png</normaloff>:/Icons/folder-open-document.png</iconset>
    </property>
    <property name="text">
@@ -522,11 +523,29 @@
   </action>
   <action name="actionSave_Theory_as">
    <property name="icon">
-    <iconset resource="../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
      <normaloff>:/Icons/disk--pencil.png</normaloff>:/Icons/disk--pencil.png</iconset>
    </property>
    <property name="text">
     <string>Save Theory as...</string>
+   </property>
+  </action>
+  <action name="actionLoad_Default_Keyboard">
+   <property name="icon">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+     <normaloff>:/Icons/folder-open-document.png</normaloff>:/Icons/folder-open-document.png</iconset>
+   </property>
+   <property name="text">
+    <string>Load Default Keyboard (ErgoDox)</string>
+   </property>
+  </action>
+  <action name="actionLoad_Default_Theory">
+   <property name="icon">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+     <normaloff>:/Icons/folder-open-document.png</normaloff>:/Icons/folder-open-document.png</iconset>
+   </property>
+   <property name="text">
+    <string>Load Default Theory (Jackdaw)</string>
    </property>
   </action>
  </widget>
@@ -561,7 +580,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../Resources/ProgrammerStenoTutor.qrc"/>
+  <include location="../../Resources/ProgrammerStenoTutor.qrc"/>
  </resources>
  <connections/>
 </ui>
