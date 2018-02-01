@@ -58,8 +58,13 @@ protected slots:
     void logs(const QString& sText, int iWarningLevel = 0);
 
 private:
-    void loadKeyboard(const QString& sKeyboardFileName);
-    void loadTheory(const QString& sTheoryFileName);
+    enum SettingsOperation
+    {
+        SaveSettings = 0,
+        ClearSettings,
+    };
+    void loadKeyboard(const QString& sKeyboardFileName, SettingsOperation settingsOperation = SaveSettings);
+    void loadTheory(const QString& sTheoryFileName, SettingsOperation settingsOperation = SaveSettings);
 
 protected:
     virtual void closeEvent(QCloseEvent* pEvent) override;

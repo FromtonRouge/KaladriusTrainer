@@ -158,22 +158,20 @@ void MainWindow::logs(const QString& sText, int iWarningLevel)
     }
 }
 
-void MainWindow::loadKeyboard(const QString& sKeyboardFileName)
+void MainWindow::loadKeyboard(const QString& sKeyboardFileName, SettingsOperation settingsOperation)
 {
     if (Serialization::Load(qApp->getKeyboardModel(), sKeyboardFileName))
     {
-        QSettings settings;
-        settings.setValue("lastKeyboard", sKeyboardFileName);
+        QSettings().setValue("lastKeyboard", settingsOperation == ClearSettings ? QVariant() : sKeyboardFileName);
         COUT(tr("Keyboard loaded from file %1").arg(sKeyboardFileName));
     }
 }
 
-void MainWindow::loadTheory(const QString& sTheoryFileName)
+void MainWindow::loadTheory(const QString& sTheoryFileName, SettingsOperation settingsOperation)
 {
     if (Serialization::Load(qApp->getTheoryModel(), sTheoryFileName))
     {
-        QSettings settings;
-        settings.setValue("lastTheory", sTheoryFileName);
+        QSettings().setValue("lastTheory", settingsOperation == ClearSettings ? QVariant() : sTheoryFileName);
         COUT(tr("Theory loaded from file %1").arg(sTheoryFileName));
     }
 }
@@ -246,7 +244,7 @@ void MainWindow::on_actionLoad_Default_Theory_triggered()
     auto pTemporaryFile = QTemporaryFile::createNativeFile(resourceFile);
     if (pTemporaryFile)
     {
-        loadTheory(pTemporaryFile->fileName());
+        loadTheory(pTemporaryFile->fileName(), ClearSettings);
     }
 }
 
@@ -433,7 +431,7 @@ void MainWindow::on_actionLoad_Default_Keyboard_triggered()
     auto pTemporaryFile = QTemporaryFile::createNativeFile(resourceFile);
     if (pTemporaryFile)
     {
-        loadKeyboard(pTemporaryFile->fileName());
+        loadKeyboard(pTemporaryFile->fileName(), ClearSettings);
     }
 }
 
