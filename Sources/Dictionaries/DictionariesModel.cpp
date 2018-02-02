@@ -110,3 +110,26 @@ QModelIndex DictionariesModel::index(int iRow, int iColumn, const QModelIndex& p
     }
     return QModelIndex();
 }
+
+QVariant DictionariesModel::headerData(int iSection, Qt::Orientation orientation, int iRole) const
+{
+    if (iRole == Qt::DisplayRole)
+    {
+        switch (iSection)
+        {
+        case 0:
+            {
+                return tr("Text");
+            }
+        case 1:
+            {
+                return tr("Keyboard");
+            }
+        default:
+            {
+                break;
+            }
+        }
+    }
+    return QIdentityProxyModel::headerData(iSection, orientation, iRole);
+}

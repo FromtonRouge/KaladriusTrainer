@@ -33,6 +33,7 @@ public:
     virtual bool hasChildren(const QModelIndex& parent) const override;
     virtual int rowCount(const QModelIndex& parent) const override;
     virtual QModelIndex index(int iRow, int iColumn, const QModelIndex& parent) const override;
+    virtual QVariant headerData(int iSection, Qt::Orientation orientation, int iRole = Qt::DisplayRole) const override;
 
 private:
     QPersistentModelIndex _sourceIndexDictionaries;
