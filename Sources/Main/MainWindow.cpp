@@ -60,7 +60,7 @@ MainWindow::MainWindow(QWidget *parent)
     , _pUndoStack(new QUndoStack(this))
 {
     _pUi->setupUi(this);
-    setDockOptions(dockOptions() | DockOption::GroupedDragging);
+    setDockOptions(dockOptions() | DockOption::GroupedDragging | DockOption::AllowNestedDocks);
 
     connect(qApp, SIGNAL(logs(QString, int)), this, SLOT(logs(QString,int)));
 
