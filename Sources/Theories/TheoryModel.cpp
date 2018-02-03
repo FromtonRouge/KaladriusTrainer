@@ -63,12 +63,15 @@ QVariant TheoryModel::data(const QModelIndex& index, int iRole) const
 void TheoryModel::setDictionaries(const Dictionaries& dictionaries)
 {
     auto pTheoryTreeItem = getTheoryTreeItem();
+
+    // Clear existing dictionaries
     auto pDictionaries = pTheoryTreeItem->getDictionaries();
     if (pDictionaries->hasChildren())
     {
         pDictionaries->removeRows(0, pDictionaries->rowCount());
     }
 
+    // Insert new dictionaries
     for (const auto& dictionary : dictionaries)
     {
         auto pDictionaryItem = new DictionaryTreeItem(dictionary.getName(), dictionary.getKeysLabels());
@@ -91,6 +94,8 @@ void TheoryModel::setDictionaries(const Dictionaries& dictionaries)
             }
         }
     }
+
+    buildCache();
     emit dictionariesLoaded();
 }
 
@@ -104,6 +109,8 @@ void TheoryModel::setTheoryTreeItem(TheoryTreeItem* pTheoryTreeItem)
 {
     clear();
     appendRow({pTheoryTreeItem, new EmptyTreeItem()});
+
+    buildCache();
     emit dictionariesLoaded();
     setHorizontalHeaderLabels(QStringList() << tr("Name") << tr("Value"));
 }
@@ -135,4 +142,44 @@ QString TheoryModel::getTheoryName() const
         return indexTheoryName.data(Qt::DisplayRole).toString();
     }
     return QString();
+}
+
+void TheoryModel::buildCache()
+{
+    _cache.clear();
+    const QModelIndex& indexDictionaries = getDictionariesIndex();
+    if (indexDictionaries.isValid())
+    {
+        const int iDictionaries = rowCount(indexDictionaries);
+        for (int iDictionary = 0; iDictionary < iDictionaries; ++iDictionary)
+        {
+            const QModelIndex& indexDictionary = index(iDictionary, 0, indexDictionaries);
+            const QString& sDictionaryName = indexDictionary.data(Qt::DisplayRole).toString();
+            if (!sDictionaryName.isEmpty())
+            {
+                const QModelIndex& indexEntries = Utils::index(this, "Entries", 0, indexDictionary);
+                if (indexEntries.isValid())
+                {
+                    CacheDictionaryEntries entries;
+                    const int iEntries = rowCount(indexEntries);
+                    for (int iEntry = 0; iEntry < iEntries; ++iEntry)
+                    {
+                        const QModelIndex& indexEntry = index(iEntry, 0, indexEntries);
+                        const QModelIndex& indexEntryBits = index(iEntry, 1, indexEntries);
+                        const QString& sText = indexEntry.data(Qt::DisplayRole).toString();
+                        const QBitArray& bits = indexEntryBits.data(InputKeyBitsRole).toBitArray();
+                        if (sText != "<no_entry>")
+                        {
+                            entries.insert(sText, bits);
+                        }
+                    }
+
+                    if (!entries.isEmpty())
+                    {
+                        _cache.insert(sDictionaryName, entries);
+                    }
+                }
+            }
+        }
+    }
 }

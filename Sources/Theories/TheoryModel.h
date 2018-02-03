@@ -21,6 +21,9 @@
 
 #include "Dictionaries/Dictionary.h"
 #include "Models/TreeItemModel.h"
+#include <QtCore/QHash>
+#include <QtCore/QMultiHash>
+#include <QtCore/QBitArray>
 
 class TheoryTreeItem;
 class TheoryModel : public TreeItemModel
@@ -29,6 +32,10 @@ class TheoryModel : public TreeItemModel
 
 signals:
     void dictionariesLoaded();
+
+public:
+    typedef QMultiHash<QString, QBitArray> CacheDictionaryEntries; ///< Key = text, value = keyboard keys bits.
+    typedef QHash<QString, CacheDictionaryEntries> CacheDictionaries; ///< Key = dictionary name, value = CacheDictionaryEntries.
 
 public:
     TheoryModel(QObject* pParent = nullptr);
@@ -40,4 +47,11 @@ public:
     QModelIndex getTheoryIndex() const;
     QModelIndex getDictionariesIndex() const;
     QString getTheoryName() const;
+    const CacheDictionaries& getCachedDictionaries() const {return _cache;}
+
+private:
+    void buildCache();
+
+private:
+    CacheDictionaries _cache; ///<  Cache for fast lookup.
 };

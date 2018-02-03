@@ -102,6 +102,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(_pUi->widgetDictionaries2, SIGNAL(dictionaryEntrySelected(QString, QBitArray)), pKeyboardModel, SLOT(selectLinkedKeys(QString, QBitArray)));
     connect(_pUi->widgetDictionaries3, SIGNAL(dictionaryEntrySelected(QString, QBitArray)), pKeyboardModel, SLOT(selectLinkedKeys(QString, QBitArray)));
     connect(_pUi->widgetDictionaries4, SIGNAL(dictionaryEntrySelected(QString, QBitArray)), pKeyboardModel, SLOT(selectLinkedKeys(QString, QBitArray)));
+    connect(_pUi->widgetStrokesSolver->findChild<QTextEdit*>("textEdit"), SIGNAL(strokeFound(QString, QBitArray)), pKeyboardModel, SLOT(selectLinkedKeys(QString, QBitArray)));
 
     _pUi->treeViewKeyboardProperties->setModel(qApp->getUndoableKeyboardModel());
     _pKeyboardGraphicsScene->setKeyboardProperties(_pUi->treeViewKeyboardProperties);

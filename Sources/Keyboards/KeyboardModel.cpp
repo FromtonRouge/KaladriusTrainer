@@ -248,23 +248,28 @@ void KeyboardModel::selectLinkedKeys(const QString& sDictionaryName, const QBitA
             if (indexLinkedKeys.isValid())
             {
                 const int iLinkedKeycaps = rowCount(indexLinkedKeys);
-                if (iLinkedKeycaps == inputsKeysBits.size())
+                QVector<QPair<QString, bool>> keycapsStates(iLinkedKeycaps);
+                for (int iLinkedKeycap = 0; iLinkedKeycap < iLinkedKeycaps; ++iLinkedKeycap)
                 {
-                    QVector<QPair<QString, bool>> keycapsStates(inputsKeysBits.size());
-                    for (int iLinkedKeycap = 0; iLinkedKeycap < iLinkedKeycaps; ++iLinkedKeycap)
+                    const QModelIndex& indexKeycapId = indexLinkedKeys.child(iLinkedKeycap, 1);
+                    const QVariant& variant = indexKeycapId.data(Qt::EditRole);
+                    if (variant.isValid())
                     {
-                        const QModelIndex& indexKeycapId = indexLinkedKeys.child(iLinkedKeycap, 1);
-                        const QVariant& variant = indexKeycapId.data(Qt::EditRole);
-                        if (variant.isValid())
+                        const auto& keycapRef = qvariant_cast<KeycapRef>(variant);
+                        keycapsStates[iLinkedKeycap].first = keycapRef.keycapId;
+
+                        if (inputsKeysBits.size() > iLinkedKeycap)
                         {
-                            const auto& keycapRef = qvariant_cast<KeycapRef>(variant);
-                            keycapsStates[iLinkedKeycap].first = keycapRef.keycapId;
                             keycapsStates[iLinkedKeycap].second = inputsKeysBits.testBit(iLinkedKeycap);
                         }
+                        else
+                        {
+                            keycapsStates[iLinkedKeycap].second = false;
+                        }
                     }
-
-                    emit linkedKeycapsStates(keycapsStates);
                 }
+
+                emit linkedKeycapsStates(keycapsStates);
             }
         }
     }
