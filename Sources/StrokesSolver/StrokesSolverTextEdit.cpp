@@ -18,7 +18,6 @@
 // ======================================================================
 
 #include "StrokesSolverTextEdit.h"
-#include "Theories/TheoryModel.h"
 #include "Main/Application.h"
 #include <QtCore/QRegularExpression>
 #include <QtCore/QDebug>
@@ -31,6 +30,8 @@ StrokesSolverTextEdit::StrokesSolverTextEdit(QWidget* pParent)
 
 void StrokesSolverTextEdit::onCursorPositionChanged()
 {
+    emit solverStarted();
+
     // Hard coded at the moment
     QStringList dictionariesToParse;
     dictionariesToParse << "Left Hand Shelton Dictionary";
@@ -39,13 +40,6 @@ void StrokesSolverTextEdit::onCursorPositionChanged()
     dictionariesToParse << "Right Hand Shelton Dictionary";
     dictionariesToParse << "Right Controls Dictionary";
     dictionariesToParse << "Right Pinky Dictionary";
-    //dictionariesToParse << "Left Punctuation Dictionary";
-    //dictionariesToParse << "Right Punctuation Dictionary";
-
-    for (const auto& sDictionaryName : dictionariesToParse)
-    {
-        emit strokeFound(sDictionaryName, QBitArray());
-    }
 
     // Check first if we have cached dictionaries data
     auto pTheoryModel = qApp->getTheoryModel();
@@ -67,41 +61,55 @@ void StrokesSolverTextEdit::onCursorPositionChanged()
         cursor.setPosition(findCursor.position(), QTextCursor::KeepAnchor);
     }
 
-    QString sTextToSolve = cursor.selectedText().toUpper();
+    QString sTextToSolve = cursor.selectedText();
     if (sTextToSolve == " ")
     {
         cursor.movePosition(QTextCursor::EndOfWord, QTextCursor::KeepAnchor);
-        sTextToSolve = cursor.selectedText().toUpper();
+        sTextToSolve = cursor.selectedText();
     }
 
     if (!sTextToSolve.isEmpty())
     {
-        sTextToSolve = sTextToSolve.trimmed(); // Remove leading space
+        sTextToSolve = sTextToSolve.trimmed().toUpper(); // Remove leading space
 
-        // Try to find a match for the first dictionary
-        auto itDictionary = dictionariesToParse.begin();
-        while (itDictionary != dictionariesToParse.end())
+        if (!solve(sTextToSolve, dictionaries, dictionariesToParse))
         {
-            QBitArray bits;
-            auto entries = dictionaries[*itDictionary];
-            const int iSize = sTextToSolve.size();
-            for (int iChar = iSize - 1; iChar >= 0; --iChar)
-            {
-                const QString& subString = sTextToSolve.left(iChar + 1);
-                auto itEntry = entries.find(subString);
-                if (itEntry != entries.end())
-                {
-                    bits = itEntry.value();
-                    sTextToSolve = sTextToSolve.right(iSize - iChar - 1);
-                    break;
-                }
-            }
-
-            if (!bits.isNull())
-            {
-                emit strokeFound(*itDictionary, bits);
-            }
-            itDictionary++;
+            solve(sTextToSolve, dictionaries, {"Left Punctuation Dictionary", "Right Punctuation Dictionary"});
         }
     }
+}
+
+bool StrokesSolverTextEdit::solve(QString sText,
+                                  const TheoryModel::CacheDictionaries& cachedDictionaries,
+                                  const QStringList& orderedDictionaries) const
+{
+    bool bAtLeastOneMatch = false;
+
+    // Try to find a match for each dictionary
+    auto itDictionary = orderedDictionaries.begin();
+    while (itDictionary != orderedDictionaries.end())
+    {
+        QBitArray bits;
+        auto entries = cachedDictionaries[*itDictionary];
+        const int iSize = sText.size();
+        for (int iChar = iSize - 1; iChar >= 0; --iChar)
+        {
+            const QString& subString = sText.left(iChar + 1);
+            auto itEntry = entries.find(subString);
+            if (itEntry != entries.end())
+            {
+                bAtLeastOneMatch = true;
+                bits = itEntry.value();
+                sText = sText.right(iSize - iChar - 1);
+                break;
+            }
+        }
+
+        if (!bits.isNull())
+        {
+            emit dictionaryMatch(*itDictionary, bits);
+        }
+        itDictionary++;
+    }
+    return bAtLeastOneMatch;
 }

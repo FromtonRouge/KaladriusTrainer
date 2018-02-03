@@ -20,17 +20,22 @@
 #pragma once
 
 #include <QtWidgets/QTextEdit>
+#include "Theories/TheoryModel.h"
 
 class StrokesSolverTextEdit : public QTextEdit
 {
     Q_OBJECT
 
 signals:
-    void strokeFound(const QString& sDictionaryName, const QBitArray& inputsKeysBits);
+    void solverStarted() const;
+    void dictionaryMatch(const QString& sDictionaryName, const QBitArray& inputsKeysBits) const;
 
 public:
     StrokesSolverTextEdit(QWidget* pParent = nullptr);
 
 protected slots:
     void onCursorPositionChanged();
+
+private:
+    bool solve(QString sText, const TheoryModel::CacheDictionaries& cachedDictionaries, const QStringList& dictionaries) const;
 };
