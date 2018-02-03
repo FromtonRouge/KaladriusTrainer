@@ -42,11 +42,12 @@ find_package(Qt5 COMPONENTS Core Gui Widgets Svg Xml REQUIRED)
 
 file(GLOB_RECURSE SOURCES ./Sources/*.cpp)
 file(GLOB_RECURSE HEADERS ./Sources/*.h)
+file(GLOB_RECURSE UIS ./Sources/*.ui)
 file(GLOB QRCS ./Resources/*.qrc)
 file(GLOB RCS ./Resources/*.rc)
 include_directories(./Sources)
 
-add_executable(${PROJECT_NAME} WIN32 ${SOURCES} ${HEADERS} ${QRCS} ${RCS})
+add_executable(${PROJECT_NAME} WIN32 ${SOURCES} ${HEADERS} ${QRCS} ${RCS} ${UIS})
 target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Svg Qt5::Xml)
 
 if (Boost_FOUND)
