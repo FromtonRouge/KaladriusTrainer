@@ -19,10 +19,18 @@
 
 #include "StrokesSolverWidget.h"
 #include "ui_StrokesSolverWidget.h"
+#include <QtCore/QSettings>
 
 StrokesSolverWidget::StrokesSolverWidget(QWidget* pParent)
     : QWidget(pParent)
     , _pUi(new Ui::StrokesSolverWidget())
 {
     _pUi->setupUi(this);
+    _pUi->checkBoxTrainingMode->setChecked(QSettings().value("trainingMode", false).toBool());
+}
+
+void StrokesSolverWidget::on_checkBoxTrainingMode_toggled(bool bChecked)
+{
+    QSettings().setValue("trainingMode", bChecked);
+    _pUi->textEdit->setTrainingMode(bChecked);
 }

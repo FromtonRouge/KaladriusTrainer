@@ -32,10 +32,17 @@ signals:
 
 public:
     StrokesSolverTextEdit(QWidget* pParent = nullptr);
+    void setTrainingMode(bool);
 
 protected slots:
     void onCursorPositionChanged();
 
+protected:
+    virtual void keyPressEvent(QKeyEvent* pKeyEvent) override;
+
 private:
     bool solve(QString sText, const TheoryModel::CacheDictionaries& cachedDictionaries, const QStringList& dictionaries) const;
+
+private:
+    bool _bTrainingMode;
 };

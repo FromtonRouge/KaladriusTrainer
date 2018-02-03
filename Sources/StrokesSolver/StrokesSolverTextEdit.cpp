@@ -20,14 +20,31 @@
 #include "StrokesSolverTextEdit.h"
 #include "Main/Application.h"
 #include <QtCore/QRegularExpression>
+#include <QtGui/QKeyEvent>
 #include <QtCore/QDebug>
 
 StrokesSolverTextEdit::StrokesSolverTextEdit(QWidget* pParent)
     : QTextEdit(pParent)
+    , _bTrainingMode(false)
 {
     setAcceptRichText(false);
     setText("An orthographic theory of shorthand is based on spelling rather than phonetics. The advantage is that you can (in theory) write any word you know how to spell at least as fast as you can type it, because you do not need a dictionary to convert it from phonetic to written form. This is a sketch for an orthographic theory that might perhaps be implemented on a SOFTHRUF or a Planck, Atreus or other small keyboard that allows easy chording. It is intended to be a less specialised tool than Plover, easier to learn and to use as a general personal keyboard, while hopefully having more significant advantages than a simple change to key layout like Dvorak or Colemak.");
     connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(onCursorPositionChanged()));
+}
+
+void StrokesSolverTextEdit::setTrainingMode(bool bChecked)
+{
+    _bTrainingMode = bChecked;
+    QTextCursor cursor = textCursor();
+    cursor.movePosition(QTextCursor::Start, QTextCursor::MoveAnchor);
+    cursor.movePosition(QTextCursor::End, QTextCursor::KeepAnchor);
+    auto format = cursor.charFormat();
+    format.setBackground(QBrush());
+    cursor.setCharFormat(format);
+    setTextCursor(cursor);
+
+    cursor.movePosition(QTextCursor::Start, QTextCursor::MoveAnchor);
+    setTextCursor(cursor);
 }
 
 void StrokesSolverTextEdit::onCursorPositionChanged()
@@ -78,6 +95,80 @@ void StrokesSolverTextEdit::onCursorPositionChanged()
         {
             solve(sTextToSolve, dictionaries, {"Left Punctuation Dictionary", "Right Punctuation Dictionary"});
         }
+    }
+}
+
+void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
+{
+    if (_bTrainingMode)
+    {
+        auto cursor = textCursor();
+        switch (pKeyEvent->key())
+        {
+        case Qt::Key_PageDown:
+        case Qt::Key_PageUp:
+        case Qt::Key_Home:
+        case Qt::Key_End:
+        case Qt::Key_Left:
+        case Qt::Key_Right:
+        case Qt::Key_Down:
+        case Qt::Key_Up:
+            {
+                return QTextEdit::keyPressEvent(pKeyEvent);
+            }
+        case Qt::Key_Backspace:
+            {
+                auto format = cursor.charFormat();
+                if (format.background() == Qt::red)
+                {
+                    return QTextEdit::keyPressEvent(pKeyEvent);
+                }
+                else if (format.background() != QBrush())
+                {
+                    cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor);
+                    format.setBackground(QBrush());
+                    cursor.setCharFormat(format);
+                    setTextCursor(cursor);
+
+                    cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor);
+                    setTextCursor(cursor);
+                }
+                else
+                {
+                    cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor);
+                    setTextCursor(cursor);
+                }
+                return;
+            }
+        default:
+            {
+                break;
+            }
+        }
+
+        const QString& sInputText = pKeyEvent->text();
+        cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
+        const QString& sSelectedText = cursor.selectedText();
+        if (sInputText != sSelectedText)
+        {
+            cursor = textCursor();
+            auto format = cursor.charFormat();
+            format.setBackground(Qt::red);
+            cursor.setCharFormat(format);
+            cursor.insertText(sInputText);
+        }
+        else
+        {
+            auto format = cursor.charFormat();
+            format.setBackground(Qt::green);
+            cursor.setCharFormat(format);
+            cursor.setPosition(cursor.position(), QTextCursor::MoveAnchor);
+            setTextCursor(cursor);
+        }
+    }
+    else
+    {
+        QTextEdit::keyPressEvent(pKeyEvent);
     }
 }
 
