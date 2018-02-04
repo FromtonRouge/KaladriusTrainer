@@ -28,8 +28,8 @@ StrokesSolverTextEdit::StrokesSolverTextEdit(QWidget* pParent)
     : QTextEdit(pParent)
     , _bTrainingMode(false)
     , _colorOk(0, 255, 0, 128)
-    , _colorWarning(250, 200, 50, 128)
-    , _colorError(255, 0, 0, 128)
+    , _colorWarning(250, 200, 50, 200)
+    , _colorError(255, 0, 0, 200)
     , _pTimerSolve(new QTimer(this))
 {
     setAcceptRichText(false);

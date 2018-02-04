@@ -33,6 +33,7 @@ class StrokesSolverWidget : public QWidget
 
 public:
     StrokesSolverWidget(QWidget* pParent = nullptr);
+    ~StrokesSolverWidget();
 
 protected slots:
     void on_checkBoxTrainingMode_toggled(bool bChecked);

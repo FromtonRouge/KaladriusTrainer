@@ -29,6 +29,11 @@ StrokesSolverWidget::StrokesSolverWidget(QWidget* pParent)
     _pUi->checkBoxTrainingMode->setChecked(QSettings().value("trainingMode", false).toBool());
 }
 
+StrokesSolverWidget::~StrokesSolverWidget()
+{
+
+}
+
 void StrokesSolverWidget::on_checkBoxTrainingMode_toggled(bool bChecked)
 {
     QSettings().setValue("trainingMode", bChecked);
