@@ -37,6 +37,8 @@ public:
 
 protected slots:
     void on_checkBoxTrainingMode_toggled(bool bChecked);
+    void on_fontComboBox_currentFontChanged(QFont font);
+    void on_comboBoxFontSize_currentTextChanged(const QString& sText);
 
 private:
     QScopedPointer<Ui::StrokesSolverWidget> _pUi;

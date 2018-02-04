@@ -19,7 +19,9 @@
 
 #include "StrokesSolverWidget.h"
 #include "ui_StrokesSolverWidget.h"
+#include <QtGui/QFontDatabase>
 #include <QtCore/QSettings>
+#include <QtCore/QSignalBlocker>
 
 StrokesSolverWidget::StrokesSolverWidget(QWidget* pParent)
     : QWidget(pParent)
@@ -27,6 +29,25 @@ StrokesSolverWidget::StrokesSolverWidget(QWidget* pParent)
 {
     _pUi->setupUi(this);
     _pUi->checkBoxTrainingMode->setChecked(QSettings().value("trainingMode", false).toBool());
+
+    // We don't want to trigger the connected slots
+    QSignalBlocker blockerFontSize(_pUi->comboBoxFontSize);
+    QSignalBlocker blockerFontCombo(_pUi->fontComboBox);
+
+    // Build the font standard sizes combo box
+    _pUi->comboBoxFontSize->setEditable(true);
+    const auto& sizes = QFontDatabase::standardSizes();
+    for (int iSize : sizes)
+    {
+        _pUi->comboBoxFontSize->addItem(QString::number(iSize));
+    }
+
+    // Try to get a saved font if any
+    const QVariant& variant = QSettings().value("strokesSolverFont", _pUi->textEdit->font());
+    const QFont& wantedFont = qvariant_cast<QFont>(variant);
+    _pUi->fontComboBox->setCurrentFont(wantedFont);
+    _pUi->comboBoxFontSize->setCurrentIndex(sizes.indexOf(wantedFont.pointSize()));
+    _pUi->textEdit->setFont(wantedFont);
 }
 
 StrokesSolverWidget::~StrokesSolverWidget()
@@ -38,4 +59,20 @@ void StrokesSolverWidget::on_checkBoxTrainingMode_toggled(bool bChecked)
 {
     QSettings().setValue("trainingMode", bChecked);
     _pUi->textEdit->setTrainingMode(bChecked);
+}
+
+void StrokesSolverWidget::on_fontComboBox_currentFontChanged(QFont font)
+{
+    const int iSize = _pUi->comboBoxFontSize->currentText().toInt();
+    font.setPointSize(iSize);
+    _pUi->textEdit->setFont(font);
+    QSettings().setValue("strokesSolverFont", font);
+}
+
+void StrokesSolverWidget::on_comboBoxFontSize_currentTextChanged(const QString& sText)
+{
+    QFont font = _pUi->textEdit->font();
+    font.setPointSize(sText.toInt());
+    _pUi->textEdit->setFont(font);
+    QSettings().setValue("strokesSolverFont", font);
 }
