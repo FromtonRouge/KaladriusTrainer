@@ -484,4 +484,15 @@ void MainWindow::delayedRestoreState()
     // Restore dock states
     QSettings settings;
     restoreState(settings.value("windowState").toByteArray());
+
+    // Set the focus on the StrokesSolverTextEdit by default
+    if (_pUi->dockWidgetStrokesSolver->isVisible())
+    {
+        _pUi->dockWidgetStrokesSolver->raise();
+        auto pStrokesSolverTextEdit = _pUi->widgetStrokesSolver->findChild<QTextEdit*>("textEdit");
+        if (pStrokesSolverTextEdit)
+        {
+            pStrokesSolverTextEdit->setFocus();
+        }
+    }
 }

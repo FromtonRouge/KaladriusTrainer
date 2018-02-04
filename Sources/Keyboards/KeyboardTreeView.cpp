@@ -155,8 +155,6 @@ void KeyboardTreeView::onRowsInserted(const QModelIndex& parent, int iFirst, int
 
 void KeyboardTreeView::onLinkTheory()
 {
-    // TODO: Add a child node (LinkedTheoryTreeItem) with the name of the loaded theory
-    // and all dictionaries + keys bindings
     const QModelIndex& current = currentIndex();
     if (current.isValid())
     {

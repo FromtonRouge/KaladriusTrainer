@@ -54,6 +54,11 @@ void StrokesSolverTextEdit::setTrainingMode(bool bChecked)
 
     cursor.movePosition(QTextCursor::Start, QTextCursor::MoveAnchor);
     setTextCursor(cursor);
+
+    if (bChecked)
+    {
+        setFocus();
+    }
 }
 
 void StrokesSolverTextEdit::onCursorPositionChanged()
@@ -114,7 +119,7 @@ void StrokesSolverTextEdit::onTimerSolve()
 
 void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
 {
-    if (_bTrainingMode)
+    if (_bTrainingMode && !(pKeyEvent->modifiers() & Qt::ControlModifier))
     {
         auto cursor = textCursor();
         auto format = cursor.charFormat();
