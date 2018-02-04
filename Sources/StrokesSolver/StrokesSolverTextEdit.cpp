@@ -21,15 +21,24 @@
 #include "Main/Application.h"
 #include <QtCore/QRegularExpression>
 #include <QtGui/QKeyEvent>
+#include <QtCore/QTimer>
 #include <QtCore/QDebug>
 
 StrokesSolverTextEdit::StrokesSolverTextEdit(QWidget* pParent)
     : QTextEdit(pParent)
     , _bTrainingMode(false)
+    , _colorOk(0, 255, 0, 128)
+    , _colorWarning(250, 200, 50, 128)
+    , _colorError(255, 0, 0, 128)
+    , _pTimerSolve(new QTimer(this))
 {
     setAcceptRichText(false);
     setText("An orthographic theory of shorthand is based on spelling rather than phonetics. The advantage is that you can (in theory) write any word you know how to spell at least as fast as you can type it, because you do not need a dictionary to convert it from phonetic to written form. This is a sketch for an orthographic theory that might perhaps be implemented on a SOFTHRUF or a Planck, Atreus or other small keyboard that allows easy chording. It is intended to be a less specialised tool than Plover, easier to learn and to use as a general personal keyboard, while hopefully having more significant advantages than a simple change to key layout like Dvorak or Colemak.");
     connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(onCursorPositionChanged()));
+
+    _pTimerSolve->setSingleShot(true);
+    _pTimerSolve->setInterval(10);
+    connect(_pTimerSolve, SIGNAL(timeout()), this, SLOT(onTimerSolve()));
 }
 
 void StrokesSolverTextEdit::setTrainingMode(bool bChecked)
@@ -48,6 +57,11 @@ void StrokesSolverTextEdit::setTrainingMode(bool bChecked)
 }
 
 void StrokesSolverTextEdit::onCursorPositionChanged()
+{
+    _pTimerSolve->start();
+}
+
+void StrokesSolverTextEdit::onTimerSolve()
 {
     emit solverStarted();
 
@@ -103,6 +117,7 @@ void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
     if (_bTrainingMode)
     {
         auto cursor = textCursor();
+        auto format = cursor.charFormat();
         switch (pKeyEvent->key())
         {
         case Qt::Key_PageDown:
@@ -110,6 +125,27 @@ void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
         case Qt::Key_Home:
         case Qt::Key_End:
         case Qt::Key_Left:
+            {
+                if (format.background() != QBrush())
+                {
+                    // Move the cursor backward without selecting the text so
+                    // the solve() can work properly
+                    cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor);
+                    setTextCursor(cursor);
+
+                    // Reset the background color
+                    cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+                    format.setBackground(QBrush());
+                    cursor.setCharFormat(format);
+                    setTextCursor(cursor);
+
+                    // Go back again...
+                    cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor);
+                    setTextCursor(cursor);
+                    return;
+                }
+                // No break
+            }
         case Qt::Key_Right:
         case Qt::Key_Down:
         case Qt::Key_Up:
@@ -118,18 +154,24 @@ void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
             }
         case Qt::Key_Backspace:
             {
-                auto format = cursor.charFormat();
-                if (format.background() == Qt::red)
+                if (format.background() == _colorError)
                 {
                     return QTextEdit::keyPressEvent(pKeyEvent);
                 }
                 else if (format.background() != QBrush())
                 {
-                    cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor);
+                    // Move the cursor backward without selecting the text so
+                    // the solve() can work properly
+                    cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor);
+                    setTextCursor(cursor);
+
+                    // Reset the background color
+                    cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
                     format.setBackground(QBrush());
                     cursor.setCharFormat(format);
                     setTextCursor(cursor);
 
+                    // Go back again...
                     cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor);
                     setTextCursor(cursor);
                 }
@@ -151,16 +193,29 @@ void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
         const QString& sSelectedText = cursor.selectedText();
         if (sInputText != sSelectedText)
         {
-            cursor = textCursor();
-            auto format = cursor.charFormat();
-            format.setBackground(Qt::red);
-            cursor.setCharFormat(format);
-            cursor.insertText(sInputText);
+            if (sInputText.toUpper() == sSelectedText.toUpper())
+            {
+                // Warning
+                format.setBackground(_colorWarning);
+                cursor.setCharFormat(format);
+                cursor.setPosition(cursor.position(), QTextCursor::MoveAnchor);
+                setTextCursor(cursor);
+            }
+            else
+            {
+                // Error dectected
+                cursor = textCursor();
+                format = cursor.charFormat();
+                format.setBackground(_colorError);
+                cursor.setCharFormat(format);
+                cursor.insertText(sInputText);
+            }
         }
         else
         {
-            auto format = cursor.charFormat();
-            format.setBackground(Qt::green);
+            // Valid input
+            format = cursor.charFormat();
+            format.setBackground(_colorOk);
             cursor.setCharFormat(format);
             cursor.setPosition(cursor.position(), QTextCursor::MoveAnchor);
             setTextCursor(cursor);

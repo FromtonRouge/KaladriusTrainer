@@ -19,9 +19,11 @@
 
 #pragma once
 
-#include <QtWidgets/QTextEdit>
 #include "Theories/TheoryModel.h"
+#include <QtWidgets/QTextEdit>
+#include <QtGui/QColor>
 
+class QTimer;
 class StrokesSolverTextEdit : public QTextEdit
 {
     Q_OBJECT
@@ -36,6 +38,7 @@ public:
 
 protected slots:
     void onCursorPositionChanged();
+    void onTimerSolve();
 
 protected:
     virtual void keyPressEvent(QKeyEvent* pKeyEvent) override;
@@ -45,4 +48,8 @@ private:
 
 private:
     bool _bTrainingMode;
+    QColor _colorOk;
+    QColor _colorWarning;
+    QColor _colorError;
+    QTimer* _pTimerSolve;
 };
