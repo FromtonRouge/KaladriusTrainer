@@ -269,7 +269,7 @@ void DictionariesWidget::onCurrentChanged(const QModelIndex& current, const QMod
                 if (!sDictionaryName.isEmpty())
                 {
                     // Send signal to the keyboard model
-                    emit dictionaryEntrySelected(sDictionaryName, bits);
+                    emit dictionaryEntrySelected(sDictionaryName, {bits});
                 }
             }
         }

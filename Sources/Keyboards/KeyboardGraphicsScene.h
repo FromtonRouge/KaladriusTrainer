@@ -47,7 +47,7 @@ public:
     KeycapGraphicsItem* getKeycapItem(const QModelIndex& indexKeycap) const;
 
 public slots:
-    void setKeycapsStates(const QVector<QPair<QString, bool>>& keycapsStates);
+    void setKeycapsStates(const QVector<QVector<QPair<QString, bool>>>& possibleKeycapsEntries);
 
 private slots:
     void onModelReset();

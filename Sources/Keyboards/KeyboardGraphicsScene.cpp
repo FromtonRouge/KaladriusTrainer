@@ -27,6 +27,7 @@
 #include <QtGui/QFont>
 #include <QtCore/QItemSelectionModel>
 #include <QtCore/QSignalBlocker>
+#include <QtCore/QDebug>
 #include <functional>
 #include <iostream>
 
@@ -66,12 +67,29 @@ KeycapGraphicsItem*KeyboardGraphicsScene::getKeycapItem(const QModelIndex& index
     return getKeycapItem(indexKeycap.data().toString());
 }
 
-void KeyboardGraphicsScene::setKeycapsStates(const QVector<QPair<QString, bool> >& keycapsStates)
+void KeyboardGraphicsScene::setKeycapsStates(const QVector<QVector<QPair<QString, bool>>>& possibleKeycapsEntries)
 {
-    for (const auto& keycapState : keycapsStates)
+    QHash<QString, bool> mergedStates;
+
+    // Parse every entries
+    for (const auto& keycapsForOneEntry : possibleKeycapsEntries)
     {
-        const QString& sKeycapId = keycapState.first;
-        bool bPressed = keycapState.second;
+        // Parse keycaps for the current entry
+        for (const auto& keycapState : keycapsForOneEntry)
+        {
+            const QString& sKeycapId = keycapState.first;
+            const bool bPressed = keycapState.second;
+            mergedStates[sKeycapId] |= bPressed;
+        }
+
+        break; // TODO: at the moment display the first solution
+    }
+
+    auto it = mergedStates.begin();
+    while (it != mergedStates.end())
+    {
+        const QString& sKeycapId = it.key();
+        const bool bPressed = it++.value();
         auto pKeycapItem = getKeycapItem(sKeycapId);
         if (pKeycapItem)
         {

@@ -22,6 +22,7 @@
 #include <QtCore/QRegularExpression>
 #include <QtGui/QKeyEvent>
 #include <QtCore/QTimer>
+#include <QtCore/QSet>
 #include <QtCore/QDebug>
 
 StrokesSolverTextEdit::StrokesSolverTextEdit(QWidget* pParent)
@@ -78,6 +79,7 @@ void StrokesSolverTextEdit::onTimerSolve()
     dictionariesToParse << "Right Hand Shelton Dictionary";
     dictionariesToParse << "Right Controls Dictionary";
     dictionariesToParse << "Right Pinky Dictionary";
+    dictionariesToParse << "Right Controls Dictionary";
 
     // Check first if we have cached dictionaries data
     auto pTheoryModel = qApp->getTheoryModel();
@@ -238,31 +240,47 @@ bool StrokesSolverTextEdit::solve(QString sText,
 {
     bool bAtLeastOneMatch = false;
 
+    // A dictionary can appears more than once in orderedDictionaries
+    QSet<QString> matchedDictionaries;
+
     // Try to find a match for each dictionary
     auto itDictionary = orderedDictionaries.begin();
     while (itDictionary != orderedDictionaries.end())
     {
-        QBitArray bits;
-        auto entries = cachedDictionaries[*itDictionary];
+        const QString& sDictionaryName = *itDictionary++;
+        if (matchedDictionaries.contains(sDictionaryName))
+        {
+            continue;
+        }
+
+        QVector<QBitArray> possibleBits;
+        auto entries = cachedDictionaries[sDictionaryName];
         const int iSize = sText.size();
         for (int iChar = iSize - 1; iChar >= 0; --iChar)
         {
             const QString& subString = sText.left(iChar + 1);
-            auto itEntry = entries.find(subString);
-            if (itEntry != entries.end())
+            
+            // Get all possible bits for the current text
+            auto itPossibleBits = entries.find(subString);
+            while (itPossibleBits != entries.end() && itPossibleBits.key() == subString)
             {
+                possibleBits << itPossibleBits.value();
+                itPossibleBits++;
+            }
+            
+            if (!possibleBits.isEmpty())
+            {
+                matchedDictionaries.insert(sDictionaryName);
                 bAtLeastOneMatch = true;
-                bits = itEntry.value();
                 sText = sText.right(iSize - iChar - 1);
                 break;
             }
         }
 
-        if (!bits.isNull())
+        if (!possibleBits.isEmpty())
         {
-            emit dictionaryMatch(*itDictionary, bits);
+            emit dictionaryMatch(sDictionaryName, possibleBits);
         }
-        itDictionary++;
     }
     return bAtLeastOneMatch;
 }

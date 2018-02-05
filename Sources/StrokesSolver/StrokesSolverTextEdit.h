@@ -22,6 +22,7 @@
 #include "Theories/TheoryModel.h"
 #include <QtWidgets/QTextEdit>
 #include <QtGui/QColor>
+#include <QtCore/QVector>
 
 class QTimer;
 class StrokesSolverTextEdit : public QTextEdit
@@ -30,7 +31,7 @@ class StrokesSolverTextEdit : public QTextEdit
 
 signals:
     void solverStarted() const;
-    void dictionaryMatch(const QString& sDictionaryName, const QBitArray& inputsKeysBits) const;
+    void dictionaryMatch(const QString& sDictionaryName, const QVector<QBitArray>& possibleBits) const;
 
 public:
     StrokesSolverTextEdit(QWidget* pParent = nullptr);

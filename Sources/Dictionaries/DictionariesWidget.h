@@ -22,6 +22,7 @@
 #include <QtWidgets/QWidget>
 #include <QtCore/QScopedPointer>
 #include <QtCore/QBitArray>
+#include <QtCore/QVector>
 
 namespace Ui
 {
@@ -37,7 +38,7 @@ class DictionariesWidget : public QWidget
     Q_OBJECT
 
 signals:
-    void dictionaryEntrySelected(const QString& sDictionaryName, const QBitArray& inputsKeysBits);
+    void dictionaryEntrySelected(const QString& sDictionaryName, const QVector<QBitArray>& possibleBits) const;
 
 public:
     DictionariesWidget(QWidget* pParent = nullptr);
