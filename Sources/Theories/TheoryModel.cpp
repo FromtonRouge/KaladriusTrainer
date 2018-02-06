@@ -126,12 +126,7 @@ QModelIndex TheoryModel::getTheoryIndex() const
 
 QModelIndex TheoryModel::getDictionariesIndex() const
 {
-    const QModelIndex& indexTheory = getTheoryIndex();
-    if (indexTheory.isValid())
-    {
-        return indexTheory.child(2, 0);
-    }
-    return QModelIndex();
+    return indexFromItem(getTheoryTreeItem()->getDictionaries());
 }
 
 QString TheoryModel::getTheoryName() const

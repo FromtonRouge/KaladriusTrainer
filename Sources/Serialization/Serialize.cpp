@@ -78,6 +78,46 @@ namespace boost
     }
 }
 
+BOOST_CLASS_VERSION(ArrayElementTreeItem, 0)
+BOOST_CLASS_EXPORT(ArrayElementTreeItem) // For serializing from a base pointer
+namespace boost
+{
+    namespace serialization
+    {
+        template<class Archive> void serialize(Archive& ar, ArrayElementTreeItem& obj,  const unsigned int fileVersion)
+        {
+            ar & make_nvp("base", base_object<TreeItem>(obj));
+        }
+    }
+}
+
+BOOST_CLASS_VERSION(AttributeValueTreeItem, 0)
+BOOST_CLASS_EXPORT(AttributeValueTreeItem) // For serializing from a base pointer
+namespace boost
+{
+    namespace serialization
+    {
+        template<class Archive> void serialize(Archive& ar, AttributeValueTreeItem& obj,  const unsigned int fileVersion)
+        {
+            ar & make_nvp("base", base_object<TreeItem>(obj));
+            split_free(ar, obj, fileVersion);
+        }
+
+        template<class Archive> void save(Archive& ar, const AttributeValueTreeItem& obj,  const unsigned int)
+        {
+            const QVariant& value = obj.data(Qt::EditRole);
+            ar << make_nvp("value", value);
+        }
+
+        template<class Archive> void load(Archive& ar, AttributeValueTreeItem& obj,  const unsigned int)
+        {
+            QVariant value;
+            ar >> make_nvp("value", value);
+            obj.setData(value, Qt::EditRole);
+        }
+    }
+}
+
 BOOST_CLASS_VERSION(ArrayTreeItem, 0)
 BOOST_CLASS_EXPORT(ArrayTreeItem) // For serializing from a base pointer
 namespace boost
@@ -480,7 +520,7 @@ namespace boost
     }
 }
 
-BOOST_CLASS_VERSION(TheoryTreeItem, 0)
+BOOST_CLASS_VERSION(TheoryTreeItem, 1)
 namespace boost
 {
     namespace serialization
@@ -500,11 +540,14 @@ namespace boost
             value = obj.getDescription()->getValue()->data(Qt::EditRole);
             ar << make_nvp("description", value);
 
-            ListTreeItem* pDictionaries = obj.getDictionaries();
+            auto pSpecialKeys = obj.getSpecialKeys();
+            ar << make_nvp("special_keys", *pSpecialKeys);
+
+            auto pDictionaries = obj.getDictionaries();
             ar << make_nvp("dictionaries", *pDictionaries);
         }
 
-        template<class Archive> void load(Archive& ar, TheoryTreeItem& obj,  const unsigned int)
+        template<class Archive> void load(Archive& ar, TheoryTreeItem& obj,  const unsigned int iVersion)
         {
             QVariant value;
             auto pValue = obj.getName()->getValue();
@@ -515,7 +558,13 @@ namespace boost
             ar >> make_nvp("description", value);
             pValue->setData(value, Qt::EditRole);
 
-            ListTreeItem* pDictionaries = obj.getDictionaries();
+            if (iVersion > 0)
+            {
+                auto pSpecialKeys = obj.getSpecialKeys();
+                ar >> make_nvp("special_keys", *pSpecialKeys);
+            }
+
+            auto pDictionaries = obj.getDictionaries();
             ar >> make_nvp("dictionaries", *pDictionaries);
         }
     }

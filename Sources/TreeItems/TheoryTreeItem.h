@@ -22,6 +22,7 @@
 #include "TreeItems/TreeItem.h"
 
 class ListTreeItem;
+class ArrayTreeItem;
 class TheoryTreeItem : public TreeItem
 {
 public:
@@ -30,5 +31,6 @@ public:
     virtual int type() const override {return Theory;}
     AttributeTreeItem* getName() const;
     AttributeTreeItem* getDescription() const;
+    ArrayTreeItem* getSpecialKeys() const;
     ListTreeItem* getDictionaries() const;
 };

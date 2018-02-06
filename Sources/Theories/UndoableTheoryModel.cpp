@@ -17,31 +17,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "UndoableTheoryModel.h"
 
-#include <QtWidgets/QTreeView>
-
-class QAction;
-class TheoryTreeView : public QTreeView
+UndoableTheoryModel::UndoableTheoryModel(QObject* pParent)
+    : UndoableProxyModel(pParent)
 {
-    Q_OBJECT
 
-public:
-    TheoryTreeView(QWidget* pParent = nullptr);
-    ~TheoryTreeView();
-
-    virtual void setModel(QAbstractItemModel* pModel) override;
-
-private slots:
-    void onRowsInserted(const QModelIndex& parent, int iFirst, int iLast);
-    void onRemove();
-    void onAdd();
-
-protected:
-    virtual void contextMenuEvent(QContextMenuEvent* pEvent) override;
-    virtual void currentChanged(const QModelIndex& current, const QModelIndex& previous) override;
-
-private:
-    QAction* _pActionRemove;
-    QAction* _pActionAdd;
-};
+}

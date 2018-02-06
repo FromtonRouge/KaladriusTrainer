@@ -30,7 +30,7 @@
 
 class KeyboardModel;
 class TheoryModel;
-class UndoableProxyModel;
+class UndoableTheoryModel;
 class UndoableKeyboardModel;
 class Application : public QApplication
 {
@@ -44,7 +44,7 @@ public:
     ~Application();
 
     TheoryModel* getTheoryModel() const {return _pTheoryModel;}
-    UndoableProxyModel* getUndoableTheoryModel() const {return _pUndoableTheoryModel;}
+    UndoableTheoryModel* getUndoableTheoryModel() const {return _pUndoableTheoryModel;}
     KeyboardModel* getKeyboardModel() const {return _pKeyboardModel;}
     UndoableKeyboardModel* getUndoableKeyboardModel() const {return _pUndoableKeyboardModel;}
 
@@ -58,7 +58,7 @@ private:
     std::streambuf* _pOldStreambufCerr;
 
     TheoryModel* _pTheoryModel;
-    UndoableProxyModel* _pUndoableTheoryModel;
+    UndoableTheoryModel* _pUndoableTheoryModel;
     KeyboardModel* _pKeyboardModel;
     UndoableKeyboardModel* _pUndoableKeyboardModel;
 };

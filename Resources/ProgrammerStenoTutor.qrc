@@ -25,5 +25,6 @@
         <file>Icons/cross.png</file>
         <file>Keyboards/ErgoDox.kbd</file>
         <file>Theories/Jackdaw.theory</file>
+        <file>Icons/plus.png</file>
     </qresource>
 </RCC>

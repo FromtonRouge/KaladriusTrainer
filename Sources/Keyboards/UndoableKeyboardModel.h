@@ -23,6 +23,8 @@
 
 class UndoableKeyboardModel : public UndoableProxyModel
 {
+    Q_OBJECT
+
 public:
     UndoableKeyboardModel(QObject* pParent = nullptr);
 

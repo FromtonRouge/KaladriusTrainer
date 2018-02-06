@@ -21,6 +21,7 @@
 #include "ProjectConfig.h"
 #include "ValueEditors/UserEditorFactory.h"
 #include "Theories/TheoryModel.h"
+#include "Theories/UndoableTheoryModel.h"
 #include "Keyboards/KeyboardModel.h"
 #include "Keyboards/UndoableKeyboardModel.h"
 #include <QtCore/QCommandLineParser>
@@ -31,7 +32,7 @@ Application::Application(int& argc, char** argv)
     , _pOldStreambufCout(std::cout.rdbuf())
     , _pOldStreambufCerr(std::cerr.rdbuf())
     , _pTheoryModel(new TheoryModel(this))
-    , _pUndoableTheoryModel(new UndoableProxyModel(this))
+    , _pUndoableTheoryModel(new UndoableTheoryModel(this))
     , _pKeyboardModel(new KeyboardModel(this))
     , _pUndoableKeyboardModel(new UndoableKeyboardModel(this))
 {

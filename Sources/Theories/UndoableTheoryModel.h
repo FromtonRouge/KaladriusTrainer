@@ -19,29 +19,12 @@
 
 #pragma once
 
-#include <QtWidgets/QTreeView>
+#include "Models/UndoableProxyModel.h"
 
-class QAction;
-class TheoryTreeView : public QTreeView
+class UndoableTheoryModel : public UndoableProxyModel
 {
     Q_OBJECT
 
 public:
-    TheoryTreeView(QWidget* pParent = nullptr);
-    ~TheoryTreeView();
-
-    virtual void setModel(QAbstractItemModel* pModel) override;
-
-private slots:
-    void onRowsInserted(const QModelIndex& parent, int iFirst, int iLast);
-    void onRemove();
-    void onAdd();
-
-protected:
-    virtual void contextMenuEvent(QContextMenuEvent* pEvent) override;
-    virtual void currentChanged(const QModelIndex& current, const QModelIndex& previous) override;
-
-private:
-    QAction* _pActionRemove;
-    QAction* _pActionAdd;
+    UndoableTheoryModel(QObject* pParent = nullptr);
 };
