@@ -22,13 +22,16 @@
 #include "TreeItems/TreeItem.h"
 
 class ListTreeItem;
+class ArrayTreeItem;
 class LinkedTheoryTreeItem : public TreeItem
 {
 public:
     LinkedTheoryTreeItem(const QString& sTheoryName = QString("Linked Theory"));
     virtual int type() const override {return LinkedTheory;}
+    ArrayTreeItem* getLinkedSpecialKeys() const {return _pLinkedSpecialKeys;}
     ListTreeItem* getLinkedDictionaries() const {return _pLinkedDictionaries;}
 
 private:
+    ArrayTreeItem* _pLinkedSpecialKeys;
     ListTreeItem* _pLinkedDictionaries;
 };

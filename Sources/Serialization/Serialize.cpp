@@ -356,7 +356,7 @@ namespace boost
     }
 }
 
-BOOST_CLASS_VERSION(LinkedTheoryTreeItem, 0)
+BOOST_CLASS_VERSION(LinkedTheoryTreeItem, 1)
 BOOST_CLASS_EXPORT(LinkedTheoryTreeItem) // For serializing from a base pointer
 namespace boost
 {
@@ -373,17 +373,26 @@ namespace boost
             std::string sText = obj.text().toStdString();
             ar << make_nvp("name", sText);
 
-            ListTreeItem* pLinkedDictionaries = obj.getLinkedDictionaries();
+            auto pLinkedSpecialKeys = obj.getLinkedSpecialKeys();
+            ar << make_nvp("linked_special_keys", *pLinkedSpecialKeys);
+
+            auto pLinkedDictionaries = obj.getLinkedDictionaries();
             ar << make_nvp("linked_dictionaries", *pLinkedDictionaries);
         }
 
-        template<class Archive> void load(Archive& ar, LinkedTheoryTreeItem& obj,  const unsigned int)
+        template<class Archive> void load(Archive& ar, LinkedTheoryTreeItem& obj,  const unsigned int iVersion)
         {
             std::string sText;
             ar >> make_nvp("name", sText);
             obj.setText(QString::fromStdString(sText));
 
-            ListTreeItem* pLinkedDictionaries = obj.getLinkedDictionaries();
+            if (iVersion > 0)
+            {
+                auto pLinkedSpecialKeys = obj.getLinkedSpecialKeys();
+                ar >> make_nvp("linked_special_keys", *pLinkedSpecialKeys);
+            }
+
+            auto pLinkedDictionaries = obj.getLinkedDictionaries();
             ar >> make_nvp("linked_dictionaries", *pLinkedDictionaries);
         }
     }

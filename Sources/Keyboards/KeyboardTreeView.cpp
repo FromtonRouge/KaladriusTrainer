@@ -19,7 +19,7 @@
 
 #include "KeyboardTreeView.h"
 #include "Main/Application.h"
-#include "Models/UndoableProxyModel.h"
+#include "UndoableKeyboardModel.h"
 #include "Theories/TheoryModel.h"
 #include "KeyboardModel.h"
 #include "Keycaps/KeycapDelegate.h"
@@ -32,6 +32,7 @@
 #include "TreeItems/LinkedDictionaryTreeItem.h"
 #include "TreeItems/ListTreeItem.h"
 #include "TreeItems/ArrayTreeItem.h"
+#include "TreeItems/AttributeValueTreeItem.h"
 #include "ValueTypes/KeycapRef.h"
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QAction>
@@ -55,6 +56,11 @@ KeyboardTreeView::KeyboardTreeView(QWidget* pParent)
     _pActionLinkTheory = new QAction(QIcon(":/Icons/chain.png"), tr("Link Theory"), this);
     connect(_pActionLinkTheory, SIGNAL(triggered()), this, SLOT(onLinkTheory()));
     addAction(_pActionLinkTheory);
+
+    _pActionAdd = new QAction(QIcon(":/Icons/plus.png"), tr("Add"), this);
+    connect(_pActionAdd, SIGNAL(triggered()), this, SLOT(onAdd()));
+    addAction(_pActionAdd);
+    _pActionAdd->setDisabled(true);
 
     _pActionRemove = new QAction(QIcon(":/Icons/cross.png"), tr("Remove"), this);
     _pActionRemove->setShortcut(QKeySequence::Delete);
@@ -126,8 +132,8 @@ void KeyboardTreeView::onGraphicsSceneSelectionChanged()
 
 void KeyboardTreeView::onRowsInserted(const QModelIndex& parent, int iFirst, int iLast)
 {
-    auto pUndoableProxyModel = qobject_cast<UndoableProxyModel*>(model());
-    auto pKeyboardModel = qobject_cast<KeyboardModel*>(pUndoableProxyModel->sourceModel());
+    auto pUndoableKeyboardModel = qobject_cast<UndoableKeyboardModel*>(model());
+    auto pKeyboardModel = qobject_cast<KeyboardModel*>(pUndoableKeyboardModel->sourceModel());
     bool bResizeColumn = false;
     for (int iRow = iFirst; iRow <= iLast; ++iRow)
     {
@@ -142,8 +148,7 @@ void KeyboardTreeView::onRowsInserted(const QModelIndex& parent, int iFirst, int
 
             bResizeColumn = true;
 
-            expand(pUndoableProxyModel->index(iRow, 0, parent));
-            expand(pUndoableProxyModel->mapFromSource(sourceIndexKeycaps));
+            expand(pUndoableKeyboardModel->index(iRow, 0, parent));
         }
     }
 
@@ -159,8 +164,8 @@ void KeyboardTreeView::onLinkTheory()
     if (current.isValid())
     {
         const QModelIndex& currentName = current.sibling(current.row(), 0);
-        auto pUndoableProxyModel = qobject_cast<UndoableProxyModel*>(model());
-        const int iInsertRow = pUndoableProxyModel->rowCount(currentName);
+        auto pUndoableKeyboardModel = qobject_cast<UndoableKeyboardModel*>(model());
+        const int iInsertRow = pUndoableKeyboardModel->rowCount(currentName);
 
         auto pTheoryModel = qApp->getTheoryModel();
         auto pLinkedTheory = new LinkedTheoryTreeItem(pTheoryModel->getTheoryName());
@@ -189,7 +194,7 @@ void KeyboardTreeView::onLinkTheory()
         }
 
         const QByteArray& branch = Serialization::Save({pLinkedTheory});
-        const QModelIndex& indexBranch = pUndoableProxyModel->insertBranch(iInsertRow, currentName, branch);
+        const QModelIndex& indexBranch = pUndoableKeyboardModel->insertBranch(iInsertRow, currentName, branch);
         Q_ASSERT(indexBranch.isValid());
         setCurrentIndex(indexBranch);
         expand(indexBranch);
@@ -202,8 +207,26 @@ void KeyboardTreeView::onRemove()
     if (current.isValid())
     {
         const QModelIndex& currentName = current.sibling(current.row(), 0);
-        auto pUndoableProxyModel = qobject_cast<UndoableProxyModel*>(model());
-        pUndoableProxyModel->removeRow(currentName.row(), currentName.parent());
+        auto pUndoableKeyboardModel = qobject_cast<UndoableKeyboardModel*>(model());
+        pUndoableKeyboardModel->removeRow(currentName.row(), currentName.parent());
+    }
+}
+
+void KeyboardTreeView::onAdd()
+{
+    const QModelIndex& current = currentIndex();
+    if (current.isValid())
+    {
+        auto pUndoableKeyboardModel = qobject_cast<UndoableKeyboardModel*>(model());
+        auto pNewElement = new ArrayElementTreeItem();
+        auto pNewElementValue = new AttributeValueTreeItem(qVariantFromValue(KeycapRef()));
+        const QByteArray& branch = Serialization::Save({pNewElement, pNewElementValue});
+        Q_ASSERT(!branch.isEmpty());
+        const int iInsertRow = pUndoableKeyboardModel->rowCount(current);
+        const QModelIndex& currentName = current.sibling(current.row(), 0);
+        const QModelIndex& indexBranch = pUndoableKeyboardModel->insertBranch(iInsertRow, currentName, branch);
+        Q_ASSERT(indexBranch.isValid());
+        setCurrentIndex(indexBranch);
     }
 }
 
@@ -212,15 +235,15 @@ void KeyboardTreeView::onRelabelLinkedKeys()
     const QModelIndex& current = currentIndex();
     if (current.isValid())
     {
-        auto pUndoableProxyModel = qobject_cast<UndoableProxyModel*>(model());
-        const int iLinkedKeys = pUndoableProxyModel->rowCount(current);
-        pUndoableProxyModel->getUndoStack()->beginMacro(tr("%1 keycaps relinked").arg(iLinkedKeys));
+        auto pUndoableKeyboardModel = qobject_cast<UndoableKeyboardModel*>(model());
+        const int iLinkedKeys = pUndoableKeyboardModel->rowCount(current);
+        pUndoableKeyboardModel->getUndoStack()->beginMacro(tr("%1 keycaps relinked").arg(iLinkedKeys));
         for (int iLinkedKey = 0; iLinkedKey < iLinkedKeys; ++iLinkedKey)
         {
             const QModelIndex& indexKeycapRef = current.child(iLinkedKey, 1);
-            pUndoableProxyModel->setData(indexKeycapRef, indexKeycapRef.data(Qt::EditRole));
+            pUndoableKeyboardModel->setData(indexKeycapRef, indexKeycapRef.data(Qt::EditRole));
         }
-        pUndoableProxyModel->getUndoStack()->endMacro();
+        pUndoableKeyboardModel->getUndoStack()->endMacro();
     }
 }
 
@@ -233,21 +256,44 @@ void KeyboardTreeView::currentChanged(const QModelIndex& current, const QModelIn
         const int iType = current.data(TreeItemTypeRole).toInt();
         switch (iType)
         {
+        case TreeItem::Array:
+            {
+                _pActionRemove->setEnabled(false);
+                _pActionAdd->setEnabled(true);
+                _pActionLinkTheory->setEnabled(false);
+                _pActionRelabelLinkedKeys->setEnabled(true);
+                break;
+            }
+        case TreeItem::ArrayElement:
+            {
+                _pActionRemove->setEnabled(true);
+                _pActionAdd->setEnabled(false);
+                _pActionLinkTheory->setEnabled(false);
+                _pActionRelabelLinkedKeys->setEnabled(false);
+                break;
+            }
         case TreeItem::LinkedTheories:
             {
                 _pActionRemove->setEnabled(false);
+                _pActionAdd->setEnabled(false);
                 _pActionLinkTheory->setEnabled(true);
+                _pActionRelabelLinkedKeys->setEnabled(false);
                 break;
             }
         case TreeItem::LinkedTheory:
             {
                 _pActionRemove->setEnabled(true);
+                _pActionAdd->setEnabled(false);
+                _pActionLinkTheory->setEnabled(false);
+                _pActionRelabelLinkedKeys->setEnabled(false);
                 break;
             }
         default:
             {
                 _pActionRemove->setEnabled(false);
+                _pActionAdd->setEnabled(false);
                 _pActionLinkTheory->setEnabled(false);
+                _pActionRelabelLinkedKeys->setEnabled(false);
                 break;
             }
         }

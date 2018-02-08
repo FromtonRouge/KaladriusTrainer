@@ -37,16 +37,16 @@ TheoryTreeView::TheoryTreeView(QWidget* pParent)
     setEditTriggers(AllEditTriggers);
     header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
+    _pActionAdd = new QAction(QIcon(":/Icons/plus.png"), tr("Add"), this);
+    connect(_pActionAdd, SIGNAL(triggered()), this, SLOT(onAdd()));
+    addAction(_pActionAdd);
+    _pActionAdd->setDisabled(true);
+
     _pActionRemove = new QAction(QIcon(":/Icons/cross.png"), tr("Remove"), this);
     _pActionRemove->setShortcut(QKeySequence::Delete);
     connect(_pActionRemove, SIGNAL(triggered()), this, SLOT(onRemove()));
     addAction(_pActionRemove);
     _pActionRemove->setDisabled(true);
-
-    _pActionAdd = new QAction(QIcon(":/Icons/plus.png"), tr("Add"), this);
-    connect(_pActionAdd, SIGNAL(triggered()), this, SLOT(onAdd()));
-    addAction(_pActionAdd);
-    _pActionAdd->setDisabled(true);
 }
 
 TheoryTreeView::~TheoryTreeView()

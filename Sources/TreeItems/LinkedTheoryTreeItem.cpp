@@ -19,12 +19,16 @@
 
 #include "LinkedTheoryTreeItem.h"
 #include "ListTreeItem.h"
+#include "ArrayTreeItem.h"
 
 LinkedTheoryTreeItem::LinkedTheoryTreeItem(const QString& sTheoryName)
 {
     setIcon(QIcon(":/Icons/graduation-hat.png"));
     setText(sTheoryName);
     setEditable(false);
+
+    _pLinkedSpecialKeys = new ArrayTreeItem(QIcon(":/Icons/keyboard-full.png"), QObject::tr("Linked Special Keys"));
+    appendRow({_pLinkedSpecialKeys, new EmptyTreeItem()});
 
     _pLinkedDictionaries = new ListTreeItem(QIcon(":/Icons/books-brown.png"), QObject::tr("Linked Dictionaries"));
     appendRow({_pLinkedDictionaries, new EmptyTreeItem()});

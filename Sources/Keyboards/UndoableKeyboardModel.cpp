@@ -44,19 +44,54 @@ bool UndoableKeyboardModel::setData(const QModelIndex& index, const QVariant& va
         {
             if (value.isValid() && value.userType() == qMetaTypeId<KeycapRef>())
             {
-                // Check if we are under a linked dictionary branch
-                const QModelIndex& indexLinkedDictionary = Utils::findParent(index, TreeItem::LinkedDictionary);
-                if (indexLinkedDictionary.isValid())
-                {
-                    // Get the keycap id from the keycap reference
-                    const auto& keycapRef = qvariant_cast<KeycapRef>(value);
-                    const QString& sKeycapId = keycapRef.keycapId;
+                // Get the keycap id from the keycap reference
+                const auto& keycapRef = qvariant_cast<KeycapRef>(value);
+                const QString& sKeycapId = keycapRef.keycapId;
+                auto pSourceModel = qobject_cast<KeyboardModel*>(sourceModel());
+                const QModelIndex& proxyIndexKeycapsIndex = mapFromSource(pSourceModel->getKeycapsIndex());
+                const auto* pTheoryModel = qApp->getTheoryModel();
 
-                    auto pSourceModel = qobject_cast<KeyboardModel*>(sourceModel());
-                    if (pSourceModel)
+                if (proxyIndexKeycapsIndex.isValid() && hasChildren(proxyIndexKeycapsIndex))
+                {
+                    // Check if the first parent is the linked theory item
+                    const QModelIndex& parent = index.parent();
+                    const int iParentType = parent.data(TreeItemTypeRole).toInt();
+                    const QString& sParentName = parent.data().toString();
+                    if (iParentType == TreeItem::Array && sParentName == tr("Linked Special Keys"))
                     {
-                        const QModelIndex& proxyIndexKeycapsIndex = mapFromSource(pSourceModel->getKeycapsIndex());
-                        if (proxyIndexKeycapsIndex.isValid() && hasChildren(proxyIndexKeycapsIndex))
+                        const auto& matches = match(proxyIndexKeycapsIndex.child(0,0), Qt::DisplayRole, sKeycapId, 1, Qt::MatchExactly);
+                        if (!matches.isEmpty())
+                        {
+                            const QModelIndex& proxyIndexKeycap = matches.front();
+                            const QModelIndex& proxyIndexLabelValue = Utils::index(this, "Label", 1, proxyIndexKeycap);
+                            if (proxyIndexLabelValue.isValid())
+                            {
+                                getUndoStack()->beginMacro(tr("1 keycap linked to theory"));
+
+                                // Now get the key label in the theory model
+                                const QModelIndex& indexSpecialKeys = Utils::index(pTheoryModel, "Special Keys", 0, pTheoryModel->getTheoryIndex());
+                                if (indexSpecialKeys.isValid())
+                                {
+                                    const QModelIndex& indexName = index.sibling(index.row(), 0);
+                                    const QString& sPath = QString("%1").arg(indexName.data().toString());
+                                    const QModelIndex& indexKeyLabelInTheoryModel = Utils::index(pTheoryModel, sPath, 1, indexSpecialKeys);
+                                    if (indexKeyLabelInTheoryModel.isValid())
+                                    {
+                                        setData(proxyIndexLabelValue, indexKeyLabelInTheoryModel.data().toString());
+                                    }
+                                }
+
+                                UndoableProxyModel::setData(index, value, iRole);
+                                getUndoStack()->endMacro();
+                                return true;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // Check if we are under a linked dictionary branch
+                        const QModelIndex& indexLinkedDictionary = Utils::findParent(index, TreeItem::LinkedDictionary);
+                        if (indexLinkedDictionary.isValid())
                         {
                             const auto& matches = match(proxyIndexKeycapsIndex.child(0,0), Qt::DisplayRole, sKeycapId, 1, Qt::MatchExactly);
                             if (!matches.isEmpty())
@@ -68,7 +103,6 @@ bool UndoableKeyboardModel::setData(const QModelIndex& index, const QVariant& va
                                     getUndoStack()->beginMacro(tr("1 keycap linked to theory"));
 
                                     // Now get the key label in the theory model
-                                    const auto* pTheoryModel = qApp->getTheoryModel();
                                     const QModelIndex& indexDictionariesInTheoryModel = pTheoryModel->getDictionariesIndex();
                                     if (indexDictionariesInTheoryModel.isValid())
                                     {
