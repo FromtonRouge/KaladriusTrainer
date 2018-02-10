@@ -42,7 +42,7 @@
      <x>0</x>
      <y>0</y>
      <width>737</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -572,7 +572,7 @@
      <normaloff>:/Icons/folder-open-document.png</normaloff>:/Icons/folder-open-document.png</iconset>
    </property>
    <property name="text">
-    <string>Load Default Theory (Jackdaw)</string>
+    <string>Load Default Theory (Programmer Steno)</string>
    </property>
   </action>
  </widget>

@@ -248,7 +248,7 @@ void MainWindow::on_actionLoad_Theory_triggered()
 
 void MainWindow::on_actionLoad_Default_Theory_triggered()
 {
-    QFile resourceFile(":/Theories/Jackdaw.theory");
+    QFile resourceFile(":/Theories/ProgrammerSteno.theory");
     auto pTemporaryFile = QTemporaryFile::createNativeFile(resourceFile);
     if (pTemporaryFile)
     {
