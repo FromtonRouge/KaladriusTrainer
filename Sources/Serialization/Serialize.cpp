@@ -87,6 +87,45 @@ namespace boost
         template<class Archive> void serialize(Archive& ar, ArrayElementTreeItem& obj,  const unsigned int fileVersion)
         {
             ar & make_nvp("base", base_object<TreeItem>(obj));
+            split_free(ar, obj, fileVersion);
+        }
+
+        template<class Archive> void save(Archive& ar, const ArrayElementTreeItem& obj,  const unsigned int)
+        {
+            const int iRows = obj.rowCount();
+            const int iColumns = obj.columnCount();
+            ar << make_nvp("rows", iRows);
+            ar << make_nvp("columns", iColumns);
+            for (int iRow = 0; iRow < iRows; ++iRow)
+            {
+                for (int iColumn = 0; iColumn < iColumns; ++iColumn)
+                {
+                    auto pTreeItem = obj.child(iRow, iColumn);
+                    ar << make_nvp("item", pTreeItem);
+                }
+            }
+        }
+
+        template<class Archive> void load(Archive& ar, ArrayElementTreeItem& obj,  const unsigned int)
+        {
+            int iRows = 0;
+            int iColumns = 0;
+            ar >> make_nvp("rows", iRows);
+            ar >> make_nvp("columns", iColumns);
+            for (int iRow = 0; iRow < iRows; ++iRow)
+            {
+                QList<QStandardItem*> items;
+                for (int iColumn = 0; iColumn < iColumns; ++iColumn)
+                {
+                    QStandardItem* pTreeItem = nullptr;
+                    ar >> make_nvp("item", pTreeItem);
+                    if (pTreeItem)
+                    {
+                        items << pTreeItem;
+                    }
+                }
+                obj.appendRow(items);
+            }
         }
     }
 }
@@ -136,18 +175,12 @@ namespace boost
             const int iColumns = obj.columnCount();
             ar << make_nvp("rows", iRows);
             ar << make_nvp("columns", iColumns);
-
-            QVariant value;
             for (int iRow = 0; iRow < iRows; ++iRow)
             {
                 for (int iColumn = 0; iColumn < iColumns; ++iColumn)
                 {
-                    if (iColumn != 0)
-                    {
-                        auto pTreeItem = obj.child(iRow, iColumn);
-                        value = pTreeItem->data(Qt::EditRole);
-                        ar << make_nvp("value", value);
-                    }
+                    auto pTreeItem = obj.child(iRow, iColumn);
+                    ar << make_nvp("item", pTreeItem);
                 }
             }
         }
@@ -158,20 +191,16 @@ namespace boost
             int iColumns = 0;
             ar >> make_nvp("rows", iRows);
             ar >> make_nvp("columns", iColumns);
-            QVariant value;
             for (int iRow = 0; iRow < iRows; ++iRow)
             {
                 QList<QStandardItem*> items;
                 for (int iColumn = 0; iColumn < iColumns; ++iColumn)
                 {
-                    if (iColumn == 0)
+                    QStandardItem* pTreeItem = nullptr;
+                    ar >> make_nvp("item", pTreeItem);
+                    if (pTreeItem)
                     {
-                        items << new ArrayElementTreeItem();
-                    }
-                    else
-                    {
-                        ar >> make_nvp("value", value);
-                        items << new AttributeValueTreeItem(value);
+                        items << pTreeItem;
                     }
                 }
                 obj.appendRow(items);
@@ -356,7 +385,7 @@ namespace boost
     }
 }
 
-BOOST_CLASS_VERSION(LinkedTheoryTreeItem, 1)
+BOOST_CLASS_VERSION(LinkedTheoryTreeItem, 0)
 BOOST_CLASS_EXPORT(LinkedTheoryTreeItem) // For serializing from a base pointer
 namespace boost
 {
@@ -380,17 +409,14 @@ namespace boost
             ar << make_nvp("linked_dictionaries", *pLinkedDictionaries);
         }
 
-        template<class Archive> void load(Archive& ar, LinkedTheoryTreeItem& obj,  const unsigned int iVersion)
+        template<class Archive> void load(Archive& ar, LinkedTheoryTreeItem& obj,  const unsigned int)
         {
             std::string sText;
             ar >> make_nvp("name", sText);
             obj.setText(QString::fromStdString(sText));
 
-            if (iVersion > 0)
-            {
-                auto pLinkedSpecialKeys = obj.getLinkedSpecialKeys();
-                ar >> make_nvp("linked_special_keys", *pLinkedSpecialKeys);
-            }
+            auto pLinkedSpecialKeys = obj.getLinkedSpecialKeys();
+            ar >> make_nvp("linked_special_keys", *pLinkedSpecialKeys);
 
             auto pLinkedDictionaries = obj.getLinkedDictionaries();
             ar >> make_nvp("linked_dictionaries", *pLinkedDictionaries);
@@ -529,7 +555,7 @@ namespace boost
     }
 }
 
-BOOST_CLASS_VERSION(TheoryTreeItem, 1)
+BOOST_CLASS_VERSION(TheoryTreeItem, 0)
 namespace boost
 {
     namespace serialization
@@ -556,7 +582,7 @@ namespace boost
             ar << make_nvp("dictionaries", *pDictionaries);
         }
 
-        template<class Archive> void load(Archive& ar, TheoryTreeItem& obj,  const unsigned int iVersion)
+        template<class Archive> void load(Archive& ar, TheoryTreeItem& obj,  const unsigned int)
         {
             QVariant value;
             auto pValue = obj.getName()->getValue();
@@ -567,11 +593,8 @@ namespace boost
             ar >> make_nvp("description", value);
             pValue->setData(value, Qt::EditRole);
 
-            if (iVersion > 0)
-            {
-                auto pSpecialKeys = obj.getSpecialKeys();
-                ar >> make_nvp("special_keys", *pSpecialKeys);
-            }
+            auto pSpecialKeys = obj.getSpecialKeys();
+            ar >> make_nvp("special_keys", *pSpecialKeys);
 
             auto pDictionaries = obj.getDictionaries();
             ar >> make_nvp("dictionaries", *pDictionaries);

@@ -55,9 +55,7 @@ bool UndoableKeyboardModel::setData(const QModelIndex& index, const QVariant& va
                 {
                     // Check if the first parent is the linked theory item
                     const QModelIndex& parent = index.parent();
-                    const int iParentType = parent.data(TreeItemTypeRole).toInt();
-                    const QString& sParentName = parent.data().toString();
-                    if (iParentType == TreeItem::Array && sParentName == tr("Linked Special Keys"))
+                    if (parent.data(TreeItemTypeRole).toInt() == TreeItem::ArrayElement)
                     {
                         const auto& matches = match(proxyIndexKeycapsIndex.child(0,0), Qt::DisplayRole, sKeycapId, 1, Qt::MatchExactly);
                         if (!matches.isEmpty())
@@ -72,7 +70,8 @@ bool UndoableKeyboardModel::setData(const QModelIndex& index, const QVariant& va
                                 const QModelIndex& indexSpecialKeys = Utils::index(pTheoryModel, "Special Keys", 0, pTheoryModel->getTheoryIndex());
                                 if (indexSpecialKeys.isValid())
                                 {
-                                    const QModelIndex& indexName = index.sibling(index.row(), 0);
+                                    const QModelIndex& parentArray = index.parent();
+                                    const QModelIndex& indexName = parentArray.sibling(parentArray.row(), 0);
                                     const QString& sPath = QString("%1").arg(indexName.data().toString());
                                     const QModelIndex& indexKeyLabelInTheoryModel = Utils::index(pTheoryModel, sPath, 1, indexSpecialKeys);
                                     if (indexKeyLabelInTheoryModel.isValid())

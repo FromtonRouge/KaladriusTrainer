@@ -34,12 +34,14 @@
 #include "TreeItems/ArrayTreeItem.h"
 #include "TreeItems/AttributeValueTreeItem.h"
 #include "ValueTypes/KeycapRef.h"
+#include "ValueTypes/ArrayValue.h"
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QUndoStack>
 #include <QtGui/QContextMenuEvent>
 #include <QtCore/QItemSelectionModel>
+#include <functional>
 
 KeyboardTreeView::KeyboardTreeView(QWidget* pParent)
     : QTreeView(pParent)
@@ -57,8 +59,13 @@ KeyboardTreeView::KeyboardTreeView(QWidget* pParent)
     connect(_pActionLinkTheory, SIGNAL(triggered()), this, SLOT(onLinkTheory()));
     addAction(_pActionLinkTheory);
 
+    _pActionRelabelLinkedKeys = new QAction(QIcon(":/Icons/keyboard.png"), tr("Relabel Linked Keys"), this);
+    connect(_pActionRelabelLinkedKeys, SIGNAL(triggered()), this, SLOT(onRelabelLinkedKeys()));
+    addAction(_pActionRelabelLinkedKeys);
+
     _pActionAdd = new QAction(QIcon(":/Icons/plus.png"), tr("Add"), this);
     connect(_pActionAdd, SIGNAL(triggered()), this, SLOT(onAdd()));
+    _pActionAdd->setShortcut(QKeySequence::New);
     addAction(_pActionAdd);
     _pActionAdd->setDisabled(true);
 
@@ -67,10 +74,6 @@ KeyboardTreeView::KeyboardTreeView(QWidget* pParent)
     connect(_pActionRemove, SIGNAL(triggered()), this, SLOT(onRemove()));
     addAction(_pActionRemove);
     _pActionRemove->setDisabled(true);
-
-    _pActionRelabelLinkedKeys = new QAction(QIcon(":/Icons/keyboard.png"), tr("Relabel Linked Keys"), this);
-    connect(_pActionRelabelLinkedKeys, SIGNAL(triggered()), this, SLOT(onRelabelLinkedKeys()));
-    addAction(_pActionRelabelLinkedKeys);
 }
 
 KeyboardTreeView::~KeyboardTreeView()
@@ -217,16 +220,49 @@ void KeyboardTreeView::onAdd()
     const QModelIndex& current = currentIndex();
     if (current.isValid())
     {
-        auto pUndoableKeyboardModel = qobject_cast<UndoableKeyboardModel*>(model());
-        auto pNewElement = new ArrayElementTreeItem();
-        auto pNewElementValue = new AttributeValueTreeItem(qVariantFromValue(KeycapRef()));
-        const QByteArray& branch = Serialization::Save({pNewElement, pNewElementValue});
-        Q_ASSERT(!branch.isEmpty());
-        const int iInsertRow = pUndoableKeyboardModel->rowCount(current);
         const QModelIndex& currentName = current.sibling(current.row(), 0);
-        const QModelIndex& indexBranch = pUndoableKeyboardModel->insertBranch(iInsertRow, currentName, branch);
-        Q_ASSERT(indexBranch.isValid());
-        setCurrentIndex(indexBranch);
+        const QModelIndex& currentValue = current.sibling(current.row(), 1);
+        auto pUndoableKeyboardModel = qobject_cast<UndoableKeyboardModel*>(model());
+
+        QVariant variant;
+        switch (currentName.data(TreeItemTypeRole).toInt())
+        {
+        case TreeItem::ArrayElement:
+            {
+                const QVariant& currentVariant = currentValue.data(Qt::EditRole);
+                if (currentVariant.isValid())
+                {
+                    const int iType = currentVariant.userType();
+                    if (iType == qMetaTypeId<ArrayValue>())
+                    {
+                        const auto& arrayValue = qvariant_cast<ArrayValue>(currentVariant);
+                        variant = arrayValue.defaultValue;
+                    }
+                }
+                break;
+            }
+        case TreeItem::Array:
+            {
+                variant = qVariantFromValue(ArrayValue("Special Keys", qVariantFromValue(KeycapRef())));
+                break;
+            }
+        default:
+            {
+                return;
+            }
+        }
+
+        if (variant.isValid())
+        {
+            auto pNewElement = new ArrayElementTreeItem();
+            auto pNewElementValue = new AttributeValueTreeItem(variant);
+            const QByteArray& branch = Serialization::Save({pNewElement, pNewElementValue});
+            Q_ASSERT(!branch.isEmpty());
+            const int iInsertRow = pUndoableKeyboardModel->rowCount(currentName);
+            const QModelIndex& indexBranch = pUndoableKeyboardModel->insertBranch(iInsertRow, currentName, branch);
+            Q_ASSERT(indexBranch.isValid());
+            setCurrentIndex(indexBranch);
+        }
     }
 }
 
@@ -236,13 +272,27 @@ void KeyboardTreeView::onRelabelLinkedKeys()
     if (current.isValid())
     {
         auto pUndoableKeyboardModel = qobject_cast<UndoableKeyboardModel*>(model());
-        const int iLinkedKeys = pUndoableKeyboardModel->rowCount(current);
-        pUndoableKeyboardModel->getUndoStack()->beginMacro(tr("%1 keycaps relinked").arg(iLinkedKeys));
-        for (int iLinkedKey = 0; iLinkedKey < iLinkedKeys; ++iLinkedKey)
+        std::function<void (const QModelIndex&)> visitor = [&visitor, pUndoableKeyboardModel](const QModelIndex& index)
         {
-            const QModelIndex& indexKeycapRef = current.child(iLinkedKey, 1);
-            pUndoableKeyboardModel->setData(indexKeycapRef, indexKeycapRef.data(Qt::EditRole));
-        }
+            if (index.isValid())
+            {
+                const QModelIndex& indexValue = index.sibling(index.row(), 1);
+                const QVariant& variant = indexValue.data(Qt::EditRole);
+                if (variant.isValid() && variant.userType() == qMetaTypeId<KeycapRef>())
+                {
+                    pUndoableKeyboardModel->setData(indexValue, variant);
+                }
+
+                const int iRows = pUndoableKeyboardModel->rowCount(index);
+                for (int iRow = 0; iRow < iRows; ++iRow)
+                {
+                    visitor(pUndoableKeyboardModel->index(iRow, 0, index));
+                }
+            }
+        };
+
+        pUndoableKeyboardModel->getUndoStack()->beginMacro(tr("keycaps relinked"));
+        visitor(current);
         pUndoableKeyboardModel->getUndoStack()->endMacro();
     }
 }
@@ -270,6 +320,19 @@ void KeyboardTreeView::currentChanged(const QModelIndex& current, const QModelIn
                 _pActionAdd->setEnabled(false);
                 _pActionLinkTheory->setEnabled(false);
                 _pActionRelabelLinkedKeys->setEnabled(false);
+
+                // Check the value type of the element
+                const QModelIndex& currentValue = current.sibling(current.row(), 1);
+                const QVariant& value = currentValue.data(Qt::EditRole);
+                if (value.isValid())
+                {
+                    const int iUserType = value.userType();
+                    if (iUserType == qMetaTypeId<ArrayValue>())
+                    {
+                        _pActionAdd->setEnabled(true);
+                        _pActionRelabelLinkedKeys->setEnabled(true);
+                    }
+                }
                 break;
             }
         case TreeItem::LinkedTheories:

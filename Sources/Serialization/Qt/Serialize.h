@@ -20,6 +20,7 @@
 #pragma once
 
 #include "ValueTypes/KeycapRef.h"
+#include "ValueTypes/ArrayValue.h"
 #include <QtCore/QDataStream>
 #include <QtCore/QByteArray>
 #include <QtCore/QVariant>
@@ -115,8 +116,13 @@ namespace boost
 
                 if (sTypeName == QMetaType::typeName(qMetaTypeId<KeycapRef>()))
                 {
-                    const auto& keycapRef = qvariant_cast<KeycapRef>(obj);
-                    ar << make_nvp("variant", keycapRef);
+                    const auto& data = qvariant_cast<KeycapRef>(obj);
+                    ar << make_nvp("variant", data);
+                }
+                else if (sTypeName == QMetaType::typeName(qMetaTypeId<ArrayValue>()))
+                {
+                    const auto& data = qvariant_cast<ArrayValue>(obj);
+                    ar << make_nvp("variant", data);
                 }
                 else
                 {
@@ -144,6 +150,12 @@ namespace boost
                 if (sTypeName == QMetaType::typeName(qMetaTypeId<KeycapRef>()))
                 {
                     KeycapRef data;
+                    ar >> make_nvp("variant", data);
+                    obj = qVariantFromValue(data);
+                }
+                else if (sTypeName == QMetaType::typeName(qMetaTypeId<ArrayValue>()))
+                {
+                    ArrayValue data;
                     ar >> make_nvp("variant", data);
                     obj = qVariantFromValue(data);
                 }
@@ -175,6 +187,19 @@ namespace boost
         template<class Archive> void serialize(Archive& ar, KeycapRef& obj,  const unsigned int)
         {
             ar & make_nvp("keycap_id", obj.keycapId);
+        }
+    }
+}
+
+BOOST_CLASS_VERSION(ArrayValue, 0)
+namespace boost
+{
+    namespace serialization
+    {
+        template<class Archive> void serialize(Archive& ar, ArrayValue& obj,  const unsigned int)
+        {
+            ar & make_nvp("label", obj.sLabel);
+            ar & make_nvp("default_value", obj.defaultValue);
         }
     }
 }

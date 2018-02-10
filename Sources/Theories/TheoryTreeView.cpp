@@ -39,6 +39,7 @@ TheoryTreeView::TheoryTreeView(QWidget* pParent)
 
     _pActionAdd = new QAction(QIcon(":/Icons/plus.png"), tr("Add"), this);
     connect(_pActionAdd, SIGNAL(triggered()), this, SLOT(onAdd()));
+    _pActionAdd->setShortcut(QKeySequence::New);
     addAction(_pActionAdd);
     _pActionAdd->setDisabled(true);
 
