@@ -21,12 +21,12 @@
 
 #include "TreeItems/TreeItem.h"
 
-class AttributeValueTreeItem;
+class ValueTreeItem;
 class AttributeTreeItem : public TreeItem
 {
 public:
     AttributeTreeItem(const QString& sAttributeName = QString());
     ~AttributeTreeItem();
-    AttributeValueTreeItem* getValue() const;
+    ValueTreeItem* getValue() const;
     virtual int type() const override {return Attribute;}
 };

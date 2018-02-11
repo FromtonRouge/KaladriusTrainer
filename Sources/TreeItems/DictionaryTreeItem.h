@@ -21,7 +21,6 @@
 
 #include "TreeItems/TreeItem.h"
 
-class ArrayTreeItem;
 class ListTreeItem;
 class DictionaryTreeItem : public TreeItem
 {
@@ -29,6 +28,6 @@ public:
     DictionaryTreeItem(const QString& sText = QString(), const QVector<QString>& keysLabels = {});
     ~DictionaryTreeItem();
     virtual int type() const override {return Dictionary;}
-    ArrayTreeItem* getKeys() const;
+    ListTreeItem* getKeys() const;
     ListTreeItem* getEntries() const;
 };

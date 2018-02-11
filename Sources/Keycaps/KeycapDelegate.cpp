@@ -19,7 +19,7 @@
 
 #include "KeycapDelegate.h"
 #include "ValueTypes/KeycapRef.h"
-#include "ValueTypes/ArrayValue.h"
+#include "ValueTypes/ListValue.h"
 #include "Models/DiffModel.h"
 #include <QtGui/QFont>
 #include <QtCore/QEvent>
@@ -85,9 +85,9 @@ void KeycapDelegate::initStyleOption(QStyleOptionViewItem* pOption, const QModel
                             pOption->icon = QIcon(":/Icons/keyboard.png");
                         }
                     }
-                    else if (iUserType == qMetaTypeId<ArrayValue>())
+                    else if (iUserType == qMetaTypeId<ListValue>())
                     {
-                        const auto& data = qvariant_cast<ArrayValue>(value);
+                        const auto& data = qvariant_cast<ListValue>(value);
                         pOption->text = data.sLabel;
                         pOption->features.setFlag(QStyleOptionViewItem::HasDecoration);
                         pOption->icon = QIcon(":/Icons/edit-list-order.png");

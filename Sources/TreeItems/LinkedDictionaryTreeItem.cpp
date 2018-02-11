@@ -18,7 +18,10 @@
 // ======================================================================
 
 #include "LinkedDictionaryTreeItem.h"
-#include "ArrayTreeItem.h"
+#include "ListTreeItem.h"
+#include "ValueTreeItem.h"
+#include "ValueTypes/ListValue.h"
+#include "ValueTypes/KeycapRef.h"
 #include <QtGui/QIcon>
 
 LinkedDictionaryTreeItem::LinkedDictionaryTreeItem(const QString& sDictionaryName)
@@ -27,8 +30,9 @@ LinkedDictionaryTreeItem::LinkedDictionaryTreeItem(const QString& sDictionaryNam
     setText(sDictionaryName);
     setEditable(false);
 
-    _pLinkedKeysTreeItem = new ArrayTreeItem(QIcon(":/Icons/keyboard-full.png"), QObject::tr("Linked Keys"));
-    appendRow({_pLinkedKeysTreeItem, new EmptyTreeItem()});
+    _pLinkedKeysTreeItem = new ListTreeItem(QIcon(":/Icons/keyboard-full.png"), QObject::tr("Linked Keys"));
+    auto pValueTreeItem = new ValueTreeItem(qVariantFromValue(ListValue(QObject::tr("Keycaps"), qVariantFromValue(KeycapRef()))));
+    appendRow({_pLinkedKeysTreeItem, pValueTreeItem});
 }
 
 LinkedDictionaryTreeItem::~LinkedDictionaryTreeItem()

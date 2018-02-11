@@ -18,7 +18,7 @@
 // ======================================================================
 
 #include "AttributeTreeItem.h"
-#include "AttributeValueTreeItem.h"
+#include "ValueTreeItem.h"
 
 AttributeTreeItem::AttributeTreeItem(const QString& sAttributeName)
 {
@@ -32,7 +32,7 @@ AttributeTreeItem::~AttributeTreeItem()
 
 }
 
-AttributeValueTreeItem*AttributeTreeItem::getValue() const
+ValueTreeItem* AttributeTreeItem::getValue() const
 {
-    return static_cast<AttributeValueTreeItem*>(parent()->child(row(), column() + 1));
+    return static_cast<ValueTreeItem*>(parent()->child(row(), column() + 1));
 }

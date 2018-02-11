@@ -23,11 +23,29 @@
 #include <QtCore/QMetaType>
 #include <QtCore/QVariant>
 
-struct ArrayValue
+struct ListValue
 {
-    ArrayValue(const QString& sLabel = QString(), const QVariant& defaultValue = QVariant()) : sLabel(sLabel), defaultValue(defaultValue) {}
+    enum NamingPolicy
+    {
+        NameIsNotEditable,
+        NameIsEditable,
+        NameIsAutoIndexed, ///< eg: [0], [1] etc....
+    };
+
+    ListValue(const QString& sLabel = QString(),
+              const QVariant& defaultValue = QVariant(),
+              NamingPolicy namingPolicy = NameIsAutoIndexed,
+              const QString& sDefaultIconResource = QString(":/Icons/document-attribute.png"))
+        : sLabel(sLabel)
+        , defaultValue(defaultValue)
+        , namingPolicy(namingPolicy)
+        , sDefaultIconResource(sDefaultIconResource)
+    {}
+
     QString sLabel;
     QVariant defaultValue;
+    NamingPolicy namingPolicy;
+    QString sDefaultIconResource;
 };
 
-Q_DECLARE_METATYPE(ArrayValue)
+Q_DECLARE_METATYPE(ListValue)

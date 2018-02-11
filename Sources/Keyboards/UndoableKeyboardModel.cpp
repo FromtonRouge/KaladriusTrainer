@@ -51,12 +51,45 @@ bool UndoableKeyboardModel::setData(const QModelIndex& index, const QVariant& va
                 const QModelIndex& proxyIndexKeycapsIndex = mapFromSource(pSourceModel->getKeycapsIndex());
                 const auto* pTheoryModel = qApp->getTheoryModel();
 
-                if (proxyIndexKeycapsIndex.isValid() && hasChildren(proxyIndexKeycapsIndex))
+                const QModelIndex& parent = index.parent();
+                if (proxyIndexKeycapsIndex.isValid() && hasChildren(proxyIndexKeycapsIndex) && parent.data(TreeItemTypeRole).toInt() == TreeItem::List)
                 {
-                    // Check if the first parent is the linked theory item
-                    const QModelIndex& parent = index.parent();
-                    if (parent.data(TreeItemTypeRole).toInt() == TreeItem::ArrayElement)
+                    // Check if we are under a linked dictionary branch
+                    const QModelIndex& indexLinkedDictionary = Utils::findParent(index, TreeItem::LinkedDictionary);
+                    if (indexLinkedDictionary.isValid())
                     {
+                        const auto& matches = match(proxyIndexKeycapsIndex.child(0,0), Qt::DisplayRole, sKeycapId, 1, Qt::MatchExactly);
+                        if (!matches.isEmpty())
+                        {
+                            const QModelIndex& proxyIndexKeycap = matches.front();
+                            const QModelIndex& proxyIndexLabelValue = Utils::index(this, "Label", 1, proxyIndexKeycap);
+                            if (proxyIndexLabelValue.isValid())
+                            {
+                                getUndoStack()->beginMacro(tr("1 keycap linked to theory"));
+
+                                // Now get the key label in the theory model
+                                const QModelIndex& indexDictionariesInTheoryModel = pTheoryModel->getDictionariesIndex();
+                                if (indexDictionariesInTheoryModel.isValid())
+                                {
+                                    const QString& sLinkedDictionaryName = indexLinkedDictionary.data().toString();
+                                    const QModelIndex& indexName = index.sibling(index.row(), 0);
+                                    const QString& sPath = QString("%1/Keys/%2").arg(sLinkedDictionaryName).arg(indexName.data().toString());
+                                    const QModelIndex& indexKeyLabelInTheoryModel = Utils::index(pTheoryModel, sPath, 1, indexDictionariesInTheoryModel);
+                                    if (indexKeyLabelInTheoryModel.isValid())
+                                    {
+                                        setData(proxyIndexLabelValue, indexKeyLabelInTheoryModel.data().toString());
+                                    }
+                                }
+
+                                UndoableProxyModel::setData(index, value, iRole);
+                                getUndoStack()->endMacro();
+                                return true;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // Special keys case
                         const auto& matches = match(proxyIndexKeycapsIndex.child(0,0), Qt::DisplayRole, sKeycapId, 1, Qt::MatchExactly);
                         if (!matches.isEmpty())
                         {
@@ -83,42 +116,6 @@ bool UndoableKeyboardModel::setData(const QModelIndex& index, const QVariant& va
                                 UndoableProxyModel::setData(index, value, iRole);
                                 getUndoStack()->endMacro();
                                 return true;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Check if we are under a linked dictionary branch
-                        const QModelIndex& indexLinkedDictionary = Utils::findParent(index, TreeItem::LinkedDictionary);
-                        if (indexLinkedDictionary.isValid())
-                        {
-                            const auto& matches = match(proxyIndexKeycapsIndex.child(0,0), Qt::DisplayRole, sKeycapId, 1, Qt::MatchExactly);
-                            if (!matches.isEmpty())
-                            {
-                                const QModelIndex& proxyIndexKeycap = matches.front();
-                                const QModelIndex& proxyIndexLabelValue = Utils::index(this, "Label", 1, proxyIndexKeycap);
-                                if (proxyIndexLabelValue.isValid())
-                                {
-                                    getUndoStack()->beginMacro(tr("1 keycap linked to theory"));
-
-                                    // Now get the key label in the theory model
-                                    const QModelIndex& indexDictionariesInTheoryModel = pTheoryModel->getDictionariesIndex();
-                                    if (indexDictionariesInTheoryModel.isValid())
-                                    {
-                                        const QString& sLinkedDictionaryName = indexLinkedDictionary.data().toString();
-                                        const QModelIndex& indexName = index.sibling(index.row(), 0);
-                                        const QString& sPath = QString("%1/Keys/%2").arg(sLinkedDictionaryName).arg(indexName.data().toString());
-                                        const QModelIndex& indexKeyLabelInTheoryModel = Utils::index(pTheoryModel, sPath, 1, indexDictionariesInTheoryModel);
-                                        if (indexKeyLabelInTheoryModel.isValid())
-                                        {
-                                            setData(proxyIndexLabelValue, indexKeyLabelInTheoryModel.data().toString());
-                                        }
-                                    }
-
-                                    UndoableProxyModel::setData(index, value, iRole);
-                                    getUndoStack()->endMacro();
-                                    return true;
-                                }
                             }
                         }
                     }

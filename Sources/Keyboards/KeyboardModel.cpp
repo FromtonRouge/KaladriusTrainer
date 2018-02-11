@@ -22,7 +22,7 @@
 #include "TreeItems/KeyboardTreeItem.h"
 #include "TreeItems/KeycapTreeItem.h"
 #include "TreeItems/AttributeTreeItem.h"
-#include "TreeItems/AttributeValueTreeItem.h"
+#include "TreeItems/ValueTreeItem.h"
 #include "TreeItems/ListTreeItem.h"
 #include "Streams/Iostream.h"
 #include "Models/Utils.h"

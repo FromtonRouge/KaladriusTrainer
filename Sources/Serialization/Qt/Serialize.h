@@ -20,7 +20,7 @@
 #pragma once
 
 #include "ValueTypes/KeycapRef.h"
-#include "ValueTypes/ArrayValue.h"
+#include "ValueTypes/ListValue.h"
 #include <QtCore/QDataStream>
 #include <QtCore/QByteArray>
 #include <QtCore/QVariant>
@@ -119,9 +119,9 @@ namespace boost
                     const auto& data = qvariant_cast<KeycapRef>(obj);
                     ar << make_nvp("variant", data);
                 }
-                else if (sTypeName == QMetaType::typeName(qMetaTypeId<ArrayValue>()))
+                else if (sTypeName == QMetaType::typeName(qMetaTypeId<ListValue>()))
                 {
-                    const auto& data = qvariant_cast<ArrayValue>(obj);
+                    const auto& data = qvariant_cast<ListValue>(obj);
                     ar << make_nvp("variant", data);
                 }
                 else
@@ -153,9 +153,9 @@ namespace boost
                     ar >> make_nvp("variant", data);
                     obj = qVariantFromValue(data);
                 }
-                else if (sTypeName == QMetaType::typeName(qMetaTypeId<ArrayValue>()))
+                else if (sTypeName == QMetaType::typeName(qMetaTypeId<ListValue>()))
                 {
-                    ArrayValue data;
+                    ListValue data;
                     ar >> make_nvp("variant", data);
                     obj = qVariantFromValue(data);
                 }
@@ -191,15 +191,16 @@ namespace boost
     }
 }
 
-BOOST_CLASS_VERSION(ArrayValue, 0)
+BOOST_CLASS_VERSION(ListValue, 0)
 namespace boost
 {
     namespace serialization
     {
-        template<class Archive> void serialize(Archive& ar, ArrayValue& obj,  const unsigned int)
+        template<class Archive> void serialize(Archive& ar, ListValue& obj,  const unsigned int)
         {
             ar & make_nvp("label", obj.sLabel);
             ar & make_nvp("default_value", obj.defaultValue);
+            ar & make_nvp("naming_policy", obj.namingPolicy);
         }
     }
 }

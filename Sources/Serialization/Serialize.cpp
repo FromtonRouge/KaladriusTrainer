@@ -29,8 +29,7 @@
 #include "TreeItems/OutputTextTreeItem.h"
 #include "TreeItems/InputKeysTreeItem.h"
 #include "TreeItems/AttributeTreeItem.h"
-#include "TreeItems/AttributeValueTreeItem.h"
-#include "TreeItems/ArrayTreeItem.h"
+#include "TreeItems/ValueTreeItem.h"
 #include "TreeItems/LinkedTheoryTreeItem.h"
 #include "TreeItems/LinkedDictionaryTreeItem.h"
 #include <boost/archive/xml_oarchive.hpp>
@@ -78,133 +77,29 @@ namespace boost
     }
 }
 
-BOOST_CLASS_VERSION(ArrayElementTreeItem, 0)
-BOOST_CLASS_EXPORT(ArrayElementTreeItem) // For serializing from a base pointer
+BOOST_CLASS_VERSION(ValueTreeItem, 0)
+BOOST_CLASS_EXPORT(ValueTreeItem) // For serializing from a base pointer
 namespace boost
 {
     namespace serialization
     {
-        template<class Archive> void serialize(Archive& ar, ArrayElementTreeItem& obj,  const unsigned int fileVersion)
+        template<class Archive> void serialize(Archive& ar, ValueTreeItem& obj,  const unsigned int fileVersion)
         {
             ar & make_nvp("base", base_object<TreeItem>(obj));
             split_free(ar, obj, fileVersion);
         }
 
-        template<class Archive> void save(Archive& ar, const ArrayElementTreeItem& obj,  const unsigned int)
-        {
-            const int iRows = obj.rowCount();
-            const int iColumns = obj.columnCount();
-            ar << make_nvp("rows", iRows);
-            ar << make_nvp("columns", iColumns);
-            for (int iRow = 0; iRow < iRows; ++iRow)
-            {
-                for (int iColumn = 0; iColumn < iColumns; ++iColumn)
-                {
-                    auto pTreeItem = obj.child(iRow, iColumn);
-                    ar << make_nvp("item", pTreeItem);
-                }
-            }
-        }
-
-        template<class Archive> void load(Archive& ar, ArrayElementTreeItem& obj,  const unsigned int)
-        {
-            int iRows = 0;
-            int iColumns = 0;
-            ar >> make_nvp("rows", iRows);
-            ar >> make_nvp("columns", iColumns);
-            for (int iRow = 0; iRow < iRows; ++iRow)
-            {
-                QList<QStandardItem*> items;
-                for (int iColumn = 0; iColumn < iColumns; ++iColumn)
-                {
-                    QStandardItem* pTreeItem = nullptr;
-                    ar >> make_nvp("item", pTreeItem);
-                    if (pTreeItem)
-                    {
-                        items << pTreeItem;
-                    }
-                }
-                obj.appendRow(items);
-            }
-        }
-    }
-}
-
-BOOST_CLASS_VERSION(AttributeValueTreeItem, 0)
-BOOST_CLASS_EXPORT(AttributeValueTreeItem) // For serializing from a base pointer
-namespace boost
-{
-    namespace serialization
-    {
-        template<class Archive> void serialize(Archive& ar, AttributeValueTreeItem& obj,  const unsigned int fileVersion)
-        {
-            ar & make_nvp("base", base_object<TreeItem>(obj));
-            split_free(ar, obj, fileVersion);
-        }
-
-        template<class Archive> void save(Archive& ar, const AttributeValueTreeItem& obj,  const unsigned int)
+        template<class Archive> void save(Archive& ar, const ValueTreeItem& obj,  const unsigned int)
         {
             const QVariant& value = obj.data(Qt::EditRole);
             ar << make_nvp("value", value);
         }
 
-        template<class Archive> void load(Archive& ar, AttributeValueTreeItem& obj,  const unsigned int)
+        template<class Archive> void load(Archive& ar, ValueTreeItem& obj,  const unsigned int)
         {
             QVariant value;
             ar >> make_nvp("value", value);
             obj.setData(value, Qt::EditRole);
-        }
-    }
-}
-
-BOOST_CLASS_VERSION(ArrayTreeItem, 0)
-BOOST_CLASS_EXPORT(ArrayTreeItem) // For serializing from a base pointer
-namespace boost
-{
-    namespace serialization
-    {
-        template<class Archive> void serialize(Archive& ar, ArrayTreeItem& obj,  const unsigned int fileVersion)
-        {
-            ar & make_nvp("base", base_object<TreeItem>(obj));
-            split_free(ar, obj, fileVersion);
-        }
-
-        template<class Archive> void save(Archive& ar, const ArrayTreeItem& obj,  const unsigned int)
-        {
-            const int iRows = obj.rowCount();
-            const int iColumns = obj.columnCount();
-            ar << make_nvp("rows", iRows);
-            ar << make_nvp("columns", iColumns);
-            for (int iRow = 0; iRow < iRows; ++iRow)
-            {
-                for (int iColumn = 0; iColumn < iColumns; ++iColumn)
-                {
-                    auto pTreeItem = obj.child(iRow, iColumn);
-                    ar << make_nvp("item", pTreeItem);
-                }
-            }
-        }
-
-        template<class Archive> void load(Archive& ar, ArrayTreeItem& obj,  const unsigned int)
-        {
-            int iRows = 0;
-            int iColumns = 0;
-            ar >> make_nvp("rows", iRows);
-            ar >> make_nvp("columns", iColumns);
-            for (int iRow = 0; iRow < iRows; ++iRow)
-            {
-                QList<QStandardItem*> items;
-                for (int iColumn = 0; iColumn < iColumns; ++iColumn)
-                {
-                    QStandardItem* pTreeItem = nullptr;
-                    ar >> make_nvp("item", pTreeItem);
-                    if (pTreeItem)
-                    {
-                        items << pTreeItem;
-                    }
-                }
-                obj.appendRow(items);
-            }
         }
     }
 }
@@ -314,6 +209,34 @@ namespace boost
 
         template<class Archive> void save(Archive& ar, const ListTreeItem& obj,  const unsigned int)
         {
+            // Check if the name is editable
+            bool bNameIsEditable = false;
+            auto pParent = obj.parent();
+            if (pParent && pParent->type() == TreeItem::List)
+            {
+                auto pGrandParent = pParent->parent();
+                if (pGrandParent)
+                {
+                    auto pParentValue = pGrandParent->child(pParent->row(), 1);
+                    if (pParentValue)
+                    {
+                        const QVariant& variant = pParentValue->data(Qt::EditRole);
+                        if (variant.isValid() && variant.userType() == qMetaTypeId<ListValue>())
+                        {
+                            bNameIsEditable = qvariant_cast<ListValue>(variant).namingPolicy == ListValue::NameIsEditable;
+                        }
+                    }
+                }
+            }
+
+            ar << make_nvp("name_is_editable", bNameIsEditable);
+
+            if (bNameIsEditable)
+            {
+                std::string sText = obj.text().toStdString();
+                ar << make_nvp("name", sText);
+            }
+
             const int iRows = obj.rowCount();
             const int iColumns = obj.columnCount();
             ar << make_nvp("rows", iRows);
@@ -330,6 +253,16 @@ namespace boost
 
         template<class Archive> void load(Archive& ar, ListTreeItem& obj,  const unsigned int)
         {
+            bool bNameIsEditable = false;
+            ar >> make_nvp("name_is_editable", bNameIsEditable);
+
+            if (bNameIsEditable)
+            {
+                std::string sText;
+                ar >> make_nvp("name", sText);
+                obj.setText(QString::fromStdString(sText));
+            }
+
             int iRows = 0;
             int iColumns = 0;
             ar >> make_nvp("rows", iRows);
@@ -369,7 +302,7 @@ namespace boost
             std::string sText = obj.text().toStdString();
             ar << make_nvp("name", sText);
 
-            ArrayTreeItem* pLinkedKeysTreeItem = obj.getLinkedKeys();
+            auto pLinkedKeysTreeItem = obj.getLinkedKeys();
             ar << make_nvp("linked_keys", *pLinkedKeysTreeItem);
         }
 
@@ -379,7 +312,7 @@ namespace boost
             ar >> make_nvp("name", sText);
             obj.setText(QString::fromStdString(sText));
 
-            ArrayTreeItem* pLinkedKeysTreeItem = obj.getLinkedKeys();
+            auto pLinkedKeysTreeItem = obj.getLinkedKeys();
             ar >> make_nvp("linked_keys", *pLinkedKeysTreeItem);
         }
     }
@@ -509,9 +442,9 @@ namespace boost
             ar >> make_nvp("keys", sText);
             obj.setText(QString::fromStdString(sText));
 
-            QVariant bits;
-            ar >> make_nvp("bits", bits);
-            obj.setData(bits, InputKeyBitsRole);
+            QVariant variant;
+            ar >> make_nvp("bits", variant);
+            obj.setKeyBits(variant.toBitArray());
         }
     }
 }
@@ -533,10 +466,10 @@ namespace boost
             std::string sText = obj.text().toStdString();
             ar << make_nvp("name", sText);
 
-            ArrayTreeItem* pKeysTreeItem = obj.getKeys();
+            auto pKeysTreeItem = obj.getKeys();
             ar << make_nvp("keys", *pKeysTreeItem);
 
-            ListTreeItem* pEntriesTreeItem = obj.getEntries();
+            auto pEntriesTreeItem = obj.getEntries();
             ar << make_nvp("entries", *pEntriesTreeItem);
         }
 
@@ -546,10 +479,10 @@ namespace boost
             ar >> make_nvp("name", sText);
             obj.setText(QString::fromStdString(sText));
 
-            ArrayTreeItem* pKeysTreeItem = obj.getKeys();
+            auto pKeysTreeItem = obj.getKeys();
             ar >> make_nvp("keys", *pKeysTreeItem);
 
-            ListTreeItem* pEntriesTreeItem = obj.getEntries();
+            auto pEntriesTreeItem = obj.getEntries();
             ar >> make_nvp("entries", *pEntriesTreeItem);
         }
     }

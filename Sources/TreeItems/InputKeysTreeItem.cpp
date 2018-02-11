@@ -20,6 +20,7 @@
 #include "InputKeysTreeItem.h"
 #include "Models/ItemDataRole.h"
 #include <QtGui/QIcon>
+#include <boost/dynamic_bitset.hpp>
 
 InputKeysTreeItem::InputKeysTreeItem(const QString& sInputKeys, const QBitArray& bits)
 {
@@ -37,7 +38,14 @@ InputKeysTreeItem::~InputKeysTreeItem()
 void InputKeysTreeItem::setKeyBits(const QBitArray& bits)
 {
     setData(bits, InputKeyBitsRole);
-    //TODO setToolTip(QObject::tr("Keys on the steno keyboard [%1]").arg(uiBits));
+
+    boost::dynamic_bitset<> dynamicbits;
+    dynamicbits.resize(bits.size());
+    for (int iBit = 0; iBit < bits.size(); ++iBit)
+    {
+        dynamicbits[iBit] = bits[iBit];
+    }
+    setToolTip(QObject::tr("Keys on the steno keyboard. Array index in the table [%1]").arg(dynamicbits.to_ulong()));
 }
 
 QBitArray InputKeysTreeItem::getKeyBits() const

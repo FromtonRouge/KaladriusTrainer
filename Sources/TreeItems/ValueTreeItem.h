@@ -19,25 +19,12 @@
 
 #pragma once
 
-#include "TreeItems/AttributeTreeItem.h"
-#include <QtGui/QIcon>
+#include "TreeItems/TreeItem.h"
 
-class ArrayElementTreeItem : public AttributeTreeItem
+class ValueTreeItem : public TreeItem
 {
 public:
-    ArrayElementTreeItem() {}
-    ~ArrayElementTreeItem() {}
-    virtual int type() const override {return ArrayElement;}
-};
-
-class ArrayTreeItem : public TreeItem
-{
-public:
-    ArrayTreeItem(const QIcon& icon = QIcon(), const QString& sName = QString());
-    ~ArrayTreeItem();
-    virtual int type() const override {return Array;}
-    ArrayElementTreeItem* addElement(const QVariant& value);
-
-private:
-    virtual ArrayElementTreeItem* addAttribute(const QString& ignored, const QVariant& value) override;
+    ValueTreeItem(const QVariant& value = QVariant());
+    ~ValueTreeItem();
+    virtual int type() const override {return Value;}
 };

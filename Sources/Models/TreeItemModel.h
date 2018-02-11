@@ -30,6 +30,7 @@ class TreeItemModel : public QStandardItemModel
 public:
     TreeItemModel(QObject* pParent = nullptr);
     ~TreeItemModel();
+    virtual Qt::ItemFlags flags(const QModelIndex& index) const override;
     virtual QVariant data(const QModelIndex& index, int iRole) const override;
     virtual bool dropMimeData(const QMimeData* pMimedata, Qt::DropAction action, int iRow, int iColumn, const QModelIndex& parent) override;
 };

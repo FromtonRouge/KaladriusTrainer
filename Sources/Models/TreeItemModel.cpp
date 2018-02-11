@@ -19,6 +19,7 @@
 
 #include "TreeItemModel.h"
 #include "Serialization/Serialize.h"
+#include "ValueTypes/ListValue.h"
 #include <QtCore/QMimeData>
 
 TreeItemModel::TreeItemModel(QObject* pParent)
@@ -32,15 +33,97 @@ TreeItemModel::~TreeItemModel()
 
 }
 
+Qt::ItemFlags TreeItemModel::flags(const QModelIndex& index) const
+{
+    auto result = QStandardItemModel::flags(index);
+    if (index.isValid())
+    {
+        const int iType = index.data(TreeItemTypeRole).toInt();
+        if (iType == TreeItem::List && index.column() == 0)
+        {
+            const QModelIndex& parent = index.parent();
+            const QModelIndex& parentValue = parent.sibling(parent.row(), 1);
+            if (parentValue.data(TreeItemTypeRole).toInt() == TreeItem::Value)
+            {
+                const QVariant& variant = parentValue.data(Qt::EditRole);
+                if (variant.isValid() && variant.userType() == qMetaTypeId<ListValue>())
+                {
+                    const auto& listValue = qvariant_cast<ListValue>(variant);
+                    switch (listValue.namingPolicy)
+                    {
+                    case ListValue::NameIsEditable:
+                        {
+                            result.setFlag(Qt::ItemIsEditable, true);
+                            break;
+                        }
+                    case ListValue::NameIsNotEditable:
+                    case ListValue::NameIsAutoIndexed:
+                    default:
+                        {
+                            result.setFlag(Qt::ItemIsEditable, false);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
 QVariant TreeItemModel::data(const QModelIndex& index, int iRole) const
 {
     QVariant result;
     switch (iRole)
     {
+    case Qt::DecorationRole:
+        {
+            QString sIconResource;
+            const int iType = itemFromIndex(index)->type();
+            if (iType == TreeItem::List && index.column() == 0)
+            {
+                const QModelIndex& parent = index.parent();
+                const QModelIndex& parentValue = parent.sibling(parent.row(), 1);
+                if (parentValue.data(TreeItemTypeRole).toInt() == TreeItem::Value)
+                {
+                    const QVariant& variant = parentValue.data(Qt::EditRole);
+                    if (variant.isValid() && variant.userType() == qMetaTypeId<ListValue>())
+                    {
+                        sIconResource = qvariant_cast<ListValue>(variant).sDefaultIconResource;
+                    }
+                }
+            }
+
+            if (!sIconResource.isEmpty())
+            {
+                result = QIcon(sIconResource);
+            }
+            else
+            {
+                result = QStandardItemModel::data(index, iRole);
+            }
+            break;
+        }
     case Qt::DisplayRole:
         {
+            bool bAutoIndexing = false;
             const int iType = itemFromIndex(index)->type();
-            if (iType == TreeItem::ArrayElement)
+            if (iType == TreeItem::List)
+            {
+                const QModelIndex& parent = index.parent();
+                const QModelIndex& parentValue = parent.sibling(parent.row(), 1);
+                if (parentValue.data(TreeItemTypeRole).toInt() == TreeItem::Value)
+                {
+                    const QVariant& variant = parentValue.data(Qt::EditRole);
+                    if (variant.isValid() && variant.userType() == qMetaTypeId<ListValue>())
+                    {
+                        bAutoIndexing = qvariant_cast<ListValue>(variant).namingPolicy == ListValue::NameIsAutoIndexed;
+                    }
+                }
+            }
+
+            if (bAutoIndexing)
             {
                 result = QString("[%1]").arg(index.row());
             }

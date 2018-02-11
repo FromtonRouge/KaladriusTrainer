@@ -25,10 +25,7 @@
 class ListTreeItem : public TreeItem
 {
 public:
-    ListTreeItem(const QIcon& icon = QIcon(), const QString& sName = QString(), int iType = List);
+    ListTreeItem(const QIcon& icon = QIcon(), const QString& sName = QString());
     ~ListTreeItem();
-    virtual int type() const override {return _iType;}
-
-private:
-    int _iType;
+    virtual int type() const override {return List;}
 };

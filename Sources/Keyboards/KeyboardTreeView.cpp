@@ -31,10 +31,9 @@
 #include "TreeItems/LinkedTheoryTreeItem.h"
 #include "TreeItems/LinkedDictionaryTreeItem.h"
 #include "TreeItems/ListTreeItem.h"
-#include "TreeItems/ArrayTreeItem.h"
-#include "TreeItems/AttributeValueTreeItem.h"
+#include "TreeItems/ValueTreeItem.h"
 #include "ValueTypes/KeycapRef.h"
-#include "ValueTypes/ArrayValue.h"
+#include "ValueTypes/ListValue.h"
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QMenu>
@@ -190,13 +189,14 @@ void KeyboardTreeView::onLinkTheory()
             const int iKeys = pKeys->rowCount();
             for (int iKey = 0; iKey < iKeys; ++iKey)
             {
-                pLinkedKeys->addElement(qVariantFromValue(KeycapRef()));
+                pLinkedKeys->appendRow({new ListTreeItem(), new ValueTreeItem(qVariantFromValue(KeycapRef()))});
             }
 
             pLinkedDictionaries->appendRow({pLinkedDictionary, new EmptyTreeItem()});
         }
 
         const QByteArray& branch = Serialization::Save({pLinkedTheory});
+        delete pLinkedTheory;
         const QModelIndex& indexBranch = pUndoableKeyboardModel->insertBranch(iInsertRow, currentName, branch);
         Q_ASSERT(indexBranch.isValid());
         setCurrentIndex(indexBranch);
@@ -222,28 +222,23 @@ void KeyboardTreeView::onAdd()
     {
         const QModelIndex& currentName = current.sibling(current.row(), 0);
         const QModelIndex& currentValue = current.sibling(current.row(), 1);
-        auto pUndoableKeyboardModel = qobject_cast<UndoableKeyboardModel*>(model());
-
         QVariant variant;
         switch (currentName.data(TreeItemTypeRole).toInt())
         {
-        case TreeItem::ArrayElement:
+        case TreeItem::List:
             {
                 const QVariant& currentVariant = currentValue.data(Qt::EditRole);
                 if (currentVariant.isValid())
                 {
-                    const int iType = currentVariant.userType();
-                    if (iType == qMetaTypeId<ArrayValue>())
+                    if (currentVariant.userType() == qMetaTypeId<ListValue>())
                     {
-                        const auto& arrayValue = qvariant_cast<ArrayValue>(currentVariant);
-                        variant = arrayValue.defaultValue;
+                        variant = qvariant_cast<ListValue>(currentVariant).defaultValue;
                     }
                 }
-                break;
-            }
-        case TreeItem::Array:
-            {
-                variant = qVariantFromValue(ArrayValue("Special Keys", qVariantFromValue(KeycapRef())));
+                else
+                {
+                    variant = qVariantFromValue(ListValue("Special Keys", qVariantFromValue(KeycapRef())));
+                }
                 break;
             }
         default:
@@ -254,9 +249,12 @@ void KeyboardTreeView::onAdd()
 
         if (variant.isValid())
         {
-            auto pNewElement = new ArrayElementTreeItem();
-            auto pNewElementValue = new AttributeValueTreeItem(variant);
+            auto pUndoableKeyboardModel = qobject_cast<UndoableKeyboardModel*>(model());
+            auto pNewElement = new ListTreeItem();
+            auto pNewElementValue = new ValueTreeItem(variant);
             const QByteArray& branch = Serialization::Save({pNewElement, pNewElementValue});
+            delete pNewElement;
+            delete pNewElementValue;
             Q_ASSERT(!branch.isEmpty());
             const int iInsertRow = pUndoableKeyboardModel->rowCount(currentName);
             const QModelIndex& indexBranch = pUndoableKeyboardModel->insertBranch(iInsertRow, currentName, branch);
@@ -306,15 +304,7 @@ void KeyboardTreeView::currentChanged(const QModelIndex& current, const QModelIn
         const int iType = current.data(TreeItemTypeRole).toInt();
         switch (iType)
         {
-        case TreeItem::Array:
-            {
-                _pActionRemove->setEnabled(false);
-                _pActionAdd->setEnabled(true);
-                _pActionLinkTheory->setEnabled(false);
-                _pActionRelabelLinkedKeys->setEnabled(true);
-                break;
-            }
-        case TreeItem::ArrayElement:
+        case TreeItem::List:
             {
                 _pActionRemove->setEnabled(true);
                 _pActionAdd->setEnabled(false);
@@ -322,25 +312,32 @@ void KeyboardTreeView::currentChanged(const QModelIndex& current, const QModelIn
                 _pActionRelabelLinkedKeys->setEnabled(false);
 
                 // Check the value type of the element
+                const bool bLinkedTheories = current.data().toString() == "Linked Theories";
                 const QModelIndex& currentValue = current.sibling(current.row(), 1);
                 const QVariant& value = currentValue.data(Qt::EditRole);
                 if (value.isValid())
                 {
                     const int iUserType = value.userType();
-                    if (iUserType == qMetaTypeId<ArrayValue>())
+                    if (iUserType == qMetaTypeId<ListValue>())
                     {
                         _pActionAdd->setEnabled(true);
                         _pActionRelabelLinkedKeys->setEnabled(true);
                     }
                 }
-                break;
-            }
-        case TreeItem::LinkedTheories:
-            {
-                _pActionRemove->setEnabled(false);
-                _pActionAdd->setEnabled(false);
-                _pActionLinkTheory->setEnabled(true);
-                _pActionRelabelLinkedKeys->setEnabled(false);
+                else if (bLinkedTheories)
+                {
+                    _pActionRemove->setEnabled(false);
+                    _pActionAdd->setEnabled(false);
+                    _pActionLinkTheory->setEnabled(bLinkedTheories);
+                    _pActionRelabelLinkedKeys->setEnabled(false);
+                }
+                else
+                {
+                    _pActionRemove->setEnabled(false);
+                    _pActionAdd->setEnabled(true);
+                    _pActionLinkTheory->setEnabled(false);
+                    _pActionRelabelLinkedKeys->setEnabled(true);
+                }
                 break;
             }
         case TreeItem::LinkedTheory:

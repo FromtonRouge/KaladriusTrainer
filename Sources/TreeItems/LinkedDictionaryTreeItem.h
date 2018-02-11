@@ -21,15 +21,15 @@
 
 #include "TreeItems/TreeItem.h"
 
-class ArrayTreeItem;
+class ListTreeItem;
 class LinkedDictionaryTreeItem : public TreeItem
 {
 public:
     LinkedDictionaryTreeItem(const QString& sDictionaryName = QString());
     ~LinkedDictionaryTreeItem();
     virtual int type() const override {return LinkedDictionary;}
-    ArrayTreeItem* getLinkedKeys() const {return _pLinkedKeysTreeItem;}
+    ListTreeItem* getLinkedKeys() const {return _pLinkedKeysTreeItem;}
 
 private:
-    ArrayTreeItem* _pLinkedKeysTreeItem;
+    ListTreeItem* _pLinkedKeysTreeItem;
 };

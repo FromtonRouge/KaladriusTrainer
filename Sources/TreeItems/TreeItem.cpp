@@ -19,11 +19,11 @@
 
 #include "TreeItem.h"
 #include "AttributeTreeItem.h"
-#include "AttributeValueTreeItem.h"
+#include "ValueTreeItem.h"
 
 AttributeTreeItem* TreeItem::addAttribute(const QString& sName, const QVariant& value)
 {
     AttributeTreeItem* pAttribute = new AttributeTreeItem(sName);
-    appendRow({pAttribute, new AttributeValueTreeItem(value)});
+    appendRow({pAttribute, new ValueTreeItem(value)});
     return pAttribute;
 }

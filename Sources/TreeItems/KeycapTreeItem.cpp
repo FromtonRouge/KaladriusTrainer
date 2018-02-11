@@ -19,7 +19,7 @@
 
 #include "KeycapTreeItem.h"
 #include "AttributeTreeItem.h"
-#include "AttributeValueTreeItem.h"
+#include "ValueTreeItem.h"
 #include <QtGui/QFont>
 #include <QtGui/QColor>
 

@@ -18,8 +18,10 @@
 // ======================================================================
 
 #include "LinkedTheoryTreeItem.h"
+#include "ValueTreeItem.h"
+#include "ValueTypes/ListValue.h"
+#include "ValueTypes/KeycapRef.h"
 #include "ListTreeItem.h"
-#include "ArrayTreeItem.h"
 
 LinkedTheoryTreeItem::LinkedTheoryTreeItem(const QString& sTheoryName)
 {
@@ -27,8 +29,10 @@ LinkedTheoryTreeItem::LinkedTheoryTreeItem(const QString& sTheoryName)
     setText(sTheoryName);
     setEditable(false);
 
-    _pLinkedSpecialKeys = new ArrayTreeItem(QIcon(":/Icons/keyboard-full.png"), QObject::tr("Linked Special Keys"));
-    appendRow({_pLinkedSpecialKeys, new EmptyTreeItem()});
+    _pLinkedSpecialKeys = new ListTreeItem(QIcon(":/Icons/keyboard-full.png"), QObject::tr("Linked Special Keys"));
+    const QVariant& defaultSubList = qVariantFromValue(ListValue(QObject::tr("Keycaps"), qVariantFromValue(KeycapRef())));
+    auto pValueTreeItem = new ValueTreeItem(qVariantFromValue(ListValue(QObject::tr("Keycaps List"), defaultSubList, ListValue::NameIsEditable)));
+    appendRow({_pLinkedSpecialKeys, pValueTreeItem});
 
     _pLinkedDictionaries = new ListTreeItem(QIcon(":/Icons/books-brown.png"), QObject::tr("Linked Dictionaries"));
     appendRow({_pLinkedDictionaries, new EmptyTreeItem()});

@@ -20,8 +20,10 @@
 #include "TheoryTreeView.h"
 #include "UndoableTheoryModel.h"
 #include "TreeItems/TreeItem.h"
-#include "TreeItems/ArrayTreeItem.h"
-#include "TreeItems/AttributeValueTreeItem.h"
+#include "TreeItems/ListTreeItem.h"
+#include "TreeItems/ValueTreeItem.h"
+#include "ValueTypes/ListValue.h"
+#include "Keycaps/KeycapDelegate.h"
 #include "Models/ItemDataRole.h"
 #include "Serialization/Serialize.h"
 #include <QtWidgets/QHeaderView>
@@ -36,6 +38,9 @@ TheoryTreeView::TheoryTreeView(QWidget* pParent)
     setSelectionMode(ExtendedSelection);
     setEditTriggers(AllEditTriggers);
     header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+
+    delete itemDelegate();
+    setItemDelegate(new KeycapDelegate(this));
 
     _pActionAdd = new QAction(QIcon(":/Icons/plus.png"), tr("Add"), this);
     connect(_pActionAdd, SIGNAL(triggered()), this, SLOT(onAdd()));
@@ -91,16 +96,27 @@ void TheoryTreeView::onAdd()
     const QModelIndex& current = currentIndex();
     if (current.isValid())
     {
-        auto pUndoableTheoryModel = qobject_cast<UndoableTheoryModel*>(model());
-        auto pNewElement = new ArrayElementTreeItem();
-        auto pNewElementValue = new AttributeValueTreeItem(QString());
-        const QByteArray& branch = Serialization::Save({pNewElement, pNewElementValue});
-        Q_ASSERT(!branch.isEmpty());
-        const int iInsertRow = pUndoableTheoryModel->rowCount(current);
         const QModelIndex& currentName = current.sibling(current.row(), 0);
-        const QModelIndex& indexBranch = pUndoableTheoryModel->insertBranch(iInsertRow, currentName, branch);
-        Q_ASSERT(indexBranch.isValid());
-        setCurrentIndex(indexBranch);
+        const QModelIndex& currentValue = current.sibling(current.row(), 1);
+        if (currentValue.data(TreeItemTypeRole).toInt() == TreeItem::Value)
+        {
+            const QVariant& variant = currentValue.data(Qt::EditRole);
+            if (variant.isValid() && variant.userType() == qMetaTypeId<ListValue>())
+            {
+                const auto& listValue = qvariant_cast<ListValue>(variant);
+                auto pUndoableTheoryModel = qobject_cast<UndoableTheoryModel*>(model());
+                auto pNewElement = new ListTreeItem();
+                auto pNewElementValue = new ValueTreeItem(listValue.defaultValue);
+                const QByteArray& branch = Serialization::Save({pNewElement, pNewElementValue});
+                delete pNewElement;
+                delete pNewElementValue;
+                Q_ASSERT(!branch.isEmpty());
+                const int iInsertRow = pUndoableTheoryModel->rowCount(current);
+                const QModelIndex& indexBranch = pUndoableTheoryModel->insertBranch(iInsertRow, currentName, branch);
+                Q_ASSERT(indexBranch.isValid());
+                setCurrentIndex(indexBranch);
+            }
+        }
     }
 }
 
@@ -131,16 +147,10 @@ void TheoryTreeView::currentChanged(const QModelIndex& current, const QModelInde
         const int iType = current.data(TreeItemTypeRole).toInt();
         switch (iType)
         {
-        case TreeItem::Array:
-            {
-                _pActionRemove->setEnabled(false);
-                _pActionAdd->setEnabled(true);
-                break;
-            }
-        case TreeItem::ArrayElement:
+        case TreeItem::List:
             {
                 _pActionRemove->setEnabled(true);
-                _pActionAdd->setEnabled(false);
+                _pActionAdd->setEnabled(true);
                 break;
             }
         default:

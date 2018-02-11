@@ -17,14 +17,14 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "AttributeValueTreeItem.h"
+#include "ValueTreeItem.h"
 
-AttributeValueTreeItem::AttributeValueTreeItem(const QVariant& value)
+ValueTreeItem::ValueTreeItem(const QVariant& value)
 {
     setData(value, Qt::EditRole);
 }
 
-AttributeValueTreeItem::~AttributeValueTreeItem()
+ValueTreeItem::~ValueTreeItem()
 {
 
 }

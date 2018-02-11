@@ -158,7 +158,6 @@ void DictionariesWidget::on_comboBox_currentIndexChanged(int iCurrent)
 
     const auto pModel = _pUi->treeView->model();
 
-    // TODO
     const QModelIndex& sourceIndexDictionaries = _pTheoryModel->getDictionariesIndex();
     Q_ASSERT(sourceIndexDictionaries.isValid());
 
