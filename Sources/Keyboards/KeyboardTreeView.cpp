@@ -34,6 +34,7 @@
 #include "TreeItems/ValueTreeItem.h"
 #include "ValueTypes/KeycapRef.h"
 #include "ValueTypes/ListValue.h"
+#include "Models/Utils.h"
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QMenu>
@@ -221,37 +222,13 @@ void KeyboardTreeView::onAdd()
     if (current.isValid())
     {
         const QModelIndex& currentName = current.sibling(current.row(), 0);
-        const QModelIndex& currentValue = current.sibling(current.row(), 1);
-        QVariant variant;
-        switch (currentName.data(TreeItemTypeRole).toInt())
-        {
-        case TreeItem::List:
-            {
-                const QVariant& currentVariant = currentValue.data(Qt::EditRole);
-                if (currentVariant.isValid())
-                {
-                    if (currentVariant.userType() == qMetaTypeId<ListValue>())
-                    {
-                        variant = qvariant_cast<ListValue>(currentVariant).defaultValue;
-                    }
-                }
-                else
-                {
-                    variant = qVariantFromValue(ListValue("Special Keys", qVariantFromValue(KeycapRef())));
-                }
-                break;
-            }
-        default:
-            {
-                return;
-            }
-        }
-
+        const QVariant& variant = currentName.data(ListValueRole);
         if (variant.isValid())
         {
+            const auto& listValue = qvariant_cast<ListValue>(variant);
             auto pUndoableKeyboardModel = qobject_cast<UndoableKeyboardModel*>(model());
             auto pNewElement = new ListTreeItem();
-            auto pNewElementValue = new ValueTreeItem(variant);
+            auto pNewElementValue = new ValueTreeItem(listValue.defaultValue);
             const QByteArray& branch = Serialization::Save({pNewElement, pNewElementValue});
             delete pNewElement;
             delete pNewElementValue;
@@ -306,38 +283,13 @@ void KeyboardTreeView::currentChanged(const QModelIndex& current, const QModelIn
         {
         case TreeItem::List:
             {
-                _pActionRemove->setEnabled(true);
-                _pActionAdd->setEnabled(false);
+                _pActionRemove->setEnabled(current.parent().data(ListValueRole).isValid());
+                _pActionAdd->setEnabled(current.data(ListValueRole).isValid());
                 _pActionLinkTheory->setEnabled(false);
-                _pActionRelabelLinkedKeys->setEnabled(false);
+                _pActionRelabelLinkedKeys->setEnabled(Utils::findParent(current, TreeItem::LinkedTheory).isValid());
 
-                // Check the value type of the element
                 const bool bLinkedTheories = current.data().toString() == "Linked Theories";
-                const QModelIndex& currentValue = current.sibling(current.row(), 1);
-                const QVariant& value = currentValue.data(Qt::EditRole);
-                if (value.isValid())
-                {
-                    const int iUserType = value.userType();
-                    if (iUserType == qMetaTypeId<ListValue>())
-                    {
-                        _pActionAdd->setEnabled(true);
-                        _pActionRelabelLinkedKeys->setEnabled(true);
-                    }
-                }
-                else if (bLinkedTheories)
-                {
-                    _pActionRemove->setEnabled(false);
-                    _pActionAdd->setEnabled(false);
-                    _pActionLinkTheory->setEnabled(bLinkedTheories);
-                    _pActionRelabelLinkedKeys->setEnabled(false);
-                }
-                else
-                {
-                    _pActionRemove->setEnabled(false);
-                    _pActionAdd->setEnabled(true);
-                    _pActionLinkTheory->setEnabled(false);
-                    _pActionRelabelLinkedKeys->setEnabled(true);
-                }
+                _pActionLinkTheory->setEnabled(bLinkedTheories);
                 break;
             }
         case TreeItem::LinkedTheory:

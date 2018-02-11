@@ -77,6 +77,34 @@ QVariant TreeItemModel::data(const QModelIndex& index, int iRole) const
     QVariant result;
     switch (iRole)
     {
+    case Qt::DisplayRole:
+        {
+            bool bAutoIndexing = false;
+            const int iType = itemFromIndex(index)->type();
+            if (iType == TreeItem::List)
+            {
+                const QModelIndex& parent = index.parent();
+                const QModelIndex& parentValue = parent.sibling(parent.row(), 1);
+                if (parentValue.data(TreeItemTypeRole).toInt() == TreeItem::Value)
+                {
+                    const QVariant& variant = parentValue.data(Qt::EditRole);
+                    if (variant.isValid() && variant.userType() == qMetaTypeId<ListValue>())
+                    {
+                        bAutoIndexing = qvariant_cast<ListValue>(variant).namingPolicy == ListValue::NameIsAutoIndexed;
+                    }
+                }
+            }
+
+            if (bAutoIndexing)
+            {
+                result = QString("[%1]").arg(index.row());
+            }
+            else
+            {
+                result = QStandardItemModel::data(index, iRole);
+            }
+            break;
+        }
     case Qt::DecorationRole:
         {
             QString sIconResource;
@@ -105,31 +133,19 @@ QVariant TreeItemModel::data(const QModelIndex& index, int iRole) const
             }
             break;
         }
-    case Qt::DisplayRole:
+    case ListValueRole:
         {
-            bool bAutoIndexing = false;
-            const int iType = itemFromIndex(index)->type();
-            if (iType == TreeItem::List)
+            if (index.data(TreeItemTypeRole).toInt() == TreeItem::List)
             {
-                const QModelIndex& parent = index.parent();
-                const QModelIndex& parentValue = parent.sibling(parent.row(), 1);
-                if (parentValue.data(TreeItemTypeRole).toInt() == TreeItem::Value)
+                const QModelIndex& indexValue = index.sibling(index.row(), 1);
+                if (indexValue.isValid() && indexValue.data(TreeItemTypeRole).toInt() == TreeItem::Value)
                 {
-                    const QVariant& variant = parentValue.data(Qt::EditRole);
+                    const QVariant& variant = indexValue.data(Qt::EditRole);
                     if (variant.isValid() && variant.userType() == qMetaTypeId<ListValue>())
                     {
-                        bAutoIndexing = qvariant_cast<ListValue>(variant).namingPolicy == ListValue::NameIsAutoIndexed;
+                        result = variant;
                     }
                 }
-            }
-
-            if (bAutoIndexing)
-            {
-                result = QString("[%1]").arg(index.row());
-            }
-            else
-            {
-                result = QStandardItemModel::data(index, iRole);
             }
             break;
         }
