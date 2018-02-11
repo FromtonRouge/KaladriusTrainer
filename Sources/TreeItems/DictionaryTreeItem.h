@@ -22,12 +22,14 @@
 #include "TreeItems/TreeItem.h"
 
 class ListTreeItem;
+class AttributeTreeItem;
 class DictionaryTreeItem : public TreeItem
 {
 public:
     DictionaryTreeItem(const QString& sText = QString(), const QVector<QString>& keysLabels = {});
     ~DictionaryTreeItem();
     virtual int type() const override {return Dictionary;}
+    AttributeTreeItem* getMandatoryKey() const;
     ListTreeItem* getKeys() const;
     ListTreeItem* getEntries() const;
 };

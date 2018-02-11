@@ -466,6 +466,9 @@ namespace boost
             std::string sText = obj.text().toStdString();
             ar << make_nvp("name", sText);
 
+            QVariant value = obj.getMandatoryKey()->getValue()->data(Qt::EditRole);
+            ar << make_nvp("mandatory_key", value);
+
             auto pKeysTreeItem = obj.getKeys();
             ar << make_nvp("keys", *pKeysTreeItem);
 
@@ -473,11 +476,15 @@ namespace boost
             ar << make_nvp("entries", *pEntriesTreeItem);
         }
 
-        template<class Archive> void load(Archive& ar, DictionaryTreeItem& obj,  const unsigned int)
+        template<class Archive> void load(Archive& ar, DictionaryTreeItem& obj,  const unsigned int iVersion)
         {
             std::string sText;
             ar >> make_nvp("name", sText);
             obj.setText(QString::fromStdString(sText));
+
+            QVariant value;
+            ar >> make_nvp("mandatory_key", value);
+            obj.getMandatoryKey()->getValue()->setData(value, Qt::EditRole);
 
             auto pKeysTreeItem = obj.getKeys();
             ar >> make_nvp("keys", *pKeysTreeItem);

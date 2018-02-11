@@ -113,6 +113,15 @@ AAAACgAAAAACACs=
 				<base object_id="_19"></base>
 			</base>
 			<name>Left Controls Dictionary</name>
+			<mandatory_key>
+				<type>10</type>
+				<variant>
+					<size>9</size>
+					<bytes>
+AAAACgD/////
+					</bytes>
+				</variant>
+			</mandatory_key>
 			<keys object_id="_20">
 				<base>
 					<base object_id="_21"></base>
@@ -1595,6 +1604,15 @@ AAAADQAAAAAGPw==
 				<base object_id="_303"></base>
 			</base>
 			<name>Left Hand Shelton Dictionary</name>
+			<mandatory_key>
+				<type>10</type>
+				<variant>
+					<size>9</size>
+					<bytes>
+AAAACgD/////
+					</bytes>
+				</variant>
+			</mandatory_key>
 			<keys object_id="_304">
 				<base>
 					<base object_id="_305"></base>
@@ -7153,6 +7171,15 @@ AAAADQAAAAAI/w==
 				<base object_id="_1363"></base>
 			</base>
 			<name>Left Punctuation Dictionary</name>
+			<mandatory_key>
+				<type>10</type>
+				<variant>
+					<size>21</size>
+					<bytes>
+AAAACgAAAAAMAHMAawBTAHQAYQBy
+					</bytes>
+				</variant>
+			</mandatory_key>
 			<keys object_id="_1364">
 				<base>
 					<base object_id="_1365"></base>
@@ -12711,6 +12738,15 @@ AAAADQAAAAAI/w==
 				<base object_id="_2423"></base>
 			</base>
 			<name>Right Controls Dictionary</name>
+			<mandatory_key>
+				<type>10</type>
+				<variant>
+					<size>9</size>
+					<bytes>
+AAAACgD/////
+					</bytes>
+				</variant>
+			</mandatory_key>
 			<keys object_id="_2424">
 				<base>
 					<base object_id="_2425"></base>
@@ -13499,6 +13535,15 @@ AAAADQAAAAAFHw==
 				<base object_id="_2575"></base>
 			</base>
 			<name>Right Hand Shelton Dictionary</name>
+			<mandatory_key>
+				<type>10</type>
+				<variant>
+					<size>9</size>
+					<bytes>
+AAAACgD/////
+					</bytes>
+				</variant>
+			</mandatory_key>
 			<keys object_id="_2576">
 				<base>
 					<base object_id="_2577"></base>
@@ -19057,6 +19102,15 @@ AAAADQAAAAAI/w==
 				<base object_id="_3635"></base>
 			</base>
 			<name>Right Pinky Dictionary</name>
+			<mandatory_key>
+				<type>10</type>
+				<variant>
+					<size>9</size>
+					<bytes>
+AAAACgD/////
+					</bytes>
+				</variant>
+			</mandatory_key>
 			<keys object_id="_3636">
 				<base>
 					<base object_id="_3637"></base>
@@ -19191,6 +19245,15 @@ AAAADQAAAAACAw==
 				<base object_id="_3663"></base>
 			</base>
 			<name>Right Punctuation Dictionary</name>
+			<mandatory_key>
+				<type>10</type>
+				<variant>
+					<size>21</size>
+					<bytes>
+AAAACgAAAAAMAHMAawBTAHQAYQBy
+					</bytes>
+				</variant>
+			</mandatory_key>
 			<keys object_id="_3664">
 				<base>
 					<base object_id="_3665"></base>
@@ -24749,6 +24812,15 @@ AAAADQAAAAAI/w==
 				<base object_id="_4723"></base>
 			</base>
 			<name>Thumbs Bigrams Dictionary</name>
+			<mandatory_key>
+				<type>10</type>
+				<variant>
+					<size>21</size>
+					<bytes>
+AAAACgAAAAAMAHMAawBTAHQAYQBy
+					</bytes>
+				</variant>
+			</mandatory_key>
 			<keys object_id="_4724">
 				<base>
 					<base object_id="_4725"></base>
@@ -26231,6 +26303,15 @@ AAAADQAAAAAGPw==
 				<base object_id="_5007"></base>
 			</base>
 			<name>Thumbs Dictionary</name>
+			<mandatory_key>
+				<type>10</type>
+				<variant>
+					<size>9</size>
+					<bytes>
+AAAACgD/////
+					</bytes>
+				</variant>
+			</mandatory_key>
 			<keys object_id="_5008">
 				<base>
 					<base object_id="_5009"></base>

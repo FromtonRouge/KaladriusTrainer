@@ -20,6 +20,7 @@
 #include "DictionaryTreeItem.h"
 #include "ListTreeItem.h"
 #include "ValueTreeItem.h"
+#include "AttributeTreeItem.h"
 #include "ValueTypes/ListValue.h"
 #include <QtGui/QIcon>
 
@@ -28,6 +29,8 @@ DictionaryTreeItem::DictionaryTreeItem(const QString& sText, const QVector<QStri
     setIcon(QIcon(":/Icons/book-brown.png"));
     setText(sText);
     setEditable(false);
+
+    appendRow({new AttributeTreeItem(QObject::tr("Mandatory Key")), new ValueTreeItem(QString())});
 
     auto pKeysTreeItem = new ListTreeItem(QIcon(":/Icons/keyboard-full.png"), QObject::tr("Keys"));
     for (const QString& sKeyLabel : keysLabels)
@@ -44,12 +47,17 @@ DictionaryTreeItem::~DictionaryTreeItem()
 {
 }
 
+AttributeTreeItem*DictionaryTreeItem::getMandatoryKey() const
+{
+    return static_cast<AttributeTreeItem*>(child(0, 0));
+}
+
 ListTreeItem* DictionaryTreeItem::getKeys() const
 {
-    return static_cast<ListTreeItem*>(child(0, 0));
+    return static_cast<ListTreeItem*>(child(1, 0));
 }
 
 ListTreeItem* DictionaryTreeItem::getEntries() const
 {
-    return static_cast<ListTreeItem*>(child(1, 0));
+    return static_cast<ListTreeItem*>(child(2, 0));
 }
