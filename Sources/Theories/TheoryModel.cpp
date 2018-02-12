@@ -47,7 +47,8 @@ QVariant TheoryModel::data(const QModelIndex& index, int iRole) const
         {
             if (index.data(TreeItemTypeRole).toInt() == TreeItem::Dictionary)
             {
-                result = index.child(1, 0);
+                auto pItem = static_cast<DictionaryTreeItem*>(itemFromIndex(index));
+                result = pItem->getEntries()->index();
             }
             break;
         }
