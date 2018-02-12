@@ -38,7 +38,7 @@ class DictionariesWidget : public QWidget
     Q_OBJECT
 
 signals:
-    void dictionaryEntrySelected(const QString& sDictionaryName, const QVector<QBitArray>& possibleBits) const;
+    void dictionaryEntrySelected(const QString& sDictionaryName, const QString& sMandatorySpecialKey, const QVector<QBitArray>& possibleBits) const;
 
 public:
     DictionariesWidget(QWidget* pParent = nullptr);

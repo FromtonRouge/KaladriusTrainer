@@ -268,7 +268,8 @@ void DictionariesWidget::onCurrentChanged(const QModelIndex& current, const QMod
                 if (!sDictionaryName.isEmpty())
                 {
                     // Send signal to the keyboard model
-                    emit dictionaryEntrySelected(sDictionaryName, {bits});
+                    const QString& sMandatorySpecialKey = _pTheoryModel->getCachedDictionaries()[sDictionaryName].sMandatorySpecialKey;
+                    emit dictionaryEntrySelected(sDictionaryName, sMandatorySpecialKey, {bits});
                 }
             }
         }

@@ -19,6 +19,7 @@
 
 #pragma once
 
+#include "KeyboardModel.h"
 #include <QtWidgets/QGraphicsScene>
 #include <QtCore/QHash>
 #include <QtCore/QVector>
@@ -47,7 +48,7 @@ public:
     KeycapGraphicsItem* getKeycapItem(const QModelIndex& indexKeycap) const;
 
 public slots:
-    void setKeycapsStates(const QVector<QVector<QPair<QString, bool>>>& possibleKeycapsEntries);
+    void setKeycapsStates(const KeycapsStates& specialKeysStates, const QVector<KeycapsStates>& possibleKeycapsEntries);
 
 private slots:
     void onModelReset();

@@ -172,7 +172,13 @@ void TheoryModel::buildCache()
 
                     if (!entries.isEmpty())
                     {
-                        _cache.insert(sDictionaryName, entries);
+                        QString sMandatorySpecialKey;
+                        const QModelIndex& indexMandatorySpecialKey = Utils::index(this, "Mandatory Key", 1, indexDictionary);
+                        if (indexMandatorySpecialKey.isValid())
+                        {
+                            sMandatorySpecialKey = indexMandatorySpecialKey.data().toString();
+                        }
+                        _cache.insert(sDictionaryName, {sMandatorySpecialKey, entries});
                     }
                 }
             }

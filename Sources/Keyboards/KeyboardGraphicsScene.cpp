@@ -18,7 +18,6 @@
 // ======================================================================
 
 #include "KeyboardGraphicsScene.h"
-#include "KeyboardModel.h"
 #include "Models/UndoableProxyModel.h"
 #include "KeyboardTreeView.h"
 #include "Keycaps/KeycapGraphicsItem.h"
@@ -67,7 +66,8 @@ KeycapGraphicsItem*KeyboardGraphicsScene::getKeycapItem(const QModelIndex& index
     return getKeycapItem(indexKeycap.data().toString());
 }
 
-void KeyboardGraphicsScene::setKeycapsStates(const QVector<QVector<QPair<QString, bool>>>& possibleKeycapsEntries)
+void KeyboardGraphicsScene::setKeycapsStates(const KeycapsStates& specialKeysStates,
+                                             const QVector<KeycapsStates>& possibleKeycapsEntries)
 {
     QHash<QString, bool> mergedStates;
 
@@ -94,6 +94,16 @@ void KeyboardGraphicsScene::setKeycapsStates(const QVector<QVector<QPair<QString
         if (pKeycapItem)
         {
             pKeycapItem->setSelected(bPressed);
+        }
+    }
+
+    // Special keys
+    for (const KeycapState& specialKeyState : specialKeysStates)
+    {
+        auto pKeycapItem = getKeycapItem(specialKeyState.first);
+        if (pKeycapItem)
+        {
+            pKeycapItem->setSelected(specialKeyState.second);
         }
     }
 }

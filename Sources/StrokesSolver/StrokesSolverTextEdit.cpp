@@ -254,7 +254,8 @@ bool StrokesSolverTextEdit::solve(QString sText,
         }
 
         QVector<QBitArray> possibleBits;
-        auto entries = cachedDictionaries[sDictionaryName];
+        const auto& cachedDictionaryInfo = cachedDictionaries[sDictionaryName];
+        auto entries = cachedDictionaryInfo.entries;
         const int iSize = sText.size();
         for (int iChar = iSize - 1; iChar >= 0; --iChar)
         {
@@ -279,7 +280,7 @@ bool StrokesSolverTextEdit::solve(QString sText,
 
         if (!possibleBits.isEmpty())
         {
-            emit dictionaryMatch(sDictionaryName, possibleBits);
+            emit dictionaryMatch(sDictionaryName, cachedDictionaryInfo.sMandatorySpecialKey, possibleBits);
         }
     }
     return bAtLeastOneMatch;

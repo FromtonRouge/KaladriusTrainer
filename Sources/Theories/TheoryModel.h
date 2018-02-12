@@ -35,7 +35,14 @@ signals:
 
 public:
     typedef QMultiHash<QString, QBitArray> CacheDictionaryEntries; ///< Key = text, value = keyboard keys bits.
-    typedef QHash<QString, CacheDictionaryEntries> CacheDictionaries; ///< Key = dictionary name, value = CacheDictionaryEntries.
+
+    struct CacheDictionaryInfo
+    {
+        QString sMandatorySpecialKey;
+        CacheDictionaryEntries entries;
+    };
+
+    typedef QHash<QString, CacheDictionaryInfo> CacheDictionaries; ///< Key = dictionary name, value = CacheDictionaryInfo.
 
 public:
     TheoryModel(QObject* pParent = nullptr);

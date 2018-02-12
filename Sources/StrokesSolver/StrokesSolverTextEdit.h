@@ -31,7 +31,7 @@ class StrokesSolverTextEdit : public QTextEdit
 
 signals:
     void solverStarted() const;
-    void dictionaryMatch(const QString& sDictionaryName, const QVector<QBitArray>& possibleBits) const;
+    void dictionaryMatch(const QString& sDictionaryName, const QString& sMandatorySpecialKey, const QVector<QBitArray>& possibleBits) const;
 
 public:
     StrokesSolverTextEdit(QWidget* pParent = nullptr);
