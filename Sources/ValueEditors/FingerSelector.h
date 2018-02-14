@@ -17,34 +17,24 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "KeyboardTreeItem.h"
-#include "ListTreeItem.h"
-#include <QtGui/QIcon>
+#pragma once
 
-KeyboardTreeItem::KeyboardTreeItem()
+#include "UserEditor.h"
+#include "ValueTypes/Finger.h" // for convenience
+
+class QComboBox;
+class FingerSelector : public UserEditor
 {
-    setIcon(QIcon(":/Icons/keyboard-full.png"));
-    setText(QObject::tr("Keyboard"));
-    setEditable(false);
+    Q_OBJECT
 
-    auto pKeycapsListItem = new ListTreeItem(QIcon(":/Icons/keyboard-full.png"), QObject::tr("Keycaps"));
-    appendRow({pKeycapsListItem, new EmptyTreeItem()});
+public:
+    FingerSelector(QWidget* pParent = nullptr);
 
-    auto pLinkedTheories = new ListTreeItem(QIcon(":/Icons/book-open.png"), QObject::tr("Linked Theories"));
-    appendRow({pLinkedTheories, new EmptyTreeItem()});
-}
+    virtual void setValue(const QVariant& value) override;
 
-KeyboardTreeItem::~KeyboardTreeItem()
-{
+private slots:
+    void onCurrentIndexChanged(int);
 
-}
-
-ListTreeItem* KeyboardTreeItem::getKeycaps() const
-{
-    return static_cast<ListTreeItem*>(child(0));
-}
-
-ListTreeItem* KeyboardTreeItem::getLinkedTheories() const
-{
-    return static_cast<ListTreeItem*>(child(1));
-}
+private:
+    QComboBox* _pComboBox;
+};

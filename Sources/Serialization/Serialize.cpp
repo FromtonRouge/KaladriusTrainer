@@ -104,7 +104,7 @@ namespace boost
     }
 }
 
-BOOST_CLASS_VERSION(KeycapTreeItem, 0)
+BOOST_CLASS_VERSION(KeycapTreeItem, 1)
 BOOST_CLASS_EXPORT(KeycapTreeItem) // For serializing from a base pointer
 namespace boost
 {
@@ -152,9 +152,13 @@ namespace boost
             pValueTreeItem = obj.child(1, 1);
             value = pValueTreeItem->data(Qt::EditRole);
             ar << make_nvp("color", value);
+
+            pValueTreeItem = obj.child(2, 1);
+            value = pValueTreeItem->data(Qt::EditRole);
+            ar << make_nvp("finger", value);
         }
 
-        template<class Archive> void load(Archive& ar, KeycapTreeItem& obj,  const unsigned int)
+        template<class Archive> void load(Archive& ar, KeycapTreeItem& obj,  const unsigned int iVersion)
         {
             // Load keycap id
             std::string sId;
@@ -191,6 +195,13 @@ namespace boost
             pValueTreeItem = obj.child(1, 1);
             ar >> make_nvp("color", value);
             pValueTreeItem->setData(value, Qt::EditRole);
+
+            if (iVersion >= 1)
+            {
+                pValueTreeItem = obj.child(2, 1);
+                ar >> make_nvp("finger", value);
+                pValueTreeItem->setData(value, Qt::EditRole);
+            }
         }
     }
 }

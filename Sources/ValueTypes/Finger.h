@@ -17,34 +17,24 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "KeyboardTreeItem.h"
-#include "ListTreeItem.h"
-#include <QtGui/QIcon>
+#pragma once
 
-KeyboardTreeItem::KeyboardTreeItem()
+#include <QtCore/QString>
+#include <QtCore/QMetaType>
+
+struct Finger
 {
-    setIcon(QIcon(":/Icons/keyboard-full.png"));
-    setText(QObject::tr("Keyboard"));
-    setEditable(false);
+    enum Id
+    {
+        None = -1,
+        Thumb = 0,
+        Index,
+        Middle,
+        Ring,
+        Pinky
+    };
+    Finger(Id id = None) : id(id) {}
+    Id id;
+};
 
-    auto pKeycapsListItem = new ListTreeItem(QIcon(":/Icons/keyboard-full.png"), QObject::tr("Keycaps"));
-    appendRow({pKeycapsListItem, new EmptyTreeItem()});
-
-    auto pLinkedTheories = new ListTreeItem(QIcon(":/Icons/book-open.png"), QObject::tr("Linked Theories"));
-    appendRow({pLinkedTheories, new EmptyTreeItem()});
-}
-
-KeyboardTreeItem::~KeyboardTreeItem()
-{
-
-}
-
-ListTreeItem* KeyboardTreeItem::getKeycaps() const
-{
-    return static_cast<ListTreeItem*>(child(0));
-}
-
-ListTreeItem* KeyboardTreeItem::getLinkedTheories() const
-{
-    return static_cast<ListTreeItem*>(child(1));
-}
+Q_DECLARE_METATYPE(Finger)

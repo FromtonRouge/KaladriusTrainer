@@ -17,34 +17,31 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "KeyboardTreeItem.h"
-#include "ListTreeItem.h"
-#include <QtGui/QIcon>
+#include "FingerSelector.h"
+#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QComboBox>
+#include <QtCore/QAbstractItemModel>
 
-KeyboardTreeItem::KeyboardTreeItem()
+FingerSelector::FingerSelector(QWidget* pParent)
+    : UserEditor(pParent)
+    , _pComboBox(new QComboBox(this))
 {
-    setIcon(QIcon(":/Icons/keyboard-full.png"));
-    setText(QObject::tr("Keyboard"));
-    setEditable(false);
-
-    auto pKeycapsListItem = new ListTreeItem(QIcon(":/Icons/keyboard-full.png"), QObject::tr("Keycaps"));
-    appendRow({pKeycapsListItem, new EmptyTreeItem()});
-
-    auto pLinkedTheories = new ListTreeItem(QIcon(":/Icons/book-open.png"), QObject::tr("Linked Theories"));
-    appendRow({pLinkedTheories, new EmptyTreeItem()});
+    _pComboBox->addItems({tr("None"), tr("Thumb"), tr("Index"), tr("Middle"), tr("Ring"), tr("Pinky")});
+    connect(_pComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onCurrentIndexChanged(int)));
+    auto pLayout = new QHBoxLayout();
+    pLayout->setContentsMargins(0, 0, 0, 0);
+    pLayout->addWidget(_pComboBox);
+    setLayout(pLayout);
 }
 
-KeyboardTreeItem::~KeyboardTreeItem()
+void FingerSelector::setValue(const QVariant& value)
 {
-
+    _value = value;
+    _pComboBox->setCurrentIndex(int(qvariant_cast<Finger>(value).id) + 1);
 }
 
-ListTreeItem* KeyboardTreeItem::getKeycaps() const
+void FingerSelector::onCurrentIndexChanged(int iIndex)
 {
-    return static_cast<ListTreeItem*>(child(0));
-}
-
-ListTreeItem* KeyboardTreeItem::getLinkedTheories() const
-{
-    return static_cast<ListTreeItem*>(child(1));
+    _value = qVariantFromValue(Finger(Finger::Id(iIndex - 1)));
+    apply();
 }

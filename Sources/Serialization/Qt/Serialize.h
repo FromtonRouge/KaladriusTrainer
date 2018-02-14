@@ -21,6 +21,7 @@
 
 #include "ValueTypes/KeycapRef.h"
 #include "ValueTypes/ListValue.h"
+#include "ValueTypes/Finger.h"
 #include <QtCore/QDataStream>
 #include <QtCore/QByteArray>
 #include <QtCore/QVariant>
@@ -124,6 +125,11 @@ namespace boost
                     const auto& data = qvariant_cast<ListValue>(obj);
                     ar << make_nvp("variant", data);
                 }
+                else if (sTypeName == QMetaType::typeName(qMetaTypeId<Finger>()))
+                {
+                    const auto& data = qvariant_cast<Finger>(obj);
+                    ar << make_nvp("variant", data);
+                }
                 else
                 {
                     Q_ASSERT_X(false, "Qt/Serialize.h", "Can't save: Unknown QVariant user type");
@@ -159,6 +165,12 @@ namespace boost
                     ar >> make_nvp("variant", data);
                     obj = qVariantFromValue(data);
                 }
+                else if (sTypeName == QMetaType::typeName(qMetaTypeId<Finger>()))
+                {
+                    Finger data;
+                    ar >> make_nvp("variant", data);
+                    obj = qVariantFromValue(data);
+                }
                 else
                 {
                     Q_ASSERT_X(false, "Qt/Serialize.h", "Can't load: Unknown QVariant user type");
@@ -187,6 +199,18 @@ namespace boost
         template<class Archive> void serialize(Archive& ar, KeycapRef& obj,  const unsigned int)
         {
             ar & make_nvp("keycap_id", obj.keycapId);
+        }
+    }
+}
+
+BOOST_CLASS_VERSION(Finger, 0)
+namespace boost
+{
+    namespace serialization
+    {
+        template<class Archive> void serialize(Archive& ar, Finger& obj,  const unsigned int)
+        {
+            ar & make_nvp("finger_id", obj.id);
         }
     }
 }

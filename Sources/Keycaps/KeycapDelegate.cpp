@@ -20,6 +20,7 @@
 #include "KeycapDelegate.h"
 #include "ValueTypes/KeycapRef.h"
 #include "ValueTypes/ListValue.h"
+#include "ValueTypes/Finger.h"
 #include "Models/DiffModel.h"
 #include <QtGui/QFont>
 #include <QtCore/QEvent>
@@ -91,6 +92,51 @@ void KeycapDelegate::initStyleOption(QStyleOptionViewItem* pOption, const QModel
                         pOption->text = data.sLabel;
                         pOption->features.setFlag(QStyleOptionViewItem::HasDecoration);
                         pOption->icon = QIcon(":/Icons/edit-list-order.png");
+                    }
+                    else if (iUserType == qMetaTypeId<Finger>())
+                    {
+                        const auto& data = qvariant_cast<Finger>(value);
+                        QString sLabel = tr("Unknown");
+                        switch (data.id)
+                        {
+                        case Finger::None:
+                            {
+                                sLabel = tr("None");
+                                break;
+                            }
+                        case Finger::Thumb:
+                            {
+                                sLabel = tr("Thumb");
+                                break;
+                            }
+                        case Finger::Index:
+                            {
+                                sLabel = tr("Index");
+                                break;
+                            }
+                        case Finger::Middle:
+                            {
+                                sLabel = tr("Middle");
+                                break;
+                            }
+                        case Finger::Ring:
+                            {
+                                sLabel = tr("Ring");
+                                break;
+                            }
+                        case Finger::Pinky:
+                            {
+                                sLabel = tr("Pinky");
+                                break;
+                            }
+                        default:
+                            {
+                                break;
+                            }
+                        }
+                        pOption->text = sLabel;
+                        pOption->features.setFlag(QStyleOptionViewItem::HasDecoration);
+                        pOption->icon = QIcon(":/Icons/hand.png");
                     }
                     break;
                 }

@@ -22,6 +22,7 @@
 #include "FontEditor.h"
 #include "Main/Application.h"
 #include "KeycapRefEditor.h"
+#include "FingerSelector.h"
 #include "Keyboards/KeyboardModel.h"
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QDoubleSpinBox>
@@ -90,6 +91,10 @@ QWidget* UserEditorFactory::createEditor(int iUserType, QWidget* pParent) const
                         return new KeycapRefEditor(_pKeycapsRefModel.data(), pParent);
                     }
                 }
+            }
+            else if (iUserType == qMetaTypeId<Finger>())
+            {
+                return new FingerSelector(pParent);
             }
             else
             {

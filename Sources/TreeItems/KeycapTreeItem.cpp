@@ -18,6 +18,7 @@
 // ======================================================================
 
 #include "KeycapTreeItem.h"
+#include "ValueTypes/Finger.h"
 #include "AttributeTreeItem.h"
 #include "ValueTreeItem.h"
 #include <QtGui/QFont>
@@ -36,6 +37,7 @@ KeycapTreeItem::KeycapTreeItem(const QString& sKeycapId)
     pLabelItem->addAttribute(QObject::tr("X"), qreal(0));
     pLabelItem->addAttribute(QObject::tr("Y"), qreal(0));
     addAttribute(QObject::tr("Color"), QColor());
+    addAttribute(QObject::tr("Finger"), qVariantFromValue(Finger()));
 }
 
 KeycapTreeItem::~KeycapTreeItem()
