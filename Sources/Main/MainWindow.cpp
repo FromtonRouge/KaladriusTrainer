@@ -94,20 +94,26 @@ MainWindow::MainWindow(QWidget *parent)
 
     auto pTheoryModel = qApp->getTheoryModel();
     auto pKeyboardModel = qApp->getKeyboardModel();
-    connect(pKeyboardModel, SIGNAL(linkedKeycapsStates(KeycapsStates, QVector<KeycapsStates>)), _pKeyboardGraphicsScene, SLOT(setKeycapsStates(KeycapsStates, QVector<KeycapsStates>)));
+    connect(pKeyboardModel, SIGNAL(linkedKeycapsStates(QVector<KeycapsStates>)), _pKeyboardGraphicsScene, SLOT(setKeycapsStates(QVector<KeycapsStates>)));
+    connect(pKeyboardModel, SIGNAL(linkedKeycapsStates(KeycapsStates)), _pKeyboardGraphicsScene, SLOT(setKeycapsStates(KeycapsStates)));
     _pUi->widgetDictionaries1->setTheoryModel(pTheoryModel);
     _pUi->widgetDictionaries2->setTheoryModel(pTheoryModel);
     _pUi->widgetDictionaries3->setTheoryModel(pTheoryModel);
     _pUi->widgetDictionaries4->setTheoryModel(pTheoryModel);
-    connect(_pUi->widgetDictionaries1, SIGNAL(dictionaryEntrySelected(QString, QString, QVector<QBitArray>)), pKeyboardModel, SLOT(selectLinkedKeys(QString, QString, QVector<QBitArray>)));
-    connect(_pUi->widgetDictionaries2, SIGNAL(dictionaryEntrySelected(QString, QString, QVector<QBitArray>)), pKeyboardModel, SLOT(selectLinkedKeys(QString, QString, QVector<QBitArray>)));
-    connect(_pUi->widgetDictionaries3, SIGNAL(dictionaryEntrySelected(QString, QString, QVector<QBitArray>)), pKeyboardModel, SLOT(selectLinkedKeys(QString, QString, QVector<QBitArray>)));
-    connect(_pUi->widgetDictionaries4, SIGNAL(dictionaryEntrySelected(QString, QString, QVector<QBitArray>)), pKeyboardModel, SLOT(selectLinkedKeys(QString, QString, QVector<QBitArray>)));
+    connect(_pUi->widgetDictionaries1, SIGNAL(dictionaryEntrySelected(QString, QVector<QBitArray>)), pKeyboardModel, SLOT(selectLinkedKeys(QString, QVector<QBitArray>)));
+    connect(_pUi->widgetDictionaries2, SIGNAL(dictionaryEntrySelected(QString, QVector<QBitArray>)), pKeyboardModel, SLOT(selectLinkedKeys(QString, QVector<QBitArray>)));
+    connect(_pUi->widgetDictionaries3, SIGNAL(dictionaryEntrySelected(QString, QVector<QBitArray>)), pKeyboardModel, SLOT(selectLinkedKeys(QString, QVector<QBitArray>)));
+    connect(_pUi->widgetDictionaries4, SIGNAL(dictionaryEntrySelected(QString, QVector<QBitArray>)), pKeyboardModel, SLOT(selectLinkedKeys(QString, QVector<QBitArray>)));
+    connect(_pUi->widgetDictionaries1, SIGNAL(notifySpecialKeys(HashSpecialKeysStates)), pKeyboardModel, SLOT(selectLinkedSpecialKeys(HashSpecialKeysStates)));
+    connect(_pUi->widgetDictionaries2, SIGNAL(notifySpecialKeys(HashSpecialKeysStates)), pKeyboardModel, SLOT(selectLinkedSpecialKeys(HashSpecialKeysStates)));
+    connect(_pUi->widgetDictionaries3, SIGNAL(notifySpecialKeys(HashSpecialKeysStates)), pKeyboardModel, SLOT(selectLinkedSpecialKeys(HashSpecialKeysStates)));
+    connect(_pUi->widgetDictionaries4, SIGNAL(notifySpecialKeys(HashSpecialKeysStates)), pKeyboardModel, SLOT(selectLinkedSpecialKeys(HashSpecialKeysStates)));
 
     auto pStrokesSolverTextEdit = _pUi->widgetStrokesSolver->findChild<QTextEdit*>("textEdit");
     if (pStrokesSolverTextEdit)
     {
-        connect(pStrokesSolverTextEdit, SIGNAL(dictionaryMatch(QString, QString, QVector<QBitArray>)), pKeyboardModel, SLOT(selectLinkedKeys(QString, QString, QVector<QBitArray>)));
+        connect(pStrokesSolverTextEdit, SIGNAL(dictionaryMatch(QString, QVector<QBitArray>)), pKeyboardModel, SLOT(selectLinkedKeys(QString, QVector<QBitArray>)));
+        connect(pStrokesSolverTextEdit, SIGNAL(notifySpecialKeys(HashSpecialKeysStates)), pKeyboardModel, SLOT(selectLinkedSpecialKeys(HashSpecialKeysStates)));
         connect(pStrokesSolverTextEdit, SIGNAL(solverStarted()), _pKeyboardGraphicsScene, SLOT(clearSelection()));
     }
 

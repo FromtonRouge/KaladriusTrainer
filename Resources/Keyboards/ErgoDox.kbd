@@ -3191,9 +3191,9 @@ AAAAFABAhEgAAAAAAEBRIAAAAAAAQEoAAAAAAABAU8AAAAAAAA==
 			<label>
 				<type>10</type>
 				<variant>
-					<size>15</size>
+					<size>17</size>
 					<bytes>
-AAAACgAAAAAGAFMARQBQ
+AAAACgAAAAAIAE4AUwBFAFA=
 					</bytes>
 				</variant>
 			</label>
@@ -3202,7 +3202,7 @@ AAAACgAAAAAGAFMARQBQ
 				<variant>
 					<size>56</size>
 					<bytes>
-AAAAQAAAAAAMAFUAYgB1AG4AdAB1/////0AqAAAAAAAA/////wUAAQAyEAAAAQAAAAAAAAAAAAA=
+AAAAQAAAAAAMAFUAYgB1AG4AdAB1/////0AoAAAAAAAA/////wUAAQAyEAAAAQAAAAAAAAAAAAA=
 					</bytes>
 				</variant>
 			</label_font>
@@ -4768,9 +4768,9 @@ AAAAFABAhEgAAAAAAEBisAAAAAAAQEoAAAAAAABAU8AAAAAAAA==
 			<label>
 				<type>10</type>
 				<variant>
-					<size>15</size>
+					<size>17</size>
 					<bytes>
-AAAACgAAAAAGAFMARQBQ
+AAAACgAAAAAIAE4AUwBFAFA=
 					</bytes>
 				</variant>
 			</label>
@@ -4779,7 +4779,7 @@ AAAACgAAAAAGAFMARQBQ
 				<variant>
 					<size>56</size>
 					<bytes>
-AAAAQAAAAAAMAFUAYgB1AG4AdAB1/////0AqAAAAAAAA/////wUAAQAyEAAAAQAAAAAAAAAAAAA=
+AAAAQAAAAAAMAFUAYgB1AG4AdAB1/////0AoAAAAAAAA/////wUAAQAyEAAAAQAAAAAAAAAAAAA=
 					</bytes>
 				</variant>
 			</label_font>

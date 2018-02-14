@@ -234,7 +234,7 @@ bool KeyboardModel::canDropMimeData(const QMimeData* pMimeData, Qt::DropAction a
     return TreeItemModel::canDropMimeData(pMimeData, action, iRow, iColumn, parent);
 }
 
-void KeyboardModel::selectLinkedKeys(const QString& sDictionaryName, const QString& sMandatorySpecialKey, const QVector<QBitArray>& possibleBitsEntries)
+void KeyboardModel::selectLinkedKeys(const QString& sDictionaryName, const QVector<QBitArray>& possibleBitsEntries)
 {
     if (possibleBitsEntries.isEmpty())
     {
@@ -282,46 +282,56 @@ void KeyboardModel::selectLinkedKeys(const QString& sDictionaryName, const QStri
                     possibleKeycapsEntries << keycapsStates;
                 }
 
-                KeycapsStates specialKeysStates;
-                if (!sMandatorySpecialKey.isEmpty())
-                {
-                    const auto& matches = match(indexLinkedTheories.child(0, 0), Qt::DisplayRole, QStringLiteral("Linked Special Keys"), 1, Qt::MatchExactly|Qt::MatchRecursive);
-                    if (!matches.isEmpty())
-                    {
-                        const QModelIndex& indexLinkedSpecialKeys = matches.front();
-                        const int iSpecialKeys = rowCount(indexLinkedSpecialKeys);
-                        for (int iSpecialKey = 0; iSpecialKey < iSpecialKeys; ++iSpecialKey)
-                        {
-                            const QModelIndex& indexSpecialKey = index(iSpecialKey, 0, indexLinkedSpecialKeys);
-                            const QString& sSpecialKey = indexSpecialKey.data(Qt::DisplayRole).toString();
-                            bool bEnabled = false;
-                            const int iMappings = rowCount(indexSpecialKey);
-                            for (int iMapping = 0; iMapping < iMappings; ++iMapping)
-                            {
-                                const QModelIndex& indexMapping = index(iMapping, 1, indexSpecialKey);
-                                const QVariant& variant = indexMapping.data(Qt::EditRole);
-                                if (variant.isValid())
-                                {
-                                    const KeycapRef& keycapRef = qvariant_cast<KeycapRef>(variant);
+                emit linkedKeycapsStates(possibleKeycapsEntries);
+            }
+        }
+    }
+}
 
-                                    // TODO: Enable only one keycap
-                                    if (!bEnabled)
-                                    {
-                                        bEnabled = sSpecialKey == sMandatorySpecialKey;
-                                        specialKeysStates << KeycapState(keycapRef.keycapId, bEnabled);
-                                    }
-                                    else
-                                    {
-                                        specialKeysStates << KeycapState(keycapRef.keycapId, false);
-                                    }
-                                }
-                            }
+void KeyboardModel::selectLinkedSpecialKeys(const HashSpecialKeysStates& specialKeysStates)
+{
+    KeycapsStates keycapsStates;
+
+    const QModelIndex& indexLinkedTheories = getKeyboardTreeItem()->getLinkedTheories()->index();
+    if (indexLinkedTheories.isValid() && hasChildren(indexLinkedTheories))
+    {
+        const auto& matches = match(indexLinkedTheories.child(0, 0), Qt::DisplayRole, QStringLiteral("Linked Special Keys"), 1, Qt::MatchExactly|Qt::MatchRecursive);
+        if (!matches.isEmpty())
+        {
+            const QModelIndex& indexLinkedSpecialKeys = matches.front();
+            const int iSpecialKeys = rowCount(indexLinkedSpecialKeys);
+            for (int iSpecialKey = 0; iSpecialKey < iSpecialKeys; ++iSpecialKey)
+            {
+                const QModelIndex& indexSpecialKey = index(iSpecialKey, 0, indexLinkedSpecialKeys);
+                const QString& sSpecialKey = indexSpecialKey.data(Qt::DisplayRole).toString();
+                bool bEnabled = false;
+                const int iMappings = rowCount(indexSpecialKey);
+                for (int iMapping = 0; iMapping < iMappings; ++iMapping)
+                {
+                    const QModelIndex& indexMapping = index(iMapping, 1, indexSpecialKey);
+                    const QVariant& variant = indexMapping.data(Qt::EditRole);
+                    if (variant.isValid())
+                    {
+                        const KeycapRef& keycapRef = qvariant_cast<KeycapRef>(variant);
+
+                        // TODO: Enable only one keycap
+                        if (!bEnabled)
+                        {
+                            bEnabled = specialKeysStates[sSpecialKey];
+                            keycapsStates << KeycapState(keycapRef.keycapId, bEnabled);
+                        }
+                        else
+                        {
+                            keycapsStates << KeycapState(keycapRef.keycapId, false);
                         }
                     }
                 }
-
-                emit linkedKeycapsStates(specialKeysStates, possibleKeycapsEntries);
             }
         }
+    }
+
+    if (!keycapsStates.isEmpty())
+    {
+        emit linkedKeycapsStates(keycapsStates);
     }
 }

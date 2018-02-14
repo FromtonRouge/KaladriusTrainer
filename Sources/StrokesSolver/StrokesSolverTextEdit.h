@@ -20,6 +20,7 @@
 #pragma once
 
 #include "Theories/TheoryModel.h"
+#include "Keycaps/KeycapState.h"
 #include <QtWidgets/QTextEdit>
 #include <QtGui/QColor>
 #include <QtCore/QVector>
@@ -31,7 +32,8 @@ class StrokesSolverTextEdit : public QTextEdit
 
 signals:
     void solverStarted() const;
-    void dictionaryMatch(const QString& sDictionaryName, const QString& sMandatorySpecialKey, const QVector<QBitArray>& possibleBits) const;
+    void dictionaryMatch(const QString& sDictionaryName, const QVector<QBitArray>& possibleBits) const;
+    void notifySpecialKeys(const HashSpecialKeysStates& specialKeysStates) const;
 
 public:
     StrokesSolverTextEdit(QWidget* pParent = nullptr);
@@ -45,7 +47,10 @@ protected:
     virtual void keyPressEvent(QKeyEvent* pKeyEvent) override;
 
 private:
-    bool solve(QString sText, const TheoryModel::CacheDictionaries& cachedDictionaries, const QStringList& dictionaries) const;
+    bool solve(QString sText,
+               const TheoryModel::CacheDictionaries& cachedDictionaries,
+               const QStringList& dictionaries,
+               HashSpecialKeysStates& rSpecialKeysStates) const;
 
 private:
     bool _bTrainingMode;

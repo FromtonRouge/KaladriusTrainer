@@ -52,6 +52,7 @@ public:
     TheoryTreeItem* getTheoryTreeItem() const;
     void setTheoryTreeItem(TheoryTreeItem* pTheoryTreeItem);
     QModelIndex getTheoryIndex() const;
+    QModelIndex getSpecialKeysIndex() const;
     QModelIndex getDictionariesIndex() const;
     QString getTheoryName() const;
     const CacheDictionaries& getCachedDictionaries() const {return _cache;}

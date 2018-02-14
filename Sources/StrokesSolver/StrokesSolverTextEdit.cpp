@@ -101,21 +101,49 @@ void StrokesSolverTextEdit::onTimerSolve()
         cursor.setPosition(findCursor.position(), QTextCursor::KeepAnchor);
     }
 
+    bool bNoSpace = true;
     QString sTextToSolve = cursor.selectedText();
     if (sTextToSolve == " ")
     {
         cursor.movePosition(QTextCursor::EndOfWord, QTextCursor::KeepAnchor);
         sTextToSolve = cursor.selectedText();
+        bNoSpace = false;
+    }
+    else if (sTextToSolve.startsWith('.') || sTextToSolve.startsWith(',') || sTextToSolve.startsWith(';'))
+    {
+        bNoSpace = false;
     }
 
     if (!sTextToSolve.isEmpty())
     {
         sTextToSolve = sTextToSolve.trimmed().toUpper(); // Remove leading space
 
-        if (!solve(sTextToSolve, dictionaries, dictionariesToParse))
+        // Get all special keys
+        HashSpecialKeysStates hashSpecialKeysStates;
+        const QModelIndex& indexSpecialKeys = pTheoryModel->getSpecialKeysIndex();
+        if (indexSpecialKeys.isValid())
         {
-            solve(sTextToSolve, dictionaries, {"Left Punctuation Dictionary", "Right Punctuation Dictionary"});
+            const int iSpecialKeys = pTheoryModel->rowCount(indexSpecialKeys);
+            for (int iSpecialKey = 0; iSpecialKey < iSpecialKeys; ++iSpecialKey)
+            {
+                const QString& sSpecialKeyIdentifier = pTheoryModel->index(iSpecialKey, 0, indexSpecialKeys).data(Qt::DisplayRole).toString();
+                hashSpecialKeysStates.insert(sSpecialKeyIdentifier, false);
+            }
         }
+
+        if (!solve(sTextToSolve, dictionaries, dictionariesToParse, hashSpecialKeysStates))
+        {
+            solve(sTextToSolve, dictionaries, {"Left Punctuation Dictionary", "Right Punctuation Dictionary"}, hashSpecialKeysStates);
+        }
+
+        // To cancel the automatic space insertion, the user has to press the "NO SEPARATOR" key
+        if (bNoSpace)
+        {
+            hashSpecialKeysStates["skSeparator"] = true;
+        }
+
+        // Send all special keys states once
+        emit notifySpecialKeys(hashSpecialKeysStates);
     }
 }
 
@@ -236,7 +264,8 @@ void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
 
 bool StrokesSolverTextEdit::solve(QString sText,
                                   const TheoryModel::CacheDictionaries& cachedDictionaries,
-                                  const QStringList& orderedDictionaries) const
+                                  const QStringList& orderedDictionaries,
+                                  HashSpecialKeysStates& rSpecialKeysStates) const
 {
     bool bAtLeastOneMatch = false;
 
@@ -280,7 +309,14 @@ bool StrokesSolverTextEdit::solve(QString sText,
 
         if (!possibleBits.isEmpty())
         {
-            emit dictionaryMatch(sDictionaryName, cachedDictionaryInfo.sMandatorySpecialKey, possibleBits);
+            // Set the mandatory key in the special keys states
+            auto it = rSpecialKeysStates.find(cachedDictionaryInfo.sMandatorySpecialKey);
+            if (it != rSpecialKeysStates.end())
+            {
+                it.value() = true;
+            }
+
+            emit dictionaryMatch(sDictionaryName, possibleBits);
         }
     }
     return bAtLeastOneMatch;

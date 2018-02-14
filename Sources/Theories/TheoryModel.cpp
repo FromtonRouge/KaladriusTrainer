@@ -125,6 +125,11 @@ QModelIndex TheoryModel::getTheoryIndex() const
     return QModelIndex();
 }
 
+QModelIndex TheoryModel::getSpecialKeysIndex() const
+{
+    return indexFromItem(getTheoryTreeItem()->getSpecialKeys());
+}
+
 QModelIndex TheoryModel::getDictionariesIndex() const
 {
     return indexFromItem(getTheoryTreeItem()->getDictionaries());
