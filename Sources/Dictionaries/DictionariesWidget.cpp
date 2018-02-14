@@ -104,13 +104,16 @@ DictionariesWidget::DictionariesWidget(QWidget* pParent)
     , _iPreviousDictionary(-1)
     , _pTimer(new QTimer(this))
     , _bBuildingDictionaries(false)
+    , _pActionShowUnusedEntries(nullptr)
 {
     _pUi->setupUi(this);
     _pUi->treeView->setAlternatingRowColors(true);
+
     auto pMenu = new QMenu(this);
-    auto pAction = pMenu->addAction(tr("Show unused entries"));
-    pAction->setCheckable(true);
-    connect(pAction, SIGNAL(toggled(bool)), this, SLOT(onShowUnusedEntriesToggled(bool)));
+    _pActionShowUnusedEntries = pMenu->addAction(tr("Show unused entries"));
+    _pActionShowUnusedEntries->setCheckable(true);
+    connect(_pActionShowUnusedEntries, SIGNAL(toggled(bool)), this, SLOT(onShowUnusedEntriesToggled(bool)));
+
     _pUi->toolButtonSettings->setMenu(pMenu);
     _pSortFilterDictionary->setSourceModel(_pDictionariesModel);
     _pSortFilterNoEntries->setSourceModel(_pSortFilterDictionary);
@@ -245,6 +248,9 @@ void DictionariesWidget::onDictionariesLoaded()
     _pUi->comboBox->clear();
     _pUi->comboBox->addItems(dictionaries);
 
+    const bool bShowUnusedEntries = settings.value(QString("%1/showUnusedEntries").arg(objectName()), false).toBool();
+    _pActionShowUnusedEntries->setChecked(bShowUnusedEntries);
+
     _pDictionariesModel->setSourceModel(_pTheoryModel);
     _pSortFilterAlphabeticalOrder->sort(0);
     _pUi->treeView->resizeColumnToContents(0);
@@ -300,6 +306,7 @@ void DictionariesWidget::onShowUnusedEntriesToggled(bool bChecked)
 {
     auto pNoEntriesFilter = static_cast<NoEntriesFilter*>(_pSortFilterNoEntries);
     pNoEntriesFilter->setEnabled(!bChecked);
+    QSettings().setValue(QString("%1/showUnusedEntries").arg(objectName()), bChecked);
 }
 
 void DictionariesWidget::saveExpandedIndexes()

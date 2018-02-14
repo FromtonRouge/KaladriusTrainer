@@ -34,6 +34,7 @@ class TheoryModel;
 class DictionariesModel;
 class QSortFilterProxyModel;
 class QTimer;
+class QAction;
 class DictionariesWidget : public QWidget
 {
     Q_OBJECT
@@ -72,4 +73,5 @@ private:
     QString _sPreviousFilter;
     QTimer* _pTimer;
     bool _bBuildingDictionaries;
+    QAction* _pActionShowUnusedEntries;
 };
