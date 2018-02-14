@@ -23,13 +23,17 @@
 #include "KeyboardTreeView.h"
 #include "Keycaps/KeycapGraphicsItem.h"
 #include "TreeItems/TreeItem.h"
+#include "Models/Utils.h"
+#include "ValueTypes/Finger.h"
 #include <QtSvg/QSvgRenderer>
 #include <QtGui/QFont>
 #include <QtCore/QItemSelectionModel>
 #include <QtCore/QSignalBlocker>
 #include <QtCore/QDebug>
+#include <QtCore/QMultiMap>
 #include <functional>
 #include <iostream>
+#include <set>
 
 KeyboardGraphicsScene::KeyboardGraphicsScene(QObject* pParent)
     : QGraphicsScene(pParent)
@@ -69,31 +73,51 @@ KeycapGraphicsItem*KeyboardGraphicsScene::getKeycapItem(const QModelIndex& index
 
 void KeyboardGraphicsScene::setKeycapsStates(const QVector<KeycapsStates>& possibleKeycapsEntries)
 {
-    QHash<QString, bool> mergedStates;
+    // Get keyboard model data for fingers information
+    auto pKeyboardModel = qobject_cast<KeyboardModel*>(_pUndoableKeyboardModel->sourceModel());
+    const QModelIndex& indexKeycapsInKeyboardModel = pKeyboardModel->getKeycapsIndex();
 
-    // Parse every entries
+    // Classify possible entries from the easiest to stroke to the hardest
+    QMultiMap<uint, KeycapsStates> possibleEntriesByFingersEffort;
     for (const auto& keycapsForOneEntry : possibleKeycapsEntries)
     {
+        // Compute the fingers effort value, at the moment it's just the sum of fingers ids
+        uint uiFingersEffort = 0;
+
         // Parse keycaps for the current entry
         for (const auto& keycapState : keycapsForOneEntry)
         {
             const QString& sKeycapId = keycapState.first;
-            const bool bPressed = keycapState.second;
-            mergedStates[sKeycapId] |= bPressed;
+            if (indexKeycapsInKeyboardModel.isValid())
+            {
+                const QModelIndex& indexFingerValue = Utils::index(pKeyboardModel, sKeycapId + "/Finger", 1, indexKeycapsInKeyboardModel);
+                if (indexFingerValue.isValid())
+                {
+                    const Finger& finger = qvariant_cast<Finger>(indexFingerValue.data(Qt::EditRole));
+                    if (finger.id != Finger::None)
+                    {
+                        uiFingersEffort += uint(finger.id);
+                    }
+                }
+            }
         }
 
-        break; // TODO: at the moment display the first solution
+        possibleEntriesByFingersEffort.insert(uiFingersEffort, keycapsForOneEntry);
     }
 
-    auto it = mergedStates.begin();
-    while (it != mergedStates.end())
+    if (!possibleEntriesByFingersEffort.isEmpty())
     {
-        const QString& sKeycapId = it.key();
-        const bool bPressed = it++.value();
-        auto pKeycapItem = getKeycapItem(sKeycapId);
-        if (pKeycapItem)
+        // Get the easiest entry to stroke for the user, it's the first one in the map
+        const KeycapsStates& easiestEntry = possibleEntriesByFingersEffort.first();
+        for (const auto& keycapState : easiestEntry)
         {
-            pKeycapItem->setSelected(bPressed);
+            const QString& sKeycapId = keycapState.first;
+            const bool bPressed = keycapState.second;
+            auto pKeycapItem = getKeycapItem(sKeycapId);
+            if (pKeycapItem)
+            {
+                pKeycapItem->setSelected(bPressed);
+            }
         }
     }
 }

@@ -180,8 +180,11 @@ void KeyboardModel::setSvgContent(const QByteArray& svgContent)
 
 KeyboardTreeItem* KeyboardModel::getKeyboardTreeItem() const
 {
-    const QModelIndex& indexKeyboard = getKeyboardIndex();
-    return indexKeyboard.isValid() ? static_cast<KeyboardTreeItem*>(itemFromIndex(indexKeyboard)) : nullptr;
+    if (!hasChildren())
+    {
+        return nullptr;
+    }
+    return dynamic_cast<KeyboardTreeItem*>(invisibleRootItem()->child(0));
 }
 
 void KeyboardModel::setKeyboardTreeItem(KeyboardTreeItem* pKeyboardTreeItem)
@@ -196,27 +199,16 @@ QModelIndex KeyboardModel::getKeyboardIndex() const
 {
     if (hasChildren())
     {
-        const auto& matches = match(index(0,0), TreeItemTypeRole, TreeItem::Keyboard, 1, Qt::MatchExactly);
-        if (!matches.isEmpty())
-        {
-            return matches.front();
-        }
+        auto pKeyboardTreeItem = getKeyboardTreeItem();
+        return pKeyboardTreeItem ? indexFromItem(pKeyboardTreeItem) : QModelIndex();
     }
     return QModelIndex();
 }
 
 QModelIndex KeyboardModel::getKeycapsIndex() const
 {
-    const QModelIndex& indexKeyboard = getKeyboardIndex();
-    if (indexKeyboard.isValid() && hasChildren(indexKeyboard))
-    {
-        const auto& matches = match(indexKeyboard.child(0,0), TreeItemTypeRole, TreeItem::List, 1, Qt::MatchExactly);
-        if (!matches.isEmpty())
-        {
-            return matches.front();
-        }
-    }
-    return QModelIndex();
+    auto pKeycapsTreeItem = getKeyboardTreeItem()->getKeycaps();
+    return pKeycapsTreeItem ? indexFromItem(pKeycapsTreeItem) : QModelIndex();
 }
 
 QStringList KeyboardModel::mimeTypes() const
