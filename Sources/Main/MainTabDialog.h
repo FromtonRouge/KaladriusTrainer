@@ -17,22 +17,35 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "Main/Application.h"
-#include "MainWindow.h"
-#include "MainTabDialog.h"
-#include <QtWidgets/QTabWidget>
-#include <QtCore/QSettings>
+#pragma once
 
-int main(int argc, char *argv[])
+#include <QtWidgets/QDialog>
+#include <QtCore/QScopedPointer>
+
+namespace Ui
 {
-    Application a(argc, argv);
-
-    MainTabDialog mainTabDialog;
-    MainWindow mainWindow;
-    mainTabDialog.getTabWidget()->addTab(&mainWindow, QObject::tr("Developer Mode"));
-    mainTabDialog.showMaximized();
-    mainTabDialog.restoreGeometry(QSettings().value("MainTabDialog/geometry").toByteArray());
-    mainWindow.restoreGeometry(QSettings().value("geometry").toByteArray());
-
-    return a.exec();
+    class MainTabDialog;
 }
+
+class QTabWidget;
+class QTimer;
+class MainTabDialog : public QDialog
+{
+    Q_OBJECT
+
+public:
+    MainTabDialog(QWidget* pParent = nullptr);
+    ~MainTabDialog();
+    QTabWidget* getTabWidget() const;
+
+protected slots:
+    void delayedRestoreState();
+
+protected:
+    virtual void closeEvent(QCloseEvent* pEvent) override;
+    virtual bool event(QEvent* pEvent) override;
+
+private:
+    QScopedPointer<Ui::MainTabDialog> _pUi;
+    QTimer* _pTimer;
+};

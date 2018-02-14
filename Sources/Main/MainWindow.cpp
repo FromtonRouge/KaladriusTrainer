@@ -62,6 +62,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     _pUi->setupUi(this);
     setDockOptions(dockOptions() | DockOption::GroupedDragging | DockOption::AllowNestedDocks);
+    setWindowFlags(Qt::Widget);
 
     connect(qApp, SIGNAL(logs(QString, int)), this, SLOT(logs(QString,int)));
 
@@ -132,11 +133,6 @@ MainWindow::MainWindow(QWidget *parent)
     _pUi->dockWidgetLogs->hide();
     _pUi->dockWidgetUndo->hide();
 
-    showMaximized();
-
-    // Restore geometry
-    restoreGeometry(settings.value("geometry").toByteArray());
-
     // Load last .kbd file if any
     const QString& sLastKeyboard = settings.value("lastKeyboard").toString();
     if (!sLastKeyboard.isEmpty() && QFile::exists(sLastKeyboard))
@@ -188,14 +184,6 @@ void MainWindow::loadTheory(const QString& sTheoryFileName, SettingsOperation se
         QSettings().setValue("lastTheory", settingsOperation == ClearSettings ? QVariant() : sTheoryFileName);
         COUT(tr("Theory loaded from file %1").arg(sTheoryFileName));
     }
-}
-
-void MainWindow::closeEvent(QCloseEvent* pEvent)
-{
-    QSettings settings;
-    settings.setValue("geometry", saveGeometry());
-    settings.setValue("windowState", saveState());
-    QMainWindow::closeEvent(pEvent);
 }
 
 bool MainWindow::event(QEvent *pEvent)
@@ -488,10 +476,6 @@ void MainWindow::on_actionSave_Keyboard_triggered()
 
 void MainWindow::delayedRestoreState()
 {
-    // Restore dock states
-    QSettings settings;
-    restoreState(settings.value("windowState").toByteArray());
-
     // Set the focus on the StrokesSolverTextEdit by default
     if (_pUi->dockWidgetStrokesSolver->isVisible())
     {

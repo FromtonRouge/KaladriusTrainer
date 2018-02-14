@@ -67,7 +67,6 @@ private:
     void loadTheory(const QString& sTheoryFileName, SettingsOperation settingsOperation = SaveSettings);
 
 protected:
-    virtual void closeEvent(QCloseEvent* pEvent) override;
     virtual bool event(QEvent* pEvent) override;
 
 private:
