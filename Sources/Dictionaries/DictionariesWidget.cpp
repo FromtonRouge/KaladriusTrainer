@@ -21,6 +21,7 @@
 #include "DictionariesModel.h"
 #include "Theories/TheoryModel.h"
 #include "ui_DictionariesWidget.h"
+#include <QtWidgets/QMenu>
 #include <QtCore/QSortFilterProxyModel>
 #include <QtCore/QTimer>
 #include <QtCore/QSettings>
@@ -80,6 +81,14 @@ struct NoEntriesFilter : public QSortFilterProxyModel
         }
         return QSortFilterProxyModel::filterAcceptsRow(iSourceRow, sourceParent);
     }
+
+    void setEnabled(bool bEnabled)
+    {
+        enabled = bEnabled;
+        invalidateFilter();
+    }
+
+private:
     bool enabled;
 };
 
@@ -98,6 +107,11 @@ DictionariesWidget::DictionariesWidget(QWidget* pParent)
 {
     _pUi->setupUi(this);
     _pUi->treeView->setAlternatingRowColors(true);
+    auto pMenu = new QMenu(this);
+    auto pAction = pMenu->addAction(tr("Show unused entries"));
+    pAction->setCheckable(true);
+    connect(pAction, SIGNAL(toggled(bool)), this, SLOT(onShowUnusedEntriesToggled(bool)));
+    _pUi->toolButtonSettings->setMenu(pMenu);
     _pSortFilterDictionary->setSourceModel(_pDictionariesModel);
     _pSortFilterNoEntries->setSourceModel(_pSortFilterDictionary);
     _pSortFilterSearch->setSourceModel(_pSortFilterNoEntries);
@@ -280,6 +294,12 @@ void DictionariesWidget::onCurrentChanged(const QModelIndex& current, const QMod
             }
         }
     }
+}
+
+void DictionariesWidget::onShowUnusedEntriesToggled(bool bChecked)
+{
+    auto pNoEntriesFilter = static_cast<NoEntriesFilter*>(_pSortFilterNoEntries);
+    pNoEntriesFilter->setEnabled(!bChecked);
 }
 
 void DictionariesWidget::saveExpandedIndexes()

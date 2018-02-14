@@ -28,5 +28,6 @@
         <file>Icons/edit-list-order.png</file>
         <file>Theories/ProgrammerSteno.theory</file>
         <file>Icons/hand.png</file>
+        <file>Icons/gear.png</file>
     </qresource>
 </RCC>

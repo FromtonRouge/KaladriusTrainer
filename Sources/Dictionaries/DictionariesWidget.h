@@ -54,6 +54,7 @@ protected slots:
     void applyFilter();
     void onDictionariesLoaded();
     void onCurrentChanged(const QModelIndex& current, const QModelIndex& previous);
+    void onShowUnusedEntriesToggled(bool);
 
 private:
     void saveExpandedIndexes();

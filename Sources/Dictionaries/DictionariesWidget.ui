@@ -26,7 +26,20 @@
    <property name="bottomMargin">
     <number>0</number>
    </property>
-   <item row="3" column="0">
+   <item row="0" column="0">
+    <widget class="QLabel" name="labelFilterDictionary">
+     <property name="toolTip">
+      <string>Dictionary Filter</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="../../Resources/ProgrammerStenoTutor.qrc">:/Icons/book-brown.png</pixmap>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
     <widget class="QLabel" name="label">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
@@ -41,34 +54,11 @@
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="ProgrammerStenoTutor.qrc">:/Icons/funnel.png</pixmap>
+      <pixmap resource="../../Resources/ProgrammerStenoTutor.qrc">:/Icons/funnel.png</pixmap>
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="labelFilterDictionary">
-     <property name="toolTip">
-      <string>Dictionary Filter</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="ProgrammerStenoTutor.qrc">:/Icons/book-brown.png</pixmap>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0" colspan="3">
-    <widget class="QTreeView" name="treeView"/>
-   </item>
-   <item row="1" column="1" colspan="2">
-    <widget class="QComboBox" name="comboBox">
-     <property name="toolTip">
-      <string>Select a dictionary</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1" colspan="2">
+   <item row="1" column="1">
     <widget class="QLineEdit" name="lineEdit">
      <property name="toolTip">
       <string>Filter</string>
@@ -78,10 +68,34 @@
      </property>
     </widget>
    </item>
+   <item row="1" column="2">
+    <widget class="QToolButton" name="toolButtonSettings">
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+       <normaloff>:/Icons/gear.png</normaloff>:/Icons/gear.png</iconset>
+     </property>
+     <property name="popupMode">
+      <enum>QToolButton::MenuButtonPopup</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="3">
+    <widget class="QTreeView" name="treeView"/>
+   </item>
+   <item row="0" column="1" colspan="2">
+    <widget class="QComboBox" name="comboBox">
+     <property name="toolTip">
+      <string>Select a dictionary</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <resources>
-  <include location="ProgrammerStenoTutor.qrc"/>
+  <include location="../../Resources/ProgrammerStenoTutor.qrc"/>
  </resources>
  <connections/>
 </ui>
