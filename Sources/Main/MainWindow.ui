@@ -32,7 +32,7 @@
      <number>0</number>
     </property>
     <item row="0" column="0">
-     <widget class="QMdiArea" name="mdiArea"/>
+     <widget class="KeyboardGraphicsView" name="graphicsView"/>
     </item>
    </layout>
   </widget>
@@ -42,7 +42,7 @@
      <x>0</x>
      <y>0</y>
      <width>737</width>
-     <height>22</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -88,12 +88,6 @@
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
-   <widget class="QMenu" name="menuWindow">
-    <property name="title">
-     <string>Window</string>
-    </property>
-    <addaction name="actionKeyboard_Window"/>
-   </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>Help</string>
@@ -107,7 +101,6 @@
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
-   <addaction name="menuWindow"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
@@ -350,7 +343,6 @@
    <addaction name="actionLoad_Keyboard"/>
    <addaction name="actionSave_Keyboard"/>
    <addaction name="separator"/>
-   <addaction name="actionKeyboard_Window"/>
    <addaction name="actionRecord_Keyboard"/>
   </widget>
   <widget class="QDockWidget" name="dockWidgetTheory">
@@ -456,15 +448,6 @@
    </property>
    <property name="shortcut">
     <string>F6</string>
-   </property>
-  </action>
-  <action name="actionKeyboard_Window">
-   <property name="icon">
-    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
-     <normaloff>:/Icons/keyboard-full.png</normaloff>:/Icons/keyboard-full.png</iconset>
-   </property>
-   <property name="text">
-    <string>Keyboard Window</string>
    </property>
   </action>
   <action name="actionAbout">
@@ -610,6 +593,11 @@
    <extends>QWidget</extends>
    <header>StrokesSolver/StrokesSolverWidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>KeyboardGraphicsView</class>
+   <extends>QGraphicsView</extends>
+   <header>Keyboards/KeyboardGraphicsView.h</header>
   </customwidget>
  </customwidgets>
  <resources>

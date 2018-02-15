@@ -144,7 +144,9 @@ MainWindow::MainWindow(QWidget *parent)
         _pUi->actionLoad_Default_Keyboard->trigger();
     }
 
-    _pUi->actionKeyboard_Window->trigger();
+    connect(qApp->getKeyboardModel(), SIGNAL(keyboardLoaded()), _pUi->graphicsView, SLOT(fitKeyboardInView()));
+    connect(_pUi->actionRecord_Keyboard, SIGNAL(triggered(bool)), _pUi->graphicsView, SLOT(recordKeyboardInputs(bool)));
+    _pUi->graphicsView->setScene(_pKeyboardGraphicsScene);
 }
 
 MainWindow::~MainWindow()
@@ -402,18 +404,6 @@ void MainWindow::on_actionAbout_triggered()
     sText += tr("<p>Record icon made by <a href='http://www.freepik.com/'>Freepik</a> from <a href='http://www.flaticon.com/'>www.flaticon.com</a>.</p>");
     messageBox.setText(sText);
     messageBox.exec();
-}
-
-void MainWindow::on_actionKeyboard_Window_triggered()
-{
-    auto pGraphicsView = new KeyboardGraphicsView();
-    connect(qApp->getKeyboardModel(), SIGNAL(keyboardLoaded()), pGraphicsView, SLOT(fitKeyboardInView()));
-    connect(_pUi->actionRecord_Keyboard, SIGNAL(triggered(bool)), pGraphicsView, SLOT(recordKeyboardInputs(bool)));
-    auto pSubWindow = _pUi->mdiArea->addSubWindow(pGraphicsView);
-    pSubWindow->setWindowTitle(tr("Keyboard"));
-    pGraphicsView->setParent(pSubWindow);
-    pGraphicsView->setScene(_pKeyboardGraphicsScene);
-    pSubWindow->showMaximized();
 }
 
 void MainWindow::on_actionLoad_Keyboard_triggered()

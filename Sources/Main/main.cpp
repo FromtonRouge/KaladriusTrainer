@@ -21,18 +21,24 @@
 #include "MainWindow.h"
 #include "MainTabDialog.h"
 #include <QtWidgets/QTabWidget>
+#include <QtWidgets/QDesktopWidget>
 #include <QtCore/QSettings>
 
 int main(int argc, char *argv[])
 {
     Application a(argc, argv);
 
+    QSettings settings;
     MainTabDialog mainTabDialog;
     MainWindow mainWindow;
     mainTabDialog.getTabWidget()->addTab(&mainWindow, QObject::tr("Developer Mode"));
     mainTabDialog.showMaximized();
-    mainTabDialog.restoreGeometry(QSettings().value("MainTabDialog/geometry").toByteArray());
-    mainWindow.restoreGeometry(QSettings().value("geometry").toByteArray());
+    mainTabDialog.restoreGeometry(settings.value("MainTabDialog/geometry").toByteArray());
+    if (mainTabDialog.isMaximized())
+    {
+        mainTabDialog.setGeometry(QApplication::desktop()->availableGeometry(&mainTabDialog));
+    }
+    mainWindow.restoreState(settings.value("windowState").toByteArray());
 
     return a.exec();
 }

@@ -28,7 +28,6 @@ namespace Ui
 }
 
 class QTabWidget;
-class QTimer;
 class MainTabDialog : public QDialog
 {
     Q_OBJECT
@@ -38,14 +37,9 @@ public:
     ~MainTabDialog();
     QTabWidget* getTabWidget() const;
 
-protected slots:
-    void delayedRestoreState();
-
 protected:
     virtual void closeEvent(QCloseEvent* pEvent) override;
-    virtual bool event(QEvent* pEvent) override;
 
 private:
     QScopedPointer<Ui::MainTabDialog> _pUi;
-    QTimer* _pTimer;
 };

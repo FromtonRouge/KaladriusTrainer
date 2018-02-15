@@ -27,13 +27,9 @@
 MainTabDialog::MainTabDialog(QWidget* pParent)
     : QDialog(pParent)
     , _pUi(new Ui::MainTabDialog)
-    , _pTimer(new QTimer(this))
 {
     _pUi->setupUi(this);
     setWindowFlags(Qt::Window);
-    _pTimer->setSingleShot(true);
-    _pTimer->setInterval(50);
-    connect(_pTimer, SIGNAL(timeout()), this, SLOT(delayedRestoreState()));
 }
 
 MainTabDialog::~MainTabDialog()
@@ -45,39 +41,11 @@ QTabWidget*MainTabDialog::getTabWidget() const
     return _pUi->tabWidget;
 }
 
-void MainTabDialog::delayedRestoreState()
-{
-    auto pMainWindow = qobject_cast<QMainWindow*>(_pUi->tabWidget->widget(0));
-    QSettings settings;
-    pMainWindow->restoreState(settings.value("windowState").toByteArray());
-    disconnect(_pTimer, SIGNAL(timeout()), this, SLOT(delayedRestoreState()));
-}
-
 void MainTabDialog::closeEvent(QCloseEvent* pEvent)
 {
     QSettings settings;
     settings.setValue("MainTabDialog/geometry", saveGeometry());
-
     auto pMainWindow = qobject_cast<QMainWindow*>(_pUi->tabWidget->widget(0));
-    settings.setValue("geometry", pMainWindow->saveGeometry());
     settings.setValue("windowState", pMainWindow->saveState());
-
     QDialog::closeEvent(pEvent);
-}
-
-bool MainTabDialog::event(QEvent* pEvent)
-{
-    switch (pEvent->type())
-    {
-    case QEvent::Resize:
-        {
-            _pTimer->start();
-            break;
-        }
-    default:
-        {
-            break;
-        }
-    }
-    return QDialog::event(pEvent);
 }

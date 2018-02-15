@@ -49,7 +49,6 @@ protected slots:
     void on_actionWrite_Markdown_Files_To_triggered();
     void on_actionWrite_Markdown_Files_triggered();
     void on_actionAbout_triggered();
-    void on_actionKeyboard_Window_triggered();
     void on_actionLoad_Keyboard_triggered();
     void on_actionLoad_Default_Keyboard_triggered();
     void on_actionSave_Keyboard_as_triggered();
