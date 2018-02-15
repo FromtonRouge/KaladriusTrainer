@@ -21,8 +21,6 @@
 #include "ui_MainTabDialog.h"
 #include <QtWidgets/QMainWindow>
 #include <QtCore/QSettings>
-#include <QtCore/QTimer>
-#include <QtCore/QDebug>
 
 MainTabDialog::MainTabDialog(QWidget* pParent)
     : QDialog(pParent)
@@ -45,7 +43,10 @@ void MainTabDialog::closeEvent(QCloseEvent* pEvent)
 {
     QSettings settings;
     settings.setValue("MainTabDialog/geometry", saveGeometry());
-    auto pMainWindow = qobject_cast<QMainWindow*>(_pUi->tabWidget->widget(0));
-    settings.setValue("windowState", pMainWindow->saveState());
+    auto pMainWindow = qobject_cast<QMainWindow*>(_pUi->tabWidget->widget(0)->layout()->itemAt(0)->widget());
+    if (pMainWindow)
+    {
+        settings.setValue("windowState", pMainWindow->saveState());
+    }
     QDialog::closeEvent(pEvent);
 }

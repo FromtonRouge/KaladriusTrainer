@@ -57,7 +57,39 @@
         <number>0</number>
        </property>
        <item row="0" column="0">
-        <widget class="QTabWidget" name="tabWidget"/>
+        <widget class="QTabWidget" name="tabWidget">
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
+         <property name="movable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="tabLearningMode">
+          <attribute name="title">
+           <string>Learning Mode</string>
+          </attribute>
+         </widget>
+         <widget class="QWidget" name="tabStatistics">
+          <attribute name="title">
+           <string>Statistics</string>
+          </attribute>
+         </widget>
+         <widget class="QWidget" name="tabTheoryEditor">
+          <attribute name="title">
+           <string>Theory Editor</string>
+          </attribute>
+         </widget>
+         <widget class="QWidget" name="tabKeyboardEditor">
+          <attribute name="title">
+           <string>Keyboard Editor</string>
+          </attribute>
+         </widget>
+         <widget class="QWidget" name="tabDeveloperMode">
+          <attribute name="title">
+           <string>Developer Mode</string>
+          </attribute>
+         </widget>
+        </widget>
        </item>
       </layout>
      </widget>

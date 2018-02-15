@@ -17,11 +17,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "Main/Application.h"
+#include "Application.h"
 #include "MainWindow.h"
 #include "MainTabDialog.h"
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QDesktopWidget>
+#include <QtWidgets/QGridLayout>
 #include <QtCore/QSettings>
 
 int main(int argc, char *argv[])
@@ -29,9 +30,21 @@ int main(int argc, char *argv[])
     Application a(argc, argv);
 
     QSettings settings;
+
     MainTabDialog mainTabDialog;
+    auto pTabWidget = mainTabDialog.getTabWidget();
+    const int iTabs = pTabWidget->count();
+    for (int iTab = 0; iTab < iTabs; ++iTab)
+    {
+        QWidget* pWidget = pTabWidget->widget(iTab);
+        auto pLayout = new QGridLayout();
+        pLayout->setContentsMargins(0, 0, 0, 0);
+        pWidget->setLayout(pLayout);
+    }
+
     MainWindow mainWindow;
-    mainTabDialog.getTabWidget()->addTab(&mainWindow, QObject::tr("Developer Mode"));
+    pTabWidget->widget(0)->layout()->addWidget(&mainWindow);
+
     mainTabDialog.showMaximized();
     mainTabDialog.restoreGeometry(settings.value("MainTabDialog/geometry").toByteArray());
     if (mainTabDialog.isMaximized())
