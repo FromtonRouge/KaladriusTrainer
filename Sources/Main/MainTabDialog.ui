@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>751</width>
     <height>300</height>
    </rect>
   </property>
@@ -43,7 +43,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>400</width>
+        <width>751</width>
         <height>300</height>
        </rect>
       </property>
@@ -68,30 +68,59 @@
          <property name="movable">
           <bool>true</bool>
          </property>
-         <widget class="QWidget" name="tabLearningMode">
-          <attribute name="title">
-           <string>Learning Mode</string>
-          </attribute>
-         </widget>
-         <widget class="QWidget" name="tabStatistics">
-          <attribute name="title">
-           <string>Statistics</string>
-          </attribute>
-         </widget>
          <widget class="QWidget" name="tabTheoryEditor">
           <attribute name="title">
            <string>Theory Editor</string>
           </attribute>
+          <layout class="QGridLayout" name="gridLayout_3">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="TheoryEditorMainWindow" name="mainWindowTheoryEditor" native="true"/>
+           </item>
+          </layout>
          </widget>
-         <widget class="QWidget" name="tabKeyboardEditor">
+         <widget class="QWidget" name="tabLearningMode">
           <attribute name="title">
-           <string>Keyboard Editor</string>
+           <string>Learning Mode</string>
           </attribute>
+          <layout class="QGridLayout" name="gridLayout_4">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="MainWindow" name="mainWindowLearningMode" native="true"/>
+           </item>
+          </layout>
          </widget>
-         <widget class="QWidget" name="tabDeveloperMode">
+         <widget class="QWidget" name="tab">
           <attribute name="title">
-           <string>Developer Mode</string>
+           <string>Logs</string>
           </attribute>
+          <layout class="QGridLayout" name="gridLayout_5">
+           <item row="0" column="0">
+            <widget class="QTextEdit" name="textEditLogs"/>
+           </item>
+          </layout>
          </widget>
         </widget>
        </item>
@@ -101,6 +130,20 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>TheoryEditorMainWindow</class>
+   <extends>QWidget</extends>
+   <header>Theories/TheoryEditorMainWindow.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MainWindow</class>
+   <extends>QWidget</extends>
+   <header>Main/MainWindow.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../../Resources/ProgrammerStenoTutor.qrc"/>
  </resources>

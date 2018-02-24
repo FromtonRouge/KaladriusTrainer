@@ -20,38 +20,11 @@
 #include "Application.h"
 #include "MainWindow.h"
 #include "MainTabDialog.h"
-#include <QtWidgets/QTabWidget>
-#include <QtWidgets/QDesktopWidget>
-#include <QtWidgets/QGridLayout>
 #include <QtCore/QSettings>
 
 int main(int argc, char *argv[])
 {
     Application a(argc, argv);
-
-    QSettings settings;
-
     MainTabDialog mainTabDialog;
-    auto pTabWidget = mainTabDialog.getTabWidget();
-    const int iTabs = pTabWidget->count();
-    for (int iTab = 0; iTab < iTabs; ++iTab)
-    {
-        QWidget* pWidget = pTabWidget->widget(iTab);
-        auto pLayout = new QGridLayout();
-        pLayout->setContentsMargins(0, 0, 0, 0);
-        pWidget->setLayout(pLayout);
-    }
-
-    MainWindow mainWindow;
-    pTabWidget->widget(0)->layout()->addWidget(&mainWindow);
-
-    mainTabDialog.showMaximized();
-    mainTabDialog.restoreGeometry(settings.value("MainTabDialog/geometry").toByteArray());
-    if (mainTabDialog.isMaximized())
-    {
-        mainTabDialog.setGeometry(QApplication::desktop()->availableGeometry(&mainTabDialog));
-    }
-    mainWindow.restoreState(settings.value("windowState").toByteArray());
-
     return a.exec();
 }

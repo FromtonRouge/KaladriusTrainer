@@ -19,33 +19,31 @@
 
 #pragma once
 
+#include "Dictionaries/Dictionary.h"
 #include <QtWidgets/QMainWindow>
 #include <QtCore/QScopedPointer>
 
 namespace Ui
 {
-    class MainWindow;
+    class TheoryEditorMainWindow;
 }
 
-class QUndoStack;
-class KeyboardGraphicsScene;
-class MainWindow : public QMainWindow
+class TheoryEditorMainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    TheoryEditorMainWindow(QWidget *parent = nullptr);
+    ~TheoryEditorMainWindow();
 
 protected slots:
-    void on_actionImport_Keyboard_Svg_triggered();
-    void on_actionImport_Default_Keyboard_Svg_triggered();
-    void on_actionAbout_triggered();
-    void on_actionLoad_Keyboard_triggered();
-    void on_actionLoad_Default_Keyboard_triggered();
-    void on_actionSave_Keyboard_as_triggered();
-    void on_actionSave_Keyboard_triggered();
-    void delayedRestoreState();
+    void on_actionLoad_triggered();
+    void on_actionLoad_Default_triggered();
+    void on_actionSave_triggered();
+    void on_actionSave_As_triggered();
+    void on_actionImport_Dictionaries_triggered();
+    void on_actionWrite_Markdown_Files_triggered();
+    void on_actionWrite_Markdown_Files_To_triggered();
 
 private:
     enum SettingsOperation
@@ -53,13 +51,9 @@ private:
         SaveSettings = 0,
         ClearSettings,
     };
-    void loadKeyboard(const QString& sKeyboardFileName, SettingsOperation settingsOperation = SaveSettings);
-
-protected:
-    virtual bool event(QEvent* pEvent) override;
+    void loadTheory(const QString& sTheoryFileName, SettingsOperation settingsOperation = SaveSettings);
 
 private:
-    QScopedPointer<Ui::MainWindow> _pUi;
-    KeyboardGraphicsScene* _pKeyboardGraphicsScene; ///< Only 1 scene and potentialy N views on this scene.
-    QUndoStack* _pUndoStack;
+    QScopedPointer<Ui::TheoryEditorMainWindow> _pUi;
+    Dictionaries _dictionaries;
 };

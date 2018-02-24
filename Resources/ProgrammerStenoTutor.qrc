@@ -29,5 +29,6 @@
         <file>Theories/ProgrammerSteno.theory</file>
         <file>Icons/hand.png</file>
         <file>Icons/gear.png</file>
+        <file>Icons/document.png</file>
     </qresource>
 </RCC>

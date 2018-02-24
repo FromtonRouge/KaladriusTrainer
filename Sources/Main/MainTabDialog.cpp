@@ -18,8 +18,10 @@
 // ======================================================================
 
 #include "MainTabDialog.h"
+#include "Application.h"
 #include "ui_MainTabDialog.h"
 #include <QtWidgets/QMainWindow>
+#include <QtWidgets/QDesktopWidget>
 #include <QtCore/QSettings>
 
 MainTabDialog::MainTabDialog(QWidget* pParent)
@@ -28,6 +30,21 @@ MainTabDialog::MainTabDialog(QWidget* pParent)
 {
     _pUi->setupUi(this);
     setWindowFlags(Qt::Window);
+
+    connect(qApp, SIGNAL(logs(QString, int)), this, SLOT(logs(QString,int)));
+
+    showMaximized();
+
+    // Restore geometry and window state
+    QSettings settings;
+    restoreGeometry(settings.value("MainTabDialog/geometry").toByteArray());
+    if (isMaximized())
+    {
+        setGeometry(QApplication::desktop()->availableGeometry(this));
+    }
+
+    // Restore main windows geometries and states
+    _pUi->mainWindowLearningMode->restoreState(settings.value("windowState").toByteArray());
 }
 
 MainTabDialog::~MainTabDialog()
@@ -37,6 +54,23 @@ MainTabDialog::~MainTabDialog()
 QTabWidget*MainTabDialog::getTabWidget() const
 {
     return _pUi->tabWidget;
+}
+
+void MainTabDialog::logs(const QString& sText, int iWarningLevel)
+{
+    // Write logs to the text edit with the appropriate color
+    QTextCursor cursor(_pUi->textEditLogs->textCursor());
+    QTextCharFormat format(cursor.charFormat());
+    format.setForeground(QBrush(iWarningLevel == 0 ? Qt::black : Qt::red));
+    cursor.movePosition(QTextCursor::End);
+    cursor.insertText(sText, format);
+    _pUi->textEditLogs->setTextCursor(cursor);
+
+    if (iWarningLevel == 2)
+    {
+        //_pUi->dockWidgetLogs->setVisible(true);
+        //_pUi->dockWidgetLogs->raise();
+    }
 }
 
 void MainTabDialog::closeEvent(QCloseEvent* pEvent)

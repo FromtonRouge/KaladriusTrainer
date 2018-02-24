@@ -37,6 +37,9 @@ public:
     ~MainTabDialog();
     QTabWidget* getTabWidget() const;
 
+protected slots:
+    void logs(const QString& sText, int iWarningLevel = 0);
+
 protected:
     virtual void closeEvent(QCloseEvent* pEvent) override;
 

@@ -42,30 +42,13 @@
      <x>0</x>
      <y>0</y>
      <width>737</width>
-     <height>20</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>File</string>
     </property>
-    <widget class="QMenu" name="menuTheory">
-     <property name="title">
-      <string>Theory</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
-       <normaloff>:/Icons/graduation-hat.png</normaloff>:/Icons/graduation-hat.png</iconset>
-     </property>
-     <addaction name="actionLoad_Theory"/>
-     <addaction name="actionLoad_Default_Theory"/>
-     <addaction name="actionSave_Theory_as"/>
-     <addaction name="separator"/>
-     <addaction name="actionImport_Dictionaries"/>
-     <addaction name="separator"/>
-     <addaction name="actionWrite_Markdown_Files_To"/>
-     <addaction name="actionWrite_Markdown_Files"/>
-    </widget>
     <widget class="QMenu" name="menuKeyboard">
      <property name="title">
       <string>Keyboard</string>
@@ -84,9 +67,7 @@
     </widget>
     <addaction name="menuKeyboard"/>
     <addaction name="separator"/>
-    <addaction name="menuTheory"/>
     <addaction name="separator"/>
-    <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -212,37 +193,6 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="dockWidgetLogs">
-   <property name="windowTitle">
-    <string>Logs</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>8</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents">
-    <layout class="QGridLayout" name="gridLayout">
-     <property name="leftMargin">
-      <number>0</number>
-     </property>
-     <property name="topMargin">
-      <number>0</number>
-     </property>
-     <property name="rightMargin">
-      <number>0</number>
-     </property>
-     <property name="bottomMargin">
-      <number>0</number>
-     </property>
-     <item row="0" column="0">
-      <widget class="QTextEdit" name="textEditLogs">
-       <property name="readOnly">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-  </widget>
   <widget class="QDockWidget" name="dockWidgetKeyboardProperties">
    <property name="windowTitle">
     <string>Keyboard Properties</string>
@@ -345,33 +295,6 @@
    <addaction name="separator"/>
    <addaction name="actionRecord_Keyboard"/>
   </widget>
-  <widget class="QDockWidget" name="dockWidgetTheory">
-   <property name="windowTitle">
-    <string>Theory Properties</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>1</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_9">
-    <layout class="QGridLayout" name="gridLayout_10">
-     <property name="leftMargin">
-      <number>0</number>
-     </property>
-     <property name="topMargin">
-      <number>0</number>
-     </property>
-     <property name="rightMargin">
-      <number>0</number>
-     </property>
-     <property name="bottomMargin">
-      <number>0</number>
-     </property>
-     <item row="0" column="0">
-      <widget class="TheoryTreeView" name="treeViewTheory"/>
-     </item>
-    </layout>
-   </widget>
-  </widget>
   <widget class="QDockWidget" name="dockWidgetStrokesSolver">
    <property name="windowTitle">
     <string>Strokes Solver</string>
@@ -399,57 +322,6 @@
     </layout>
    </widget>
   </widget>
-  <action name="actionQuit">
-   <property name="icon">
-    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
-     <normaloff>:/Icons/door-open-out.png</normaloff>:/Icons/door-open-out.png</iconset>
-   </property>
-   <property name="text">
-    <string>Quit</string>
-   </property>
-  </action>
-  <action name="actionImport_Dictionaries">
-   <property name="icon">
-    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
-     <normaloff>:/Icons/book-open-next.png</normaloff>:/Icons/book-open-next.png</iconset>
-   </property>
-   <property name="text">
-    <string>Import Dictionaries...</string>
-   </property>
-  </action>
-  <action name="actionReload_Dictionaries">
-   <property name="icon">
-    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
-     <normaloff>:/Icons/book-open-next.png</normaloff>:/Icons/book-open-next.png</iconset>
-   </property>
-   <property name="text">
-    <string>Reload Dictionaries</string>
-   </property>
-   <property name="shortcut">
-    <string>F5</string>
-   </property>
-  </action>
-  <action name="actionWrite_Markdown_Files_To">
-   <property name="icon">
-    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
-     <normaloff>:/Icons/disk--pencil.png</normaloff>:/Icons/disk--pencil.png</iconset>
-   </property>
-   <property name="text">
-    <string>Write Markdown Files To...</string>
-   </property>
-  </action>
-  <action name="actionWrite_Markdown_Files">
-   <property name="icon">
-    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
-     <normaloff>:/Icons/disk.png</normaloff>:/Icons/disk.png</iconset>
-   </property>
-   <property name="text">
-    <string>Write Markdown Files</string>
-   </property>
-   <property name="shortcut">
-    <string>F6</string>
-   </property>
-  </action>
   <action name="actionAbout">
    <property name="icon">
     <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
@@ -582,11 +454,6 @@
    <class>QUndoView</class>
    <extends>QListView</extends>
    <header location="global">QtWidgets/QUndoView</header>
-  </customwidget>
-  <customwidget>
-   <class>TheoryTreeView</class>
-   <extends>QTreeView</extends>
-   <header>Theories/TheoryTreeView.h</header>
   </customwidget>
   <customwidget>
    <class>StrokesSolverWidget</class>
