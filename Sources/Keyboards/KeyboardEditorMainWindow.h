@@ -24,24 +24,33 @@
 
 namespace Ui
 {
-    class MainWindow;
+    class KeyboardEditorMainWindow;
 }
 
-class MainWindow : public QMainWindow
+class KeyboardEditorMainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget* pParent = nullptr);
-    ~MainWindow();
+    KeyboardEditorMainWindow(QWidget* pParent = nullptr);
+    ~KeyboardEditorMainWindow();
 
 protected slots:
-    void on_actionAbout_triggered();
-    void delayedRestoreState();
-
-protected:
-    virtual bool event(QEvent* pEvent) override;
+    void on_actionLoad_Default_triggered();
+    void on_actionLoad_triggered();
+    void on_actionSave_triggered();
+    void on_actionSave_As_triggered();
+    void on_actionImport_Svg_triggered();
+    void on_actionImport_Default_Svg_triggered();
 
 private:
-    QScopedPointer<Ui::MainWindow> _pUi;
+    enum SettingsOperation
+    {
+        SaveSettings = 0,
+        ClearSettings,
+    };
+    void loadKeyboard(const QString& sKeyboardFileName, SettingsOperation settingsOperation = SaveSettings);
+
+private:
+    QScopedPointer<Ui::KeyboardEditorMainWindow> _pUi;
 };

@@ -17,13 +17,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "TheoryEditorMainWindow.h"
+#include "Theories/TheoryEditorMainWindow.h"
+#include "Theories/TheoryModel.h"
+#include "Theories/UndoableTheoryModel.h"
+#include "Keyboards/KeyboardModel.h"
+#include "Keyboards/KeyboardGraphicsScene.h"
 #include "Main/Application.h"
 #include "Dictionaries/DictionaryParser.h"
 #include "Serialization/Serialize.h"
 #include "Streams/Iostream.h"
-#include "Theories/TheoryModel.h"
-#include "Theories/UndoableTheoryModel.h"
 #include "ui_TheoryEditorMainWindow.h"
 #include <QtWidgets/QUndoStack>
 #include <QtWidgets/QFileDialog>
@@ -69,7 +71,12 @@ TheoryEditorMainWindow::TheoryEditorMainWindow(QWidget *parent)
     }
 
     auto pTheoryModel = qApp->getTheoryModel();
+    auto pKeyboardModel = qApp->getKeyboardModel();
     _pUi->widgetDictionaries->setTheoryModel(pTheoryModel);
+    connect(_pUi->widgetDictionaries, SIGNAL(dictionaryEntrySelected(QString, QVector<QBitArray>)), pKeyboardModel, SLOT(selectLinkedKeys(QString, QVector<QBitArray>)));
+    connect(_pUi->widgetDictionaries, SIGNAL(notifySpecialKeys(HashSpecialKeysStates)), pKeyboardModel, SLOT(selectLinkedSpecialKeys(HashSpecialKeysStates)));
+    connect(pKeyboardModel, SIGNAL(keyboardLoaded()), _pUi->graphicsView, SLOT(fitKeyboardInView()));
+    _pUi->graphicsView->setScene(qApp->getKeyboardGraphicsScene());
 }
 
 TheoryEditorMainWindow::~TheoryEditorMainWindow()

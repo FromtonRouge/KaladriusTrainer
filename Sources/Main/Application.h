@@ -32,6 +32,7 @@ class KeyboardModel;
 class TheoryModel;
 class UndoableTheoryModel;
 class UndoableKeyboardModel;
+class KeyboardGraphicsScene;
 class Application : public QApplication
 {
     Q_OBJECT
@@ -47,6 +48,7 @@ public:
     UndoableTheoryModel* getUndoableTheoryModel() const {return _pUndoableTheoryModel;}
     KeyboardModel* getKeyboardModel() const {return _pKeyboardModel;}
     UndoableKeyboardModel* getUndoableKeyboardModel() const {return _pUndoableKeyboardModel;}
+    KeyboardGraphicsScene* getKeyboardGraphicsScene() const {return _pKeyboardGraphicsScene;}
 
 private:
     void toLogs(const QString& sText, int iWarningLevel = 0);
@@ -61,4 +63,5 @@ private:
     UndoableTheoryModel* _pUndoableTheoryModel;
     KeyboardModel* _pKeyboardModel;
     UndoableKeyboardModel* _pUndoableKeyboardModel;
+    KeyboardGraphicsScene* _pKeyboardGraphicsScene; ///< Only 1 scene and potentialy N views on this scene.
 };
