@@ -29,6 +29,7 @@
 #include "ui_TheoryEditorMainWindow.h"
 #include <QtWidgets/QUndoStack>
 #include <QtWidgets/QFileDialog>
+#include <QtWidgets/QTabWidget>
 #include <QtCore/QSettings>
 #include <QtCore/QTemporaryFile>
 #include <QtCore/QFile>
@@ -40,10 +41,12 @@ TheoryEditorMainWindow::TheoryEditorMainWindow(QWidget *parent)
     _pUi->setupUi(this);
     setDockOptions(dockOptions() | DockOption::GroupedDragging | DockOption::AllowNestedDocks);
     setWindowFlags(Qt::Widget);
+    setWindowTitle(tr("Theory Editor[*]"));
 
     // Local undo stack
     auto pUndoStack = new QUndoStack(this);
     _pUi->listViewUndo->setStack(pUndoStack);
+    connect(pUndoStack, SIGNAL(cleanChanged(bool)), this, SLOT(onUndoCleanChanged(bool)));
 
     QAction* pUndoAction = pUndoStack->createUndoAction(this);
     pUndoAction->setIcon(QIcon(":/Icons/arrow-curve-180-left.png"));
@@ -114,6 +117,7 @@ void TheoryEditorMainWindow::on_actionSave_triggered()
         if (Serialization::Save(qApp->getTheoryModel(), sLastTheory))
         {
             COUT(tr("Theory saved to file %1").arg(sLastTheory));
+            _pUi->listViewUndo->stack()->setClean();
         }
     }
     else
@@ -125,18 +129,20 @@ void TheoryEditorMainWindow::on_actionSave_triggered()
 void TheoryEditorMainWindow::on_actionSave_As_triggered()
 {
     QSettings settings;
+    QString sTheoryFileName;
     const QString& sLastTheoryFile = settings.value("lastTheory").toString();
     QFileDialog saveDlg(this, tr("Theory"), sLastTheoryFile, "*.theory");
     saveDlg.setDefaultSuffix("theory");
     saveDlg.setAcceptMode(QFileDialog::AcceptSave);
     if (saveDlg.exec())
     {
-        const QString sTheoryFile = saveDlg.selectedFiles().front();
-        if (Serialization::Save(qApp->getTheoryModel(), sTheoryFile))
-        {
-            settings.setValue("lastTheory", sTheoryFile);
-            COUT(tr("Theory saved to file %1").arg(sTheoryFile));
-        }
+        sTheoryFileName = saveDlg.selectedFiles().front();
+        settings.setValue("lastTheory", sTheoryFileName);
+    }
+
+    if (!sTheoryFileName.isEmpty())
+    {
+        _pUi->actionSave->trigger();
     }
 }
 
@@ -260,6 +266,27 @@ void TheoryEditorMainWindow::on_actionWrite_Markdown_Files_To_triggered()
     }
 }
 
+void TheoryEditorMainWindow::onUndoCleanChanged(bool bClean)
+{
+    // Get the tab widget parent
+    QObject* pParent = parent();
+    while (pParent && pParent->metaObject()->className() != QTabWidget::staticMetaObject.className())
+    {
+        pParent = pParent->parent();
+    }
+
+    auto pTabWidget = qobject_cast<QTabWidget*>(pParent);
+    if (pTabWidget)
+    {
+        const int iTabIndex = pTabWidget->indexOf(qobject_cast<QWidget*>(parent()));
+        if (iTabIndex != -1)
+        {
+            QString sWindowTitle = windowTitle();
+            pTabWidget->setTabText(iTabIndex, sWindowTitle.replace("[*]", bClean ? "":"*"));
+        }
+    }
+}
+
 void TheoryEditorMainWindow::loadTheory(const QString& sTheoryFileName, TheoryEditorMainWindow::SettingsOperation settingsOperation)
 {
     if (Serialization::Load(qApp->getTheoryModel(), sTheoryFileName))
@@ -268,5 +295,6 @@ void TheoryEditorMainWindow::loadTheory(const QString& sTheoryFileName, TheoryEd
         COUT(tr("Theory loaded from file %1").arg(sTheoryFileName));
         _pUi->treeViewTheory->expandToDepth(1);
         _pUi->treeViewTheory->resizeColumnToContents(0);
+        _pUi->listViewUndo->stack()->clear();
     }
 }

@@ -42,6 +42,7 @@ protected slots:
     void on_actionSave_As_triggered();
     void on_actionImport_Svg_triggered();
     void on_actionImport_Default_Svg_triggered();
+    void onUndoCleanChanged(bool bClean);
 
 private:
     enum SettingsOperation
