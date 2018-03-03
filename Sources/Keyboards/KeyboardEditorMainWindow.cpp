@@ -27,36 +27,24 @@
 #include "ui_KeyboardEditorMainWindow.h"
 #include <QtWidgets/QUndoStack>
 #include <QtWidgets/QFileDialog>
-#include <QtWidgets/QTabWidget>
 #include <QtCore/QSettings>
 #include <QtCore/QTemporaryFile>
 #include <QtCore/QFile>
 #include <QtCore/QDebug>
 
 KeyboardEditorMainWindow::KeyboardEditorMainWindow(QWidget *pParent)
-    : QMainWindow(pParent)
+    : MainTabWindow(pParent)
     , _pUi(new Ui::KeyboardEditorMainWindow)
 {
     _pUi->setupUi(this);
-    setDockOptions(dockOptions() | DockOption::GroupedDragging | DockOption::AllowNestedDocks);
-    setWindowFlags(Qt::Widget);
     setWindowTitle(tr("Keyboard Editor[*]"));
 
-    // Local undo stack
-    auto pUndoStack = new QUndoStack(this);
+    // Init undo stack
+    auto pUndoStack = qApp->getUndoableKeyboardModel()->getUndoStack();
     _pUi->listViewUndo->setStack(pUndoStack);
-    qApp->getUndoableKeyboardModel()->setUndoStack(pUndoStack);
     connect(pUndoStack, SIGNAL(cleanChanged(bool)), this, SLOT(onUndoCleanChanged(bool)));
-
-    QAction* pUndoAction = pUndoStack->createUndoAction(this);
-    pUndoAction->setIcon(QIcon(":/Icons/arrow-curve-180-left.png"));
-    pUndoAction->setShortcut(QKeySequence("Ctrl+Z"));
-    _pUi->menuEdit->addAction(pUndoAction);
-
-    QAction* pRedoAction = pUndoStack->createRedoAction(this);
-    pRedoAction->setIcon(QIcon(":/Icons/arrow-curve.png"));
-    pRedoAction->setShortcut(QKeySequence("Ctrl+Y"));
-    _pUi->menuEdit->addAction(pRedoAction);
+    _pUi->menuEdit->addAction(createUndoAction(pUndoStack));
+    _pUi->menuEdit->addAction(createRedoAction(pUndoStack));
 
     auto pKeyboardModel = qApp->getKeyboardModel();
     auto pKeyboardGraphicsScene = qApp->getKeyboardGraphicsScene();
@@ -178,25 +166,3 @@ void KeyboardEditorMainWindow::on_actionImport_Default_Svg_triggered()
     settings.setValue("lastKeyboardSvg", ":/Svgs/ergodox.svg");
     settings.setValue("lastKeyboard", QString());
 }
-
-void KeyboardEditorMainWindow::onUndoCleanChanged(bool bClean)
-{
-    // Get the tab widget parent
-    QObject* pParent = parent();
-    while (pParent && pParent->metaObject()->className() != QTabWidget::staticMetaObject.className())
-    {
-        pParent = pParent->parent();
-    }
-
-    auto pTabWidget = qobject_cast<QTabWidget*>(pParent);
-    if (pTabWidget)
-    {
-        const int iTabIndex = pTabWidget->indexOf(qobject_cast<QWidget*>(parent()));
-        if (iTabIndex != -1)
-        {
-            QString sWindowTitle = windowTitle();
-            pTabWidget->setTabText(iTabIndex, sWindowTitle.replace("[*]", bClean ? "":"*"));
-        }
-    }
-}
-

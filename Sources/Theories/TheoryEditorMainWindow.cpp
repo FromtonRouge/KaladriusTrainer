@@ -35,30 +35,19 @@
 #include <QtCore/QFile>
 
 TheoryEditorMainWindow::TheoryEditorMainWindow(QWidget *parent)
-    : QMainWindow(parent)
+    : MainTabWindow(parent)
     , _pUi(new Ui::TheoryEditorMainWindow)
 {
     _pUi->setupUi(this);
-    setDockOptions(dockOptions() | DockOption::GroupedDragging | DockOption::AllowNestedDocks);
-    setWindowFlags(Qt::Widget);
     setWindowTitle(tr("Theory Editor[*]"));
 
-    // Local undo stack
-    auto pUndoStack = new QUndoStack(this);
+    // Init undo stack
+    auto pUndoStack = qApp->getUndoableTheoryModel()->getUndoStack();
     _pUi->listViewUndo->setStack(pUndoStack);
     connect(pUndoStack, SIGNAL(cleanChanged(bool)), this, SLOT(onUndoCleanChanged(bool)));
+    _pUi->menuEdit->addAction(createUndoAction(pUndoStack));
+    _pUi->menuEdit->addAction(createRedoAction(pUndoStack));
 
-    QAction* pUndoAction = pUndoStack->createUndoAction(this);
-    pUndoAction->setIcon(QIcon(":/Icons/arrow-curve-180-left.png"));
-    pUndoAction->setShortcut(QKeySequence("Ctrl+Z"));
-    _pUi->menuEdit->addAction(pUndoAction);
-
-    QAction* pRedoAction = pUndoStack->createRedoAction(this);
-    pRedoAction->setIcon(QIcon(":/Icons/arrow-curve.png"));
-    pRedoAction->setShortcut(QKeySequence("Ctrl+Y"));
-    _pUi->menuEdit->addAction(pRedoAction);
-
-    qApp->getUndoableTheoryModel()->setUndoStack(pUndoStack);
     _pUi->treeViewTheory->setModel(qApp->getUndoableTheoryModel());
 
     // Load last .theory file if any
@@ -263,27 +252,6 @@ void TheoryEditorMainWindow::on_actionWrite_Markdown_Files_To_triggered()
     {
         settings.setValue("lastMarkdownFilesDirectory", sDirectory);
         _pUi->actionWrite_Markdown_Files->trigger();
-    }
-}
-
-void TheoryEditorMainWindow::onUndoCleanChanged(bool bClean)
-{
-    // Get the tab widget parent
-    QObject* pParent = parent();
-    while (pParent && pParent->metaObject()->className() != QTabWidget::staticMetaObject.className())
-    {
-        pParent = pParent->parent();
-    }
-
-    auto pTabWidget = qobject_cast<QTabWidget*>(pParent);
-    if (pTabWidget)
-    {
-        const int iTabIndex = pTabWidget->indexOf(qobject_cast<QWidget*>(parent()));
-        if (iTabIndex != -1)
-        {
-            QString sWindowTitle = windowTitle();
-            pTabWidget->setTabText(iTabIndex, sWindowTitle.replace("[*]", bClean ? "":"*"));
-        }
     }
 }
 

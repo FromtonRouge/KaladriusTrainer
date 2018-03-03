@@ -19,8 +19,8 @@
 
 #pragma once
 
+#include "Main/MainTabWindow.h"
 #include "Dictionaries/Dictionary.h"
-#include <QtWidgets/QMainWindow>
 #include <QtCore/QScopedPointer>
 
 namespace Ui
@@ -28,7 +28,7 @@ namespace Ui
     class TheoryEditorMainWindow;
 }
 
-class TheoryEditorMainWindow : public QMainWindow
+class TheoryEditorMainWindow : public MainTabWindow
 {
     Q_OBJECT
 
@@ -44,7 +44,6 @@ protected slots:
     void on_actionImport_Dictionaries_triggered();
     void on_actionWrite_Markdown_Files_triggered();
     void on_actionWrite_Markdown_Files_To_triggered();
-    void onUndoCleanChanged(bool bClean);
 
 private:
     enum SettingsOperation

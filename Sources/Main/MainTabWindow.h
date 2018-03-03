@@ -19,38 +19,22 @@
 
 #pragma once
 
-#include "Main/MainTabWindow.h"
-#include <QtCore/QScopedPointer>
+#include <QtWidgets/QMainWindow>
 
-namespace Ui
-{
-    class KeyboardEditorMainWindow;
-}
-
-class KeyboardEditorMainWindow : public MainTabWindow
+class QTabWidget;
+class QUndoStack;
+class MainTabWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    KeyboardEditorMainWindow(QWidget* pParent = nullptr);
-    ~KeyboardEditorMainWindow();
+    MainTabWindow(QWidget* pParent = nullptr);
+    QTabWidget* getParentTabWidget() const;
 
 protected slots:
-    void on_actionLoad_Default_triggered();
-    void on_actionLoad_triggered();
-    void on_actionSave_triggered();
-    void on_actionSave_As_triggered();
-    void on_actionImport_Svg_triggered();
-    void on_actionImport_Default_Svg_triggered();
+    void onUndoCleanChanged(bool bClean);
 
-private:
-    enum SettingsOperation
-    {
-        SaveSettings = 0,
-        ClearSettings,
-    };
-    void loadKeyboard(const QString& sKeyboardFileName, SettingsOperation settingsOperation = SaveSettings);
-
-private:
-    QScopedPointer<Ui::KeyboardEditorMainWindow> _pUi;
+protected:
+    QAction* createUndoAction(QUndoStack* pUndoStack);
+    QAction* createRedoAction(QUndoStack* pUndoStack);
 };

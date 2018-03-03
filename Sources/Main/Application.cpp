@@ -26,6 +26,7 @@
 #include "Keyboards/UndoableKeyboardModel.h"
 #include "Keyboards/KeyboardGraphicsScene.h"
 #include <QtCore/QCommandLineParser>
+#include <QtWidgets/QUndoStack>
 #include <iostream>
 
 Application::Application(int& argc, char** argv)
@@ -61,7 +62,9 @@ Application::Application(int& argc, char** argv)
     // Default factory for all item delegates
     QItemEditorFactory::setDefaultFactory(new UserEditorFactory());
 
+    _pUndoableTheoryModel->setUndoStack(new QUndoStack(this));
     _pUndoableTheoryModel->setSourceModel(_pTheoryModel);
+    _pUndoableKeyboardModel->setUndoStack(new QUndoStack(this));
     _pUndoableKeyboardModel->setSourceModel(_pKeyboardModel);
 }
 
