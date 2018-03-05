@@ -33,14 +33,23 @@ MainTabDialog::MainTabDialog(QWidget* pParent)
 
     connect(qApp, SIGNAL(logs(QString, int)), this, SLOT(logs(QString,int)));
 
-    showMaximized();
-
     // Restore geometry and window state
     QSettings settings;
-    restoreGeometry(settings.value("MainTabDialog/geometry").toByteArray());
-    if (isMaximized())
+    const QByteArray& byteArray = settings.value("MainTabDialog/geometry").toByteArray();
+    if (byteArray.isEmpty())
     {
-        setGeometry(QApplication::desktop()->availableGeometry(this));
+        // First time
+        showMaximized();
+    }
+    else
+    {
+        restoreGeometry(byteArray);
+        if (isMaximized())
+        {
+            // Fix for restoring properly a maximized window before a show()
+            setGeometry(QApplication::desktop()->availableGeometry(this));
+        }
+        show();
     }
 
     // Restore main windows geometries and states
