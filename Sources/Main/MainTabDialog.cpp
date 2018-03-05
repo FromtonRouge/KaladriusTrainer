@@ -23,6 +23,7 @@
 #include "ui_MainTabDialog.h"
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QDesktopWidget>
+#include <QtWidgets/QTabBar>
 #include <QtCore/QSettings>
 
 MainTabDialog::MainTabDialog(QWidget* pParent)
@@ -59,6 +60,26 @@ MainTabDialog::MainTabDialog(QWidget* pParent)
     {
         const QString& sSettingPath = QString("%1/windowState").arg(pMainWindow->objectName());
         pMainWindow->restoreState(settings.value(sSettingPath).toByteArray());
+    }
+
+    // Restore tab order
+    const QStringList& orderedTabs = settings.value("orederedTabs").toStringList();
+    if (!orderedTabs.isEmpty())
+    {
+        int iTabIndex = 0;
+        auto pTabBar = _pUi->tabWidget->tabBar();
+        for (const QString& sObjectName : orderedTabs)
+        {
+            auto pWidget = _pUi->tabWidget->findChild<QWidget*>(sObjectName);
+            if (pWidget)
+            {
+                const int iCurrentIndex = _pUi->tabWidget->indexOf(pWidget);
+                if (iTabIndex < pTabBar->count())
+                {
+                    pTabBar->moveTab(iCurrentIndex, iTabIndex++);
+                }
+            }
+        }
     }
 
     // Restore current tab index
@@ -103,6 +124,17 @@ void MainTabDialog::closeEvent(QCloseEvent* pEvent)
         const QString& sSettingPath = QString("%1/windowState").arg(pMainWindow->objectName());
         settings.setValue(sSettingPath, pMainWindow->saveState());
     }
+
+    // Save tab order
+    QStringList orderedTabs;
+    const int iTabCount = _pUi->tabWidget->count();
+    for (int iTab = 0; iTab < iTabCount; ++iTab)
+    {
+        QWidget* pWidget = _pUi->tabWidget->widget(iTab);
+        Q_ASSERT(!pWidget->objectName().isEmpty());
+        orderedTabs << pWidget->objectName();
+    }
+    settings.setValue("orederedTabs", orderedTabs);
 
     // Save current tab
     settings.setValue("currentTabIndex", _pUi->tabWidget->currentIndex());
