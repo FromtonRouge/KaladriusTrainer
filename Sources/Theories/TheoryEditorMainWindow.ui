@@ -171,6 +171,9 @@
    <addaction name="actionSave_As"/>
   </widget>
   <action name="actionNew">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
      <normaloff>:/Icons/document.png</normaloff>:/Icons/document.png</iconset>

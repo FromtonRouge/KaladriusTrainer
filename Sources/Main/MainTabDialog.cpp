@@ -19,6 +19,7 @@
 
 #include "MainTabDialog.h"
 #include "Application.h"
+#include "Streams/Iostream.h"
 #include "ui_MainTabDialog.h"
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QDesktopWidget>
@@ -53,7 +54,16 @@ MainTabDialog::MainTabDialog(QWidget* pParent)
     }
 
     // Restore main windows geometries and states
-    _pUi->mainWindowLearningMode->restoreState(settings.value("windowState").toByteArray());
+    const auto& vMainWindows = findChildren<QMainWindow*>();
+    for (auto pMainWindow : vMainWindows)
+    {
+        const QString& sSettingPath = QString("%1/windowState").arg(pMainWindow->objectName());
+        pMainWindow->restoreState(settings.value(sSettingPath).toByteArray());
+    }
+
+    // Restore current tab index
+    const int iCurrentTabIndex = settings.value("currentTabIndex", 0).toInt();
+    _pUi->tabWidget->setCurrentIndex(iCurrentTabIndex);
 }
 
 MainTabDialog::~MainTabDialog()
@@ -77,8 +87,7 @@ void MainTabDialog::logs(const QString& sText, int iWarningLevel)
 
     if (iWarningLevel == 2)
     {
-        //_pUi->dockWidgetLogs->setVisible(true);
-        //_pUi->dockWidgetLogs->raise();
+        _pUi->tabWidget->setCurrentWidget(_pUi->tabLogs);
     }
 }
 
@@ -86,10 +95,17 @@ void MainTabDialog::closeEvent(QCloseEvent* pEvent)
 {
     QSettings settings;
     settings.setValue("MainTabDialog/geometry", saveGeometry());
-    auto pMainWindow = qobject_cast<QMainWindow*>(_pUi->tabWidget->widget(0)->layout()->itemAt(0)->widget());
-    if (pMainWindow)
+
+    // Save all main windows states
+    const auto& vMainWindows = findChildren<QMainWindow*>();
+    for (auto pMainWindow : vMainWindows)
     {
-        settings.setValue("windowState", pMainWindow->saveState());
+        const QString& sSettingPath = QString("%1/windowState").arg(pMainWindow->objectName());
+        settings.setValue(sSettingPath, pMainWindow->saveState());
     }
+
+    // Save current tab
+    settings.setValue("currentTabIndex", _pUi->tabWidget->currentIndex());
+
     QDialog::closeEvent(pEvent);
 }
