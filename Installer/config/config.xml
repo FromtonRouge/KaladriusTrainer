@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Installer>
+    <Name>Programmer Steno Tutor</Name>
+    <Version>0.1.0</Version>
+    <Title>Programmer Steno Tutor Installer</Title>
+    <Publisher>FromtonRouge</Publisher>
+    <StartMenuDir>Programmer Steno Tutor</StartMenuDir>
+    <TargetDir>@ApplicationsDirX64@/ProgrammerStenoTutor</TargetDir>
+    <MaintenanceToolName>uninstall</MaintenanceToolName>
+</Installer>

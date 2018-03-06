@@ -5,3 +5,5 @@
 /.vscode
 /build
 /CMakeLists.txt.user
+/Installer/setup
+/Installer/setup.exe
