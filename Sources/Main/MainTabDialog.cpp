@@ -63,7 +63,7 @@ MainTabDialog::MainTabDialog(QWidget* pParent)
     }
 
     // Restore tab order
-    const QStringList& orderedTabs = settings.value("orederedTabs").toStringList();
+    const QStringList& orderedTabs = settings.value("orderedTabs").toStringList();
     if (!orderedTabs.isEmpty())
     {
         int iTabIndex = 0;
@@ -134,7 +134,7 @@ void MainTabDialog::closeEvent(QCloseEvent* pEvent)
         Q_ASSERT(!pWidget->objectName().isEmpty());
         orderedTabs << pWidget->objectName();
     }
-    settings.setValue("orederedTabs", orderedTabs);
+    settings.setValue("orderedTabs", orderedTabs);
 
     // Save current tab
     settings.setValue("currentTabIndex", _pUi->tabWidget->currentIndex());

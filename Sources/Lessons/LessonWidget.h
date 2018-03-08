@@ -19,38 +19,22 @@
 
 #pragma once
 
-#include <QtGui/QStandardItem>
+#include <QtWidgets/QWidget>
+#include <QtCore/QScopedPointer>
 
-class AttributeTreeItem;
-struct TreeItem : public QStandardItem
+namespace Ui
 {
-    enum Type
-    {
-        // Generic
-        Empty = UserType,
-        List,
-        Value,
-        Attribute,
+    class LessonWidget;
+}
 
-        // Keyboard
-        Keyboard,
-        Keycap,
-
-        // Theory
-        Theory,
-        LinkedTheory,
-        LinkedDictionary,
-        OutputText,
-        InputKeys,
-        Dictionary,
-    };
-
-    virtual int type() const override = 0;
-    virtual AttributeTreeItem* addAttribute(const QString& sName, const QVariant& value);
-};
-
-struct EmptyTreeItem : public TreeItem
+class LessonWidget : public QWidget
 {
-    EmptyTreeItem() {setEditable(false); setSelectable(false);}
-    virtual int type() const override {return Empty;}
+    Q_OBJECT
+
+public:
+    LessonWidget(QWidget* pParent = nullptr);
+    ~LessonWidget();
+
+private:
+    QScopedPointer<Ui::LessonWidget> _pUi;
 };

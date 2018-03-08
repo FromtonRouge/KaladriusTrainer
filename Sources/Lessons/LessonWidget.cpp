@@ -17,40 +17,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "LessonWidget.h"
+#include "ui_LessonWidget.h"
 
-#include <QtGui/QStandardItem>
-
-class AttributeTreeItem;
-struct TreeItem : public QStandardItem
+LessonWidget::LessonWidget(QWidget *pParent)
+    : QWidget(pParent)
+    , _pUi(new Ui::LessonWidget)
 {
-    enum Type
-    {
-        // Generic
-        Empty = UserType,
-        List,
-        Value,
-        Attribute,
+    _pUi->setupUi(this);
+}
 
-        // Keyboard
-        Keyboard,
-        Keycap,
-
-        // Theory
-        Theory,
-        LinkedTheory,
-        LinkedDictionary,
-        OutputText,
-        InputKeys,
-        Dictionary,
-    };
-
-    virtual int type() const override = 0;
-    virtual AttributeTreeItem* addAttribute(const QString& sName, const QVariant& value);
-};
-
-struct EmptyTreeItem : public TreeItem
+LessonWidget::~LessonWidget()
 {
-    EmptyTreeItem() {setEditable(false); setSelectable(false);}
-    virtual int type() const override {return Empty;}
-};
+}

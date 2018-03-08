@@ -17,40 +17,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "UndoableLessonModel.h"
 
-#include <QtGui/QStandardItem>
-
-class AttributeTreeItem;
-struct TreeItem : public QStandardItem
+UndoableLessonModel::UndoableLessonModel(QObject* pParent)
+    : UndoableProxyModel(pParent)
 {
-    enum Type
-    {
-        // Generic
-        Empty = UserType,
-        List,
-        Value,
-        Attribute,
 
-        // Keyboard
-        Keyboard,
-        Keycap,
+}
 
-        // Theory
-        Theory,
-        LinkedTheory,
-        LinkedDictionary,
-        OutputText,
-        InputKeys,
-        Dictionary,
-    };
-
-    virtual int type() const override = 0;
-    virtual AttributeTreeItem* addAttribute(const QString& sName, const QVariant& value);
-};
-
-struct EmptyTreeItem : public TreeItem
+UndoableLessonModel::~UndoableLessonModel()
 {
-    EmptyTreeItem() {setEditable(false); setSelectable(false);}
-    virtual int type() const override {return Empty;}
-};
+
+}
