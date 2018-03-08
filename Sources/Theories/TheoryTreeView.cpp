@@ -18,13 +18,13 @@
 // ======================================================================
 
 #include "TheoryTreeView.h"
-#include "UndoableTheoryModel.h"
-#include "TreeItems/TreeItem.h"
-#include "TreeItems/ListTreeItem.h"
-#include "TreeItems/ValueTreeItem.h"
-#include "ValueTypes/ListValue.h"
+#include "Theories/Models/UndoableTheoryModel.h"
+#include "Tree/TreeItems/TreeItem.h"
+#include "Tree/TreeItems/ListTreeItem.h"
+#include "Tree/TreeItems/ValueTreeItem.h"
+#include "Values/Types/ListValue.h"
 #include "Keycaps/KeycapDelegate.h"
-#include "Models/ItemDataRole.h"
+#include "Tree/Models/ItemDataRole.h"
 #include "Serialization/Serialize.h"
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QAction>

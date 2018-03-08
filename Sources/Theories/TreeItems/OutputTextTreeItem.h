@@ -19,14 +19,14 @@
 
 #pragma once
 
-#include "Values/Editors/UserItemDelegate.h"
+#include "Tree/TreeItems/TreeItem.h"
 
-class KeycapDelegate : public UserItemDelegate
+class OutputTextTreeItem : public TreeItem
 {
 public:
-    KeycapDelegate(QObject* pParent = nullptr);
-    ~KeycapDelegate();
-
-    virtual void setModelData(QWidget* pEditor, QAbstractItemModel* pModel, const QModelIndex& index) const override;
-    virtual void initStyleOption(QStyleOptionViewItem* pOption, const QModelIndex& index) const override;
+    OutputTextTreeItem(const QString& sOutputText = QString());
+    ~OutputTextTreeItem();
+    QString getOutputText() const;
+    void setOutputText(const QString& sOutputText);
+    virtual int type() const override {return OutputText;}
 };

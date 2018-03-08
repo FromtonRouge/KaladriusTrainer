@@ -19,14 +19,11 @@
 
 #pragma once
 
-#include "Values/Editors/UserItemDelegate.h"
+#include "Tree/Models/TreeItemModel.h"
 
-class KeycapDelegate : public UserItemDelegate
+class LessonModel : public TreeItemModel
 {
 public:
-    KeycapDelegate(QObject* pParent = nullptr);
-    ~KeycapDelegate();
-
-    virtual void setModelData(QWidget* pEditor, QAbstractItemModel* pModel, const QModelIndex& index) const override;
-    virtual void initStyleOption(QStyleOptionViewItem* pOption, const QModelIndex& index) const override;
+    LessonModel(QObject* pParent = nullptr);
+    ~LessonModel();
 };

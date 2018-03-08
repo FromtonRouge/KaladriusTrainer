@@ -19,14 +19,15 @@
 
 #pragma once
 
-#include "Values/Editors/UserItemDelegate.h"
+#include "Tree/Models/UndoableProxyModel.h"
 
-class KeycapDelegate : public UserItemDelegate
+class UndoableKeyboardModel : public UndoableProxyModel
 {
-public:
-    KeycapDelegate(QObject* pParent = nullptr);
-    ~KeycapDelegate();
+    Q_OBJECT
 
-    virtual void setModelData(QWidget* pEditor, QAbstractItemModel* pModel, const QModelIndex& index) const override;
-    virtual void initStyleOption(QStyleOptionViewItem* pOption, const QModelIndex& index) const override;
+public:
+    UndoableKeyboardModel(QObject* pParent = nullptr);
+
+    virtual bool setData(const QModelIndex& index, const QVariant& value, int iRole = Qt::EditRole) override;
+    virtual bool dropMimeData(const QMimeData* pMimeData, Qt::DropAction action, int iRow, int iColumn, const QModelIndex& parent) override;
 };

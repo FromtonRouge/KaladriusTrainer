@@ -19,14 +19,23 @@
 
 #pragma once
 
-#include "Values/Editors/UserItemDelegate.h"
+#include "UserEditor.h"
+#include "Values/Types/KeycapRef.h" // for convenience
 
-class KeycapDelegate : public UserItemDelegate
+class QComboBox;
+class QAbstractItemModel;
+class KeycapRefEditor : public UserEditor
 {
-public:
-    KeycapDelegate(QObject* pParent = nullptr);
-    ~KeycapDelegate();
+    Q_OBJECT
 
-    virtual void setModelData(QWidget* pEditor, QAbstractItemModel* pModel, const QModelIndex& index) const override;
-    virtual void initStyleOption(QStyleOptionViewItem* pOption, const QModelIndex& index) const override;
+public:
+    KeycapRefEditor(QAbstractItemModel* pKeycapsRefModel, QWidget* pParent = nullptr);
+
+    virtual void setValue(const QVariant& value) override;
+
+private slots:
+    void onCurrentIndexChanged(const QString& sKeycapId);
+
+private:
+    QComboBox* _pComboBox;
 };

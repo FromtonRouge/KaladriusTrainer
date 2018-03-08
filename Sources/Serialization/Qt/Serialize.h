@@ -19,9 +19,9 @@
 
 #pragma once
 
-#include "ValueTypes/KeycapRef.h"
-#include "ValueTypes/ListValue.h"
-#include "ValueTypes/Finger.h"
+#include "Values/Types/KeycapRef.h"
+#include "Values/Types/ListValue.h"
+#include "Values/Types/Finger.h"
 #include <QtCore/QDataStream>
 #include <QtCore/QByteArray>
 #include <QtCore/QVariant>

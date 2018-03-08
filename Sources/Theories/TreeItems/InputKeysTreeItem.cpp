@@ -17,16 +17,38 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "InputKeysTreeItem.h"
+#include "Tree/Models/ItemDataRole.h"
+#include <QtGui/QIcon>
+#include <boost/dynamic_bitset.hpp>
 
-#include "Values/Editors/UserItemDelegate.h"
-
-class KeycapDelegate : public UserItemDelegate
+InputKeysTreeItem::InputKeysTreeItem(const QString& sInputKeys, const QBitArray& bits)
 {
-public:
-    KeycapDelegate(QObject* pParent = nullptr);
-    ~KeycapDelegate();
+    setIcon(QIcon(":/Icons/keyboard-full.png"));
+    setText(sInputKeys);
+    setKeyBits(bits);
+    setEditable(false);
+}
 
-    virtual void setModelData(QWidget* pEditor, QAbstractItemModel* pModel, const QModelIndex& index) const override;
-    virtual void initStyleOption(QStyleOptionViewItem* pOption, const QModelIndex& index) const override;
-};
+InputKeysTreeItem::~InputKeysTreeItem()
+{
+
+}
+
+void InputKeysTreeItem::setKeyBits(const QBitArray& bits)
+{
+    setData(bits, InputKeyBitsRole);
+
+    boost::dynamic_bitset<> dynamicbits;
+    dynamicbits.resize(bits.size());
+    for (int iBit = 0; iBit < bits.size(); ++iBit)
+    {
+        dynamicbits[iBit] = bits[iBit];
+    }
+    setToolTip(QObject::tr("Keys on the steno keyboard. Array index in the table [%1]").arg(dynamicbits.to_ulong()));
+}
+
+QBitArray InputKeysTreeItem::getKeyBits() const
+{
+    return data(InputKeyBitsRole).toBitArray();
+}

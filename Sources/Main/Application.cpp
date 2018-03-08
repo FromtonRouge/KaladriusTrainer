@@ -19,14 +19,14 @@
 
 #include "Main/Application.h"
 #include "ProjectConfig.h"
-#include "ValueEditors/UserEditorFactory.h"
-#include "Theories/TheoryModel.h"
-#include "Theories/UndoableTheoryModel.h"
-#include "Keyboards/KeyboardModel.h"
-#include "Keyboards/UndoableKeyboardModel.h"
+#include "Values/Editors/UserEditorFactory.h"
+#include "Theories/Models/TheoryModel.h"
+#include "Theories/Models/UndoableTheoryModel.h"
+#include "Keyboards/Models/KeyboardModel.h"
+#include "Keyboards/Models/UndoableKeyboardModel.h"
 #include "Keyboards/KeyboardGraphicsScene.h"
-#include "Lessons/LessonModel.h"
-#include "Lessons/UndoableLessonModel.h"
+#include "Lessons/Models/LessonModel.h"
+#include "Lessons/Models/UndoableLessonModel.h"
 #include <QtCore/QCommandLineParser>
 #include <QtWidgets/QUndoStack>
 #include <iostream>

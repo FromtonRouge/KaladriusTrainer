@@ -20,10 +20,10 @@
 #include "KeycapTreeView.h"
 #include "KeycapDelegate.h"
 #include "Keyboards/KeyboardTreeView.h"
-#include "Keyboards/KeyboardModel.h"
-#include "Models/UndoableProxyModel.h"
-#include "Models/DiffModel.h"
-#include "TreeItems/TreeItem.h"
+#include "Keyboards/Models/KeyboardModel.h"
+#include "Tree/Models/UndoableProxyModel.h"
+#include "Tree/Models/DiffModel.h"
+#include "Tree/TreeItems/TreeItem.h"
 #include <QtWidgets/QHeaderView>
 #include <QtCore/QItemSelectionModel>
 

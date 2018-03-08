@@ -20,8 +20,8 @@
 #include "KeyboardGraphicsView.h"
 #include "KeyboardGraphicsScene.h"
 #include "Keycaps/KeycapGraphicsItem.h"
-#include "Models/UndoableProxyModel.h"
-#include "KeyboardModel.h"
+#include "Tree/Models/UndoableProxyModel.h"
+#include "Models/KeyboardModel.h"
 #include <QtWidgets/QMenu>
 #include <QtGui/QContextMenuEvent>
 #include <QtGui/QKeyEvent>

@@ -19,14 +19,12 @@
 
 #pragma once
 
-#include "Values/Editors/UserItemDelegate.h"
+#include "Tree/Models/UndoableProxyModel.h"
 
-class KeycapDelegate : public UserItemDelegate
+class UndoableTheoryModel : public UndoableProxyModel
 {
-public:
-    KeycapDelegate(QObject* pParent = nullptr);
-    ~KeycapDelegate();
+    Q_OBJECT
 
-    virtual void setModelData(QWidget* pEditor, QAbstractItemModel* pModel, const QModelIndex& index) const override;
-    virtual void initStyleOption(QStyleOptionViewItem* pOption, const QModelIndex& index) const override;
+public:
+    UndoableTheoryModel(QObject* pParent = nullptr);
 };

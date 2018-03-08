@@ -19,14 +19,22 @@
 
 #pragma once
 
-#include "Values/Editors/UserItemDelegate.h"
+#include "UserEditor.h"
+#include "Values/Types/Finger.h" // for convenience
 
-class KeycapDelegate : public UserItemDelegate
+class QComboBox;
+class FingerSelector : public UserEditor
 {
-public:
-    KeycapDelegate(QObject* pParent = nullptr);
-    ~KeycapDelegate();
+    Q_OBJECT
 
-    virtual void setModelData(QWidget* pEditor, QAbstractItemModel* pModel, const QModelIndex& index) const override;
-    virtual void initStyleOption(QStyleOptionViewItem* pOption, const QModelIndex& index) const override;
+public:
+    FingerSelector(QWidget* pParent = nullptr);
+
+    virtual void setValue(const QVariant& value) override;
+
+private slots:
+    void onCurrentIndexChanged(int);
+
+private:
+    QComboBox* _pComboBox;
 };

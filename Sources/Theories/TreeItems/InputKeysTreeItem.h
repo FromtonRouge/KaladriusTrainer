@@ -19,14 +19,15 @@
 
 #pragma once
 
-#include "Values/Editors/UserItemDelegate.h"
+#include "Tree/TreeItems/TreeItem.h"
+#include <QtCore/QBitArray>
 
-class KeycapDelegate : public UserItemDelegate
+class InputKeysTreeItem : public TreeItem
 {
 public:
-    KeycapDelegate(QObject* pParent = nullptr);
-    ~KeycapDelegate();
-
-    virtual void setModelData(QWidget* pEditor, QAbstractItemModel* pModel, const QModelIndex& index) const override;
-    virtual void initStyleOption(QStyleOptionViewItem* pOption, const QModelIndex& index) const override;
+    InputKeysTreeItem(const QString& sInputKeys = QString(), const QBitArray& bits = QBitArray());
+    ~InputKeysTreeItem();
+    virtual int type() const override {return InputKeys;}
+    void setKeyBits(const QBitArray& bits);
+    QBitArray getKeyBits() const;
 };

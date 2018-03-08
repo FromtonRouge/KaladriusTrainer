@@ -18,9 +18,9 @@
 // ======================================================================
 
 #include "Theories/TheoryEditorMainWindow.h"
-#include "Theories/TheoryModel.h"
-#include "Theories/UndoableTheoryModel.h"
-#include "Keyboards/KeyboardModel.h"
+#include "Theories/Models/TheoryModel.h"
+#include "Theories/Models/UndoableTheoryModel.h"
+#include "Keyboards/Models/KeyboardModel.h"
 #include "Keyboards/KeyboardGraphicsScene.h"
 #include "Main/Application.h"
 #include "Dictionaries/DictionaryParser.h"

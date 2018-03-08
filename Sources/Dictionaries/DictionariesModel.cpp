@@ -18,7 +18,7 @@
 // ======================================================================
 
 #include "DictionariesModel.h"
-#include "Theories/TheoryModel.h"
+#include "Theories/Models/TheoryModel.h"
 
 DictionariesModel::DictionariesModel(QObject* pParent)
     : QIdentityProxyModel(pParent)

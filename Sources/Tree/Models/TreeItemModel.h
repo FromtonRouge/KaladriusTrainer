@@ -19,14 +19,18 @@
 
 #pragma once
 
-#include "Values/Editors/UserItemDelegate.h"
+#include "ItemDataRole.h"
+#include "Tree/TreeItems/TreeItem.h"
+#include <QtGui/QStandardItemModel>
 
-class KeycapDelegate : public UserItemDelegate
+class TreeItemModel : public QStandardItemModel
 {
-public:
-    KeycapDelegate(QObject* pParent = nullptr);
-    ~KeycapDelegate();
+    Q_OBJECT
 
-    virtual void setModelData(QWidget* pEditor, QAbstractItemModel* pModel, const QModelIndex& index) const override;
-    virtual void initStyleOption(QStyleOptionViewItem* pOption, const QModelIndex& index) const override;
+public:
+    TreeItemModel(QObject* pParent = nullptr);
+    ~TreeItemModel();
+    virtual Qt::ItemFlags flags(const QModelIndex& index) const override;
+    virtual QVariant data(const QModelIndex& index, int iRole) const override;
+    virtual bool dropMimeData(const QMimeData* pMimedata, Qt::DropAction action, int iRow, int iColumn, const QModelIndex& parent) override;
 };

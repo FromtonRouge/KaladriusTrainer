@@ -18,8 +18,8 @@
 // ======================================================================
 
 #include "Keyboards/KeyboardEditorMainWindow.h"
-#include "Keyboards/UndoableKeyboardModel.h"
-#include "Keyboards/KeyboardModel.h"
+#include "Keyboards/Models/UndoableKeyboardModel.h"
+#include "Keyboards/Models/KeyboardModel.h"
 #include "Keyboards/KeyboardGraphicsScene.h"
 #include "Main/Application.h"
 #include "Serialization/Serialize.h"

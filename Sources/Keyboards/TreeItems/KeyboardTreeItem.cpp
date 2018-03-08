@@ -17,16 +17,34 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "KeyboardTreeItem.h"
+#include "Tree/TreeItems/ListTreeItem.h"
+#include <QtGui/QIcon>
 
-#include "Values/Editors/UserItemDelegate.h"
-
-class KeycapDelegate : public UserItemDelegate
+KeyboardTreeItem::KeyboardTreeItem()
 {
-public:
-    KeycapDelegate(QObject* pParent = nullptr);
-    ~KeycapDelegate();
+    setIcon(QIcon(":/Icons/keyboard-full.png"));
+    setText(QObject::tr("Keyboard"));
+    setEditable(false);
 
-    virtual void setModelData(QWidget* pEditor, QAbstractItemModel* pModel, const QModelIndex& index) const override;
-    virtual void initStyleOption(QStyleOptionViewItem* pOption, const QModelIndex& index) const override;
-};
+    auto pKeycapsListItem = new ListTreeItem(QIcon(":/Icons/keyboard-full.png"), QObject::tr("Keycaps"));
+    appendRow({pKeycapsListItem, new EmptyTreeItem()});
+
+    auto pLinkedTheories = new ListTreeItem(QIcon(":/Icons/book-open.png"), QObject::tr("Linked Theories"));
+    appendRow({pLinkedTheories, new EmptyTreeItem()});
+}
+
+KeyboardTreeItem::~KeyboardTreeItem()
+{
+
+}
+
+ListTreeItem* KeyboardTreeItem::getKeycaps() const
+{
+    return static_cast<ListTreeItem*>(child(0));
+}
+
+ListTreeItem* KeyboardTreeItem::getLinkedTheories() const
+{
+    return static_cast<ListTreeItem*>(child(1));
+}

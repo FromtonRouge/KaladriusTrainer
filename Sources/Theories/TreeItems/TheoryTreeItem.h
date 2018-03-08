@@ -19,14 +19,17 @@
 
 #pragma once
 
-#include "Values/Editors/UserItemDelegate.h"
+#include "Tree/TreeItems/TreeItem.h"
 
-class KeycapDelegate : public UserItemDelegate
+class ListTreeItem;
+class TheoryTreeItem : public TreeItem
 {
 public:
-    KeycapDelegate(QObject* pParent = nullptr);
-    ~KeycapDelegate();
-
-    virtual void setModelData(QWidget* pEditor, QAbstractItemModel* pModel, const QModelIndex& index) const override;
-    virtual void initStyleOption(QStyleOptionViewItem* pOption, const QModelIndex& index) const override;
+    TheoryTreeItem();
+    ~TheoryTreeItem();
+    virtual int type() const override {return Theory;}
+    AttributeTreeItem* getName() const;
+    AttributeTreeItem* getDescription() const;
+    ListTreeItem* getSpecialKeys() const;
+    ListTreeItem* getDictionaries() const;
 };

@@ -17,16 +17,25 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "LinkedDictionaryTreeItem.h"
+#include "Tree/TreeItems/ListTreeItem.h"
+#include "Tree/TreeItems/ValueTreeItem.h"
+#include "Values/Types/ListValue.h"
+#include "Values/Types/KeycapRef.h"
+#include <QtGui/QIcon>
 
-#include "Values/Editors/UserItemDelegate.h"
-
-class KeycapDelegate : public UserItemDelegate
+LinkedDictionaryTreeItem::LinkedDictionaryTreeItem(const QString& sDictionaryName)
 {
-public:
-    KeycapDelegate(QObject* pParent = nullptr);
-    ~KeycapDelegate();
+    setIcon(QIcon(":/Icons/book-brown.png"));
+    setText(sDictionaryName);
+    setEditable(false);
 
-    virtual void setModelData(QWidget* pEditor, QAbstractItemModel* pModel, const QModelIndex& index) const override;
-    virtual void initStyleOption(QStyleOptionViewItem* pOption, const QModelIndex& index) const override;
-};
+    _pLinkedKeysTreeItem = new ListTreeItem(QIcon(":/Icons/keyboard-full.png"), QObject::tr("Linked Keys"));
+    auto pValueTreeItem = new ValueTreeItem(qVariantFromValue(ListValue(QObject::tr("Keycaps"), qVariantFromValue(KeycapRef()))));
+    appendRow({_pLinkedKeysTreeItem, pValueTreeItem});
+}
+
+LinkedDictionaryTreeItem::~LinkedDictionaryTreeItem()
+{
+
+}

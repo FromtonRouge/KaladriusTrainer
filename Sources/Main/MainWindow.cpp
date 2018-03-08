@@ -23,9 +23,9 @@
 #include "Streams/Iostream.h"
 #include "Keyboards/KeyboardGraphicsView.h"
 #include "Keyboards/KeyboardGraphicsScene.h"
-#include "Keyboards/KeyboardModel.h"
-#include "Keyboards/UndoableKeyboardModel.h"
-#include "Theories/TheoryModel.h"
+#include "Keyboards/Models/KeyboardModel.h"
+#include "Keyboards/Models/UndoableKeyboardModel.h"
+#include "Theories/Models/TheoryModel.h"
 #include "ui_MainWindow.h"
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QTextEdit>
