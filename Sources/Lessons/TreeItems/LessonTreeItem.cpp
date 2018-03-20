@@ -17,18 +17,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "LessonEditorMainWindow.h"
-#include "ui_LessonEditorMainWindow.h"
+#include "LessonTreeItem.h"
 
-LessonEditorMainWindow::LessonEditorMainWindow(QWidget* pParent)
-    : MainTabWindow(pParent)
-    , _pUi(new Ui::LessonEditorMainWindow())
+LessonTreeItem::LessonTreeItem()
 {
-    _pUi->setupUi(this);
-    setWindowTitle(tr("Lesson Editor[*]"));
+    setEditable(true);
+    setText(QObject::tr("Lesson"));
+    setIcon(QIcon(":/Icons/book.png"));
 }
 
-LessonEditorMainWindow::~LessonEditorMainWindow()
+LessonTreeItem::~LessonTreeItem()
 {
 
 }

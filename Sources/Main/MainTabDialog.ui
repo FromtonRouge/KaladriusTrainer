@@ -63,7 +63,7 @@
        <item row="0" column="0">
         <widget class="QTabWidget" name="tabWidget">
          <property name="currentIndex">
-          <number>0</number>
+          <number>2</number>
          </property>
          <property name="movable">
           <bool>true</bool>
@@ -112,9 +112,9 @@
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="tabLessonEditor">
+         <widget class="QWidget" name="tabLessonsEditor">
           <attribute name="title">
-           <string>Lesson Editor</string>
+           <string>Lessons Editor</string>
           </attribute>
           <layout class="QGridLayout" name="gridLayout_7">
            <property name="leftMargin">
@@ -130,7 +130,7 @@
             <number>0</number>
            </property>
            <item row="0" column="0">
-            <widget class="LessonEditorMainWindow" name="mainWindowLessonEditor" native="true"/>
+            <widget class="LessonsEditorMainWindow" name="mainWindowLessonEditor" native="true"/>
            </item>
           </layout>
          </widget>
@@ -194,9 +194,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>LessonEditorMainWindow</class>
+   <class>LessonsEditorMainWindow</class>
    <extends>QWidget</extends>
-   <header>Lessons/LessonEditorMainWindow.h</header>
+   <header>Lessons/LessonsEditorMainWindow.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

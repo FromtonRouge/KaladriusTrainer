@@ -17,24 +17,17 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "Lessons/Models/LessonsModel.h"
+#include "Lessons/TreeItems/CourseTreeItem.h"
 
-#include "Main/MainTabWindow.h"
-#include <QtCore/QScopedPointer>
-
-namespace Ui
+LessonsModel::LessonsModel(QObject* pParent)
+    : TreeItemModel(pParent)
 {
-    class LessonEditorMainWindow;
+    setHorizontalHeaderLabels(QStringList() << tr("Name") << tr("Value"));
+    appendRow({new CourseTreeItem(), new EmptyTreeItem()});
 }
 
-class LessonEditorMainWindow : public MainTabWindow
+LessonsModel::~LessonsModel()
 {
-    Q_OBJECT
 
-public:
-    LessonEditorMainWindow(QWidget* pParent);
-    ~LessonEditorMainWindow();
-
-private:
-    QScopedPointer<Ui::LessonEditorMainWindow> _pUi;
-};
+}

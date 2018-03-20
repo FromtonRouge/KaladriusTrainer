@@ -25,8 +25,8 @@
 #include "Keyboards/Models/KeyboardModel.h"
 #include "Keyboards/Models/UndoableKeyboardModel.h"
 #include "Keyboards/KeyboardGraphicsScene.h"
-#include "Lessons/Models/LessonModel.h"
-#include "Lessons/Models/UndoableLessonModel.h"
+#include "Lessons/Models/LessonsModel.h"
+#include "Lessons/Models/UndoableLessonsModel.h"
 #include <QtCore/QCommandLineParser>
 #include <QtWidgets/QUndoStack>
 #include <iostream>
@@ -40,8 +40,8 @@ Application::Application(int& argc, char** argv)
     , _pKeyboardModel(new KeyboardModel(this))
     , _pUndoableKeyboardModel(new UndoableKeyboardModel(this))
     , _pKeyboardGraphicsScene(new KeyboardGraphicsScene(this))
-    , _pLessonModel(new LessonModel(this))
-    , _pUndoableLessonModel(new UndoableLessonModel(this))
+    , _pLessonsModel(new LessonsModel(this))
+    , _pUndoableLessonsModel(new UndoableLessonsModel(this))
 {
     // Setup std::cout redirection
     _streamBufferCout.open(StreamSink(std::bind(&Application::toLogs, this, std::placeholders::_1, 0)));
@@ -72,8 +72,8 @@ Application::Application(int& argc, char** argv)
     _pUndoableKeyboardModel->setUndoStack(new QUndoStack(this));
     _pUndoableKeyboardModel->setSourceModel(_pKeyboardModel);
 
-    _pUndoableLessonModel->setUndoStack(new QUndoStack(this));
-    _pUndoableLessonModel->setSourceModel(_pLessonModel);
+    _pUndoableLessonsModel->setUndoStack(new QUndoStack(this));
+    _pUndoableLessonsModel->setSourceModel(_pLessonsModel);
 }
 
 Application::~Application()

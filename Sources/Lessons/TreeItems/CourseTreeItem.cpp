@@ -17,24 +17,21 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "CourseTreeItem.h"
+#include "Tree/TreeItems/ListTreeItem.h"
+#include "Tree/TreeItems/ValueTreeItem.h"
+#include "Values/Types/ListValue.h"
 
-#include <QtWidgets/QWidget>
-#include <QtCore/QScopedPointer>
-
-namespace Ui
+CourseTreeItem::CourseTreeItem()
 {
-    class LessonWidget;
+    setEditable(false);
+    setText(QObject::tr("Course"));
+    setIcon(QIcon(":/Icons/books-stack.png"));
+    auto pValueTreeItem = new ValueTreeItem(qVariantFromValue(ListValue(QObject::tr("Lessons"), QString(), ListValue::NameIsEditable)));
+    appendRow({new ListTreeItem(QIcon(":/Icons/books.png"), QObject::tr("Lessons")), pValueTreeItem });
 }
 
-class LessonWidget : public QWidget
+CourseTreeItem::~CourseTreeItem()
 {
-    Q_OBJECT
 
-public:
-    LessonWidget(QWidget* pParent = nullptr);
-    ~LessonWidget();
-
-private:
-    QScopedPointer<Ui::LessonWidget> _pUi;
-};
+}

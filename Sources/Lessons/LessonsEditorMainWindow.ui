@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>LessonEditorMainWindow</class>
- <widget class="QMainWindow" name="LessonEditorMainWindow">
+ <class>LessonsEditorMainWindow</class>
+ <widget class="QMainWindow" name="LessonsEditorMainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,9 +11,27 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Lessons Editor</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout_2">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item row="0" column="0">
+     <widget class="QTextEdit" name="textEdit"/>
+    </item>
+   </layout>
+  </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
@@ -59,12 +77,20 @@
       <number>0</number>
      </property>
      <item row="0" column="0">
-      <widget class="QWidget" name="widgetLesson" native="true"/>
+      <widget class="LessonsWidget" name="widgetLessons" native="true"/>
      </item>
     </layout>
    </widget>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>LessonsWidget</class>
+   <extends>QWidget</extends>
+   <header>Lessons/LessonsWidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

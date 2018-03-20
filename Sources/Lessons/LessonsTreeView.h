@@ -17,15 +17,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "LessonModel.h"
+#pragma once
 
-LessonModel::LessonModel(QObject* pParent)
-    : TreeItemModel(pParent)
+#include <QtWidgets/QTreeView>
+
+class LessonsTreeView : public QTreeView
 {
-
-}
-
-LessonModel::~LessonModel()
-{
-
-}
+public:
+    LessonsTreeView(QWidget* pParent = nullptr);
+};

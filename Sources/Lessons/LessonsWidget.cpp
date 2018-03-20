@@ -17,15 +17,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "UndoableLessonModel.h"
+#include "LessonsWidget.h"
+#include "ui_LessonsWidget.h"
 
-UndoableLessonModel::UndoableLessonModel(QObject* pParent)
-    : UndoableProxyModel(pParent)
+LessonsWidget::LessonsWidget(QWidget *pParent)
+    : QWidget(pParent)
+    , _pUi(new Ui::LessonsWidget)
 {
-
+    _pUi->setupUi(this);
 }
 
-UndoableLessonModel::~UndoableLessonModel()
+LessonsWidget::~LessonsWidget()
 {
-
 }

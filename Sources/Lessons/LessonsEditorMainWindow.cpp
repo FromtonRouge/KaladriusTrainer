@@ -17,13 +17,27 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "Lessons/LessonsEditorMainWindow.h"
+#include "Lessons/LessonsTreeView.h"
+#include "Lessons/Models/UndoableLessonsModel.h"
+#include "Main/Application.h"
+#include "ui_LessonsEditorMainWindow.h"
 
-#include "Tree/Models/UndoableProxyModel.h"
-
-class UndoableLessonModel : public UndoableProxyModel
+LessonsEditorMainWindow::LessonsEditorMainWindow(QWidget* pParent)
+    : MainTabWindow(pParent)
+    , _pUi(new Ui::LessonsEditorMainWindow())
 {
-public:
-    UndoableLessonModel(QObject* pParent = nullptr);
-    ~UndoableLessonModel();
-};
+    _pUi->setupUi(this);
+    setWindowTitle(tr("Lessons Editor[*]"));
+
+    auto pUndoableLessonsModel = qApp->getUndoableLessonsModel();
+    auto pLessonsTreeView = _pUi->widgetLessons->findChild<LessonsTreeView*>();
+    pLessonsTreeView->setModel(pUndoableLessonsModel);
+    pLessonsTreeView->expandAll();
+    pLessonsTreeView->resizeColumnToContents(0);
+}
+
+LessonsEditorMainWindow::~LessonsEditorMainWindow()
+{
+
+}

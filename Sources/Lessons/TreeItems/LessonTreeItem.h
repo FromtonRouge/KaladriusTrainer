@@ -19,42 +19,12 @@
 
 #pragma once
 
-#include <QtGui/QStandardItem>
+#include "Tree/TreeItems/TreeItem.h"
 
-class AttributeTreeItem;
-struct TreeItem : public QStandardItem
+class LessonTreeItem : public TreeItem
 {
-    enum Type
-    {
-        // Generic
-        Empty = UserType,
-        List,
-        Value,
-        Attribute,
-
-        // Keyboard
-        Keyboard,
-        Keycap,
-
-        // Theory
-        Theory,
-        LinkedTheory,
-        LinkedDictionary,
-        OutputText,
-        InputKeys,
-        Dictionary,
-
-        // Lessons
-        Course,
-        Lesson,
-    };
-
-    virtual int type() const override = 0;
-    virtual AttributeTreeItem* addAttribute(const QString& sName, const QVariant& value);
-};
-
-struct EmptyTreeItem : public TreeItem
-{
-    EmptyTreeItem() {setEditable(false); setSelectable(false);}
-    virtual int type() const override {return Empty;}
+public:
+    LessonTreeItem();
+    ~LessonTreeItem();
+    virtual int type() const override {return Lesson;}
 };

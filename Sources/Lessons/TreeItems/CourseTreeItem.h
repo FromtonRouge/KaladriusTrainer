@@ -19,11 +19,12 @@
 
 #pragma once
 
-#include "Tree/Models/TreeItemModel.h"
+#include "Tree/TreeItems/TreeItem.h"
 
-class LessonModel : public TreeItemModel
+class CourseTreeItem : public TreeItem
 {
 public:
-    LessonModel(QObject* pParent = nullptr);
-    ~LessonModel();
+    CourseTreeItem();
+    ~CourseTreeItem();
+    virtual int type() const override {return Course;}
 };

@@ -30,5 +30,8 @@
         <file>Icons/hand.png</file>
         <file>Icons/gear.png</file>
         <file>Icons/document.png</file>
+        <file>Icons/books-stack.png</file>
+        <file>Icons/book.png</file>
+        <file>Icons/books.png</file>
     </qresource>
 </RCC>

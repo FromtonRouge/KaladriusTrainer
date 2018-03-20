@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>LessonWidget</class>
- <widget class="QWidget" name="LessonWidget">
+ <class>LessonsWidget</class>
+ <widget class="QWidget" name="LessonsWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -27,10 +27,17 @@
     <number>0</number>
    </property>
    <item row="0" column="0">
-    <widget class="QTreeView" name="treeView"/>
+    <widget class="LessonsTreeView" name="treeView"/>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>LessonsTreeView</class>
+   <extends>QTreeView</extends>
+   <header>Lessons/LessonsTreeView.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
