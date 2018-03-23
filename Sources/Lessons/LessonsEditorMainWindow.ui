@@ -45,6 +45,8 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionReload"/>
+    <addaction name="separator"/>
     <addaction name="actionSave"/>
     <addaction name="actionSave_As"/>
    </widget>
@@ -264,6 +266,18 @@
    </property>
    <property name="text">
     <string>Save As...</string>
+   </property>
+  </action>
+  <action name="actionReload">
+   <property name="icon">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+     <normaloff>:/Icons/folder-open-document.png</normaloff>:/Icons/folder-open-document.png</iconset>
+   </property>
+   <property name="text">
+    <string>Reload</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
    </property>
   </action>
  </widget>

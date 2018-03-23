@@ -32,6 +32,7 @@
 #include "Tree/TreeItems/ValueTreeItem.h"
 #include "Theories/TreeItems/LinkedTheoryTreeItem.h"
 #include "Theories/TreeItems/LinkedDictionaryTreeItem.h"
+#include <QtCore/QFile>
 #include <boost/archive/xml_oarchive.hpp>
 #include <boost/archive/xml_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
@@ -685,11 +686,36 @@ namespace Serialization
 
     bool Save(QTextDocument* pTextDocument, const QString& sFilePath)
     {
+        std::ofstream ofs(sFilePath.toStdString());
+        boost::archive::xml_oarchive oa(ofs);
+        try
+        {
+            oa << boost::serialization::make_nvp("text_document", *pTextDocument);
+            return true;
+        }
+        catch (const std::exception& e)
+        {
+            std::cerr << e.what() << std::endl;
+        }
         return false;
     }
 
     bool Load(QTextDocument* pTextDocument, const QString& sFilePath)
     {
+        if (QFile::exists(sFilePath))
+        {
+            std::ifstream ifs(sFilePath.toStdString());
+            boost::archive::xml_iarchive ia(ifs);
+            try
+            {
+                ia >> boost::serialization::make_nvp("text_document", *pTextDocument);
+                return true;
+            }
+            catch (const std::exception& e)
+            {
+                std::cerr << e.what() << std::endl;
+            }
+        }
         return false;
     }
 }

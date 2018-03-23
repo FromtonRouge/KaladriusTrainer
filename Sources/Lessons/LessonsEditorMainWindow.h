@@ -51,6 +51,7 @@ private slots:
     void on_actionInsert_Table_triggered();
     void on_actionSave_triggered();
     void on_actionSave_As_triggered();
+    void on_actionReload_triggered();
 
 private:
     void fontChanged(const QFont &f);

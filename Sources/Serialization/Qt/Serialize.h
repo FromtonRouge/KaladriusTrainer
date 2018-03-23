@@ -22,9 +22,13 @@
 #include "Values/Types/KeycapRef.h"
 #include "Values/Types/ListValue.h"
 #include "Values/Types/Finger.h"
+#include <QtGui/QTextDocument>
+#include <QtGui/QTextFormat>
+#include <QtGui/QTextCursor>
 #include <QtCore/QDataStream>
 #include <QtCore/QByteArray>
 #include <QtCore/QVariant>
+#include <QtCore/QVector>
 #include <QtGui/QStandardItem>
 #include <boost/serialization/binary_object.hpp>
 #include <boost/serialization/string.hpp>
@@ -225,6 +229,124 @@ namespace boost
             ar & make_nvp("label", obj.sLabel);
             ar & make_nvp("default_value", obj.defaultValue);
             ar & make_nvp("naming_policy", obj.namingPolicy);
+        }
+    }
+}
+
+BOOST_CLASS_VERSION(QTextFormat, 0)
+namespace boost
+{
+    namespace serialization
+    {
+        template<class Archive> void serialize(Archive& ar, QTextFormat& obj,  const unsigned int fileVersion)
+        {
+            split_free(ar, obj, fileVersion);
+        }
+
+        template<class Archive> void save(Archive& ar, const QTextFormat& obj,  const unsigned int fileVersion)
+        {
+            const int iFormatType = obj.type();
+            ar << make_nvp("format_type", iFormatType);
+
+            const auto& properties = obj.properties();
+            const int iProperties = properties.size();
+            ar << make_nvp("properties", iProperties);
+            auto it = properties.begin();
+            while (it != properties.end())
+            {
+                const int iPropertyId = it.key();
+                const QVariant& propertyValue = it++.value();
+                ar << make_nvp("id", iPropertyId);
+                ar << make_nvp("value", propertyValue);
+            }
+        }
+
+        template<class Archive> void load(Archive& ar, QTextFormat& obj,  const unsigned int fileVersion)
+        {
+            int iFormatType;
+            ar >> make_nvp("format_type", iFormatType);
+            obj = QTextFormat(iFormatType);
+
+            int iProperties;
+            ar >> make_nvp("properties", iProperties);
+            for (int iProperty = 0; iProperty < iProperties; ++iProperty)
+            {
+                int iPropertyId;
+                QVariant propertyValue;
+                ar >> make_nvp("id", iPropertyId);
+                ar >> make_nvp("value", propertyValue);
+                obj.setProperty(iPropertyId, propertyValue);
+            }
+        }
+    }
+}
+
+BOOST_CLASS_VERSION(QVector<QTextFormat>, 0)
+namespace boost
+{
+    namespace serialization
+    {
+        template<class Archive> void serialize(Archive& ar, QVector<QTextFormat>& obj,  const unsigned int fileVersion)
+        {
+            split_free(ar, obj, fileVersion);
+        }
+
+        template<class Archive> void save(Archive& ar, const QVector<QTextFormat>& obj,  const unsigned int fileVersion)
+        {
+            const int iCount = obj.size();
+            ar << make_nvp("count", iCount);
+            for (const auto& textFormat : obj)
+            {
+                ar << make_nvp("text_format", textFormat);
+            }
+        }
+
+        template<class Archive> void load(Archive& ar, QVector<QTextFormat>& obj,  const unsigned int fileVersion)
+        {
+            int iCount;
+            ar >> make_nvp("count", iCount);
+            for (int i = 0; i < iCount; ++i)
+            {
+                QTextFormat textFormat;
+                ar >> make_nvp("text_format", textFormat);
+                obj << textFormat;
+            }
+        }
+    }
+}
+
+BOOST_CLASS_VERSION(QTextDocument, 0)
+namespace boost
+{
+    namespace serialization
+    {
+        template<class Archive> void serialize(Archive& ar, QTextDocument& obj,  const unsigned int fileVersion)
+        {
+            split_free(ar, obj, fileVersion);
+        }
+
+        template<class Archive> void save(Archive& ar, const QTextDocument& obj,  const unsigned int fileVersion)
+        {
+            // Save all text formats first
+            const auto& allFormats = obj.allFormats();
+            ar << make_nvp("all_formats", allFormats);
+        }
+
+        template<class Archive> void load(Archive& ar, QTextDocument& obj,  const unsigned int fileVersion)
+        {
+            // Load all text formats first
+            QVector<QTextFormat> allFormats;
+            ar >> make_nvp("all_formats", allFormats);
+
+            // Load content
+            QTextCursor cursor(&obj);
+            const bool bPreviousState = obj.isUndoRedoEnabled();
+            obj.setUndoRedoEnabled(false);
+            cursor.beginEditBlock();
+            obj.clear();
+
+            cursor.endEditBlock();
+            obj.setUndoRedoEnabled(bPreviousState);
         }
     }
 }

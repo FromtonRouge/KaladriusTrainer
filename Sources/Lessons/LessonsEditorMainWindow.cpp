@@ -274,6 +274,13 @@ void LessonsEditorMainWindow::on_actionSave_As_triggered()
     }
 }
 
+void LessonsEditorMainWindow::on_actionReload_triggered()
+{
+    QSettings settings;
+    const QString& sLastCourse = settings.value("lastCourse").toString();
+    Serialization::Load(_pUi->textEdit->document(), sLastCourse);
+}
+
 void LessonsEditorMainWindow::fontChanged(const QFont& f)
 {
     QSignalBlocker blocker1(_pUi->actionBold);
