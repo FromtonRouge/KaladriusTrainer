@@ -82,8 +82,10 @@ LessonsEditorMainWindow::LessonsEditorMainWindow(QWidget* pParent)
     auto cursor = _pUi->textEdit->textCursor();
     auto blockCharFormat = cursor.blockCharFormat();
     blockCharFormat.setFontPointSize(18);
+    blockCharFormat.setBackground(Qt::white);
     cursor.setBlockCharFormat(blockCharFormat);
     _pUi->textEdit->setFont(blockCharFormat.font());
+    _pUi->textEdit->setTextBackgroundColor(Qt::white);
 
     fontChanged(blockCharFormat.font());
     foregroundColorChanged(_pUi->textEdit->textColor());
@@ -260,22 +262,18 @@ void LessonsEditorMainWindow::alignmentChanged(Qt::Alignment a)
 {
     if (a & Qt::AlignLeft)
     {
-        QSignalBlocker blocker(_pUi->actionAlign_Left);
         _pUi->actionAlign_Left->setChecked(true);
     }
     else if (a & Qt::AlignHCenter)
     {
-        QSignalBlocker blocker(_pUi->actionAlign_Center);
         _pUi->actionAlign_Center->setChecked(true);
     }
     else if (a & Qt::AlignRight)
     {
-        QSignalBlocker blocker(_pUi->actionAlign_Right);
         _pUi->actionAlign_Right->setChecked(true);
     }
     else if (a & Qt::AlignJustify)
     {
-        QSignalBlocker blocker(_pUi->actionAlign_Justify);
         _pUi->actionAlign_Justify->setChecked(true);
     }
 }
