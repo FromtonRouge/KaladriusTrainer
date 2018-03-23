@@ -20,18 +20,22 @@
 #include "Lessons/LessonsEditorMainWindow.h"
 #include "Lessons/LessonsTreeView.h"
 #include "Lessons/Models/UndoableLessonsModel.h"
+#include "Streams/Iostream.h"
 #include "Main/Application.h"
+#include "Serialization/Serialize.h"
 #include "ui_LessonsEditorMainWindow.h"
 #include <QtWidgets/QFontComboBox>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QActionGroup>
 #include <QtWidgets/QColorDialog>
+#include <QtWidgets/QFileDialog>
 #include <QtGui/QFontInfo>
 #include <QtGui/QTextCursor>
 #include <QtGui/QTextTable>
 #include <QtGui/QFont>
 #include <QtGui/QPixmap>
 #include <QtCore/QSignalBlocker>
+#include <QtCore/QSettings>
 
 LessonsEditorMainWindow::LessonsEditorMainWindow(QWidget* pParent)
     : MainTabWindow(pParent)
@@ -117,6 +121,10 @@ LessonsEditorMainWindow::LessonsEditorMainWindow(QWidget* pParent)
     pLessonsTreeView->setModel(pUndoableLessonsModel);
     pLessonsTreeView->expandAll();
     pLessonsTreeView->resizeColumnToContents(0);
+
+    QSettings settings;
+    const QString& sLastCourse = settings.value("lastCourse").toString();
+    Serialization::Load(_pUi->textEdit->document(), sLastCourse);
 }
 
 LessonsEditorMainWindow::~LessonsEditorMainWindow()
@@ -227,6 +235,43 @@ void LessonsEditorMainWindow::on_actionInsert_Table_triggered()
     cursor.endEditBlock();
     _pUi->textEdit->setTextCursor(pTextTable->cellAt(0, 0).firstCursorPosition());
     _pUi->textEdit->setFocus();
+}
+
+void LessonsEditorMainWindow::on_actionSave_triggered()
+{
+    QSettings settings;
+    const QString& sLastCourse = settings.value("lastCourse").toString();
+    if (!sLastCourse.isEmpty())
+    {
+        if (Serialization::Save(_pUi->textEdit->document(), sLastCourse))
+        {
+            COUT(tr("Course saved to file %1").arg(sLastCourse));
+        }
+    }
+    else
+    {
+        _pUi->actionSave_As->trigger();
+    }
+}
+
+void LessonsEditorMainWindow::on_actionSave_As_triggered()
+{
+    QSettings settings;
+    QString sCourseFileName;
+    const QString& sLastCourse = settings.value("lastCourse").toString();
+    QFileDialog saveDlg(this, tr("Course"), sLastCourse, "*.crs");
+    saveDlg.setDefaultSuffix("crs");
+    saveDlg.setAcceptMode(QFileDialog::AcceptSave);
+    if (saveDlg.exec())
+    {
+        sCourseFileName = saveDlg.selectedFiles().front();
+        settings.setValue("lastCourse", sCourseFileName);
+    }
+
+    if (!sCourseFileName.isEmpty())
+    {
+        _pUi->actionSave->trigger();
+    }
 }
 
 void LessonsEditorMainWindow::fontChanged(const QFont& f)

@@ -682,4 +682,14 @@ namespace Serialization
         }
         return itemsRow;
     }
+
+    bool Save(QTextDocument* pTextDocument, const QString& sFilePath)
+    {
+        return false;
+    }
+
+    bool Load(QTextDocument* pTextDocument, const QString& sFilePath)
+    {
+        return false;
+    }
 }

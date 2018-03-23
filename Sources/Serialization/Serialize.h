@@ -26,6 +26,7 @@ class QStandardItem;
 class KeyboardModel;
 class TheoryModel;
 class QString;
+class QTextDocument;
 namespace Serialization
 {
     bool Save(KeyboardModel* pModel, const QString& sFilePath);
@@ -33,6 +34,9 @@ namespace Serialization
 
     bool Save(TheoryModel* pModel, const QString& sFilePath);
     bool Load(TheoryModel* pModel, const QString& sFilePath);
+
+    bool Save(QTextDocument* pTextDocument, const QString& sFilePath);
+    bool Load(QTextDocument* pTextDocument, const QString& sFilePath);
 
     QByteArray Save(const QList<QStandardItem*>& itemsRow);
     QList<QStandardItem*> Load(const QByteArray& branchData);

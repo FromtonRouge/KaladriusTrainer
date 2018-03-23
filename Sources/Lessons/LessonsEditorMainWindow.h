@@ -49,6 +49,8 @@ private slots:
     void on_actionInsert_List_triggered();
     void on_actionInsert_Ordered_List_triggered();
     void on_actionInsert_Table_triggered();
+    void on_actionSave_triggered();
+    void on_actionSave_As_triggered();
 
 private:
     void fontChanged(const QFont &f);
