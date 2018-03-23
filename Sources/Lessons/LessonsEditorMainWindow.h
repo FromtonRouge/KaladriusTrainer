@@ -27,6 +27,9 @@ namespace Ui
     class LessonsEditorMainWindow;
 }
 
+class QTextCharFormat;
+class QFontComboBox;
+class QComboBox;
 class LessonsEditorMainWindow : public MainTabWindow
 {
     Q_OBJECT
@@ -35,6 +38,27 @@ public:
     LessonsEditorMainWindow(QWidget* pParent);
     ~LessonsEditorMainWindow();
 
+private slots:
+    void on_textEdit_currentCharFormatChanged(const QTextCharFormat& format);
+    void on_textEdit_cursorPositionChanged();
+    void on_actionBold_toggled(bool bChecked);
+    void on_actionItalic_toggled(bool bChecked);
+    void on_actionUnderline_toggled(bool bChecked);
+    void on_actionForeground_Color_triggered(bool bChecked);
+    void on_actionBackground_Color_triggered(bool bChecked);
+    void on_actionInsert_List_triggered();
+    void on_actionInsert_Ordered_List_triggered();
+    void on_actionInsert_Table_triggered();
+
+private:
+    void fontChanged(const QFont &f);
+    void foregroundColorChanged(const QColor &c);
+    void backgroundColorChanged(const QColor &c);
+    void alignmentChanged(Qt::Alignment a);
+    void mergeFormatOnSelection(const QTextCharFormat& format);
+
 private:
     QScopedPointer<Ui::LessonsEditorMainWindow> _pUi;
+    QFontComboBox* _pFontComboBox;
+    QComboBox* _pComboBoxSize;
 };

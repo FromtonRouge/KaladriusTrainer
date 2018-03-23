@@ -33,5 +33,16 @@
         <file>Icons/books-stack.png</file>
         <file>Icons/book.png</file>
         <file>Icons/books.png</file>
+        <file>Icons/color.png</file>
+        <file>Icons/edit-alignment.png</file>
+        <file>Icons/edit-alignment-center.png</file>
+        <file>Icons/edit-alignment-justify.png</file>
+        <file>Icons/edit-alignment-right.png</file>
+        <file>Icons/edit-bold.png</file>
+        <file>Icons/edit-color.png</file>
+        <file>Icons/edit-italic.png</file>
+        <file>Icons/edit-list.png</file>
+        <file>Icons/edit-underline.png</file>
+        <file>Icons/table.png</file>
     </qresource>
 </RCC>

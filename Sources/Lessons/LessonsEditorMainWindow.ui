@@ -82,6 +82,167 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QToolBar" name="toolBarFormat">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>16</width>
+     <height>16</height>
+    </size>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionBold"/>
+   <addaction name="actionItalic"/>
+   <addaction name="actionUnderline"/>
+   <addaction name="actionForeground_Color"/>
+   <addaction name="actionBackground_Color"/>
+   <addaction name="separator"/>
+   <addaction name="actionInsert_List"/>
+   <addaction name="actionInsert_Ordered_List"/>
+   <addaction name="separator"/>
+   <addaction name="actionAlign_Left"/>
+   <addaction name="actionAlign_Center"/>
+   <addaction name="actionAlign_Right"/>
+   <addaction name="actionAlign_Justify"/>
+   <addaction name="separator"/>
+   <addaction name="actionInsert_Table"/>
+  </widget>
+  <action name="actionInsert_Table">
+   <property name="icon">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+     <normaloff>:/Icons/table.png</normaloff>:/Icons/table.png</iconset>
+   </property>
+   <property name="text">
+    <string>Insert Table</string>
+   </property>
+  </action>
+  <action name="actionInsert_List">
+   <property name="icon">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+     <normaloff>:/Icons/edit-list.png</normaloff>:/Icons/edit-list.png</iconset>
+   </property>
+   <property name="text">
+    <string>Insert List</string>
+   </property>
+  </action>
+  <action name="actionInsert_Ordered_List">
+   <property name="icon">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+     <normaloff>:/Icons/edit-list-order.png</normaloff>:/Icons/edit-list-order.png</iconset>
+   </property>
+   <property name="text">
+    <string>Insert Ordered List</string>
+   </property>
+  </action>
+  <action name="actionBold">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+     <normaloff>:/Icons/edit-bold.png</normaloff>:/Icons/edit-bold.png</iconset>
+   </property>
+   <property name="text">
+    <string>Bold</string>
+   </property>
+  </action>
+  <action name="actionItalic">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+     <normaloff>:/Icons/edit-italic.png</normaloff>:/Icons/edit-italic.png</iconset>
+   </property>
+   <property name="text">
+    <string>Italic</string>
+   </property>
+  </action>
+  <action name="actionUnderline">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+     <normaloff>:/Icons/edit-underline.png</normaloff>:/Icons/edit-underline.png</iconset>
+   </property>
+   <property name="text">
+    <string>Underline</string>
+   </property>
+  </action>
+  <action name="actionAlign_Left">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+     <normaloff>:/Icons/edit-alignment.png</normaloff>:/Icons/edit-alignment.png</iconset>
+   </property>
+   <property name="text">
+    <string>Align Left</string>
+   </property>
+  </action>
+  <action name="actionAlign_Center">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+     <normaloff>:/Icons/edit-alignment-center.png</normaloff>:/Icons/edit-alignment-center.png</iconset>
+   </property>
+   <property name="text">
+    <string>Align Center</string>
+   </property>
+  </action>
+  <action name="actionAlign_Right">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+     <normaloff>:/Icons/edit-alignment-right.png</normaloff>:/Icons/edit-alignment-right.png</iconset>
+   </property>
+   <property name="text">
+    <string>Align Right</string>
+   </property>
+  </action>
+  <action name="actionAlign_Justify">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+     <normaloff>:/Icons/edit-alignment-justify.png</normaloff>:/Icons/edit-alignment-justify.png</iconset>
+   </property>
+   <property name="text">
+    <string>Align Justify</string>
+   </property>
+  </action>
+  <action name="actionForeground_Color">
+   <property name="icon">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+     <normaloff>:/Icons/edit-color.png</normaloff>:/Icons/edit-color.png</iconset>
+   </property>
+   <property name="text">
+    <string>Foreground Color</string>
+   </property>
+  </action>
+  <action name="actionBackground_Color">
+   <property name="icon">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+     <normaloff>:/Icons/color.png</normaloff>:/Icons/color.png</iconset>
+   </property>
+   <property name="text">
+    <string>Background Color</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -91,6 +252,8 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../../Resources/ProgrammerStenoTutor.qrc"/>
+ </resources>
  <connections/>
 </ui>
