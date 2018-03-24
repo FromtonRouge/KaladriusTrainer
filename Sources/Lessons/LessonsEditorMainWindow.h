@@ -55,6 +55,8 @@ private slots:
     void on_actionSave_As_triggered();
     void on_actionReload_triggered();
     void on_actionNew_triggered();
+    void on_actionIncrease_Indent_triggered();
+    void on_actionDecrease_Indent_triggered();
 
 private:
     void fontChanged(const QFont &f);

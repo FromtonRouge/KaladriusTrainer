@@ -117,6 +117,9 @@
    <addaction name="actionAlign_Right"/>
    <addaction name="actionAlign_Justify"/>
    <addaction name="separator"/>
+   <addaction name="actionIncrease_Indent"/>
+   <addaction name="actionDecrease_Indent"/>
+   <addaction name="separator"/>
    <addaction name="actionInsert_Table"/>
    <addaction name="actionInsert_Frame"/>
    <addaction name="actionInsert_Image"/>
@@ -361,6 +364,27 @@
    </property>
    <property name="text">
     <string>Insert Image</string>
+   </property>
+  </action>
+  <action name="actionIncrease_Indent">
+   <property name="icon">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+     <normaloff>:/Icons/edit-indent.png</normaloff>:/Icons/edit-indent.png</iconset>
+   </property>
+   <property name="text">
+    <string>Increase Indent</string>
+   </property>
+  </action>
+  <action name="actionDecrease_Indent">
+   <property name="icon">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+     <normaloff>:/Icons/edit-indent-rtl.png</normaloff>:/Icons/edit-indent-rtl.png</iconset>
+   </property>
+   <property name="text">
+    <string>Decrease Indent</string>
+   </property>
+   <property name="toolTip">
+    <string>Decrease Indent</string>
    </property>
   </action>
  </widget>

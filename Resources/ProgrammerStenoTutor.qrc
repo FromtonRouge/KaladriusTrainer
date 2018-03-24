@@ -46,5 +46,7 @@
         <file>Icons/table.png</file>
         <file>Icons/application-text.png</file>
         <file>Icons/image.png</file>
+        <file>Icons/edit-indent.png</file>
+        <file>Icons/edit-indent-rtl.png</file>
     </qresource>
 </RCC>

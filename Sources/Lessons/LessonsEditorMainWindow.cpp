@@ -331,6 +331,28 @@ void LessonsEditorMainWindow::on_actionNew_triggered()
     _pUi->textEdit->clear();
 }
 
+void LessonsEditorMainWindow::on_actionIncrease_Indent_triggered()
+{
+    QTextCursor cursor = _pUi->textEdit->textCursor();
+    cursor.beginEditBlock();
+    QTextBlockFormat fmt;
+    fmt.setIndent(cursor.blockFormat().indent() + 1);
+    cursor.mergeBlockFormat(fmt);
+    cursor.endEditBlock();
+    _pUi->textEdit->setFocus();
+}
+
+void LessonsEditorMainWindow::on_actionDecrease_Indent_triggered()
+{
+    QTextCursor cursor = _pUi->textEdit->textCursor();
+    cursor.beginEditBlock();
+    QTextBlockFormat fmt;
+    fmt.setIndent(qMax(cursor.blockFormat().indent() - 1, 0));
+    cursor.mergeBlockFormat(fmt);
+    cursor.endEditBlock();
+    _pUi->textEdit->setFocus();
+}
+
 void LessonsEditorMainWindow::fontChanged(const QFont& f)
 {
     QSignalBlocker blocker1(_pUi->actionBold);
