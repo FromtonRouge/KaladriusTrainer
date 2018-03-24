@@ -395,11 +395,15 @@ namespace boost
             const int iColumns = pTextTable->columns();
             ar << make_nvp("columns", iColumns);
 
+            int iTextFormatIndex = 0;
             for (int iRow = 0; iRow < iRows; ++iRow)
             {
                 for (int iColumn = 0; iColumn < iColumns; ++iColumn)
                 {
                     const QTextTableCell& cell = pTextTable->cellAt(iRow, iColumn);
+                    iTextFormatIndex = cell.tableCellFormatIndex();
+                    ar << make_nvp("text_format_index", iTextFormatIndex);
+
                     SaveTextFrame(ar, cell.begin(), cell.end(), fileVersion);
                 }
             }
@@ -413,12 +417,17 @@ namespace boost
             int iColumns;
             ar >> make_nvp("columns", iColumns);
 
+            int iTextFormatIndex = 0;
             QTextTable* pTextTable = context.cursor.insertTable(iRows, iColumns, textTableFormat);
             for (int iRow = 0; iRow < iRows; ++iRow)
             {
                 for (int iColumn = 0; iColumn < iColumns; ++iColumn)
                 {
-                    const QTextTableCell& cell = pTextTable->cellAt(iRow, iColumn);
+                    QTextTableCell cell = pTextTable->cellAt(iRow, iColumn);
+
+                    ar >> make_nvp("text_format_index", iTextFormatIndex);
+                    cell.setFormat(context.allFormats[iTextFormatIndex].toCharFormat());
+
                     context.cursor = cell.firstCursorPosition();
                     LoadTextFrame(ar, context);
                 }
