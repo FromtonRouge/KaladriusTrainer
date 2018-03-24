@@ -130,9 +130,7 @@ LessonsEditorMainWindow::LessonsEditorMainWindow(QWidget* pParent)
     _pUi->menuEdit->addAction(createUndoAction(pUndoStack));
     _pUi->menuEdit->addAction(createRedoAction(pUndoStack));
 
-    QSettings settings;
-    const QString& sLastCourse = settings.value("lastCourse").toString();
-    Serialization::Load(_pUi->textEdit->document(), sLastCourse);
+    QMetaObject::invokeMethod(_pUi->actionReload, "trigger", Qt::QueuedConnection);
 }
 
 LessonsEditorMainWindow::~LessonsEditorMainWindow()
@@ -245,6 +243,45 @@ void LessonsEditorMainWindow::on_actionInsert_Table_triggered()
     _pUi->textEdit->setFocus();
 }
 
+void LessonsEditorMainWindow::on_actionInsert_Frame_triggered()
+{
+    QTextCursor cursor = _pUi->textEdit->textCursor();
+    cursor.beginEditBlock();
+    QTextFrameFormat fmt;
+    fmt.setBorder(1);
+    fmt.setLeftMargin(8);
+    fmt.setPadding(8);
+    cursor.insertFrame(fmt);
+    cursor.endEditBlock();
+    _pUi->textEdit->setFocus();
+}
+
+void LessonsEditorMainWindow::on_actionInsert_Image_triggered()
+{
+    QTextCursor cursor = _pUi->textEdit->textCursor();
+    cursor.beginEditBlock();
+    QSettings settings;
+    QString sDirectory = settings.value("lastImagesDirectory").toString();
+    const QStringList& files = QFileDialog::getOpenFileNames(this, tr("Select images"), sDirectory, tr("Images (*.png)"));
+
+    if (!files.isEmpty())
+    {
+        QFileInfo fileInfo(files.front());
+        sDirectory = fileInfo.dir().absolutePath();
+        settings.setValue("lastImagesDirectory", sDirectory);
+    }
+
+    for (const QString& sFile : files)
+    {
+        QTextImageFormat fmt;
+        fmt.setName(sFile);
+        cursor.insertImage(fmt);
+    }
+    cursor.endEditBlock();
+    _pUi->textEdit->setFocus();
+
+}
+
 void LessonsEditorMainWindow::on_actionSave_triggered()
 {
     QSettings settings;
@@ -287,6 +324,11 @@ void LessonsEditorMainWindow::on_actionReload_triggered()
     QSettings settings;
     const QString& sLastCourse = settings.value("lastCourse").toString();
     Serialization::Load(_pUi->textEdit->document(), sLastCourse);
+}
+
+void LessonsEditorMainWindow::on_actionNew_triggered()
+{
+    _pUi->textEdit->clear();
 }
 
 void LessonsEditorMainWindow::fontChanged(const QFont& f)

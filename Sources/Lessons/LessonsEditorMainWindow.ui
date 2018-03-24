@@ -45,6 +45,7 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionNew"/>
     <addaction name="actionReload"/>
     <addaction name="separator"/>
     <addaction name="actionSave"/>
@@ -117,6 +118,8 @@
    <addaction name="actionAlign_Justify"/>
    <addaction name="separator"/>
    <addaction name="actionInsert_Table"/>
+   <addaction name="actionInsert_Frame"/>
+   <addaction name="actionInsert_Image"/>
   </widget>
   <widget class="QToolBar" name="toolBarFile">
    <property name="windowTitle">
@@ -134,6 +137,8 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionNew"/>
+   <addaction name="separator"/>
    <addaction name="actionReload"/>
    <addaction name="separator"/>
    <addaction name="actionSave"/>
@@ -326,6 +331,36 @@
    </property>
    <property name="shortcut">
     <string>F5</string>
+   </property>
+  </action>
+  <action name="actionNew">
+   <property name="icon">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+     <normaloff>:/Icons/document.png</normaloff>:/Icons/document.png</iconset>
+   </property>
+   <property name="text">
+    <string>New</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionInsert_Frame">
+   <property name="icon">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+     <normaloff>:/Icons/application-text.png</normaloff>:/Icons/application-text.png</iconset>
+   </property>
+   <property name="text">
+    <string>Insert Frame</string>
+   </property>
+  </action>
+  <action name="actionInsert_Image">
+   <property name="icon">
+    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+     <normaloff>:/Icons/image.png</normaloff>:/Icons/image.png</iconset>
+   </property>
+   <property name="text">
+    <string>Insert Image</string>
    </property>
   </action>
  </widget>

@@ -44,5 +44,7 @@
         <file>Icons/edit-list.png</file>
         <file>Icons/edit-underline.png</file>
         <file>Icons/table.png</file>
+        <file>Icons/application-text.png</file>
+        <file>Icons/image.png</file>
     </qresource>
 </RCC>
