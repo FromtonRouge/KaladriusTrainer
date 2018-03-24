@@ -25,11 +25,12 @@
 #include <QtGui/QTextDocument>
 #include <QtGui/QTextFormat>
 #include <QtGui/QTextCursor>
+#include <QtGui/QStandardItem>
 #include <QtCore/QDataStream>
 #include <QtCore/QByteArray>
 #include <QtCore/QVariant>
 #include <QtCore/QVector>
-#include <QtGui/QStandardItem>
+#include <QtCore/QDebug>
 #include <boost/serialization/binary_object.hpp>
 #include <boost/serialization/string.hpp>
 #include <boost/serialization/base_object.hpp>
@@ -281,35 +282,42 @@ namespace boost
     }
 }
 
-BOOST_CLASS_VERSION(QVector<QTextFormat>, 0)
+// Generic QVector<T> serialization
 namespace boost
 {
     namespace serialization
     {
-        template<class Archive> void serialize(Archive& ar, QVector<QTextFormat>& obj,  const unsigned int fileVersion)
+        template<class T> struct version<QVector<T>>
+        {
+            typedef mpl::int_<0> type; // Increment the version number here, must be between 0 and 255
+            typedef mpl::integral_c_tag tag;
+            BOOST_STATIC_CONSTANT(int, value = version::type::value);
+        };
+
+        template<class Archive, class T> void serialize(Archive& ar, QVector<T>& obj, const unsigned int fileVersion)
         {
             split_free(ar, obj, fileVersion);
         }
 
-        template<class Archive> void save(Archive& ar, const QVector<QTextFormat>& obj,  const unsigned int fileVersion)
+        template<class Archive, class T> void save(Archive& ar, const QVector<T>& obj,  const unsigned int fileVersion)
         {
             const int iCount = obj.size();
             ar << make_nvp("count", iCount);
-            for (const auto& textFormat : obj)
+            for (const auto& element : obj)
             {
-                ar << make_nvp("text_format", textFormat);
+                ar << make_nvp("element", element);
             }
         }
 
-        template<class Archive> void load(Archive& ar, QVector<QTextFormat>& obj,  const unsigned int fileVersion)
+        template<class Archive, class T> void load(Archive& ar, QVector<T>& obj,  const unsigned int fileVersion)
         {
             int iCount;
             ar >> make_nvp("count", iCount);
             for (int i = 0; i < iCount; ++i)
             {
-                QTextFormat textFormat;
-                ar >> make_nvp("text_format", textFormat);
-                obj << textFormat;
+                T element;
+                ar >> make_nvp("element", element);
+                obj << element;
             }
         }
     }

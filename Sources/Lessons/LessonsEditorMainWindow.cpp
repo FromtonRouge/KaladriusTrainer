@@ -29,6 +29,7 @@
 #include <QtWidgets/QActionGroup>
 #include <QtWidgets/QColorDialog>
 #include <QtWidgets/QFileDialog>
+#include <QtWidgets/QUndoStack>
 #include <QtGui/QFontInfo>
 #include <QtGui/QTextCursor>
 #include <QtGui/QTextTable>
@@ -121,6 +122,13 @@ LessonsEditorMainWindow::LessonsEditorMainWindow(QWidget* pParent)
     pLessonsTreeView->setModel(pUndoableLessonsModel);
     pLessonsTreeView->expandAll();
     pLessonsTreeView->resizeColumnToContents(0);
+
+    // Init undo stack
+    auto pUndoStack = pUndoableLessonsModel->getUndoStack();
+    _pUi->listViewUndo->setStack(pUndoStack);
+    connect(pUndoStack, SIGNAL(cleanChanged(bool)), this, SLOT(onUndoCleanChanged(bool)));
+    _pUi->menuEdit->addAction(createUndoAction(pUndoStack));
+    _pUi->menuEdit->addAction(createRedoAction(pUndoStack));
 
     QSettings settings;
     const QString& sLastCourse = settings.value("lastCourse").toString();
