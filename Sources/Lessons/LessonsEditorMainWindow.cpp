@@ -20,6 +20,7 @@
 #include "Lessons/LessonsEditorMainWindow.h"
 #include "Lessons/LessonsTreeView.h"
 #include "Lessons/Models/UndoableLessonsModel.h"
+#include "Lessons/TextFormatProperties/TextFormatPropertiesModel.h"
 #include "Streams/Iostream.h"
 #include "Main/Application.h"
 #include "Serialization/Serialize.h"
@@ -33,6 +34,7 @@
 #include <QtGui/QFontInfo>
 #include <QtGui/QTextCursor>
 #include <QtGui/QTextTable>
+#include <QtGui/QTextList>
 #include <QtGui/QFont>
 #include <QtGui/QPixmap>
 #include <QtCore/QSignalBlocker>
@@ -43,6 +45,11 @@ LessonsEditorMainWindow::LessonsEditorMainWindow(QWidget* pParent)
     , _pUi(new Ui::LessonsEditorMainWindow())
     , _pFontComboBox(new QFontComboBox(this))
     , _pComboBoxSize(new QComboBox(this))
+    , _pFramePropertiesModel(new TextFormatPropertiesModel(this))
+    , _pBlockPropertiesModel(new TextFormatPropertiesModel(this))
+    , _pBlockCharPropertiesModel(new TextFormatPropertiesModel(this))
+    , _pTextPropertiesModel(new TextFormatPropertiesModel(this))
+    , _pListPropertiesModel(new TextFormatPropertiesModel(this))
 {
     _pUi->setupUi(this);
     setWindowTitle(tr("Lessons Editor[*]"));
@@ -95,7 +102,6 @@ LessonsEditorMainWindow::LessonsEditorMainWindow(QWidget* pParent)
     fontChanged(blockCharFormat.font());
     foregroundColorChanged(_pUi->textEdit->textColor());
     backgroundColorChanged(_pUi->textEdit->textBackgroundColor());
-    alignmentChanged(_pUi->textEdit->alignment());
 
     _pComboBoxSize->setEditable(true);
 
@@ -130,6 +136,19 @@ LessonsEditorMainWindow::LessonsEditorMainWindow(QWidget* pParent)
     _pUi->menuEdit->addAction(createUndoAction(pUndoStack));
     _pUi->menuEdit->addAction(createRedoAction(pUndoStack));
 
+    _pUi->treeViewFrameProperties->setModel(_pFramePropertiesModel);
+    _pUi->treeViewBlockProperties->setModel(_pBlockPropertiesModel);
+    _pUi->treeViewBlockCharProperties->setModel(_pBlockCharPropertiesModel);
+    _pUi->treeViewTextProperties->setModel(_pTextPropertiesModel);
+    _pUi->treeViewListProperties->setModel(_pListPropertiesModel);
+
+    tabifyDockWidget(_pUi->dockWidgetFrameProperties, _pUi->dockWidgetBlockProperties);
+    tabifyDockWidget(_pUi->dockWidgetBlockProperties, _pUi->dockWidgetBlockCharProperties);
+    tabifyDockWidget(_pUi->dockWidgetBlockCharProperties, _pUi->dockWidgetTextProperties);
+    tabifyDockWidget(_pUi->dockWidgetTextProperties, _pUi->dockWidgetListProperties);
+    _pUi->dockWidgetTextProperties->raise();
+
+    on_textEdit_cursorPositionChanged();
     QMetaObject::invokeMethod(_pUi->actionReload, "trigger", Qt::QueuedConnection);
 }
 
@@ -155,6 +174,7 @@ void LessonsEditorMainWindow::on_textEdit_currentCharFormatChanged(const QTextCh
 void LessonsEditorMainWindow::on_textEdit_cursorPositionChanged()
 {
     alignmentChanged(_pUi->textEdit->alignment());
+    updateTextFormats();
 }
 
 void LessonsEditorMainWindow::on_actionBold_toggled(bool bChecked)
@@ -351,6 +371,33 @@ void LessonsEditorMainWindow::on_actionDecrease_Indent_triggered()
     cursor.mergeBlockFormat(fmt);
     cursor.endEditBlock();
     _pUi->textEdit->setFocus();
+}
+
+void LessonsEditorMainWindow::updateTextFormats()
+{
+    QTextCursor cursor = _pUi->textEdit->textCursor();
+    auto pTextFrame = cursor.currentFrame();
+    if (pTextFrame)
+    {
+        _pFramePropertiesModel->setTextFormat(pTextFrame->frameFormat());
+    }
+    else
+    {
+        _pFramePropertiesModel->setTextFormat(QTextFormat());
+    }
+    _pBlockPropertiesModel->setTextFormat(cursor.blockFormat());
+    _pBlockCharPropertiesModel->setTextFormat(cursor.blockCharFormat());
+    _pTextPropertiesModel->setTextFormat(cursor.charFormat());
+
+    auto pCurrentList = cursor.currentList();
+    if (pCurrentList)
+    {
+        _pListPropertiesModel->setTextFormat(pCurrentList->format());
+    }
+    else
+    {
+        _pListPropertiesModel->setTextFormat(QTextFormat());
+    }
 }
 
 void LessonsEditorMainWindow::fontChanged(const QFont& f)

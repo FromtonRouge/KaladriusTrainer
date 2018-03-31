@@ -30,6 +30,7 @@ namespace Ui
 class QTextCharFormat;
 class QFontComboBox;
 class QComboBox;
+class TextFormatPropertiesModel;
 class LessonsEditorMainWindow : public MainTabWindow
 {
     Q_OBJECT
@@ -57,6 +58,7 @@ private slots:
     void on_actionNew_triggered();
     void on_actionIncrease_Indent_triggered();
     void on_actionDecrease_Indent_triggered();
+    void updateTextFormats();
 
 private:
     void fontChanged(const QFont &f);
@@ -69,4 +71,9 @@ private:
     QScopedPointer<Ui::LessonsEditorMainWindow> _pUi;
     QFontComboBox* _pFontComboBox;
     QComboBox* _pComboBoxSize;
+    TextFormatPropertiesModel* _pFramePropertiesModel;
+    TextFormatPropertiesModel* _pBlockPropertiesModel;
+    TextFormatPropertiesModel* _pBlockCharPropertiesModel;
+    TextFormatPropertiesModel* _pTextPropertiesModel;
+    TextFormatPropertiesModel* _pListPropertiesModel;
 };
