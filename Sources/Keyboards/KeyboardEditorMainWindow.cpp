@@ -100,7 +100,7 @@ void KeyboardEditorMainWindow::on_actionLoad_triggered()
 
 void KeyboardEditorMainWindow::on_actionLoad_Default_triggered()
 {
-    QFile resourceFile(":/Keyboards/ErgoDox.kbd");
+    QFile resourceFile(":/Keyboards/Kaladrius.kbd");
     auto pTemporaryFile = QTemporaryFile::createNativeFile(resourceFile);
     if (pTemporaryFile)
     {

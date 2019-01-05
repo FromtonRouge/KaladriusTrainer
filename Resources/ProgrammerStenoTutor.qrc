@@ -48,5 +48,7 @@
         <file>Icons/image.png</file>
         <file>Icons/edit-indent.png</file>
         <file>Icons/edit-indent-rtl.png</file>
+        <file>Keyboards/Kaladrius.kbd</file>
+        <file>Svgs/kaladrius.svg</file>
     </qresource>
 </RCC>
