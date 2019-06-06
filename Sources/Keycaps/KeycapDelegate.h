@@ -1,5 +1,5 @@
 // ======================================================================
-// This file is a part of the ProgrammerStenoTutor project
+// This file is a part of the KaladriusTrainer project
 //
 // Copyright (C) 2017  Vissale NEANG <fromtonrouge at gmail dot com>
 //

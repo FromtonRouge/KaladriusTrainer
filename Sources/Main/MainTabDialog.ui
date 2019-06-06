@@ -11,11 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Programmer Steno Tutor</string>
+   <string>Kaladrius Trainer</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
-    <normaloff>:/Icons/ProgrammerStenoTutor.png</normaloff>:/Icons/ProgrammerStenoTutor.png</iconset>
+   <iconset resource="../../Resources/KaladriusTrainer.qrc">
+    <normaloff>:/Icons/KaladriusTrainer.png</normaloff>:/Icons/KaladriusTrainer.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <property name="leftMargin">
@@ -201,7 +201,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../Resources/ProgrammerStenoTutor.qrc"/>
+  <include location="../../Resources/KaladriusTrainer.qrc"/>
  </resources>
  <connections/>
 </ui>

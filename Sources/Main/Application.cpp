@@ -1,5 +1,5 @@
 // ======================================================================
-// This file is a part of the ProgrammerStenoTutor project
+// This file is a part of the KaladriusTrainer project
 //
 // Copyright (C) 2017  Vissale NEANG <fromtonrouge at gmail dot com>
 //
@@ -58,7 +58,7 @@ Application::Application(int& argc, char** argv)
 
     // Command line options (--help, --version)
     QCommandLineParser parser;
-    parser.setApplicationDescription(QObject::tr("Programmer Steno learning tool"));
+    parser.setApplicationDescription(QObject::tr("Kaladrius keyboard learning tool"));
     parser.addHelpOption();
     parser.addVersionOption();
     parser.process(*this);

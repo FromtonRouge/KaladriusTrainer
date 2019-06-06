@@ -311,7 +311,7 @@
   </widget>
   <action name="actionInsert_Table">
    <property name="icon">
-    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/KaladriusTrainer.qrc">
      <normaloff>:/Icons/table.png</normaloff>:/Icons/table.png</iconset>
    </property>
    <property name="text">
@@ -320,7 +320,7 @@
   </action>
   <action name="actionInsert_List">
    <property name="icon">
-    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/KaladriusTrainer.qrc">
      <normaloff>:/Icons/edit-list.png</normaloff>:/Icons/edit-list.png</iconset>
    </property>
    <property name="text">
@@ -329,7 +329,7 @@
   </action>
   <action name="actionInsert_Ordered_List">
    <property name="icon">
-    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/KaladriusTrainer.qrc">
      <normaloff>:/Icons/edit-list-order.png</normaloff>:/Icons/edit-list-order.png</iconset>
    </property>
    <property name="text">
@@ -341,7 +341,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/KaladriusTrainer.qrc">
      <normaloff>:/Icons/edit-bold.png</normaloff>:/Icons/edit-bold.png</iconset>
    </property>
    <property name="text">
@@ -353,7 +353,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/KaladriusTrainer.qrc">
      <normaloff>:/Icons/edit-italic.png</normaloff>:/Icons/edit-italic.png</iconset>
    </property>
    <property name="text">
@@ -365,7 +365,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/KaladriusTrainer.qrc">
      <normaloff>:/Icons/edit-underline.png</normaloff>:/Icons/edit-underline.png</iconset>
    </property>
    <property name="text">
@@ -377,7 +377,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/KaladriusTrainer.qrc">
      <normaloff>:/Icons/edit-alignment.png</normaloff>:/Icons/edit-alignment.png</iconset>
    </property>
    <property name="text">
@@ -389,7 +389,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/KaladriusTrainer.qrc">
      <normaloff>:/Icons/edit-alignment-center.png</normaloff>:/Icons/edit-alignment-center.png</iconset>
    </property>
    <property name="text">
@@ -401,7 +401,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/KaladriusTrainer.qrc">
      <normaloff>:/Icons/edit-alignment-right.png</normaloff>:/Icons/edit-alignment-right.png</iconset>
    </property>
    <property name="text">
@@ -413,7 +413,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/KaladriusTrainer.qrc">
      <normaloff>:/Icons/edit-alignment-justify.png</normaloff>:/Icons/edit-alignment-justify.png</iconset>
    </property>
    <property name="text">
@@ -422,7 +422,7 @@
   </action>
   <action name="actionForeground_Color">
    <property name="icon">
-    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/KaladriusTrainer.qrc">
      <normaloff>:/Icons/edit-color.png</normaloff>:/Icons/edit-color.png</iconset>
    </property>
    <property name="text">
@@ -431,7 +431,7 @@
   </action>
   <action name="actionBackground_Color">
    <property name="icon">
-    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/KaladriusTrainer.qrc">
      <normaloff>:/Icons/color.png</normaloff>:/Icons/color.png</iconset>
    </property>
    <property name="text">
@@ -440,7 +440,7 @@
   </action>
   <action name="actionSave">
    <property name="icon">
-    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/KaladriusTrainer.qrc">
      <normaloff>:/Icons/disk.png</normaloff>:/Icons/disk.png</iconset>
    </property>
    <property name="text">
@@ -452,7 +452,7 @@
   </action>
   <action name="actionSave_As">
    <property name="icon">
-    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/KaladriusTrainer.qrc">
      <normaloff>:/Icons/disk--pencil.png</normaloff>:/Icons/disk--pencil.png</iconset>
    </property>
    <property name="text">
@@ -461,7 +461,7 @@
   </action>
   <action name="actionReload">
    <property name="icon">
-    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/KaladriusTrainer.qrc">
      <normaloff>:/Icons/folder-open-document.png</normaloff>:/Icons/folder-open-document.png</iconset>
    </property>
    <property name="text">
@@ -473,7 +473,7 @@
   </action>
   <action name="actionNew">
    <property name="icon">
-    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/KaladriusTrainer.qrc">
      <normaloff>:/Icons/document.png</normaloff>:/Icons/document.png</iconset>
    </property>
    <property name="text">
@@ -485,7 +485,7 @@
   </action>
   <action name="actionInsert_Frame">
    <property name="icon">
-    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/KaladriusTrainer.qrc">
      <normaloff>:/Icons/application-text.png</normaloff>:/Icons/application-text.png</iconset>
    </property>
    <property name="text">
@@ -494,7 +494,7 @@
   </action>
   <action name="actionInsert_Image">
    <property name="icon">
-    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/KaladriusTrainer.qrc">
      <normaloff>:/Icons/image.png</normaloff>:/Icons/image.png</iconset>
    </property>
    <property name="text">
@@ -503,7 +503,7 @@
   </action>
   <action name="actionIncrease_Indent">
    <property name="icon">
-    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/KaladriusTrainer.qrc">
      <normaloff>:/Icons/edit-indent.png</normaloff>:/Icons/edit-indent.png</iconset>
    </property>
    <property name="text">
@@ -512,7 +512,7 @@
   </action>
   <action name="actionDecrease_Indent">
    <property name="icon">
-    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/KaladriusTrainer.qrc">
      <normaloff>:/Icons/edit-indent-rtl.png</normaloff>:/Icons/edit-indent-rtl.png</iconset>
    </property>
    <property name="text">
@@ -542,7 +542,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../Resources/ProgrammerStenoTutor.qrc"/>
+  <include location="../../Resources/KaladriusTrainer.qrc"/>
  </resources>
  <connections/>
 </ui>

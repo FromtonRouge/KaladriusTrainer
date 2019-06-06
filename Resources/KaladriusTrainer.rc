@@ -32,7 +32,7 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
-IDI_ICON1               ICON                    "ProgrammerStenoTutor.ico"
+IDI_ICON1               ICON                    "KaladriusTrainer.ico"
 
 #endif    // Ressources Anglais (U.S.)
 

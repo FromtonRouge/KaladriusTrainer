@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>Icons/ProgrammerStenoTutor.png</file>
+        <file>Icons/KaladriusTrainer.png</file>
         <file>Icons/book-brown.png</file>
         <file>Icons/book-open-next.png</file>
         <file>Icons/book-open.png</file>

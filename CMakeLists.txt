@@ -4,7 +4,7 @@ if (WIN32)
 	set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
 	add_definitions(-D_SCL_SECURE_NO_WARNINGS)
 endif(WIN32)
-project (ProgrammerStenoTutor)
+project (KaladriusTrainer)
 
 # The application version number
 set(PROJECT_VERSION_MAJOR 0)

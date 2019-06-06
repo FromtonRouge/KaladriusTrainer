@@ -11,11 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Programmer Steno Tutor</string>
+   <string>Kaladrius Trainer</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
-    <normaloff>:/Icons/ProgrammerStenoTutor.png</normaloff>:/Icons/ProgrammerStenoTutor.png</iconset>
+   <iconset resource="../../Resources/KaladriusTrainer.qrc">
+    <normaloff>:/Icons/KaladriusTrainer.png</normaloff>:/Icons/KaladriusTrainer.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout_6">
@@ -191,7 +191,7 @@
   </widget>
   <action name="actionAbout">
    <property name="icon">
-    <iconset resource="../../Resources/ProgrammerStenoTutor.qrc">
+    <iconset resource="../../Resources/KaladriusTrainer.qrc">
      <normaloff>:/Icons/question.png</normaloff>:/Icons/question.png</iconset>
    </property>
    <property name="text">
@@ -220,7 +220,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../Resources/ProgrammerStenoTutor.qrc"/>
+  <include location="../../Resources/KaladriusTrainer.qrc"/>
  </resources>
  <connections/>
 </ui>
