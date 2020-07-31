@@ -161,8 +161,8 @@ void KeyboardEditorMainWindow::on_actionImport_Svg_triggered()
 
 void KeyboardEditorMainWindow::on_actionImport_Default_Svg_triggered()
 {
-    qApp->getKeyboardModel()->loadKeyboardSvgFile(":/Svgs/ergodox.svg");
+    qApp->getKeyboardModel()->loadKeyboardSvgFile(":/Svgs/kaladrius.svg");
     QSettings settings;
-    settings.setValue("lastKeyboardSvg", ":/Svgs/ergodox.svg");
+    settings.setValue("lastKeyboardSvg", ":/Svgs/kaladrius.svg");
     settings.setValue("lastKeyboard", QString());
 }
