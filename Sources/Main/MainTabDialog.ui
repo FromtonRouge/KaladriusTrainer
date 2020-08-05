@@ -112,28 +112,6 @@
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="tabLessonsEditor">
-          <attribute name="title">
-           <string>Lessons Editor</string>
-          </attribute>
-          <layout class="QGridLayout" name="gridLayout_7">
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
-           <item row="0" column="0">
-            <widget class="LessonsEditorMainWindow" name="mainWindowLessonEditor" native="true"/>
-           </item>
-          </layout>
-         </widget>
          <widget class="QWidget" name="tabLearningMode">
           <attribute name="title">
            <string>Learning Mode</string>
@@ -191,12 +169,6 @@
    <class>KeyboardEditorMainWindow</class>
    <extends>QWidget</extends>
    <header>Keyboards/KeyboardEditorMainWindow.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>LessonsEditorMainWindow</class>
-   <extends>QWidget</extends>
-   <header>Lessons/LessonsEditorMainWindow.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
