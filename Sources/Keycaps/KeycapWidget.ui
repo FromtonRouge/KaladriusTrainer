@@ -35,7 +35,7 @@
   <customwidget>
    <class>KeycapTreeView</class>
    <extends>QTreeView</extends>
-   <header>Keycaps/KeycapTreeView.h</header>
+   <header>../Keycaps/KeycapTreeView.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

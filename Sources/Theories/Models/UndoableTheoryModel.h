@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "Tree/Models/UndoableProxyModel.h"
+#include "../../Tree/Models/UndoableProxyModel.h"
 
 class UndoableTheoryModel : public UndoableProxyModel
 {

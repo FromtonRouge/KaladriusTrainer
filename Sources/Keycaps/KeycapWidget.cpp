@@ -18,7 +18,7 @@
 // ======================================================================
 
 #include "KeycapWidget.h"
-#include "Keyboards/KeyboardTreeView.h"
+#include "../Keyboards/KeyboardTreeView.h"
 #include "ui_KeycapWidget.h"
 
 KeycapWidget::KeycapWidget(QWidget* pParent)

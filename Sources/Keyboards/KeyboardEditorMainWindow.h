@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "Main/MainTabWindow.h"
+#include "../Main/MainTabWindow.h"
 #include <QtCore/QScopedPointer>
 
 namespace Ui

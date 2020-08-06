@@ -20,10 +20,10 @@
 #include "UserEditorFactory.h"
 #include "ColorEditor.h"
 #include "FontEditor.h"
-#include "Main/Application.h"
+#include "../../Main/Application.h"
 #include "KeycapRefEditor.h"
 #include "FingerSelector.h"
-#include "Keyboards/Models/KeyboardModel.h"
+#include "../../Keyboards/Models/KeyboardModel.h"
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QStandardItemEditorCreator>

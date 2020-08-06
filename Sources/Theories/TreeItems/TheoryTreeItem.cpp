@@ -18,10 +18,10 @@
 // ======================================================================
 
 #include "TheoryTreeItem.h"
-#include "Tree/TreeItems/ListTreeItem.h"
-#include "Tree/TreeItems/ValueTreeItem.h"
-#include "Tree/TreeItems/AttributeTreeItem.h"
-#include "Values/Types/ListValue.h"
+#include "../../Tree/TreeItems/ListTreeItem.h"
+#include "../../Tree/TreeItems/ValueTreeItem.h"
+#include "../../Tree/TreeItems/AttributeTreeItem.h"
+#include "../../Values/Types/ListValue.h"
 #include <QtGui/QIcon>
 
 TheoryTreeItem::TheoryTreeItem()

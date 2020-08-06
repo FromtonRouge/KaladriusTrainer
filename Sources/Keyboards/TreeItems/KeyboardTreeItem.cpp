@@ -18,7 +18,7 @@
 // ======================================================================
 
 #include "KeyboardTreeItem.h"
-#include "Tree/TreeItems/ListTreeItem.h"
+#include "../../Tree/TreeItems/ListTreeItem.h"
 #include <QtGui/QIcon>
 
 KeyboardTreeItem::KeyboardTreeItem()

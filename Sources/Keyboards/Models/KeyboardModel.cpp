@@ -17,15 +17,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "Keyboards/Models/KeyboardModel.h"
-#include "Values/Types/KeycapRef.h"
-#include "Keyboards/TreeItems/KeyboardTreeItem.h"
-#include "Keyboards/TreeItems/KeycapTreeItem.h"
-#include "Tree/TreeItems/AttributeTreeItem.h"
-#include "Tree/TreeItems/ValueTreeItem.h"
-#include "Tree/TreeItems/ListTreeItem.h"
-#include "Streams/Iostream.h"
-#include "Tree/Models/Utils.h"
+#include "KeyboardModel.h"
+#include "../../Values/Types/KeycapRef.h"
+#include "../../Keyboards/TreeItems/KeyboardTreeItem.h"
+#include "../../Keyboards/TreeItems/KeycapTreeItem.h"
+#include "../../Tree/TreeItems/AttributeTreeItem.h"
+#include "../../Tree/TreeItems/ValueTreeItem.h"
+#include "../../Tree/TreeItems/ListTreeItem.h"
+#include "../../Streams/Iostream.h"
+#include "../../Tree/Models/Utils.h"
 #include <QtXml/QDomDocument>
 #include <QtGui/QFont>
 #include <QtCore/QRectF>

@@ -42,7 +42,7 @@
      <x>0</x>
      <y>0</y>
      <width>737</width>
-     <height>22</height>
+     <height>30</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHelp">
@@ -204,19 +204,19 @@
   <customwidget>
    <class>DictionariesWidget</class>
    <extends>QWidget</extends>
-   <header>Dictionaries/DictionariesWidget.h</header>
+   <header>../Dictionaries/DictionariesWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>StrokesSolverWidget</class>
    <extends>QWidget</extends>
-   <header>StrokesSolver/StrokesSolverWidget.h</header>
+   <header>../StrokesSolver/StrokesSolverWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>KeyboardGraphicsView</class>
    <extends>QGraphicsView</extends>
-   <header>Keyboards/KeyboardGraphicsView.h</header>
+   <header>../Keyboards/KeyboardGraphicsView.h</header>
   </customwidget>
  </customwidgets>
  <resources>

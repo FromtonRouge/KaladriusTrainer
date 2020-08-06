@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "Tree/TreeItems/TreeItem.h"
+#include "TreeItem.h"
 #include <QtGui/QIcon>
 
 class ListTreeItem : public TreeItem

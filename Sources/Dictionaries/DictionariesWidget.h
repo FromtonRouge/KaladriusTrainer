@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "Keycaps/KeycapState.h"
+#include "../Keycaps/KeycapState.h"
 #include <QtWidgets/QWidget>
 #include <QtCore/QScopedPointer>
 #include <QtCore/QBitArray>

@@ -156,19 +156,19 @@
   <customwidget>
    <class>TheoryEditorMainWindow</class>
    <extends>QWidget</extends>
-   <header>Theories/TheoryEditorMainWindow.h</header>
+   <header>../Theories/TheoryEditorMainWindow.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>MainWindow</class>
    <extends>QWidget</extends>
-   <header>Main/MainWindow.h</header>
+   <header>../Main/MainWindow.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>KeyboardEditorMainWindow</class>
    <extends>QWidget</extends>
-   <header>Keyboards/KeyboardEditorMainWindow.h</header>
+   <header>../Keyboards/KeyboardEditorMainWindow.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

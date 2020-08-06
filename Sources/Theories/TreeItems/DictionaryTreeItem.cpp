@@ -18,10 +18,10 @@
 // ======================================================================
 
 #include "DictionaryTreeItem.h"
-#include "Tree/TreeItems/ListTreeItem.h"
-#include "Tree/TreeItems/ValueTreeItem.h"
-#include "Tree/TreeItems/AttributeTreeItem.h"
-#include "Values/Types/ListValue.h"
+#include "../../Tree/TreeItems/ListTreeItem.h"
+#include "../../Tree/TreeItems/ValueTreeItem.h"
+#include "../../Tree/TreeItems/AttributeTreeItem.h"
+#include "../../Values/Types/ListValue.h"
 #include <QtGui/QIcon>
 
 DictionaryTreeItem::DictionaryTreeItem(const QString& sText, const QVector<QString>& keysLabels)

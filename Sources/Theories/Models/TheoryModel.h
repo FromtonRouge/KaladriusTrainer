@@ -19,8 +19,8 @@
 
 #pragma once
 
-#include "Dictionaries/Dictionary.h"
-#include "Tree/Models/TreeItemModel.h"
+#include "../../Dictionaries/Dictionary.h"
+#include "../../Tree/Models/TreeItemModel.h"
 #include <QtCore/QHash>
 #include <QtCore/QMultiHash>
 #include <QtCore/QBitArray>

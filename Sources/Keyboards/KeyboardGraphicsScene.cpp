@@ -19,12 +19,12 @@
 
 #include "KeyboardGraphicsScene.h"
 #include "Models/KeyboardModel.h"
-#include "Tree/Models/UndoableProxyModel.h"
+#include "../Tree/Models/UndoableProxyModel.h"
 #include "KeyboardTreeView.h"
-#include "Keycaps/KeycapGraphicsItem.h"
-#include "Tree/TreeItems/TreeItem.h"
-#include "Tree/Models/Utils.h"
-#include "Values/Types/Finger.h"
+#include "../Keycaps/KeycapGraphicsItem.h"
+#include "../Tree/TreeItems/TreeItem.h"
+#include "../Tree/Models/Utils.h"
+#include "../Values/Types/Finger.h"
 #include <QtSvg/QSvgRenderer>
 #include <QtGui/QFont>
 #include <QtCore/QItemSelectionModel>

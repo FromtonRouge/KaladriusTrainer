@@ -18,20 +18,21 @@
 // ======================================================================
 
 #include "Serialize.h"
-#include "Serialization/Qt/Serialize.h"
-#include "Keyboards/Models/KeyboardModel.h"
-#include "Theories/Models/TheoryModel.h"
-#include "Keyboards/TreeItems/KeyboardTreeItem.h"
-#include "Keyboards/TreeItems/KeycapTreeItem.h"
-#include "Tree/TreeItems/ListTreeItem.h"
-#include "Theories/TreeItems/TheoryTreeItem.h"
-#include "Theories/TreeItems/DictionaryTreeItem.h"
-#include "Theories/TreeItems/OutputTextTreeItem.h"
-#include "Theories/TreeItems/InputKeysTreeItem.h"
-#include "Tree/TreeItems/AttributeTreeItem.h"
-#include "Tree/TreeItems/ValueTreeItem.h"
-#include "Theories/TreeItems/LinkedTheoryTreeItem.h"
-#include "Theories/TreeItems/LinkedDictionaryTreeItem.h"
+#include "Qt/Serialize.h"
+#include "../Keyboards/Models/KeyboardModel.h"
+#include "../Theories/Models/TheoryModel.h"
+#include "../Keyboards/TreeItems/KeyboardTreeItem.h"
+#include "../Keyboards/TreeItems/KeycapTreeItem.h"
+#include "../Tree/TreeItems/ListTreeItem.h"
+#include "../Theories/TreeItems/TheoryTreeItem.h"
+#include "../Theories/TreeItems/DictionaryTreeItem.h"
+#include "../Theories/TreeItems/OutputTextTreeItem.h"
+#include "../Theories/TreeItems/InputKeysTreeItem.h"
+#include "../Tree/TreeItems/AttributeTreeItem.h"
+#include "../Tree/TreeItems/ValueTreeItem.h"
+#include "../Theories/TreeItems/LinkedTheoryTreeItem.h"
+#include "../Theories/TreeItems/LinkedDictionaryTreeItem.h"
+#include "../Values/Types/ListValue.h"
 #include <QtCore/QFile>
 #include <boost/archive/xml_oarchive.hpp>
 #include <boost/archive/xml_iarchive.hpp>
@@ -682,40 +683,5 @@ namespace Serialization
             std::cerr << e.what() << std::endl;
         }
         return itemsRow;
-    }
-
-    bool Save(QTextDocument* pTextDocument, const QString& sFilePath)
-    {
-        std::ofstream ofs(sFilePath.toStdString());
-        boost::archive::xml_oarchive oa(ofs);
-        try
-        {
-            oa << boost::serialization::make_nvp("text_document", *pTextDocument);
-            return true;
-        }
-        catch (const std::exception& e)
-        {
-            std::cerr << e.what() << std::endl;
-        }
-        return false;
-    }
-
-    bool Load(QTextDocument* pTextDocument, const QString& sFilePath)
-    {
-        if (QFile::exists(sFilePath))
-        {
-            std::ifstream ifs(sFilePath.toStdString());
-            boost::archive::xml_iarchive ia(ifs);
-            try
-            {
-                ia >> boost::serialization::make_nvp("text_document", *pTextDocument);
-                return true;
-            }
-            catch (const std::exception& e)
-            {
-                std::cerr << e.what() << std::endl;
-            }
-        }
-        return false;
     }
 }

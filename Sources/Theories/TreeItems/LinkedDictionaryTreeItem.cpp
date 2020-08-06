@@ -18,10 +18,10 @@
 // ======================================================================
 
 #include "LinkedDictionaryTreeItem.h"
-#include "Tree/TreeItems/ListTreeItem.h"
-#include "Tree/TreeItems/ValueTreeItem.h"
-#include "Values/Types/ListValue.h"
-#include "Values/Types/KeycapRef.h"
+#include "../../Tree/TreeItems/ListTreeItem.h"
+#include "../../Tree/TreeItems/ValueTreeItem.h"
+#include "../../Values/Types/ListValue.h"
+#include "../../Values/Types/KeycapRef.h"
 #include <QtGui/QIcon>
 
 LinkedDictionaryTreeItem::LinkedDictionaryTreeItem(const QString& sDictionaryName)

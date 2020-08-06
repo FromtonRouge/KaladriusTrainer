@@ -19,8 +19,8 @@
 
 #pragma once
 
-#include "Main/MainTabWindow.h"
-#include "Dictionaries/Dictionary.h"
+#include "../Main/MainTabWindow.h"
+#include "../Dictionaries/Dictionary.h"
 #include <QtCore/QScopedPointer>
 
 namespace Ui

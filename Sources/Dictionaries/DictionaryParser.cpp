@@ -19,7 +19,7 @@
 
 #include "DictionaryParser.h"
 #include "Keycode.h"
-#include "Streams/Iostream.h"
+#include "../Streams/Iostream.h"
 #include <QtCore/QFile>
 #include <QtCore/QRegularExpression>
 #include <QtCore/QObject>

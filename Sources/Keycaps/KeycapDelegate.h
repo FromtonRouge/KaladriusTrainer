@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "Values/Editors/UserItemDelegate.h"
+#include "../Values/Editors/UserItemDelegate.h"
 
 class KeycapDelegate : public UserItemDelegate
 {

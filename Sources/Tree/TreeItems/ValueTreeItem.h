@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "Tree/TreeItems/TreeItem.h"
+#include "TreeItem.h"
 
 class ValueTreeItem : public TreeItem
 {

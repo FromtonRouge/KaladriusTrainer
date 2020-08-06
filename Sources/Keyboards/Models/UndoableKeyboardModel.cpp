@@ -17,14 +17,14 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "Keyboards/Models/UndoableKeyboardModel.h"
-#include "Values/Types/KeycapRef.h"
-#include "Keyboards/Models/KeyboardModel.h"
-#include "Theories/Models/TheoryModel.h"
-#include "Main/Application.h"
-#include "Tree/Models/ItemDataRole.h"
-#include "Tree/Models/Utils.h"
-#include "Tree/TreeItems/TreeItem.h"
+#include "../../Keyboards/Models/UndoableKeyboardModel.h"
+#include "../../Values/Types/KeycapRef.h"
+#include "../../Keyboards/Models/KeyboardModel.h"
+#include "../../Theories/Models/TheoryModel.h"
+#include "../../Main/Application.h"
+#include "../../Tree/Models/ItemDataRole.h"
+#include "../../Tree/Models/Utils.h"
+#include "../../Tree/TreeItems/TreeItem.h"
 #include <QtWidgets/QUndoStack>
 #include <QtCore/QMimeData>
 #include <QtCore/QByteArray>

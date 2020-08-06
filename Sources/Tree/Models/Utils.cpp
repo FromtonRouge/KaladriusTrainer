@@ -17,8 +17,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "Tree/Models/Utils.h"
-#include "Tree/Models/ItemDataRole.h"
+#include "../../Tree/Models/Utils.h"
+#include "../../Tree/Models/ItemDataRole.h"
 
 namespace Utils
 {

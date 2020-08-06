@@ -17,15 +17,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "Main/MainWindow.h"
-#include "Main/Application.h"
-#include "Serialization/Serialize.h"
-#include "Streams/Iostream.h"
-#include "Keyboards/KeyboardGraphicsView.h"
-#include "Keyboards/KeyboardGraphicsScene.h"
-#include "Keyboards/Models/KeyboardModel.h"
-#include "Keyboards/Models/UndoableKeyboardModel.h"
-#include "Theories/Models/TheoryModel.h"
+#include "MainWindow.h"
+#include "Application.h"
+#include "../Serialization/Serialize.h"
+#include "../Streams/Iostream.h"
+#include "../Keyboards/KeyboardGraphicsView.h"
+#include "../Keyboards/KeyboardGraphicsScene.h"
+#include "../Keyboards/Models/KeyboardModel.h"
+#include "../Keyboards/Models/UndoableKeyboardModel.h"
+#include "../Theories/Models/TheoryModel.h"
 #include "ui_MainWindow.h"
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QTextEdit>

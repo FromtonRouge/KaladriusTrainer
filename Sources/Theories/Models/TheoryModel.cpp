@@ -18,13 +18,13 @@
 // ======================================================================
 
 #include "TheoryModel.h"
-#include "Tree/Models/Utils.h"
-#include "Tree/TreeItems/TreeItem.h"
-#include "Theories/TreeItems/TheoryTreeItem.h"
-#include "Tree/TreeItems/ListTreeItem.h"
-#include "Theories/TreeItems/OutputTextTreeItem.h"
-#include "Theories/TreeItems/InputKeysTreeItem.h"
-#include "Theories/TreeItems/DictionaryTreeItem.h"
+#include "../../Tree/Models/Utils.h"
+#include "../../Tree/TreeItems/TreeItem.h"
+#include "../../Theories/TreeItems/TheoryTreeItem.h"
+#include "../../Tree/TreeItems/ListTreeItem.h"
+#include "../../Theories/TreeItems/OutputTextTreeItem.h"
+#include "../../Theories/TreeItems/InputKeysTreeItem.h"
+#include "../../Theories/TreeItems/DictionaryTreeItem.h"
 
 TheoryModel::TheoryModel(QObject* pParent)
     : TreeItemModel(pParent)

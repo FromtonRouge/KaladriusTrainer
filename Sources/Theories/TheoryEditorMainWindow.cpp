@@ -17,15 +17,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "Theories/TheoryEditorMainWindow.h"
-#include "Theories/Models/TheoryModel.h"
-#include "Theories/Models/UndoableTheoryModel.h"
-#include "Keyboards/Models/KeyboardModel.h"
-#include "Keyboards/KeyboardGraphicsScene.h"
-#include "Main/Application.h"
-#include "Dictionaries/DictionaryParser.h"
-#include "Serialization/Serialize.h"
-#include "Streams/Iostream.h"
+#include "../Theories/TheoryEditorMainWindow.h"
+#include "../Theories/Models/TheoryModel.h"
+#include "../Theories/Models/UndoableTheoryModel.h"
+#include "../Keyboards/Models/KeyboardModel.h"
+#include "../Keyboards/KeyboardGraphicsScene.h"
+#include "../Main/Application.h"
+#include "../Dictionaries/DictionaryParser.h"
+#include "../Serialization/Serialize.h"
+#include "../Streams/Iostream.h"
 #include "ui_TheoryEditorMainWindow.h"
 #include <QtWidgets/QUndoStack>
 #include <QtWidgets/QFileDialog>

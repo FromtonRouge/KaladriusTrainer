@@ -18,10 +18,10 @@
 // ======================================================================
 
 #include "KeycapDelegate.h"
-#include "Values/Types/KeycapRef.h"
-#include "Values/Types/ListValue.h"
-#include "Values/Types/Finger.h"
-#include "Tree/Models/DiffModel.h"
+#include "../Values/Types/KeycapRef.h"
+#include "../Values/Types/ListValue.h"
+#include "../Values/Types/Finger.h"
+#include "../Tree/Models/DiffModel.h"
 #include <QtGui/QFont>
 #include <QtCore/QEvent>
 #include <QtCore/QMetaProperty>

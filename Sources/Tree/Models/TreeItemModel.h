@@ -20,7 +20,7 @@
 #pragma once
 
 #include "ItemDataRole.h"
-#include "Tree/TreeItems/TreeItem.h"
+#include "../../Tree/TreeItems/TreeItem.h"
 #include <QtGui/QStandardItemModel>
 
 class TreeItemModel : public QStandardItemModel

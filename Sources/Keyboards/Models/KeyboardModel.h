@@ -19,8 +19,8 @@
 
 #pragma once
 
-#include "Tree/Models/TreeItemModel.h"
-#include "Keycaps/KeycapState.h"
+#include "../../Tree/Models/TreeItemModel.h"
+#include "../../Keycaps/KeycapState.h"
 #include <QtCore/QByteArray>
 #include <QtCore/QBitArray>
 #include <QtCore/QVector>

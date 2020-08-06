@@ -17,13 +17,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "Keyboards/KeyboardEditorMainWindow.h"
-#include "Keyboards/Models/UndoableKeyboardModel.h"
-#include "Keyboards/Models/KeyboardModel.h"
-#include "Keyboards/KeyboardGraphicsScene.h"
-#include "Main/Application.h"
-#include "Serialization/Serialize.h"
-#include "Streams/Iostream.h"
+#include "../Keyboards/KeyboardEditorMainWindow.h"
+#include "../Keyboards/Models/UndoableKeyboardModel.h"
+#include "../Keyboards/Models/KeyboardModel.h"
+#include "../Keyboards/KeyboardGraphicsScene.h"
+#include "../Main/Application.h"
+#include "../Serialization/Serialize.h"
+#include "../Streams/Iostream.h"
 #include "ui_KeyboardEditorMainWindow.h"
 #include <QtWidgets/QUndoStack>
 #include <QtWidgets/QFileDialog>

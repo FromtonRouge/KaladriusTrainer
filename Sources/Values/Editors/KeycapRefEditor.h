@@ -20,7 +20,7 @@
 #pragma once
 
 #include "UserEditor.h"
-#include "Values/Types/KeycapRef.h" // for convenience
+#include "../../Values/Types/KeycapRef.h" // for convenience
 
 class QComboBox;
 class QAbstractItemModel;

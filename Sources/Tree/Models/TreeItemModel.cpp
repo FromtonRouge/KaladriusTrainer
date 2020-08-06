@@ -18,8 +18,8 @@
 // ======================================================================
 
 #include "TreeItemModel.h"
-#include "Serialization/Serialize.h"
-#include "Values/Types/ListValue.h"
+#include "../../Serialization/Serialize.h"
+#include "../../Values/Types/ListValue.h"
 #include <QtCore/QMimeData>
 
 TreeItemModel::TreeItemModel(QObject* pParent)

@@ -1,9 +1,7 @@
 /KaladriusTrainer.pro.user
 /*.exe
-/cmake
 /x64
 /.vscode
 /build
-/CMakeLists.txt.user
 /Installer/setup
 /Installer/setup.exe

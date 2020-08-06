@@ -18,9 +18,9 @@
 // ======================================================================
 
 #include "KeycapTreeItem.h"
-#include "Values/Types/Finger.h"
-#include "Tree/TreeItems/AttributeTreeItem.h"
-#include "Tree/TreeItems/ValueTreeItem.h"
+#include "../../Values/Types/Finger.h"
+#include "../../Tree/TreeItems/AttributeTreeItem.h"
+#include "../../Tree/TreeItems/ValueTreeItem.h"
 #include <QtGui/QFont>
 #include <QtGui/QColor>
 

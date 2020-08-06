@@ -19,7 +19,7 @@
 
 #include "MainTabDialog.h"
 #include "Application.h"
-#include "Streams/Iostream.h"
+#include "../Streams/Iostream.h"
 #include "ui_MainTabDialog.h"
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QDesktopWidget>

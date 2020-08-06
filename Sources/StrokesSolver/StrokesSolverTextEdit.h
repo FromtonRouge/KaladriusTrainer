@@ -19,8 +19,8 @@
 
 #pragma once
 
-#include "Theories/Models/TheoryModel.h"
-#include "Keycaps/KeycapState.h"
+#include "../Theories/Models/TheoryModel.h"
+#include "../Keycaps/KeycapState.h"
 #include <QtWidgets/QTextEdit>
 #include <QtGui/QColor>
 #include <QtCore/QVector>

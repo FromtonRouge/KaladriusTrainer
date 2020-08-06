@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "Tree/TreeItems/TreeItem.h"
+#include "../../Tree/TreeItems/TreeItem.h"
 #include <QtCore/QBitArray>
 
 class InputKeysTreeItem : public TreeItem

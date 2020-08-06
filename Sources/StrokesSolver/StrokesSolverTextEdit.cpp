@@ -18,7 +18,7 @@
 // ======================================================================
 
 #include "StrokesSolverTextEdit.h"
-#include "Main/Application.h"
+#include "../Main/Application.h"
 #include <QtCore/QRegularExpression>
 #include <QtGui/QKeyEvent>
 #include <QtCore/QTimer>

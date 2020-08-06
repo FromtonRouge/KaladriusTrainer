@@ -1,5 +1,0 @@
-// The configured options and settings for the project
-#define PROJECT_APPLICATION_NAME "KaladriusTrainer"
-#define PROJECT_VERSION_MAJOR @PROJECT_VERSION_MAJOR@
-#define PROJECT_VERSION_MINOR @PROJECT_VERSION_MINOR@
-#define PROJECT_VERSION_PATCH @PROJECT_VERSION_PATCH@

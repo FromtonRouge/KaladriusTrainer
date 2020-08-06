@@ -20,7 +20,7 @@
 #pragma once
 
 #include "UserEditor.h"
-#include "Values/Types/Finger.h" // for convenience
+#include "../../Values/Types/Finger.h" // for convenience
 
 class QComboBox;
 class FingerSelector : public UserEditor

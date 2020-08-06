@@ -17,14 +17,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "Main/Application.h"
-#include "ProjectConfig.h"
-#include "Values/Editors/UserEditorFactory.h"
-#include "Theories/Models/TheoryModel.h"
-#include "Theories/Models/UndoableTheoryModel.h"
-#include "Keyboards/Models/KeyboardModel.h"
-#include "Keyboards/Models/UndoableKeyboardModel.h"
-#include "Keyboards/KeyboardGraphicsScene.h"
+#include "Application.h"
+#include "../Values/Editors/UserEditorFactory.h"
+#include "../Theories/Models/TheoryModel.h"
+#include "../Theories/Models/UndoableTheoryModel.h"
+#include "../Keyboards/Models/KeyboardModel.h"
+#include "../Keyboards/Models/UndoableKeyboardModel.h"
+#include "../Keyboards/KeyboardGraphicsScene.h"
 #include <QtCore/QCommandLineParser>
 #include <QtWidgets/QUndoStack>
 #include <iostream>
@@ -49,7 +48,11 @@ Application::Application(int& argc, char** argv)
 
     // Application settings
     setOrganizationName("FromtonRouge");
-    setApplicationName(PROJECT_APPLICATION_NAME);
+    setApplicationName("KaladriusTrainer");
+
+#define PROJECT_VERSION_MAJOR 0
+#define PROJECT_VERSION_MINOR 1
+#define PROJECT_VERSION_PATCH 0
     setApplicationVersion(QString("v%1.%2.%3").arg(PROJECT_VERSION_MAJOR).arg(PROJECT_VERSION_MINOR).arg(PROJECT_VERSION_PATCH));
 
     // Command line options (--help, --version)

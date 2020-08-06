@@ -19,10 +19,10 @@
 
 #pragma once
 
-#include "Values/Types/KeycapRef.h"
-#include "Values/Types/ListValue.h"
-#include "Values/Types/Finger.h"
-#include "Streams/Iostream.h"
+#include "../../Values/Types/KeycapRef.h"
+#include "../../Values/Types/ListValue.h"
+#include "../../Values/Types/Finger.h"
+#include "../../Streams/Iostream.h"
 #include <QtGui/QTextDocument>
 #include <QtGui/QTextFormat>
 #include <QtGui/QTextCursor>

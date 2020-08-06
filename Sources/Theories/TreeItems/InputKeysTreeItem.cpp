@@ -18,7 +18,7 @@
 // ======================================================================
 
 #include "InputKeysTreeItem.h"
-#include "Tree/Models/ItemDataRole.h"
+#include "../../Tree/Models/ItemDataRole.h"
 #include <QtGui/QIcon>
 #include <boost/dynamic_bitset.hpp>
 

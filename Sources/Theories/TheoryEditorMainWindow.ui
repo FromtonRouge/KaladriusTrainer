@@ -38,7 +38,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>22</height>
+     <height>30</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -254,19 +254,14 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QUndoView</class>
-   <extends>QListView</extends>
-   <header location="global">QtWidgets/QUndoView</header>
-  </customwidget>
-  <customwidget>
    <class>KeyboardGraphicsView</class>
    <extends>QGraphicsView</extends>
-   <header>Keyboards/KeyboardGraphicsView.h</header>
+   <header>../Keyboards/KeyboardGraphicsView.h</header>
   </customwidget>
   <customwidget>
    <class>DictionariesWidget</class>
    <extends>QWidget</extends>
-   <header>Dictionaries/DictionariesWidget.h</header>
+   <header>../Dictionaries/DictionariesWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
