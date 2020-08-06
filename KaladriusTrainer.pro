@@ -18,6 +18,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 INCLUDEPATH += "D:\Dev\Cpp\Common\boost_1_64_0"
 LIBS += "-LD:\Dev\Cpp\Common\boost_1_64_0\stage_x64\lib"
 
+RC_ICONS = Resources/KaladriusTrainer.ico
+
 SOURCES += \
     Sources/Dictionaries/DictionariesModel.cpp \
     Sources/Dictionaries/DictionariesWidget.cpp \
