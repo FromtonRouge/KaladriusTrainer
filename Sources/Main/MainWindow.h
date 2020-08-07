@@ -27,6 +27,8 @@ namespace Ui
     class MainWindow;
 }
 
+class CountdownTimer;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -44,4 +46,5 @@ protected:
 
 private:
     QScopedPointer<Ui::MainWindow> _pUi;
+    CountdownTimer* _pCountdownTimer = nullptr;
 };

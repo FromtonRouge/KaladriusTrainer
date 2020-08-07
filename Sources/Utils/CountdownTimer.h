@@ -19,27 +19,35 @@
 
 #pragma once
 
-#include <QtWidgets/QWidget>
-#include <QtCore/QScopedPointer>
+#include <QtCore/QObject>
+#include <QtCore/QElapsedTimer>
+#include <qqml.h>
 
-namespace Ui
-{
-    class StrokesSolverWidget;
-}
-
-class StrokesSolverWidget : public QWidget
+class CountdownTimer : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QString remainingTimeString READ getRemainingTimeString)
+    Q_PROPERTY(int remainingTime READ getRemainingTime)
+    Q_PROPERTY(bool done READ isDone)
+
+signals:
+    void remainingTimeChanged() const;
+    void done() const;
 
 public:
-    StrokesSolverWidget(QWidget* pParent = nullptr);
-    ~StrokesSolverWidget();
+    CountdownTimer(QObject* pParent = nullptr);
 
-protected slots:
-    void on_fontComboBox_currentFontChanged(QFont font);
-    void on_comboBoxFontSize_currentTextChanged(const QString& sText);
-    void on_pushButtonRestart_released();
+    QString getRemainingTimeString() const;
+    int getRemainingTime() const;
+    bool isDone();
+
+public slots:
+    void start();
+    void reset();
+    void setTotalTime(int seconds);
 
 private:
-    QScopedPointer<Ui::StrokesSolverWidget> _pUi;
+    bool _bDone = false;
+    int _iTotalTime = 60000; // in ms
+    QElapsedTimer _timer;
 };

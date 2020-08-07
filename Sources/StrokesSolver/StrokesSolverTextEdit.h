@@ -34,14 +34,20 @@ signals:
     void solverStarted() const;
     void dictionaryMatch(const QString& sDictionaryName, const QVector<QBitArray>& possibleBits) const;
     void notifySpecialKeys(const HashSpecialKeysStates& specialKeysStates) const;
+    void reset() const;
+    void started() const;
 
 public:
     StrokesSolverTextEdit(QWidget* pParent = nullptr);
-    void setTrainingMode(bool);
+    void restart(const QString& sText = QString());
+
+public slots:
+    void stopTraining();
 
 protected slots:
     void onCursorPositionChanged();
     void onTimerSolve();
+    void onTextChanged();
 
 protected:
     virtual void keyPressEvent(QKeyEvent* pKeyEvent) override;
@@ -53,9 +59,9 @@ private:
                HashSpecialKeysStates& rSpecialKeysStates) const;
 
 private:
-    bool _bTrainingMode;
+    bool _bCleanState = true;
     QColor _colorOk;
     QColor _colorWarning;
     QColor _colorError;
-    QTimer* _pTimerSolve;
+    QTimer* _pTimerSolve = nullptr;
 };

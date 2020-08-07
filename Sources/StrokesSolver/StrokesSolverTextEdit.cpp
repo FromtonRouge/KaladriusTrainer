@@ -27,24 +27,26 @@
 
 StrokesSolverTextEdit::StrokesSolverTextEdit(QWidget* pParent)
     : QTextEdit(pParent)
-    , _bTrainingMode(false)
     , _colorOk(0, 255, 0, 128)
     , _colorWarning(250, 200, 50, 200)
     , _colorError(255, 0, 0, 200)
     , _pTimerSolve(new QTimer(this))
 {
     setAcceptRichText(false);
-    setText("An orthographic theory of shorthand is based on spelling rather than phonetics. The advantage is that you can (in theory) write any word you know how to spell at least as fast as you can type it, because you do not need a dictionary to convert it from phonetic to written form. This is a sketch for an orthographic theory that might perhaps be implemented on a SOFTHRUF or a Planck, Atreus or other small keyboard that allows easy chording. It is intended to be a less specialised tool than Plover, easier to learn and to use as a general personal keyboard, while hopefully having more significant advantages than a simple change to key layout like Dvorak or Colemak.");
-    connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(onCursorPositionChanged()));
+    connect(this, &StrokesSolverTextEdit::cursorPositionChanged, this, &StrokesSolverTextEdit::onCursorPositionChanged);
+    connect(this, &QTextEdit::textChanged, this, &StrokesSolverTextEdit::onTextChanged);
 
     _pTimerSolve->setSingleShot(true);
     _pTimerSolve->setInterval(10);
-    connect(_pTimerSolve, SIGNAL(timeout()), this, SLOT(onTimerSolve()));
+    connect(_pTimerSolve, &QTimer::timeout, this, &StrokesSolverTextEdit::onTimerSolve);
 }
 
-void StrokesSolverTextEdit::setTrainingMode(bool bChecked)
+void StrokesSolverTextEdit::restart(const QString& sText)
 {
-    _bTrainingMode = bChecked;
+    setEnabled(true);
+
+    blockSignals(true);
+    setText(sText);
     QTextCursor cursor = textCursor();
     cursor.movePosition(QTextCursor::Start, QTextCursor::MoveAnchor);
     cursor.movePosition(QTextCursor::End, QTextCursor::KeepAnchor);
@@ -55,11 +57,11 @@ void StrokesSolverTextEdit::setTrainingMode(bool bChecked)
 
     cursor.movePosition(QTextCursor::Start, QTextCursor::MoveAnchor);
     setTextCursor(cursor);
+    blockSignals(false);
 
-    if (bChecked)
-    {
-        setFocus();
-    }
+    _bCleanState = true;
+    setFocus();
+    emit reset();
 }
 
 void StrokesSolverTextEdit::onCursorPositionChanged()
@@ -149,7 +151,7 @@ void StrokesSolverTextEdit::onTimerSolve()
 
 void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
 {
-    if (_bTrainingMode && !(pKeyEvent->modifiers() & Qt::ControlModifier))
+    if (!(pKeyEvent->modifiers() & Qt::ControlModifier))
     {
         auto cursor = textCursor();
         auto format = cursor.charFormat();
@@ -320,4 +322,18 @@ bool StrokesSolverTextEdit::solve(QString sText,
         }
     }
     return bAtLeastOneMatch;
+}
+
+void StrokesSolverTextEdit::onTextChanged()
+{
+    if (_bCleanState)
+    {
+        _bCleanState = false;
+        emit started();
+    }
+}
+
+void StrokesSolverTextEdit::stopTraining()
+{
+    setDisabled(true);
 }

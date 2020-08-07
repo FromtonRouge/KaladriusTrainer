@@ -26,15 +26,19 @@
 #include "../Keyboards/Models/KeyboardModel.h"
 #include "../Keyboards/Models/UndoableKeyboardModel.h"
 #include "../Theories/Models/TheoryModel.h"
+#include "../StrokesSolver/StrokesSolverTextEdit.h"
+#include "../Utils/CountdownTimer.h"
 #include "ui_MainWindow.h"
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QTextEdit>
 #include <QtCore/QEvent>
 #include <QtCore/QTimer>
+#include <QtQml/QQmlContext>
 
 MainWindow::MainWindow(QWidget* pParent)
     : QMainWindow(pParent)
     , _pUi(new Ui::MainWindow)
+    , _pCountdownTimer(new CountdownTimer(this))
 {
     _pUi->setupUi(this);
     setDockOptions(dockOptions() | DockOption::GroupedDragging | DockOption::AllowNestedDocks);
@@ -55,14 +59,20 @@ MainWindow::MainWindow(QWidget* pParent)
     connect(_pUi->widgetDictionaries3, SIGNAL(notifySpecialKeys(HashSpecialKeysStates)), pKeyboardModel, SLOT(selectLinkedSpecialKeys(HashSpecialKeysStates)));
     connect(_pUi->widgetDictionaries4, SIGNAL(notifySpecialKeys(HashSpecialKeysStates)), pKeyboardModel, SLOT(selectLinkedSpecialKeys(HashSpecialKeysStates)));
 
-    auto pStrokesSolverTextEdit = _pUi->widgetStrokesSolver->findChild<QTextEdit*>("textEdit");
+    auto pStrokesSolverTextEdit = _pUi->widgetStrokesSolver->findChild<StrokesSolverTextEdit*>("textEdit");
     auto pKeyboardGraphicsScene = qApp->getKeyboardGraphicsScene();
     if (pStrokesSolverTextEdit)
     {
         connect(pStrokesSolverTextEdit, SIGNAL(dictionaryMatch(QString, QVector<QBitArray>)), pKeyboardModel, SLOT(selectLinkedKeys(QString, QVector<QBitArray>)));
         connect(pStrokesSolverTextEdit, SIGNAL(notifySpecialKeys(HashSpecialKeysStates)), pKeyboardModel, SLOT(selectLinkedSpecialKeys(HashSpecialKeysStates)));
         connect(pStrokesSolverTextEdit, SIGNAL(solverStarted()), pKeyboardGraphicsScene, SLOT(clearSelection()));
+        connect(pStrokesSolverTextEdit, &StrokesSolverTextEdit::reset, _pCountdownTimer, &CountdownTimer::reset);
+        connect(pStrokesSolverTextEdit, &StrokesSolverTextEdit::started, _pCountdownTimer, &CountdownTimer::start);
+        connect(_pCountdownTimer, &CountdownTimer::done, pStrokesSolverTextEdit, &StrokesSolverTextEdit::stopTraining);
     }
+
+    _pUi->quickWidgetTimer->rootContext()->setContextProperty("countdownTimer", _pCountdownTimer);
+    _pUi->quickWidgetTimer->setSource(QUrl("qrc:/Qml/CountdownTimer.qml"));
 
     // Default dock states
     _pUi->dockWidgetDictionaries3->hide();

@@ -22,13 +22,14 @@
 #include <QtGui/QFontDatabase>
 #include <QtCore/QSettings>
 #include <QtCore/QSignalBlocker>
+#include <QtCore/QFile>
+#include <QtCore/QRandomGenerator>
 
 StrokesSolverWidget::StrokesSolverWidget(QWidget* pParent)
     : QWidget(pParent)
     , _pUi(new Ui::StrokesSolverWidget())
 {
     _pUi->setupUi(this);
-    _pUi->checkBoxTrainingMode->setChecked(QSettings().value("trainingMode", false).toBool());
 
     // We don't want to trigger the connected slots
     QSignalBlocker blockerFontSize(_pUi->comboBoxFontSize);
@@ -48,17 +49,12 @@ StrokesSolverWidget::StrokesSolverWidget(QWidget* pParent)
     _pUi->fontComboBox->setCurrentFont(wantedFont);
     _pUi->comboBoxFontSize->setCurrentIndex(sizes.indexOf(wantedFont.pointSize()));
     _pUi->textEdit->setFont(wantedFont);
+    _pUi->pushButtonRestart->click();
 }
 
 StrokesSolverWidget::~StrokesSolverWidget()
 {
 
-}
-
-void StrokesSolverWidget::on_checkBoxTrainingMode_toggled(bool bChecked)
-{
-    QSettings().setValue("trainingMode", bChecked);
-    _pUi->textEdit->setTrainingMode(bChecked);
 }
 
 void StrokesSolverWidget::on_fontComboBox_currentFontChanged(QFont font)
@@ -75,4 +71,29 @@ void StrokesSolverWidget::on_comboBoxFontSize_currentTextChanged(const QString& 
     font.setPointSize(sText.toInt());
     _pUi->textEdit->setFont(font);
     QSettings().setValue("strokesSolverFont", font);
+}
+
+void StrokesSolverWidget::on_pushButtonRestart_released()
+{
+    QFile file(":/Words/first200ShortWords.txt");
+    QStringList vWords;
+    if (file.open(QIODevice::ReadOnly))
+    {
+        const QString sWords = file.readAll();
+        vWords = sWords.split('\n');
+        file.close();
+    }
+
+    QStringList vText;
+    if (!vWords.isEmpty())
+    {
+        // Get 600 words it should be enough
+        for (int i=0; i<600; i++)
+        {
+            const int iIndex = QRandomGenerator::global()->bounded(vWords.size());
+            vText << vWords[iIndex];
+        }
+    }
+
+    _pUi->textEdit->restart(vText.join(" "));
 }

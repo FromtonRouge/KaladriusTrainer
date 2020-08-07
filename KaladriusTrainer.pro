@@ -1,6 +1,6 @@
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets svg xml
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets svg xml quick quickwidgets
 
 CONFIG += c++11
 
@@ -17,7 +17,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 INCLUDEPATH += "D:\Dev\Cpp\Common\boost_1_64_0"
 LIBS += "-LD:\Dev\Cpp\Common\boost_1_64_0\stage_x64\lib"
-
 RC_ICONS = Resources/KaladriusTrainer.ico
 
 SOURCES += \
@@ -68,6 +67,7 @@ SOURCES += \
     Sources/Tree/TreeItems/ListTreeItem.cpp \
     Sources/Tree/TreeItems/TreeItem.cpp \
     Sources/Tree/TreeItems/ValueTreeItem.cpp \
+    Sources/Utils/CountdownTimer.cpp \
     Sources/Values/Editors/ColorEditor.cpp \
     Sources/Values/Editors/FingerSelector.cpp \
     Sources/Values/Editors/FontEditor.cpp \
@@ -131,6 +131,7 @@ HEADERS += \
     Sources/Tree/TreeItems/ListTreeItem.h \
     Sources/Tree/TreeItems/TreeItem.h \
     Sources/Tree/TreeItems/ValueTreeItem.h \
+    Sources/Utils/CountdownTimer.h \
     Sources/Values/Editors/ColorEditor.h \
     Sources/Values/Editors/FingerSelector.h \
     Sources/Values/Editors/FontEditor.h \
