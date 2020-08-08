@@ -57,6 +57,11 @@ StrokesSolverWidget::~StrokesSolverWidget()
 
 }
 
+void StrokesSolverWidget::restart(const QString& sText)
+{
+    _pUi->textEdit->restart(sText);
+}
+
 void StrokesSolverWidget::on_fontComboBox_currentFontChanged(QFont font)
 {
     const int iSize = _pUi->comboBoxFontSize->currentText().toInt();
@@ -75,25 +80,5 @@ void StrokesSolverWidget::on_comboBoxFontSize_currentTextChanged(const QString& 
 
 void StrokesSolverWidget::on_pushButtonRestart_released()
 {
-    QFile file(":/Words/first200ShortWords.txt");
-    QStringList vWords;
-    if (file.open(QIODevice::ReadOnly))
-    {
-        const QString sWords = file.readAll();
-        vWords = sWords.split('\n');
-        file.close();
-    }
-
-    QStringList vText;
-    if (!vWords.isEmpty())
-    {
-        // Get 600 words it should be enough
-        for (int i=0; i<600; i++)
-        {
-            const int iIndex = QRandomGenerator::global()->bounded(vWords.size());
-            vText << vWords[iIndex];
-        }
-    }
-
-    _pUi->textEdit->restart(vText.join(" "));
+    emit restartNeeded();
 }

@@ -57,5 +57,8 @@
         <file>Words/first200ShortWords.txt</file>
         <file>Qml/WordCounter.qml</file>
         <file>Qml/Dashboard.qml</file>
+        <file>Icons/controller.png</file>
+        <file>Icons/clock--arrow.png</file>
+        <file>Icons/document-text.png</file>
     </qresource>
 </RCC>

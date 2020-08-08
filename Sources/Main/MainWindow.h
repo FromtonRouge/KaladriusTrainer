@@ -29,6 +29,7 @@ namespace Ui
 
 class CountdownTimer;
 class WordCounter;
+class LevelsModel;
 
 class MainWindow : public QMainWindow
 {
@@ -47,6 +48,7 @@ protected:
 
 private:
     QScopedPointer<Ui::MainWindow> _pUi;
+    LevelsModel* _pLevelsModel = nullptr;
     CountdownTimer* _pCountdownTimer = nullptr;
     WordCounter* _pWordCounter = nullptr;
 };

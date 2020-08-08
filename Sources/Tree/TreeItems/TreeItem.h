@@ -44,9 +44,9 @@ struct TreeItem : public QStandardItem
         InputKeys,
         Dictionary,
 
-        // Lessons
-        Course,
-        Lesson,
+        // Levels
+        Levels,
+        Level,
     };
 
     virtual int type() const override = 0;

@@ -17,35 +17,22 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "LevelsTreeItem.h"
+#include "LevelTreeItem.h"
+#include <QtGui/QIcon>
 
-#include <QtWidgets/QWidget>
-#include <QtCore/QScopedPointer>
-
-namespace Ui
+LevelsTreeItem::LevelsTreeItem()
 {
-    class StrokesSolverWidget;
+    setIcon(QIcon(":/Icons/controller.png"));
+    setText(QObject::tr("Levels"));
+    setEditable(false);
+
+    appendRow({new LevelTreeItem(LevelTreeItem::TimedRandomWords, QObject::tr("Short words"), ":/Words/first200ShortWords.txt")});
+    appendRow({new LevelTreeItem(LevelTreeItem::TimedRandomWords, QObject::tr("Medium words"), ":/Words/first200MediumWords.txt")});
+    appendRow({new LevelTreeItem(LevelTreeItem::TimedRandomWords, QObject::tr("Long words"), ":/Words/first200LongWords.txt")});
 }
 
-class StrokesSolverWidget : public QWidget
+LevelsTreeItem::~LevelsTreeItem()
 {
-    Q_OBJECT
 
-signals:
-    void restartNeeded() const;
-
-public:
-    StrokesSolverWidget(QWidget* pParent = nullptr);
-    ~StrokesSolverWidget();
-
-public slots:
-    void restart(const QString& sText);
-
-protected slots:
-    void on_fontComboBox_currentFontChanged(QFont font);
-    void on_comboBoxFontSize_currentTextChanged(const QString& sText);
-    void on_pushButtonRestart_released();
-
-private:
-    QScopedPointer<Ui::StrokesSolverWidget> _pUi;
-};
+}

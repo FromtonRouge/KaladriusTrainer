@@ -17,35 +17,17 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "LevelsModel.h"
+#include "../TreeItems/LevelsTreeItem.h"
 
-#include <QtWidgets/QWidget>
-#include <QtCore/QScopedPointer>
-
-namespace Ui
+LevelsModel::LevelsModel(QObject* pParent)
+    : TreeItemModel(pParent)
 {
-    class StrokesSolverWidget;
+    setHorizontalHeaderLabels({tr("Name")});
+    appendRow({new LevelsTreeItem()});
 }
 
-class StrokesSolverWidget : public QWidget
+LevelsModel::~LevelsModel()
 {
-    Q_OBJECT
 
-signals:
-    void restartNeeded() const;
-
-public:
-    StrokesSolverWidget(QWidget* pParent = nullptr);
-    ~StrokesSolverWidget();
-
-public slots:
-    void restart(const QString& sText);
-
-protected slots:
-    void on_fontComboBox_currentFontChanged(QFont font);
-    void on_comboBoxFontSize_currentTextChanged(const QString& sText);
-    void on_pushButtonRestart_released();
-
-private:
-    QScopedPointer<Ui::StrokesSolverWidget> _pUi;
-};
+}

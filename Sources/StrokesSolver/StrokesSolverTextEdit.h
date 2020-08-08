@@ -55,7 +55,8 @@ protected slots:
     void onTextChanged();
 
 protected:
-    virtual void keyPressEvent(QKeyEvent* pKeyEvent) override;
+    void keyPressEvent(QKeyEvent* pKeyEvent) override;
+    void mousePressEvent(QMouseEvent* pMouseEvent) override;
 
 private:
     bool solve(QString sText,

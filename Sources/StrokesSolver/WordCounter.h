@@ -35,7 +35,6 @@ public:
     void reset();
     void pushInputState(const QChar& expected, const QChar& input);
     void popInputState();
-    int getValidWordsCount() const {return _validWords.count();}
     int getWPM() const;
 
 private:
@@ -50,4 +49,6 @@ private:
     QString _sCurrentWord;
     int _iCurrentWordErrors = 0;
     QStringList _validWords;
+    uint _iValidCharacters = 0;
+    const int AVERAGE_WORD_LENGTH = 4; // Same as www.10fastfingers.com
 };

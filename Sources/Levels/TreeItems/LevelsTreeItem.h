@@ -19,33 +19,14 @@
 
 #pragma once
 
-#include <QtWidgets/QWidget>
-#include <QtCore/QScopedPointer>
+#include "../../Tree/TreeItems/TreeItem.h"
 
-namespace Ui
+class LevelsTreeItem : public TreeItem
 {
-    class StrokesSolverWidget;
-}
-
-class StrokesSolverWidget : public QWidget
-{
-    Q_OBJECT
-
-signals:
-    void restartNeeded() const;
-
 public:
-    StrokesSolverWidget(QWidget* pParent = nullptr);
-    ~StrokesSolverWidget();
+    LevelsTreeItem();
+    ~LevelsTreeItem();
 
-public slots:
-    void restart(const QString& sText);
-
-protected slots:
-    void on_fontComboBox_currentFontChanged(QFont font);
-    void on_comboBoxFontSize_currentTextChanged(const QString& sText);
-    void on_pushButtonRestart_released();
-
-private:
-    QScopedPointer<Ui::StrokesSolverWidget> _pUi;
+    virtual int type() const override {return Levels;}
 };
+

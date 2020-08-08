@@ -55,7 +55,7 @@
    <item row="0" column="3">
     <widget class="QPushButton" name="pushButtonRestart">
      <property name="toolTip">
-      <string>Restart</string>
+      <string>Restart (F5)</string>
      </property>
      <property name="text">
       <string/>

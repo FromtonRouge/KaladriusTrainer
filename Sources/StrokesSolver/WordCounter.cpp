@@ -35,6 +35,7 @@ void WordCounter::reset()
     _sCurrentWord.clear();
     _iCurrentWordErrors = 0;
     _validWords.clear();
+    _iValidCharacters = 0;
 }
 
 void WordCounter::pushInputState(const QChar& expected, const QChar& input)
@@ -56,6 +57,7 @@ void WordCounter::pushInputState(const QChar& expected, const QChar& input)
         if (_iCurrentWordErrors == 0)
         {
             _validWords << _sCurrentWord;
+            _iValidCharacters += _sCurrentWord.length();
         }
         else
         {
@@ -91,12 +93,12 @@ void WordCounter::popInputState()
 
 int WordCounter::getWPM() const
 {
-    const int iWords = getValidWordsCount();
+    const float fWords = float(_iValidCharacters) / AVERAGE_WORD_LENGTH;
     float fSeconds = 60.f;
     if (_pCountdownTimer->getRemainingTime() > 0)
     {
         fSeconds = float(_pCountdownTimer->getElapsedTime()) / 1000;
     }
-    const int iWPM = int(60.f * float(iWords) / fSeconds);
+    const int iWPM = int(60.f * fWords / fSeconds);
     return iWPM;
 }

@@ -60,6 +60,8 @@ void StrokesSolverTextEdit::restart(const QString& sText)
     setTextCursor(cursor);
     blockSignals(false);
 
+    _pTimerSolve->start();
+
     _bCleanState = true;
     if (_pWordCounter)
     {
@@ -167,37 +169,17 @@ void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
         auto format = cursor.charFormat();
         switch (pKeyEvent->key())
         {
+        case Qt::Key_Escape:
         case Qt::Key_PageDown:
         case Qt::Key_PageUp:
         case Qt::Key_Home:
         case Qt::Key_End:
         case Qt::Key_Left:
-            {
-                if (format.background() != QBrush())
-                {
-                    // Move the cursor backward without selecting the text so
-                    // the solve() can work properly
-                    cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor);
-                    setTextCursor(cursor);
-
-                    // Reset the background color
-                    cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-                    format.setBackground(QBrush());
-                    cursor.setCharFormat(format);
-                    setTextCursor(cursor);
-
-                    // Go back again...
-                    cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor);
-                    setTextCursor(cursor);
-                    return;
-                }
-                // No break
-            }
         case Qt::Key_Right:
         case Qt::Key_Down:
         case Qt::Key_Up:
             {
-                return QTextEdit::keyPressEvent(pKeyEvent);
+                return;
             }
         case Qt::Key_Backspace:
             {
@@ -279,6 +261,14 @@ void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
     else
     {
         QTextEdit::keyPressEvent(pKeyEvent);
+    }
+}
+
+void StrokesSolverTextEdit::mousePressEvent(QMouseEvent* pMouseEvent)
+{
+    if (_bCleanState)
+    {
+        QTextEdit::mousePressEvent(pMouseEvent);
     }
 }
 

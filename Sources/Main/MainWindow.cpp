@@ -27,8 +27,11 @@
 #include "../Keyboards/Models/UndoableKeyboardModel.h"
 #include "../Theories/Models/TheoryModel.h"
 #include "../StrokesSolver/StrokesSolverTextEdit.h"
+#include "../StrokesSolver/StrokesSolverWidget.h"
 #include "../StrokesSolver/WordCounter.h"
 #include "../Utils/CountdownTimer.h"
+#include "../Levels/Models/LevelsModel.h"
+#include "../Levels/LevelsTreeView.h"
 #include "ui_MainWindow.h"
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QTextEdit>
@@ -39,6 +42,7 @@
 MainWindow::MainWindow(QWidget* pParent)
     : QMainWindow(pParent)
     , _pUi(new Ui::MainWindow)
+    , _pLevelsModel(new LevelsModel(this))
     , _pCountdownTimer(new CountdownTimer(this))
     , _pWordCounter(new WordCounter(_pCountdownTimer, this))
 {
@@ -72,7 +76,11 @@ MainWindow::MainWindow(QWidget* pParent)
         connect(pStrokesSolverTextEdit, &StrokesSolverTextEdit::reset, _pCountdownTimer, &CountdownTimer::reset);
         connect(pStrokesSolverTextEdit, &StrokesSolverTextEdit::started, _pCountdownTimer, &CountdownTimer::start);
         connect(_pCountdownTimer, &CountdownTimer::done, pStrokesSolverTextEdit, &StrokesSolverTextEdit::stopTraining);
+        connect(_pUi->treeViewLevels, &LevelsTreeView::sendText, pStrokesSolverTextEdit, &StrokesSolverTextEdit::restart);
+        connect(_pUi->widgetStrokesSolver, &StrokesSolverWidget::restartNeeded, _pUi->treeViewLevels, &LevelsTreeView::restart);
     }
+
+    _pUi->treeViewLevels->setModel(_pLevelsModel);
 
     auto pRootContext = _pUi->quickWidgetDashboard->rootContext();
     pRootContext->setContextProperty("countdownTimer", _pCountdownTimer);

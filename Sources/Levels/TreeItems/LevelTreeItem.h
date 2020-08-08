@@ -19,33 +19,28 @@
 
 #pragma once
 
-#include <QtWidgets/QWidget>
-#include <QtCore/QScopedPointer>
+#include "../../Tree/TreeItems/TreeItem.h"
+#include <QtCore/QStringList>
 
-namespace Ui
+class LevelTreeItem : public TreeItem
 {
-    class StrokesSolverWidget;
-}
-
-class StrokesSolverWidget : public QWidget
-{
-    Q_OBJECT
-
-signals:
-    void restartNeeded() const;
+public:
+    enum LevelType
+    {
+        TimedRandomWords,
+        FreeText,
+    };
 
 public:
-    StrokesSolverWidget(QWidget* pParent = nullptr);
-    ~StrokesSolverWidget();
+    LevelTreeItem(LevelType levelType, const QString& sLabel, const QString& sWordsFilePath);
+    ~LevelTreeItem();
 
-public slots:
-    void restart(const QString& sText);
-
-protected slots:
-    void on_fontComboBox_currentFontChanged(QFont font);
-    void on_comboBoxFontSize_currentTextChanged(const QString& sText);
-    void on_pushButtonRestart_released();
+    virtual int type() const override {return Level;}
+    void loadWords(const QString& sWordsFilePath);
+    const QStringList& getWords() const {return _words;}
+    QStringList getRandomWords(int iCount = 1000) const;
 
 private:
-    QScopedPointer<Ui::StrokesSolverWidget> _pUi;
+    LevelType _levelType;
+    QStringList _words;
 };

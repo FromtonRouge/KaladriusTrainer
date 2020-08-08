@@ -38,6 +38,10 @@ SOURCES += \
     Sources/Keycaps/KeycapGraphicsItem.cpp \
     Sources/Keycaps/KeycapTreeView.cpp \
     Sources/Keycaps/KeycapWidget.cpp \
+    Sources/Levels/LevelsTreeView.cpp \
+    Sources/Levels/Models/LevelsModel.cpp \
+    Sources/Levels/TreeItems/LevelTreeItem.cpp \
+    Sources/Levels/TreeItems/LevelsTreeItem.cpp \
     Sources/Main/Application.cpp \
     Sources/Main/MainTabDialog.cpp \
     Sources/Main/MainTabWindow.cpp \
@@ -99,6 +103,10 @@ HEADERS += \
     Sources/Keycaps/KeycapState.h \
     Sources/Keycaps/KeycapTreeView.h \
     Sources/Keycaps/KeycapWidget.h \
+    Sources/Levels/LevelsTreeView.h \
+    Sources/Levels/Models/LevelsModel.h \
+    Sources/Levels/TreeItems/LevelTreeItem.h \
+    Sources/Levels/TreeItems/LevelsTreeItem.h \
     Sources/License.h \
     Sources/Main/Application.h \
     Sources/Main/MainTabDialog.h \
