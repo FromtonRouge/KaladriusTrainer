@@ -43,6 +43,11 @@ int CountdownTimer::getRemainingTime() const
     return qMax(0, iRemainingTime);
 }
 
+int CountdownTimer::getElapsedTime() const
+{
+    return _timer.elapsed();
+}
+
 QString CountdownTimer::getRemainingTimeString() const
 {
     using namespace std::chrono;
@@ -64,8 +69,8 @@ bool CountdownTimer::isDone()
     return bResult;
 }
 
-void CountdownTimer::setTotalTime(int seconds)
+void CountdownTimer::setTotalTime(float fSeconds)
 {
-    _iTotalTime = seconds * 1000;
+    _iTotalTime = int(fSeconds * 1000);
     reset();
 }

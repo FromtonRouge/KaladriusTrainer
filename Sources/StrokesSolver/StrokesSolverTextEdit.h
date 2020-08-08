@@ -23,9 +23,12 @@
 #include "../Keycaps/KeycapState.h"
 #include <QtWidgets/QTextEdit>
 #include <QtGui/QColor>
+#include <QtCore/QQueue>
 #include <QtCore/QVector>
+#include <QtCore/QChar>
 
 class QTimer;
+class WordCounter;
 class StrokesSolverTextEdit : public QTextEdit
 {
     Q_OBJECT
@@ -39,7 +42,9 @@ signals:
 
 public:
     StrokesSolverTextEdit(QWidget* pParent = nullptr);
+
     void restart(const QString& sText = QString());
+    void setWordCounter(WordCounter* pWordCounter);
 
 public slots:
     void stopTraining();
@@ -60,6 +65,7 @@ private:
 
 private:
     bool _bCleanState = true;
+    WordCounter* _pWordCounter = nullptr;
     QColor _colorOk;
     QColor _colorWarning;
     QColor _colorError;

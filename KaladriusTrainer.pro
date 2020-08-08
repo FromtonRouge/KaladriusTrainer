@@ -46,6 +46,7 @@ SOURCES += \
     Sources/Serialization/Serialize.cpp \
     Sources/StrokesSolver/StrokesSolverTextEdit.cpp \
     Sources/StrokesSolver/StrokesSolverWidget.cpp \
+    Sources/StrokesSolver/WordCounter.cpp \
     Sources/Theories/Models/TheoryModel.cpp \
     Sources/Theories/Models/UndoableTheoryModel.cpp \
     Sources/Theories/TheoryEditorMainWindow.cpp \
@@ -109,6 +110,7 @@ HEADERS += \
     Sources/Streams/StreamSink.h \
     Sources/StrokesSolver/StrokesSolverTextEdit.h \
     Sources/StrokesSolver/StrokesSolverWidget.h \
+    Sources/StrokesSolver/WordCounter.h \
     Sources/Theories/Models/TheoryModel.h \
     Sources/Theories/Models/UndoableTheoryModel.h \
     Sources/Theories/TheoryEditorMainWindow.h \

@@ -189,9 +189,9 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="dockWidgetTimer">
+  <widget class="QDockWidget" name="dockWidgetDashboard">
    <property name="windowTitle">
-    <string>Timer</string>
+    <string>Dashboard</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
@@ -211,7 +211,7 @@
       <number>0</number>
      </property>
      <item row="0" column="0">
-      <widget class="QQuickWidget" name="quickWidgetTimer">
+      <widget class="QQuickWidget" name="quickWidgetDashboard">
        <property name="resizeMode">
         <enum>QQuickWidget::SizeRootObjectToView</enum>
        </property>

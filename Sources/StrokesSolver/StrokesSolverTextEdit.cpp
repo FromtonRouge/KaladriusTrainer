@@ -19,6 +19,7 @@
 
 #include "StrokesSolverTextEdit.h"
 #include "../Main/Application.h"
+#include "WordCounter.h"
 #include <QtCore/QRegularExpression>
 #include <QtGui/QKeyEvent>
 #include <QtCore/QTimer>
@@ -60,8 +61,17 @@ void StrokesSolverTextEdit::restart(const QString& sText)
     blockSignals(false);
 
     _bCleanState = true;
+    if (_pWordCounter)
+    {
+        _pWordCounter->reset();
+    }
     setFocus();
     emit reset();
+}
+
+void StrokesSolverTextEdit::setWordCounter(WordCounter* pWordCounter)
+{
+   _pWordCounter = pWordCounter;
 }
 
 void StrokesSolverTextEdit::onCursorPositionChanged()
@@ -193,6 +203,7 @@ void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
             {
                 if (format.background() == _colorError)
                 {
+                    _pWordCounter->popInputState();
                     return QTextEdit::keyPressEvent(pKeyEvent);
                 }
                 else if (format.background() != QBrush())
@@ -217,6 +228,7 @@ void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
                     cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor);
                     setTextCursor(cursor);
                 }
+                _pWordCounter->popInputState();
                 return;
             }
         default:
@@ -256,6 +268,12 @@ void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
             cursor.setCharFormat(format);
             cursor.setPosition(cursor.position(), QTextCursor::MoveAnchor);
             setTextCursor(cursor);
+
+        }
+
+        if (!sSelectedText.isEmpty() && !sInputText.isEmpty())
+        {
+            _pWordCounter->pushInputState(sSelectedText[0], sInputText[0]);
         }
     }
     else

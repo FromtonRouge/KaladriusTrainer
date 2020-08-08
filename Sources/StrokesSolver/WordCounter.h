@@ -16,37 +16,38 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
-
 #pragma once
 
-#include <QtWidgets/QMainWindow>
-#include <QtCore/QScopedPointer>
-
-namespace Ui
-{
-    class MainWindow;
-}
+#include <QtCore/QChar>
+#include <QtCore/QStack>
+#include <QtCore/QStringList>
+#include <QtCore/QObject>
 
 class CountdownTimer;
-class WordCounter;
-
-class MainWindow : public QMainWindow
+class WordCounter : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(int wpm READ getWPM)
 
 public:
-    MainWindow(QWidget* pParent = nullptr);
-    ~MainWindow();
+    WordCounter(CountdownTimer* pCountdownTimer, QObject* pParent = nullptr);
 
-protected slots:
-    void on_actionAbout_triggered();
-    void delayedRestoreState();
-
-protected:
-    virtual bool event(QEvent* pEvent) override;
+    void reset();
+    void pushInputState(const QChar& expected, const QChar& input);
+    void popInputState();
+    int getValidWordsCount() const {return _validWords.count();}
+    int getWPM() const;
 
 private:
-    QScopedPointer<Ui::MainWindow> _pUi;
+    struct InputState
+    {
+        QChar expected;
+        QChar input;
+    };
+
     CountdownTimer* _pCountdownTimer = nullptr;
-    WordCounter* _pWordCounter = nullptr;
+    QStack<InputState> _inputStates;
+    QString _sCurrentWord;
+    int _iCurrentWordErrors = 0;
+    QStringList _validWords;
 };

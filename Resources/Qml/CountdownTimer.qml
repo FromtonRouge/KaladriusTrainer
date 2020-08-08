@@ -3,12 +3,14 @@ import QtQuick.Layouts 1.3
 
 Rectangle {
     id: main
+    width: time.width + 20
+    height: time.height + 20
+    radius: 10.0
 
     Text {
         id: time
         font.pointSize: 20
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
+        anchors.centerIn: parent
         function set() {
             if (countdownTimer.done)
             {

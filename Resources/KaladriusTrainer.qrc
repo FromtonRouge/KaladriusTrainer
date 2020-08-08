@@ -55,5 +55,7 @@
         <file>Words/first200LongWords.txt</file>
         <file>Words/first200MediumWords.txt</file>
         <file>Words/first200ShortWords.txt</file>
+        <file>Qml/WordCounter.qml</file>
+        <file>Qml/Dashboard.qml</file>
     </qresource>
 </RCC>

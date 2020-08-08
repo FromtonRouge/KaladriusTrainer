@@ -39,12 +39,14 @@ public:
 
     QString getRemainingTimeString() const;
     int getRemainingTime() const;
+    int getElapsedTime() const;
+    float getTotalTime() const {return float(_iTotalTime) / 1000;}
     bool isDone();
 
 public slots:
     void start();
     void reset();
-    void setTotalTime(int seconds);
+    void setTotalTime(float fSeconds);
 
 private:
     bool _bDone = false;

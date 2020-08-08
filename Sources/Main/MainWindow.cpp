@@ -27,6 +27,7 @@
 #include "../Keyboards/Models/UndoableKeyboardModel.h"
 #include "../Theories/Models/TheoryModel.h"
 #include "../StrokesSolver/StrokesSolverTextEdit.h"
+#include "../StrokesSolver/WordCounter.h"
 #include "../Utils/CountdownTimer.h"
 #include "ui_MainWindow.h"
 #include <QtWidgets/QMessageBox>
@@ -39,6 +40,7 @@ MainWindow::MainWindow(QWidget* pParent)
     : QMainWindow(pParent)
     , _pUi(new Ui::MainWindow)
     , _pCountdownTimer(new CountdownTimer(this))
+    , _pWordCounter(new WordCounter(_pCountdownTimer, this))
 {
     _pUi->setupUi(this);
     setDockOptions(dockOptions() | DockOption::GroupedDragging | DockOption::AllowNestedDocks);
@@ -63,6 +65,7 @@ MainWindow::MainWindow(QWidget* pParent)
     auto pKeyboardGraphicsScene = qApp->getKeyboardGraphicsScene();
     if (pStrokesSolverTextEdit)
     {
+        pStrokesSolverTextEdit->setWordCounter(_pWordCounter);
         connect(pStrokesSolverTextEdit, SIGNAL(dictionaryMatch(QString, QVector<QBitArray>)), pKeyboardModel, SLOT(selectLinkedKeys(QString, QVector<QBitArray>)));
         connect(pStrokesSolverTextEdit, SIGNAL(notifySpecialKeys(HashSpecialKeysStates)), pKeyboardModel, SLOT(selectLinkedSpecialKeys(HashSpecialKeysStates)));
         connect(pStrokesSolverTextEdit, SIGNAL(solverStarted()), pKeyboardGraphicsScene, SLOT(clearSelection()));
@@ -71,8 +74,10 @@ MainWindow::MainWindow(QWidget* pParent)
         connect(_pCountdownTimer, &CountdownTimer::done, pStrokesSolverTextEdit, &StrokesSolverTextEdit::stopTraining);
     }
 
-    _pUi->quickWidgetTimer->rootContext()->setContextProperty("countdownTimer", _pCountdownTimer);
-    _pUi->quickWidgetTimer->setSource(QUrl("qrc:/Qml/CountdownTimer.qml"));
+    auto pRootContext = _pUi->quickWidgetDashboard->rootContext();
+    pRootContext->setContextProperty("countdownTimer", _pCountdownTimer);
+    pRootContext->setContextProperty("wordCounter", _pWordCounter);
+    _pUi->quickWidgetDashboard->setSource(QUrl("qrc:/Qml/Dashboard.qml"));
 
     // Default dock states
     _pUi->dockWidgetDictionaries3->hide();
