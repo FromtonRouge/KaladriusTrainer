@@ -20,6 +20,7 @@
 #include "LevelTreeItem.h"
 #include <QtCore/QRandomGenerator>
 #include <QtCore/QFile>
+#include <QtCore/QRegularExpression>
 
 LevelTreeItem::LevelTreeItem(LevelType levelType,
                              const QUuid& uuid,
@@ -68,7 +69,8 @@ void LevelTreeItem::loadWords(const QString& sWordsFilePath)
     if (file.open(QIODevice::ReadOnly))
     {
         const QString& sWords = file.readAll();
-        _words = sWords.split('\n');
+        const QRegularExpression re("(\r\n)|(\n)\([ \t])");
+        _words = sWords.split(re);
     }
 }
 
