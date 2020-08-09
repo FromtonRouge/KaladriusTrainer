@@ -1,6 +1,6 @@
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets svg xml quick quickwidgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets svg xml quick quickwidgets sql
 
 CONFIG += c++11
 

@@ -27,9 +27,9 @@ LevelsTreeItem::LevelsTreeItem()
     setText(QObject::tr("Levels"));
     setEditable(false);
 
-    appendRow({new LevelTreeItem(LevelTreeItem::TimedRandomWords, QObject::tr("Short words"), ":/Words/first200ShortWords.txt")});
-    appendRow({new LevelTreeItem(LevelTreeItem::TimedRandomWords, QObject::tr("Medium words"), ":/Words/first200MediumWords.txt")});
-    appendRow({new LevelTreeItem(LevelTreeItem::TimedRandomWords, QObject::tr("Long words"), ":/Words/first200LongWords.txt")});
+    appendRow({new LevelTreeItem(LevelTreeItem::TimedRandomWords, "4d685a55-f8f9-4584-b8de-4cce1012fa14",  QObject::tr("Short words"), ":/Words/first200ShortWords.txt")});
+    appendRow({new LevelTreeItem(LevelTreeItem::TimedRandomWords, "ed2f7d01-6fc3-4fc1-bdbe-147cd278948c", QObject::tr("Medium words"), ":/Words/first200MediumWords.txt")});
+    appendRow({new LevelTreeItem(LevelTreeItem::TimedRandomWords, "aae7e2e5-a877-485f-84e5-b896c6a61cc5", QObject::tr("Long words"), ":/Words/first200LongWords.txt")});
 }
 
 LevelsTreeItem::~LevelsTreeItem()

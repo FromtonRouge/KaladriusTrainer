@@ -25,6 +25,8 @@
 #include "../Keyboards/Models/UndoableKeyboardModel.h"
 #include "../Keyboards/KeyboardGraphicsScene.h"
 #include <QtCore/QCommandLineParser>
+#include <QtCore/QStandardPaths>
+#include <QtSql/QSqlDatabase>
 #include <QtWidgets/QUndoStack>
 #include <iostream>
 
@@ -76,6 +78,44 @@ Application::~Application()
 {
     std::cerr.rdbuf(_pOldStreambufCerr);
     std::cout.rdbuf(_pOldStreambufCout);
+}
+
+bool Application::openDatabase()
+{
+    const QString& sDatabaseFilePath = getDatabaseFilePath();
+    if (sDatabaseFilePath.isEmpty() == false)
+    {
+        QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE");
+        if (database.isValid())
+        {
+            database.setDatabaseName(sDatabaseFilePath);
+            if (database.open())
+            {
+                return true;
+            }
+            else
+            {
+                QString sError = QString("Can't open database \"%1\"").arg(sDatabaseFilePath);
+                std::cerr << sError.toStdString() << std::endl;
+            }
+        }
+        else
+        {
+            QString sError = QString("Invalid database: %1. Available drivers=[%2]").arg(database.driverName()).arg(database.drivers().join(", "));
+            std::cerr << sError.toStdString() << std::endl;
+        }
+    }
+    return false;
+}
+
+QString Application::getDatabaseFilePath() const
+{
+    const QString& sAppLocalPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+    if (sAppLocalPath.isEmpty() == false)
+    {
+        return QString("%1/%2.sqlite").arg(sAppLocalPath).arg("Statistics");
+    }
+    return QString();
 }
 
 void Application::toLogs(const QString& sText, int iWarningLevel)

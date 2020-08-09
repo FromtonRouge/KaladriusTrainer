@@ -31,13 +31,18 @@
 #include "../StrokesSolver/WordCounter.h"
 #include "../Utils/CountdownTimer.h"
 #include "../Levels/Models/LevelsModel.h"
+#include "../Levels/TreeItems/LevelTreeItem.h"
 #include "../Levels/LevelsTreeView.h"
 #include "ui_MainWindow.h"
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QTextEdit>
+#include <QtSql/QSqlDatabase>
+#include <QtSql/QSqlQuery>
+#include <QtSql/QSqlError>
+#include <QtQml/QQmlContext>
 #include <QtCore/QEvent>
 #include <QtCore/QTimer>
-#include <QtQml/QQmlContext>
+#include <QtCore/QDateTime>
 
 MainWindow::MainWindow(QWidget* pParent)
     : QMainWindow(pParent)
@@ -75,12 +80,10 @@ MainWindow::MainWindow(QWidget* pParent)
         connect(pStrokesSolverTextEdit, SIGNAL(solverStarted()), pKeyboardGraphicsScene, SLOT(clearSelection()));
         connect(pStrokesSolverTextEdit, &StrokesSolverTextEdit::reset, _pCountdownTimer, &CountdownTimer::reset);
         connect(pStrokesSolverTextEdit, &StrokesSolverTextEdit::started, _pCountdownTimer, &CountdownTimer::start);
-        connect(_pCountdownTimer, &CountdownTimer::done, pStrokesSolverTextEdit, &StrokesSolverTextEdit::stopTraining);
+        connect(_pCountdownTimer, &CountdownTimer::done, this, &MainWindow::onCountdownTimerDone);
         connect(_pUi->treeViewLevels, &LevelsTreeView::sendText, pStrokesSolverTextEdit, &StrokesSolverTextEdit::restart);
         connect(_pUi->widgetStrokesSolver, &StrokesSolverWidget::restartNeeded, _pUi->treeViewLevels, &LevelsTreeView::restart);
     }
-
-    _pUi->treeViewLevels->setModel(_pLevelsModel);
 
     auto pRootContext = _pUi->quickWidgetDashboard->rootContext();
     pRootContext->setContextProperty("countdownTimer", _pCountdownTimer);
@@ -97,6 +100,12 @@ MainWindow::MainWindow(QWidget* pParent)
 
 MainWindow::~MainWindow()
 {
+}
+
+void MainWindow::Init()
+{
+    _pUi->treeViewLevels->setModel(_pLevelsModel);
+
 }
 
 bool MainWindow::event(QEvent *pEvent)
@@ -142,6 +151,44 @@ void MainWindow::delayedRestoreState()
         if (pStrokesSolverTextEdit)
         {
             pStrokesSolverTextEdit->setFocus();
+        }
+    }
+}
+
+void MainWindow::onCountdownTimerDone()
+{
+    auto pStrokesSolverTextEdit = _pUi->widgetStrokesSolver->findChild<StrokesSolverTextEdit*>("textEdit");
+    pStrokesSolverTextEdit->stopTraining();
+
+    // Save result in database
+    const QModelIndex& indexCurrentLevel = _pUi->treeViewLevels->currentIndex();
+    if (indexCurrentLevel.isValid())
+    {
+        const int iTreeItemType = indexCurrentLevel.data(TreeItemTypeRole).toInt();
+        switch (iTreeItemType)
+        {
+        case TreeItem::Level:
+            {
+                auto pLevelTreeItem = static_cast<LevelTreeItem*>(_pLevelsModel->itemFromIndex(indexCurrentLevel));
+                const QUuid& uuidLevel = pLevelTreeItem->getUuid();
+                const QString sTabName = QString("Level %1").arg(uuidLevel.toString(QUuid::WithoutBraces));
+                const QDateTime& currentTime = QDateTime::currentDateTime();
+                const QString& sCurrentTime = currentTime.toString();
+                const int iWpm = _pWordCounter->getWPM();
+                QString sQuery = "INSERT INTO \"main\".\"%1\"(\"Date\",\"Wpm\") VALUES (\"%2\",%3);";
+                sQuery = sQuery.arg(sTabName).arg(sCurrentTime).arg(iWpm);
+                QSqlQuery query(QSqlDatabase::database());
+                if (!query.exec(sQuery))
+                {
+                    QString sError = QString("Can't insert result: %1").arg(query.lastError().text());
+                    std::cerr << sError.toStdString() << std::endl;
+                }
+                break;
+            }
+        default:
+            {
+                break;
+            }
         }
     }
 }

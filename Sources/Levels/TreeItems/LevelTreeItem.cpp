@@ -22,9 +22,11 @@
 #include <QtCore/QFile>
 
 LevelTreeItem::LevelTreeItem(LevelType levelType,
+                             const QUuid& uuid,
                              const QString& sLabel,
                              const QString& sWordsFilePath)
     : _levelType(levelType)
+    , _uuid(uuid)
 {
     setText(sLabel);
 

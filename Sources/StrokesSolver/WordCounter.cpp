@@ -94,7 +94,7 @@ void WordCounter::popInputState()
 int WordCounter::getWPM() const
 {
     const float fWords = float(_iValidCharacters) / AVERAGE_WORD_LENGTH;
-    float fSeconds = 60.f;
+    float fSeconds = _pCountdownTimer->getTotalTime();
     if (_pCountdownTimer->getRemainingTime() > 0)
     {
         fSeconds = float(_pCountdownTimer->getElapsedTime()) / 1000;

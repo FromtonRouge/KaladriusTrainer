@@ -39,9 +39,12 @@ public:
     MainWindow(QWidget* pParent = nullptr);
     ~MainWindow();
 
+    void Init();
+
 protected slots:
     void on_actionAbout_triggered();
     void delayedRestoreState();
+    void onCountdownTimerDone();
 
 protected:
     virtual bool event(QEvent* pEvent) override;

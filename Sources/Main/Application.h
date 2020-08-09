@@ -50,8 +50,11 @@ public:
     UndoableKeyboardModel* getUndoableKeyboardModel() const {return _pUndoableKeyboardModel;}
     KeyboardGraphicsScene* getKeyboardGraphicsScene() const {return _pKeyboardGraphicsScene;}
 
+    bool openDatabase();
+
 private:
     void toLogs(const QString& sText, int iWarningLevel = 0);
+    QString getDatabaseFilePath() const;
 
 private:
     boost::iostreams::stream_buffer<StreamSink> _streamBufferCout;

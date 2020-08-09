@@ -21,6 +21,7 @@
 
 #include "../../Tree/TreeItems/TreeItem.h"
 #include <QtCore/QStringList>
+#include <QtCore/QUuid>
 
 class LevelTreeItem : public TreeItem
 {
@@ -32,15 +33,20 @@ public:
     };
 
 public:
-    LevelTreeItem(LevelType levelType, const QString& sLabel, const QString& sWordsFilePath);
+    LevelTreeItem(LevelType levelType,
+                  const QUuid& uuid,
+                  const QString& sLabel,
+                  const QString& sWordsFilePath);
     ~LevelTreeItem();
 
     virtual int type() const override {return Level;}
     void loadWords(const QString& sWordsFilePath);
     const QStringList& getWords() const {return _words;}
     QStringList getRandomWords(int iCount = 1000) const;
+    const QUuid& getUuid() const {return _uuid;}
 
 private:
+    QUuid _uuid;
     LevelType _levelType;
     QStringList _words;
 };

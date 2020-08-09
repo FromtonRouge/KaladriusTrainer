@@ -22,7 +22,12 @@
 #include "TreeItems/LevelTreeItem.h"
 #include "../Tree/Models/ItemDataRole.h"
 #include "../Tree/TreeItems/TreeItem.h"
+#include <QtSql/QSqlDatabase>
+#include <QtSql/QSqlQuery>
+#include <QtSql/QSqlError>
 #include <QtCore/QSettings>
+#include <QtCore/QUuid>
+#include <iostream>
 
 LevelsTreeView::LevelsTreeView(QWidget* pParent)
     : QTreeView(pParent)
@@ -59,12 +64,31 @@ void LevelsTreeView::restart()
         case TreeItem::Level:
             {
                 auto pLevelTreeItem = static_cast<LevelTreeItem*>(pLevelsModel->itemFromIndex(current));
+                const QUuid& uuidLevel = pLevelTreeItem->getUuid();
                 const QStringList& randomWords = pLevelTreeItem->getRandomWords();
                 const QString& sText = randomWords.join(" ");
                 emit sendText(sText);
 
                 QSettings settings;
                 settings.setValue("lastSelectedLevel", current.row());
+
+                const QSqlDatabase& db = QSqlDatabase::database();
+                if (!db.tables().contains(uuidLevel.toString()))
+                {
+                    QString sCreateDatabase = "CREATE TABLE IF NOT EXISTS \"Level %1\" ("
+                                              "\"Date\"	TEXT,"
+                                              "\"Wpm\"	INTEGER"
+                                              ");";
+
+                    sCreateDatabase = sCreateDatabase.arg(uuidLevel.toString(QUuid::WithoutBraces));
+
+                    QSqlQuery query(db);
+                    if (!query.exec(sCreateDatabase))
+                    {
+                        QString sError = QString("Can't create table: %1").arg(query.lastError().text());
+                        std::cerr << sError.toStdString() << std::endl;
+                    }
+                }
                 break;
             }
         default:

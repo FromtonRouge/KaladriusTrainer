@@ -34,6 +34,7 @@ MainTabDialog::MainTabDialog(QWidget* pParent)
     setWindowFlags(Qt::Window);
 
     connect(qApp, SIGNAL(logs(QString, int)), this, SLOT(logs(QString,int)));
+    qApp->openDatabase();
 
     // Restore geometry and window state
     QSettings settings;
@@ -85,6 +86,8 @@ MainTabDialog::MainTabDialog(QWidget* pParent)
     // Restore current tab index
     const int iCurrentTabIndex = settings.value("currentTabIndex", 0).toInt();
     _pUi->tabWidget->setCurrentIndex(iCurrentTabIndex);
+
+    _pUi->mainWindowLearningMode->Init();
 }
 
 MainTabDialog::~MainTabDialog()
