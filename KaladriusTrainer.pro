@@ -17,14 +17,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 INCLUDEPATH += "Sources"
 
-win64
-{
-    INCLUDEPATH += "D:\Dev\Cpp\Common\boost_1_64_0"
-    LIBS += "-LD:\Dev\Cpp\Common\boost_1_64_0\stage_x64\lib"
+# For both win32 and unix, build boost with this command line: b2 address-model=64 --with-serialization
+win32 {
+    INCLUDEPATH += "../boost_1_73_0"
+    LIBS += "-L../boost_1_73_0/stage/lib"
 }
 
-unix
-{
+unix {
     # Install boost development environment with the command : sudo apt-get install libboost-all-dev
     # At the moment the last boost version available is 1.65.1
     LIBS += "-lboost_serialization"
