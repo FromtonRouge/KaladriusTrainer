@@ -25,8 +25,9 @@ win64
 
 unix
 {
-    INCLUDEPATH += "../../.local/include"
-    LIBS += "-L../../.local/lib" "-lboost_serialization"
+    # Install boost development environment with the command : sudo apt-get install libboost-all-dev
+    # At the moment the last boost version available is 1.65.1
+    LIBS += "-lboost_serialization"
 }
 
 RC_ICONS = Resources/KaladriusTrainer.ico
