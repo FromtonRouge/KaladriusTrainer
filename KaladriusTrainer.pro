@@ -17,16 +17,22 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 INCLUDEPATH += "Sources"
 
-# For both win32 and unix, build boost with this command line: b2 address-model=64 --with-serialization
 win32 {
+    # WARNING: boost version is 1_73_0
+    # I built boost_serialization with the following command lines:
+    #       .\bootstrap.bat
+    #       .\b2 address-model=64 --with-serialization
     INCLUDEPATH += "../boost_1_73_0"
     LIBS += "-L../boost_1_73_0/stage/lib"
 }
 
 unix {
-    # Install boost development environment with the command : sudo apt-get install libboost-all-dev
-    # At the moment the last boost version available is 1.65.1
-    LIBS += "-lboost_serialization"
+    # WARNING: boost version is 1_73_0
+    # I built boost_serialization with the following command lines:
+    #       ./bootstrap.sh --prefix=/home/fromtonrouge/.local --with-libraries=serialization
+    #       ./b2 install
+    INCLUDEPATH += "/home/fromtonrouge/.local/include"
+    LIBS += "-L/home/fromtonrouge/.local/lib" "-lboost_serialization"
 }
 
 RC_ICONS = Resources/KaladriusTrainer.ico

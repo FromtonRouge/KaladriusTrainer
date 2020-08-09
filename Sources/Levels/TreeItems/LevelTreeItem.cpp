@@ -69,7 +69,7 @@ void LevelTreeItem::loadWords(const QString& sWordsFilePath)
     if (file.open(QIODevice::ReadOnly))
     {
         const QString& sWords = file.readAll();
-        const QRegularExpression re("(\r\n)|(\n)\([ \t])");
+        const QRegularExpression re("(\r\n)|(\n)|([ \t])");
         _words = sWords.split(re);
     }
 }
