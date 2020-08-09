@@ -1,6 +1,6 @@
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets svg xml quick quickwidgets sql
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets svg xml quick quickwidgets sql charts
 
 CONFIG += c++11
 
@@ -38,6 +38,7 @@ unix {
 RC_ICONS = Resources/KaladriusTrainer.ico
 
 SOURCES += \
+    Sources/Charts/ChartView.cpp \
     Sources/Dictionaries/DictionariesModel.cpp \
     Sources/Dictionaries/DictionariesWidget.cpp \
     Sources/Dictionaries/Dictionary.cpp \
@@ -102,6 +103,7 @@ SOURCES += \
 HEADERS += \
     Resources/KaladriusTrainer.rc \
     Resources/resource.h \
+    Sources/Charts/ChartView.h \
     Sources/Dictionaries/DictionariesModel.h \
     Sources/Dictionaries/DictionariesWidget.h \
     Sources/Dictionaries/Dictionary.h \

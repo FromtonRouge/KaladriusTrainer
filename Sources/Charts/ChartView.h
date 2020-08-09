@@ -19,37 +19,19 @@
 
 #pragma once
 
-#include <QtCore/QObject>
-#include <QtCore/QElapsedTimer>
-#include <qqml.h>
+#include <QtCharts/QChartView>
 
-class CountdownTimer : public QObject
+namespace QtCharts
 {
-    Q_OBJECT
-    Q_PROPERTY(QString remainingTimeString READ getRemainingTimeString)
-    Q_PROPERTY(int remainingTime READ getRemainingTime)
-    Q_PROPERTY(bool done READ isDone)
+    class QChart;
+}
 
-signals:
-    void remainingTimeChanged() const;
-    void done() const;
-
+class ChartView : public QtCharts::QChartView
+{
 public:
-    CountdownTimer(QObject* pParent = nullptr);
-
-    QString getRemainingTimeString() const;
-    int getRemainingTime() const;
-    int getElapsedTime() const;
-    float getTotalTime() const {return float(_iTotalTime) / 1000;}
-    bool isDone();
-
-public slots:
-    void start();
-    void reset();
-    void setTotalTime(float fSeconds);
+    ChartView(QWidget* pParent = nullptr);
+    void display(const QString& sTableName);
 
 private:
-    bool _bDone = false;
-    int _iTotalTime = 5000; // in ms
-    QElapsedTimer _timer;
+    QtCharts::QChart* _pChart = nullptr;
 };

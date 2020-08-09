@@ -72,15 +72,16 @@ void LevelsTreeView::restart()
                 QSettings settings;
                 settings.setValue("lastSelectedLevel", current.row());
 
+                const QString& sTableName = QString("Level %1").arg(uuidLevel.toString(QUuid::WithoutBraces));
                 const QSqlDatabase& db = QSqlDatabase::database();
-                if (!db.tables().contains(uuidLevel.toString()))
+                if (!db.tables().contains(sTableName))
                 {
-                    QString sCreateDatabase = "CREATE TABLE IF NOT EXISTS \"Level %1\" ("
+                    QString sCreateDatabase = "CREATE TABLE IF NOT EXISTS \"%1\" ("
                                               "\"Date\"	TEXT,"
                                               "\"Wpm\"	INTEGER"
                                               ");";
 
-                    sCreateDatabase = sCreateDatabase.arg(uuidLevel.toString(QUuid::WithoutBraces));
+                    sCreateDatabase = sCreateDatabase.arg(sTableName);
 
                     QSqlQuery query(db);
                     if (!query.exec(sCreateDatabase))
@@ -89,6 +90,8 @@ void LevelsTreeView::restart()
                         std::cerr << sError.toStdString() << std::endl;
                     }
                 }
+
+                emit restarted(sTableName);
                 break;
             }
         default:

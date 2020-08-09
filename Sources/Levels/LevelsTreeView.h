@@ -27,6 +27,7 @@ class LevelsTreeView : public QTreeView
 
 signals:
     void sendText(const QString& sText) const;
+    void restarted(const QString& sTableName) const;
 
 public:
     LevelsTreeView(QWidget* pParent = nullptr);

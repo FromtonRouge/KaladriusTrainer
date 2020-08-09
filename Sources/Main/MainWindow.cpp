@@ -91,6 +91,8 @@ MainWindow::MainWindow(QWidget* pParent)
     _pUi->quickWidgetDashboard->setSource(QUrl("qrc:/Qml/Dashboard.qml"));
 
     // Default dock states
+    _pUi->dockWidgetDictionaries1->hide();
+    _pUi->dockWidgetDictionaries2->hide();
     _pUi->dockWidgetDictionaries3->hide();
     _pUi->dockWidgetDictionaries4->hide();
 
@@ -104,8 +106,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::Init()
 {
+    connect(_pUi->treeViewLevels, &LevelsTreeView::restarted, [&](const QString& sTableName) { _pUi->chartView->display(sTableName); });
     _pUi->treeViewLevels->setModel(_pLevelsModel);
-
 }
 
 bool MainWindow::event(QEvent *pEvent)
@@ -171,17 +173,21 @@ void MainWindow::onCountdownTimerDone()
             {
                 auto pLevelTreeItem = static_cast<LevelTreeItem*>(_pLevelsModel->itemFromIndex(indexCurrentLevel));
                 const QUuid& uuidLevel = pLevelTreeItem->getUuid();
-                const QString sTabName = QString("Level %1").arg(uuidLevel.toString(QUuid::WithoutBraces));
+                const QString sTableName = QString("Level %1").arg(uuidLevel.toString(QUuid::WithoutBraces));
                 const QDateTime& currentTime = QDateTime::currentDateTime();
                 const QString& sCurrentTime = currentTime.toString();
                 const int iWpm = _pWordCounter->getWPM();
                 QString sQuery = "INSERT INTO \"main\".\"%1\"(\"Date\",\"Wpm\") VALUES (\"%2\",%3);";
-                sQuery = sQuery.arg(sTabName).arg(sCurrentTime).arg(iWpm);
+                sQuery = sQuery.arg(sTableName).arg(sCurrentTime).arg(iWpm);
                 QSqlQuery query(QSqlDatabase::database());
                 if (!query.exec(sQuery))
                 {
                     QString sError = QString("Can't insert result: %1").arg(query.lastError().text());
                     std::cerr << sError.toStdString() << std::endl;
+                }
+                else
+                {
+                    _pUi->chartView->display(sTableName);
                 }
                 break;
             }
