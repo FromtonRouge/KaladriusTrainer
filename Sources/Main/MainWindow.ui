@@ -42,7 +42,7 @@
      <x>0</x>
      <y>0</y>
      <width>737</width>
-     <height>30</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHelp">
@@ -265,26 +265,26 @@
    <header location="global">QtQuickWidgets/QQuickWidget</header>
   </customwidget>
   <customwidget>
+   <class>KeyboardGraphicsView</class>
+   <extends>QGraphicsView</extends>
+   <header location="global">Keyboards/KeyboardGraphicsView.h</header>
+  </customwidget>
+  <customwidget>
    <class>DictionariesWidget</class>
    <extends>QWidget</extends>
-   <header>../Dictionaries/DictionariesWidget.h</header>
+   <header location="global">Dictionaries/DictionariesWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>StrokesSolverWidget</class>
    <extends>QWidget</extends>
-   <header>../StrokesSolver/StrokesSolverWidget.h</header>
+   <header location="global">StrokesSolver/StrokesSolverWidget.h</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>KeyboardGraphicsView</class>
-   <extends>QGraphicsView</extends>
-   <header>../Keyboards/KeyboardGraphicsView.h</header>
   </customwidget>
   <customwidget>
    <class>LevelsTreeView</class>
    <extends>QTreeView</extends>
-   <header>../Levels/LevelsTreeView.h</header>
+   <header location="global">Levels/LevelsTreeView.h</header>
   </customwidget>
  </customwidgets>
  <resources>

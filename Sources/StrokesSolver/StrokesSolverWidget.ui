@@ -75,7 +75,7 @@
   <customwidget>
    <class>StrokesSolverTextEdit</class>
    <extends>QTextEdit</extends>
-   <header>StrokesSolverTextEdit.h</header>
+   <header location="global">StrokesSolver/StrokesSolverTextEdit.h</header>
   </customwidget>
  </customwidgets>
  <resources>

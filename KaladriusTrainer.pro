@@ -15,8 +15,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-INCLUDEPATH += "D:\Dev\Cpp\Common\boost_1_64_0"
-LIBS += "-LD:\Dev\Cpp\Common\boost_1_64_0\stage_x64\lib"
+INCLUDEPATH += "Sources"
+
+win64
+{
+    INCLUDEPATH += "D:\Dev\Cpp\Common\boost_1_64_0"
+    LIBS += "-LD:\Dev\Cpp\Common\boost_1_64_0\stage_x64\lib"
+}
+
+unix
+{
+    INCLUDEPATH += "../../.local/include"
+    LIBS += "-L../../.local/lib" "-lboost_serialization"
+}
+
 RC_ICONS = Resources/KaladriusTrainer.ico
 
 SOURCES += \

@@ -60,8 +60,8 @@ public:
     const QString& getName() const { return _sName; }
     const QString& getMarkdownFileName() const { return _sMarkdownFileName; }
     void addEntry(const Keycodes& keycodes, uint uiKeyBits);
-    const auto& getKeyBitsToEntry() const { return _keyBitsToEntry; }
-    const auto& getEntryToKeyBits() const { return _entryToKeyBits; }
+    const KeyBitsToEntry& getKeyBitsToEntry() const { return _keyBitsToEntry; }
+    const EntryToKeyBits& getEntryToKeyBits() const { return _entryToKeyBits; }
     QString getKeysLabelsInReadingOrder(const Entry& entry, const QString& sSep = QString("|")) const;
     const KeysLabels& getKeysLabels() const {return _keysLabels;}
 

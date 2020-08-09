@@ -24,10 +24,12 @@
 #include "../Keyboards/Models/KeyboardModel.h"
 #include "../Keyboards/Models/UndoableKeyboardModel.h"
 #include "../Keyboards/KeyboardGraphicsScene.h"
-#include <QtCore/QCommandLineParser>
-#include <QtCore/QStandardPaths>
 #include <QtSql/QSqlDatabase>
 #include <QtWidgets/QUndoStack>
+#include <QtCore/QCommandLineParser>
+#include <QtCore/QStandardPaths>
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 #include <iostream>
 
 Application::Application(int& argc, char** argv)
@@ -113,6 +115,16 @@ QString Application::getDatabaseFilePath() const
     const QString& sAppLocalPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
     if (sAppLocalPath.isEmpty() == false)
     {
+        // On linux we have to create the path first
+        if (!QFile::exists(sAppLocalPath))
+        {
+            QDir dir;
+            if (!dir.mkpath(sAppLocalPath))
+            {
+                return QString();
+            }
+        }
+
         return QString("%1/%2.sqlite").arg(sAppLocalPath).arg("Statistics");
     }
     return QString();
