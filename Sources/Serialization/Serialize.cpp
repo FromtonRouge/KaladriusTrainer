@@ -489,7 +489,7 @@ namespace boost
             ar << make_nvp("entries", *pEntriesTreeItem);
         }
 
-        template<class Archive> void load(Archive& ar, DictionaryTreeItem& obj,  const unsigned int iVersion)
+        template<class Archive> void load(Archive& ar, DictionaryTreeItem& obj,  const unsigned int)
         {
             std::string sText;
             ar >> make_nvp("name", sText);

@@ -78,6 +78,9 @@ void TheoryTreeView::setModel(QAbstractItemModel* pModel)
 
 void TheoryTreeView::onRowsInserted(const QModelIndex& parent, int iFirst, int iLast)
 {
+    Q_UNUSED(parent);
+    Q_UNUSED(iFirst);
+    Q_UNUSED(iLast);
 }
 
 void TheoryTreeView::onRemove()

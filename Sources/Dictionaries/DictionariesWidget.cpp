@@ -269,7 +269,7 @@ void DictionariesWidget::onDictionariesLoaded()
     }
 }
 
-void DictionariesWidget::onCurrentChanged(const QModelIndex& current, const QModelIndex& previous)
+void DictionariesWidget::onCurrentChanged(const QModelIndex& current, const QModelIndex&)
 {
     if (current.isValid())
     {

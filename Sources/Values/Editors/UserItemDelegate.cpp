@@ -22,6 +22,7 @@
 #include <QtCore/QEvent>
 
 UserItemDelegate::UserItemDelegate(QObject* pParent)
+    : QStyledItemDelegate(pParent)
 {
 
 }
