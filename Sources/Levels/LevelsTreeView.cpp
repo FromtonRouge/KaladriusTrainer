@@ -78,7 +78,8 @@ void LevelsTreeView::restart()
                 {
                     QString sCreateDatabase = "CREATE TABLE IF NOT EXISTS \"%1\" ("
                                               "\"Date\"	TEXT,"
-                                              "\"Wpm\"	INTEGER"
+                                              "\"Wpm\"	INTEGER,"
+                                              "\"Accuracy\"	REAL"
                                               ");";
 
                     sCreateDatabase = sCreateDatabase.arg(sTableName);

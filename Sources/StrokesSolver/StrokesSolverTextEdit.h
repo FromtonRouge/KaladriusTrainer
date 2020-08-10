@@ -23,7 +23,6 @@
 #include "../Keycaps/KeycapState.h"
 #include <QtWidgets/QTextEdit>
 #include <QtGui/QColor>
-#include <QtCore/QQueue>
 #include <QtCore/QVector>
 #include <QtCore/QChar>
 
@@ -65,10 +64,11 @@ private:
                HashSpecialKeysStates& rSpecialKeysStates) const;
 
 private:
+    uint _uiInvalidCharacters = 0;
+    uint _uiValidCharacters = 0;
     bool _bCleanState = true;
     WordCounter* _pWordCounter = nullptr;
     QColor _colorOk;
-    QColor _colorWarning;
     QColor _colorError;
     QTimer* _pTimerSolve = nullptr;
 };

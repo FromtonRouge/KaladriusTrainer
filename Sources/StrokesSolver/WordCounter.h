@@ -21,6 +21,7 @@
 #include <QtCore/QChar>
 #include <QtCore/QStack>
 #include <QtCore/QStringList>
+#include <QtCore/QSet>
 #include <QtCore/QObject>
 
 class CountdownTimer;
@@ -28,27 +29,19 @@ class WordCounter : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int wpm READ getWPM)
+    Q_PROPERTY(float accuracy READ getAccuracy)
 
 public:
     WordCounter(CountdownTimer* pCountdownTimer, QObject* pParent = nullptr);
 
     void reset();
-    void pushInputState(const QChar& expected, const QChar& input);
-    void popInputState();
     int getWPM() const;
+    float getAccuracy() const;
+    void registerError(int iIndex);
+    void registerValidCharacters(int iCharacters);
 
 private:
-    struct InputState
-    {
-        QChar expected;
-        QChar input;
-    };
-
     CountdownTimer* _pCountdownTimer = nullptr;
-    QStack<InputState> _inputStates;
-    QString _sCurrentWord;
-    int _iCurrentWordErrors = 0;
-    QStringList _validWords;
-    uint _iValidCharacters = 0;
-    const int AVERAGE_WORD_LENGTH = 4; // Same as www.10fastfingers.com
+    uint _uiValidCharacters = 0;
+    QSet<int> _errors;
 };

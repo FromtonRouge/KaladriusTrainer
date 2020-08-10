@@ -27,8 +27,6 @@ ChartView::ChartView(QWidget* pParent)
     : QChartView(pParent)
     , _pChart(new QtCharts::QChart)
 {
-    _pChart->setTitle(tr("Wpm"));
-    _pChart->legend()->hide();
     setChart(_pChart);
     setRenderHint(QPainter::Antialiasing);
 }
@@ -38,16 +36,38 @@ void ChartView::display(const QString& sTableName)
     _pChart->removeAllSeries();
     const QSqlDatabase& db = QSqlDatabase::database();
     QSqlQuery query(db);
-    QString sQuery = "SELECT \"Wpm\" FROM \"main\".\"%1\"";
+    QString sQuery = "SELECT \"Wpm\",\"Accuracy\" FROM \"main\".\"%1\"";
     sQuery = sQuery.arg(sTableName);
     query.exec(sQuery);
     qreal rX = 0;
-    auto pLineSeries = new QtCharts::QLineSeries();
+
+    auto pWpmSeries = new QtCharts::QLineSeries();
+    pWpmSeries->setName("Wpm");
+    QPen penWpm = pWpmSeries->pen();
+    penWpm.setWidth(3);
+    penWpm.setColor("#add8e6");
+    pWpmSeries->setPen(penWpm);
+
+    auto pAccuracySeries = new QtCharts::QLineSeries();
+    pAccuracySeries->setName("Accuracy");
+    QPen penAccuracy = pAccuracySeries->pen();
+    penAccuracy.setWidth(3);
+    penAccuracy.setColor("#ee82ee");
+    pAccuracySeries->setPen(penAccuracy);
+
     while (query.next())
     {
         const int iWpm = query.value(0).toInt();
-        pLineSeries->append(rX++, qreal(iWpm));
+        const float fAccuracy = query.value(1).toInt();
+        pWpmSeries->append(rX, qreal(iWpm));
+        pAccuracySeries->append(rX, fAccuracy);
+        rX++;
     }
-    _pChart->addSeries(pLineSeries);
+    _pChart->addSeries(pWpmSeries);
+    _pChart->addSeries(pAccuracySeries);
     _pChart->createDefaultAxes();
+    if (_pChart->axisX())
+    {
+        _pChart->axisX()->setLabelsVisible(false);
+    }
 }

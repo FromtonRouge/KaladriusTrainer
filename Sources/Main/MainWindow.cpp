@@ -177,8 +177,9 @@ void MainWindow::onCountdownTimerDone()
                 const QDateTime& currentTime = QDateTime::currentDateTime();
                 const QString& sCurrentTime = currentTime.toString();
                 const int iWpm = _pWordCounter->getWPM();
-                QString sQuery = "INSERT INTO \"main\".\"%1\"(\"Date\",\"Wpm\") VALUES (\"%2\",%3);";
-                sQuery = sQuery.arg(sTableName).arg(sCurrentTime).arg(iWpm);
+                const float fAccuracy = _pWordCounter->getAccuracy();
+                QString sQuery = "INSERT INTO \"main\".\"%1\"(\"Date\",\"Wpm\",\"Accuracy\") VALUES (\"%2\",%3, %4);";
+                sQuery = sQuery.arg(sTableName).arg(sCurrentTime).arg(iWpm).arg(fAccuracy);
                 QSqlQuery query(QSqlDatabase::database());
                 if (!query.exec(sQuery))
                 {

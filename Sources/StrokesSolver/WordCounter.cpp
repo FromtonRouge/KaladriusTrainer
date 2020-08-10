@@ -31,74 +31,34 @@ WordCounter::WordCounter(CountdownTimer* pCountdownTimer, QObject* pParent)
 
 void WordCounter::reset()
 {
-    _inputStates.clear();
-    _sCurrentWord.clear();
-    _iCurrentWordErrors = 0;
-    _validWords.clear();
-    _iValidCharacters = 0;
-}
-
-void WordCounter::pushInputState(const QChar& expected, const QChar& input)
-{
-    _inputStates.push(InputState{expected, input});
-
-    if (expected != " ")
-    {
-        _sCurrentWord.push_back(expected);
-
-        if (input != expected)
-        {
-            _iCurrentWordErrors++;
-        }
-    }
-    else
-    {
-        // Word validation
-        if (_iCurrentWordErrors == 0)
-        {
-            _validWords << _sCurrentWord;
-            _iValidCharacters += _sCurrentWord.length();
-        }
-        else
-        {
-            _iCurrentWordErrors = 0; // reset for next word
-        }
-        _sCurrentWord.clear();
-    }
-}
-
-void WordCounter::popInputState()
-{
-    if (!_inputStates.isEmpty())
-    {
-        const InputState topState = _inputStates.top();
-
-        if (topState.expected != " ")
-        {
-            _sCurrentWord.remove(_sCurrentWord.size()-1, 1);
-
-            if (topState.expected != topState.input)
-            {
-                _iCurrentWordErrors--;
-            }
-        }
-        else
-        {
-            // TODO
-        }
-
-        _inputStates.pop();
-    }
+    _uiValidCharacters = 0;
+    _errors.clear();
 }
 
 int WordCounter::getWPM() const
 {
-    const float fWords = float(_iValidCharacters) / AVERAGE_WORD_LENGTH;
+    const int AVERAGE_WORD_LENGTH = 5; // Same as www.10fastfingers.com
+    const float fWords = float(_uiValidCharacters) / AVERAGE_WORD_LENGTH;
     float fSeconds = _pCountdownTimer->getTotalTime();
     if (_pCountdownTimer->getRemainingTime() > 0)
     {
         fSeconds = float(_pCountdownTimer->getElapsedTime()) / 1000;
     }
-    const int iWPM = int(60.f * fWords / fSeconds);
-    return iWPM;
+    return int(60.f * fWords / fSeconds);
+}
+
+void WordCounter::registerError(int iIndex)
+{
+    _errors.insert(iIndex);
+}
+
+void WordCounter::registerValidCharacters(int iCharacters)
+{
+    _uiValidCharacters = iCharacters;
+}
+
+float WordCounter::getAccuracy() const
+{
+    const uint uiErrors = _errors.count();
+    return _uiValidCharacters==0 ? 0 : 100.f*(qMax<uint>(_uiValidCharacters-uiErrors, 0))/_uiValidCharacters;
 }

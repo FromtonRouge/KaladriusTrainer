@@ -12,8 +12,11 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
         }
 
-        WordCounter {
+        Row {
             anchors.horizontalCenter: parent.horizontalCenter
+            spacing: 5
+            WordCounter { }
+            Accuracy { }
         }
     }
 }

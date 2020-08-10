@@ -29,7 +29,6 @@
 StrokesSolverTextEdit::StrokesSolverTextEdit(QWidget* pParent)
     : QTextEdit(pParent)
     , _colorOk(0, 255, 0, 128)
-    , _colorWarning(250, 200, 50, 200)
     , _colorError(255, 0, 0, 200)
     , _pTimerSolve(new QTimer(this))
 {
@@ -63,6 +62,8 @@ void StrokesSolverTextEdit::restart(const QString& sText)
 
     _pTimerSolve->start();
 
+    _uiInvalidCharacters = 0;
+    _uiValidCharacters = 0;
     _bCleanState = true;
     if (_pWordCounter)
     {
@@ -173,9 +174,9 @@ void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
         {
         case Qt::Key_Backspace:
             {
-                if (format.background() == _colorError)
+                if (_uiInvalidCharacters)
                 {
-                    _pWordCounter->popInputState();
+                    _uiInvalidCharacters--;
                     return QTextEdit::keyPressEvent(pKeyEvent);
                 }
                 else if (format.background() != QBrush())
@@ -195,7 +196,12 @@ void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
                     cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor);
                     setTextCursor(cursor);
                 }
-                _pWordCounter->popInputState();
+
+                if (_uiValidCharacters > 0)
+                {
+                    _uiValidCharacters--;
+                }
+                _pWordCounter->registerValidCharacters(_uiValidCharacters);
                 return;
             }
         default:
@@ -211,25 +217,21 @@ void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
 
         cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
         const QString& sSelectedText = cursor.selectedText();
-        if (sInputText != sSelectedText)
+        if (sInputText != sSelectedText || _uiInvalidCharacters)
         {
-            if (sInputText.toUpper() == sSelectedText.toUpper())
+            if (_uiInvalidCharacters == 0)
             {
-                // Warning
-                format.setBackground(_colorWarning);
-                cursor.setCharFormat(format);
-                cursor.setPosition(cursor.position(), QTextCursor::MoveAnchor);
-                setTextCursor(cursor);
+                // Register at one and only one error for this position
+                _pWordCounter->registerError(cursor.position());
             }
-            else
-            {
-                // Error dectected
-                cursor = textCursor();
-                format = cursor.charFormat();
-                format.setBackground(_colorError);
-                cursor.setCharFormat(format);
-                cursor.insertText(sInputText);
-            }
+
+            // Error dectected
+            cursor = textCursor();
+            format = cursor.charFormat();
+            format.setBackground(_colorError);
+            cursor.setCharFormat(format);
+            cursor.insertText(sInputText);
+            _uiInvalidCharacters++;
         }
         else
         {
@@ -239,12 +241,8 @@ void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
             cursor.setCharFormat(format);
             cursor.setPosition(cursor.position(), QTextCursor::MoveAnchor);
             setTextCursor(cursor);
-
-        }
-
-        if (!sSelectedText.isEmpty() && !sInputText.isEmpty())
-        {
-            _pWordCounter->pushInputState(sSelectedText[0], sInputText[0]);
+            _uiValidCharacters++;
+            _pWordCounter->registerValidCharacters(_uiValidCharacters);
         }
     }
     else
