@@ -82,8 +82,14 @@ QStringList LevelTreeItem::getRandomWords(int iCount) const
         // Get 600 words it should be enough
         for (int i=0; i<iCount; i++)
         {
-            const int iIndex = QRandomGenerator::global()->bounded(_words.size());
-            result << _words[iIndex];
+            QString sWord;
+            do
+            {
+                const int iIndex = QRandomGenerator::global()->bounded(_words.size());
+                sWord = _words[iIndex];
+            } while (sWord.isEmpty());
+
+            result << sWord;
         }
     }
     return result;
