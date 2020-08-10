@@ -33,6 +33,7 @@ StrokesSolverTextEdit::StrokesSolverTextEdit(QWidget* pParent)
     , _colorError(255, 0, 0, 200)
     , _pTimerSolve(new QTimer(this))
 {
+    setUndoRedoEnabled(false);
     setAcceptRichText(false);
     connect(this, &StrokesSolverTextEdit::cursorPositionChanged, this, &StrokesSolverTextEdit::onCursorPositionChanged);
     connect(this, &QTextEdit::textChanged, this, &StrokesSolverTextEdit::onTextChanged);
@@ -165,22 +166,11 @@ void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
 {
     if (!(pKeyEvent->modifiers() & Qt::ControlModifier))
     {
+        const QString& sInputText = pKeyEvent->text();
         auto cursor = textCursor();
         auto format = cursor.charFormat();
         switch (pKeyEvent->key())
         {
-        case Qt::Key_Escape:
-        case Qt::Key_PageDown:
-        case Qt::Key_PageUp:
-        case Qt::Key_Home:
-        case Qt::Key_End:
-        case Qt::Key_Left:
-        case Qt::Key_Right:
-        case Qt::Key_Down:
-        case Qt::Key_Up:
-            {
-                return;
-            }
         case Qt::Key_Backspace:
             {
                 if (format.background() == _colorError)
@@ -205,21 +195,20 @@ void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
                     cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor);
                     setTextCursor(cursor);
                 }
-                else
-                {
-                    cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor);
-                    setTextCursor(cursor);
-                }
                 _pWordCounter->popInputState();
                 return;
             }
         default:
             {
+                if (sInputText.isEmpty() || !sInputText[0].isPrint())
+                {
+                    // Ignore non-printable characters
+                    return;
+                }
                 break;
             }
         }
 
-        const QString& sInputText = pKeyEvent->text();
         cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
         const QString& sSelectedText = cursor.selectedText();
         if (sInputText != sSelectedText)
