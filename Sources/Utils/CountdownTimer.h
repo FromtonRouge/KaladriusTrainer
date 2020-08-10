@@ -50,6 +50,6 @@ public slots:
 
 private:
     bool _bDone = false;
-    int _iTotalTime = 5000; // in ms
+    int _iTotalTime = 60000; // in ms
     QElapsedTimer _timer;
 };

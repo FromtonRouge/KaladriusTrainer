@@ -18,11 +18,15 @@
 // ======================================================================
 
 #include "CountdownTimer.h"
+#include <QtCore/QSettings>
 #include <chrono>
 
 CountdownTimer::CountdownTimer(QObject* pParent)
     : QObject(pParent)
 {
+#ifdef QT_DEBUG
+    _iTotalTime = QSettings().value("defaultCountdownTimerTime", 60000).toInt();
+#endif
 }
 
 void CountdownTimer::start()
