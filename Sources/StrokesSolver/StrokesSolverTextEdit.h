@@ -56,7 +56,11 @@ protected slots:
 
 protected:
     void keyPressEvent(QKeyEvent* pKeyEvent) override;
-    void mousePressEvent(QMouseEvent* pMouseEvent) override;
+    void mousePressEvent(QMouseEvent*) override {}
+    void mouseDoubleClickEvent(QMouseEvent*) override {}
+    void mouseMoveEvent(QMouseEvent*) override {}
+    void mouseReleaseEvent(QMouseEvent*) override {}
+    void contextMenuEvent(QContextMenuEvent*) override {}
 
 private:
     bool solve(QString sText,

@@ -272,14 +272,6 @@ void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
     }
 }
 
-void StrokesSolverTextEdit::mousePressEvent(QMouseEvent* pMouseEvent)
-{
-    if (_bCleanState)
-    {
-        QTextEdit::mousePressEvent(pMouseEvent);
-    }
-}
-
 bool StrokesSolverTextEdit::solve(QString sText,
                                   const TheoryModel::CacheDictionaries& cachedDictionaries,
                                   const QStringList& orderedDictionaries,

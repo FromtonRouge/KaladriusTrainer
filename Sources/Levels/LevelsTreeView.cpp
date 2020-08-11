@@ -32,7 +32,7 @@
 LevelsTreeView::LevelsTreeView(QWidget* pParent)
     : QTreeView(pParent)
 {
-
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
 LevelsTreeView::~LevelsTreeView()

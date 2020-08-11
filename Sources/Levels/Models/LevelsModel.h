@@ -28,5 +28,9 @@ class LevelsModel : public TreeItemModel
 public:
     LevelsModel(QObject* pParent = nullptr);
     ~LevelsModel();
+
+    void setProgression(const QModelIndex& index, uint16_t uiProgression);
+
+    virtual QVariant data(const QModelIndex &index, int iRole) const override;
 };
 

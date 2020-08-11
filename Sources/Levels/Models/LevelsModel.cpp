@@ -19,15 +19,43 @@
 
 #include "LevelsModel.h"
 #include "../TreeItems/LevelsTreeItem.h"
+#include "../TreeItems/LevelTreeItem.h"
 
 LevelsModel::LevelsModel(QObject* pParent)
     : TreeItemModel(pParent)
 {
-    setHorizontalHeaderLabels({tr("Name")});
+    setHorizontalHeaderLabels({tr("Name"), tr("Progress")});
     appendRow({new LevelsTreeItem()});
 }
 
 LevelsModel::~LevelsModel()
 {
 
+}
+
+void LevelsModel::setProgression(const QModelIndex& index, uint16_t uiProgression)
+{
+    const int iTreeItemType = index.data(TreeItemTypeRole).toInt();
+    if (iTreeItemType == TreeItem::Level)
+    {
+        auto pLevelTreeItem = static_cast<LevelTreeItem*>(itemFromIndex(index));
+        pLevelTreeItem->setProgression(uiProgression);
+        emit dataChanged(index, index.siblingAtColumn(1));
+    }
+}
+
+QVariant LevelsModel::data(const QModelIndex& index, int iRole) const
+{
+    if (index.column() == 1 && iRole == Qt::DisplayRole)
+    {
+        const QModelIndex& indexFirstColumn = index.siblingAtColumn(0);
+        const int iTreeItemType = indexFirstColumn.data(TreeItemTypeRole).toInt();
+        if (iTreeItemType == TreeItem::Level)
+        {
+            auto pLevelTreeItem = static_cast<LevelTreeItem*>(itemFromIndex(indexFirstColumn));
+            return QString("%1 %").arg(QString::number(pLevelTreeItem->getProgressionPercentage(), 'f', 1));
+        }
+    }
+
+    return TreeItemModel::data(index, iRole);
 }

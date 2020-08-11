@@ -21,6 +21,7 @@
 #include <QtCore/QRandomGenerator>
 #include <QtCore/QFile>
 #include <QtCore/QRegularExpression>
+#include <QtCore/QSettings>
 
 LevelTreeItem::LevelTreeItem(LevelType levelType,
                              const QUuid& uuid,
@@ -54,6 +55,8 @@ LevelTreeItem::LevelTreeItem(LevelType levelType,
     setEditable(false);
 
     loadWords(sWordsFilePath);
+
+    loadProgression();
 }
 
 LevelTreeItem::~LevelTreeItem()
@@ -74,23 +77,63 @@ void LevelTreeItem::loadWords(const QString& sWordsFilePath)
     }
 }
 
-QStringList LevelTreeItem::getRandomWords(int iCount) const
+QStringList LevelTreeItem::getCurrentWords() const
+{
+    return getWords(0, _uiProgression);
+}
+
+QStringList LevelTreeItem::getWords(uint16_t uiMin, uint16_t uiMax) const
+{
+    Q_ASSERT(uiMin < uiMax);
+    QStringList result;
+    const uint16_t uiBound = qMin<uint16_t>(uiMax, uint16_t(_words.size()));
+    for (uint16_t ui = uiMin; ui < uiBound; ++ui)
+    {
+        result << _words[ui];
+    }
+    return result;
+}
+
+QStringList LevelTreeItem::getRandomWords() const
 {
     QStringList result;
     if (!_words.isEmpty())
     {
-        // Get 600 words it should be enough
-        for (int i=0; i<iCount; i++)
+        const uint16_t uiBound = qMin<uint16_t>(_uiProgression , uint16_t(_words.size()));
+        for (uint16_t i=0; i<_uiRandomWordsCount; i++)
         {
             QString sWord;
+
+            // Note: avoid empty words and repetitions
             do
             {
-                const int iIndex = QRandomGenerator::global()->bounded(_words.size());
+                const int iIndex = QRandomGenerator::global()->bounded(uiBound);
                 sWord = _words[iIndex];
-            } while (sWord.isEmpty());
+            } while (sWord.isEmpty() || (!result.isEmpty() && !sWord.isEmpty() && sWord == result.back()));
 
             result << sWord;
         }
     }
     return result;
+}
+
+void LevelTreeItem::setProgression(uint16_t uiProgression)
+{
+    _uiProgression = qBound<uint16_t>(5, uiProgression, _words.count());
+}
+
+float LevelTreeItem::getProgressionPercentage() const
+{
+    const int iTotalWords = _words.count();
+    return iTotalWords == 0 ? 0 : 100.f*float(_uiProgression)/iTotalWords;
+}
+
+void LevelTreeItem::loadProgression()
+{
+    _uiProgression = QSettings().value(QString("Levels/%1/progress").arg(_uuid.toString()), _uiProgression).toUInt();
+}
+
+void LevelTreeItem::saveProgression() const
+{
+    QSettings().setValue(QString("Levels/%1/progress").arg(_uuid.toString()), _uiProgression);
 }

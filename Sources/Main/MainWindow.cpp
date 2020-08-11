@@ -191,6 +191,18 @@ void MainWindow::onCountdownTimerDone()
                 {
                     _pUi->chartView->display(sTableName);
                 }
+
+                // Update progression
+                const uint16_t uiProgression = pLevelTreeItem->getProgression();
+                const float fWpmDelta = fWpm - pLevelTreeItem->getWPMNeededToProgress();
+                const float fDeltaPercent = fWpmDelta/pLevelTreeItem->getWPMNeededToProgress();
+                if (fDeltaPercent > 0)
+                {
+                    uint16_t uiNewProgress = uiProgression*(1 + fDeltaPercent);
+                    _pLevelsModel->setProgression(indexCurrentLevel, uiNewProgress);
+                    pLevelTreeItem->saveProgression();
+                }
+
                 break;
             }
         default:
