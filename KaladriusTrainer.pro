@@ -188,7 +188,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
-    Images/screenshot.png \
     Installer/config/config.xml \
     Installer/packages/com.fromtonrouge.programmerstenotutor/meta/installscript.qs \
     Installer/packages/com.fromtonrouge.programmerstenotutor/meta/package.xml \
