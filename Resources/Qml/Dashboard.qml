@@ -93,14 +93,7 @@ Item {
             Layout.fillWidth: true
             font.bold: true
         }
-
-
     }
-
-
-
-
-
 }
 
 /*##^##

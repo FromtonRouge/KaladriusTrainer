@@ -230,8 +230,7 @@ void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
         if (iElapsedTime >= MIN_TIME_TO_STROKE)
         {
             // A chord happens
-            _pWordCounter->pushChord(_sCurrentChord);
-            qDebug() << _sCurrentChord;
+            _pWordCounter->pushChord(_sCurrentChord, uint16_t(iElapsedTime));
             _sCurrentChord.clear();
         }
     }

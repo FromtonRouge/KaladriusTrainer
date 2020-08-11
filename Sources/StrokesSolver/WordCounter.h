@@ -31,6 +31,7 @@ class WordCounter : public QObject
     Q_PROPERTY(float wpm READ getWPM)
     Q_PROPERTY(float spm READ getSPM)
     Q_PROPERTY(float accuracy READ getAccuracy)
+    Q_PROPERTY(float viscosity READ getViscosity)
 
 public:
     WordCounter(CountdownTimer* pCountdownTimer, QObject* pParent = nullptr);
@@ -40,15 +41,21 @@ public:
     float getWPM() const;
     float getSPM() const;
     float getAccuracy() const;
+    float getViscosity() const;
 
     void registerError(int iIndex);
     void registerValidCharacters(int iCharacters);
-    void pushChord(const QString& sChord);
+    void pushChord(const QString& sChord, uint16_t uiTimeToStroke);
     void popChord();
 
 private:
     CountdownTimer* _pCountdownTimer = nullptr;
     uint _uiValidCharacters = 0;
     QSet<int> _errors;
-    QStack<QString> _chords;
+    struct ChordData
+    {
+        QString chord;
+        uint16_t uiTimeToStroke = 0;
+    };
+    QStack<ChordData> _chords;
 };

@@ -68,9 +68,9 @@ void WordCounter::registerValidCharacters(int iCharacters)
     _uiValidCharacters = iCharacters;
 }
 
-void WordCounter::pushChord(const QString& sChord)
+void WordCounter::pushChord(const QString& sChord, uint16_t uiTimeToStroke)
 {
-    _chords.push(sChord);
+    _chords.push({sChord, uiTimeToStroke});
 }
 
 void WordCounter::popChord()
@@ -85,4 +85,29 @@ float WordCounter::getAccuracy() const
 {
     const uint uiErrors = _errors.count();
     return _uiValidCharacters==0 ? 0 : 100.f*(qMax<uint>(_uiValidCharacters-uiErrors, 0))/_uiValidCharacters;
+}
+
+float WordCounter::getViscosity() const
+{
+    // Compute the "needed time to stroke" average
+    float fSum = 0;
+    for (const ChordData& chordData : _chords)
+    {
+        fSum += float(chordData.uiTimeToStroke);
+    }
+    const float fAverage = fSum /_chords.count();
+
+    // Compute the variance
+    float fVarianceNumerator = 0;
+    for (const ChordData& chordData : _chords)
+    {
+        const float fXi = chordData.uiTimeToStroke;
+        fVarianceNumerator += (fXi - fAverage)*(fXi - fAverage);
+    }
+
+    // Compute the standard deviation of the "needed time to stroke" metric
+    // Its called "Viscosity" (0 means "fluid")
+    const float fVariance = fVarianceNumerator / _chords.count();
+    const float fStandardDeviation = sqrt(fVariance);
+    return fStandardDeviation;
 }
