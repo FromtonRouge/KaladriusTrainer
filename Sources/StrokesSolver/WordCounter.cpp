@@ -21,6 +21,7 @@
 #include "../Utils/CountdownTimer.h"
 #include <QtCore/QDebug>
 #include <chrono>
+#include <cmath>
 
 WordCounter::WordCounter(CountdownTimer* pCountdownTimer, QObject* pParent)
     : QObject(pParent)
@@ -70,7 +71,10 @@ void WordCounter::registerValidCharacters(int iCharacters)
 
 void WordCounter::pushChord(const QString& sChord, uint16_t uiTimeToStroke)
 {
-    _chords.push({sChord, uiTimeToStroke});
+    ChordData chord;
+    chord.chord = sChord;
+    chord.uiTimeToStroke = uiTimeToStroke;
+    _chords.push(chord);
 }
 
 void WordCounter::popChord()

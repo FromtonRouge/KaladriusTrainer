@@ -198,7 +198,7 @@ void MainWindow::onCountdownTimerDone()
                 const float fDeltaPercent = fWpmDelta/pLevelTreeItem->getWPMNeededToProgress();
                 if (fDeltaPercent > 0)
                 {
-                    uint16_t uiNewProgress = uiProgression*(1 + fDeltaPercent);
+                    uint16_t uiNewProgress = uiProgression + 5 + 10*fDeltaPercent; // increase faster for good players
                     _pLevelsModel->setProgression(indexCurrentLevel, uiNewProgress);
                     pLevelTreeItem->saveProgression();
                 }
