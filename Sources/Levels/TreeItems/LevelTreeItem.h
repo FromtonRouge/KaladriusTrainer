@@ -55,7 +55,7 @@ public:
     void loadProgression();
     void saveProgression() const;
 
-    uint16_t getWPMNeededToProgress() const {return _uiWPMNeededToProgress;}
+    uint16_t getSPMNeededToProgress() const {return _uiSPMNeededToProgress;}
 
 private:
     QUuid _uuid;
@@ -63,5 +63,5 @@ private:
     QStringList _words;
     uint16_t _uiRandomWordsCount = 1000;
     uint16_t _uiProgression = 5;
-    uint16_t _uiWPMNeededToProgress = 50;
+    uint16_t _uiSPMNeededToProgress = 50;
 };

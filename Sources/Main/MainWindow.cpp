@@ -194,8 +194,8 @@ void MainWindow::onCountdownTimerDone()
 
                 // Update progression
                 const uint16_t uiProgression = pLevelTreeItem->getProgression();
-                const float fWpmDelta = fWpm - pLevelTreeItem->getWPMNeededToProgress();
-                const float fDeltaPercent = fWpmDelta/pLevelTreeItem->getWPMNeededToProgress();
+                const float fSpmDelta = fSpm - pLevelTreeItem->getSPMNeededToProgress();
+                const float fDeltaPercent = fSpmDelta/pLevelTreeItem->getSPMNeededToProgress();
                 if (fDeltaPercent > 0)
                 {
                     uint16_t uiNewProgress = uiProgression + 5 + 10*fDeltaPercent; // increase faster for good players
