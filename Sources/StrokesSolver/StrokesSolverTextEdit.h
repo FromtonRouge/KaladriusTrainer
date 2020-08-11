@@ -23,6 +23,7 @@
 #include "../Keycaps/KeycapState.h"
 #include <QtWidgets/QTextEdit>
 #include <QtGui/QColor>
+#include <QtCore/QElapsedTimer>
 #include <QtCore/QVector>
 #include <QtCore/QChar>
 
@@ -64,6 +65,7 @@ private:
                HashSpecialKeysStates& rSpecialKeysStates) const;
 
 private:
+    QElapsedTimer _keyPressTimer;
     uint _uiInvalidCharacters = 0;
     uint _uiValidCharacters = 0;
     bool _bCleanState = true;
@@ -71,4 +73,5 @@ private:
     QColor _colorOk;
     QColor _colorError;
     QTimer* _pTimerSolve = nullptr;
+    QString _sCurrentChord;
 };

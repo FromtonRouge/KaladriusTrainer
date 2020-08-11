@@ -33,18 +33,29 @@ void WordCounter::reset()
 {
     _uiValidCharacters = 0;
     _errors.clear();
+    _chords.clear();
 }
 
-int WordCounter::getWPM() const
+float WordCounter::getWPM() const
 {
     const int AVERAGE_WORD_LENGTH = 5; // Same as www.10fastfingers.com
     const float fWords = float(_uiValidCharacters) / AVERAGE_WORD_LENGTH;
-    float fSeconds = _pCountdownTimer->getTotalTime();
+    float fSeconds = _pCountdownTimer->getTotalTimeInSeconds();
     if (_pCountdownTimer->getRemainingTime() > 0)
     {
         fSeconds = float(_pCountdownTimer->getElapsedTime()) / 1000;
     }
-    return int(60.f * fWords / fSeconds);
+    return 60.f * fWords / fSeconds;
+}
+
+float WordCounter::getSPM() const
+{
+    float fSeconds = _pCountdownTimer->getTotalTimeInSeconds();
+    if (_pCountdownTimer->getRemainingTime() > 0)
+    {
+        fSeconds = float(_pCountdownTimer->getElapsedTime()) / 1000;
+    }
+    return 60.f * _chords.count() / fSeconds;
 }
 
 void WordCounter::registerError(int iIndex)
@@ -55,6 +66,19 @@ void WordCounter::registerError(int iIndex)
 void WordCounter::registerValidCharacters(int iCharacters)
 {
     _uiValidCharacters = iCharacters;
+}
+
+void WordCounter::pushChord(const QString& sChord)
+{
+    _chords.push(sChord);
+}
+
+void WordCounter::popChord()
+{
+    if (!_chords.isEmpty())
+    {
+        _chords.pop();
+    }
 }
 
 float WordCounter::getAccuracy() const

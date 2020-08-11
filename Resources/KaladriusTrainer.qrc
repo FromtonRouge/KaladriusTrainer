@@ -50,16 +50,13 @@
         <file>Icons/edit-indent-rtl.png</file>
         <file>Keyboards/Kaladrius.kbd</file>
         <file>Svgs/kaladrius.svg</file>
-        <file>Qml/CountdownTimer.qml</file>
         <file>Icons/arrow-circle-double.png</file>
         <file>Words/first200LongWords.txt</file>
         <file>Words/first200MediumWords.txt</file>
         <file>Words/first200ShortWords.txt</file>
-        <file>Qml/WordCounter.qml</file>
         <file>Qml/Dashboard.qml</file>
         <file>Icons/controller.png</file>
         <file>Icons/clock--arrow.png</file>
         <file>Icons/document-text.png</file>
-        <file>Qml/Accuracy.qml</file>
     </qresource>
 </RCC>

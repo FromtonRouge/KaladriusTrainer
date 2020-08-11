@@ -176,10 +176,11 @@ void MainWindow::onCountdownTimerDone()
                 const QString sTableName = QString("Level %1").arg(uuidLevel.toString(QUuid::WithoutBraces));
                 const QDateTime& currentTime = QDateTime::currentDateTime();
                 const QString& sCurrentTime = currentTime.toString();
-                const int iWpm = _pWordCounter->getWPM();
+                const float fWpm = _pWordCounter->getWPM();
+                const float fSpm = _pWordCounter->getSPM();
                 const float fAccuracy = _pWordCounter->getAccuracy();
-                QString sQuery = "INSERT INTO \"main\".\"%1\"(\"Date\",\"Wpm\",\"Accuracy\") VALUES (\"%2\",%3, %4);";
-                sQuery = sQuery.arg(sTableName).arg(sCurrentTime).arg(iWpm).arg(fAccuracy);
+                QString sQuery = "INSERT INTO \"main\".\"%1\"(\"Date\",\"Wpm\",\"Spm\",\"Accuracy\") VALUES (\"%2\",%3, %4, %5);";
+                sQuery = sQuery.arg(sTableName).arg(sCurrentTime).arg(fWpm).arg(fSpm).arg(fAccuracy);
                 QSqlQuery query(QSqlDatabase::database());
                 if (!query.exec(sQuery))
                 {

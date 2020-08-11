@@ -28,6 +28,7 @@ class CountdownTimer : public QObject
     Q_OBJECT
     Q_PROPERTY(QString remainingTimeString READ getRemainingTimeString)
     Q_PROPERTY(int remainingTime READ getRemainingTime)
+    Q_PROPERTY(int totalTime READ getTotalTime)
     Q_PROPERTY(bool done READ isDone)
 
 signals:
@@ -40,7 +41,8 @@ public:
     QString getRemainingTimeString() const;
     int getRemainingTime() const;
     int getElapsedTime() const;
-    float getTotalTime() const {return float(_iTotalTime) / 1000;}
+    float getTotalTime() const {return _iTotalTime;}
+    float getTotalTimeInSeconds() const {return float(_iTotalTime) / 1000;}
     bool isDone();
 
 public slots:

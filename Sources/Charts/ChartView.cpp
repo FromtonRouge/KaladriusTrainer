@@ -45,7 +45,7 @@ void ChartView::display(const QString& sTableName)
     pWpmSeries->setName("Wpm");
     QPen penWpm = pWpmSeries->pen();
     penWpm.setWidth(3);
-    penWpm.setColor("#add8e6");
+    penWpm.setColor(Qt::blue);
     pWpmSeries->setPen(penWpm);
 
     auto pAccuracySeries = new QtCharts::QLineSeries();
@@ -57,9 +57,9 @@ void ChartView::display(const QString& sTableName)
 
     while (query.next())
     {
-        const int iWpm = query.value(0).toInt();
-        const float fAccuracy = query.value(1).toInt();
-        pWpmSeries->append(rX, qreal(iWpm));
+        const float fWpm = query.value(0).toFloat();
+        const float fAccuracy = query.value(1).toFloat();
+        pWpmSeries->append(rX, qreal(fWpm));
         pAccuracySeries->append(rX, fAccuracy);
         rX++;
     }

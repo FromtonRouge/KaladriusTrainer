@@ -65,6 +65,8 @@ void StrokesSolverTextEdit::restart(const QString& sText)
     _uiInvalidCharacters = 0;
     _uiValidCharacters = 0;
     _bCleanState = true;
+    _keyPressTimer.invalidate();
+
     if (_pWordCounter)
     {
         _pWordCounter->reset();
@@ -165,89 +167,109 @@ void StrokesSolverTextEdit::onTimerSolve()
 
 void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
 {
-    if (!(pKeyEvent->modifiers() & Qt::ControlModifier))
+    const QString& sInputText = pKeyEvent->text();
+    auto cursor = textCursor();
+    auto format = cursor.charFormat();
+    switch (pKeyEvent->key())
     {
-        const QString& sInputText = pKeyEvent->text();
-        auto cursor = textCursor();
-        auto format = cursor.charFormat();
-        switch (pKeyEvent->key())
+    case Qt::Key_Backspace:
         {
-        case Qt::Key_Backspace:
+            if (_uiInvalidCharacters)
             {
-                if (_uiInvalidCharacters)
-                {
-                    _uiInvalidCharacters--;
-                    return QTextEdit::keyPressEvent(pKeyEvent);
-                }
-                else if (format.background() != QBrush())
-                {
-                    // Move the cursor backward without selecting the text so
-                    // the solve() can work properly
-                    cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor);
-                    setTextCursor(cursor);
+                _uiInvalidCharacters--;
+                return QTextEdit::keyPressEvent(pKeyEvent);
+            }
+            else if (format.background() != QBrush())
+            {
+                // Move the cursor backward without selecting the text so
+                // the solve() can work properly
+                cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor);
+                setTextCursor(cursor);
 
-                    // Reset the background color
-                    cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-                    format.setBackground(QBrush());
-                    cursor.setCharFormat(format);
-                    setTextCursor(cursor);
+                // Reset the background color
+                cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+                format.setBackground(QBrush());
+                cursor.setCharFormat(format);
+                setTextCursor(cursor);
 
-                    // Go back again...
-                    cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor);
-                    setTextCursor(cursor);
-                }
+                // Go back again...
+                cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor);
+                setTextCursor(cursor);
+            }
 
-                if (_uiValidCharacters > 0)
-                {
-                    _uiValidCharacters--;
-                }
-                _pWordCounter->registerValidCharacters(_uiValidCharacters);
+            if (_uiValidCharacters > 0)
+            {
+                _uiValidCharacters--;
+            }
+            _pWordCounter->registerValidCharacters(_uiValidCharacters);
+            return;
+        }
+    default:
+        {
+            if (sInputText.isEmpty() || !sInputText[0].isPrint())
+            {
+                // Ignore non-printable characters
                 return;
             }
-        default:
-            {
-                if (sInputText.isEmpty() || !sInputText[0].isPrint())
-                {
-                    // Ignore non-printable characters
-                    return;
-                }
-                break;
-            }
+            break;
+        }
+    }
+
+    Q_ASSERT(sInputText.size() == 1);
+    _sCurrentChord += sInputText;
+
+    // Measure elapsed time between two strokes
+    if (!_keyPressTimer.isValid())
+    {
+        _keyPressTimer.start();
+    }
+    else
+    {
+        const uint16_t MIN_TIME_TO_STROKE = 100; // milliseconds
+        const qint64 iElapsedTime = _keyPressTimer.restart();
+        if (iElapsedTime >= MIN_TIME_TO_STROKE)
+        {
+            // A chord happens
+            _pWordCounter->pushChord(_sCurrentChord);
+            qDebug() << _sCurrentChord;
+            _sCurrentChord.clear();
+        }
+    }
+
+    cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
+    const QString& sSelectedText = cursor.selectedText();
+    if (sInputText != sSelectedText || _uiInvalidCharacters)
+    {
+        if (_uiInvalidCharacters == 0)
+        {
+            // Register at one and only one error for this position
+            _pWordCounter->registerError(cursor.position());
         }
 
-        cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
-        const QString& sSelectedText = cursor.selectedText();
-        if (sInputText != sSelectedText || _uiInvalidCharacters)
-        {
-            if (_uiInvalidCharacters == 0)
-            {
-                // Register at one and only one error for this position
-                _pWordCounter->registerError(cursor.position());
-            }
+        // Error dectected
+        cursor = textCursor();
+        format = cursor.charFormat();
+        format.setBackground(_colorError);
+        cursor.setCharFormat(format);
+        cursor.insertText(sInputText);
+        _uiInvalidCharacters++;
 
-            // Error dectected
-            cursor = textCursor();
-            format = cursor.charFormat();
-            format.setBackground(_colorError);
-            cursor.setCharFormat(format);
-            cursor.insertText(sInputText);
-            _uiInvalidCharacters++;
-        }
-        else
+        // Remove the previous registered stroke
+        if (_sCurrentChord.isEmpty())
         {
-            // Valid input
-            format = cursor.charFormat();
-            format.setBackground(_colorOk);
-            cursor.setCharFormat(format);
-            cursor.setPosition(cursor.position(), QTextCursor::MoveAnchor);
-            setTextCursor(cursor);
-            _uiValidCharacters++;
-            _pWordCounter->registerValidCharacters(_uiValidCharacters);
+            _pWordCounter->popChord();
         }
     }
     else
     {
-        QTextEdit::keyPressEvent(pKeyEvent);
+        // Valid input
+        format = cursor.charFormat();
+        format.setBackground(_colorOk);
+        cursor.setCharFormat(format);
+        cursor.setPosition(cursor.position(), QTextCursor::MoveAnchor);
+        setTextCursor(cursor);
+        _uiValidCharacters++;
+        _pWordCounter->registerValidCharacters(_uiValidCharacters);
     }
 }
 

@@ -28,20 +28,27 @@ class CountdownTimer;
 class WordCounter : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(int wpm READ getWPM)
+    Q_PROPERTY(float wpm READ getWPM)
+    Q_PROPERTY(float spm READ getSPM)
     Q_PROPERTY(float accuracy READ getAccuracy)
 
 public:
     WordCounter(CountdownTimer* pCountdownTimer, QObject* pParent = nullptr);
 
     void reset();
-    int getWPM() const;
+
+    float getWPM() const;
+    float getSPM() const;
     float getAccuracy() const;
+
     void registerError(int iIndex);
     void registerValidCharacters(int iCharacters);
+    void pushChord(const QString& sChord);
+    void popChord();
 
 private:
     CountdownTimer* _pCountdownTimer = nullptr;
     uint _uiValidCharacters = 0;
     QSet<int> _errors;
+    QStack<QString> _chords;
 };
