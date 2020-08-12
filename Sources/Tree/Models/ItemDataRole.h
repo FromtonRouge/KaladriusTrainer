@@ -32,5 +32,6 @@ enum ItemDataRole
     OuterBorderRole, ///< QRectF.
     InputKeyBitsRole, ///< uint.
     EntriesIndexRole, ///< QModelIndex.
+    LevelTableNameRole, ///< QString.
     MaxItemDataRole
 };

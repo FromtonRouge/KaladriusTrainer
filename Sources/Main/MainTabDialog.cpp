@@ -88,6 +88,7 @@ MainTabDialog::MainTabDialog(QWidget* pParent)
     _pUi->tabWidget->setCurrentIndex(iCurrentTabIndex);
 
     _pUi->mainWindowLearningMode->Init();
+    _pUi->mainWindowStatistics->Init();
 }
 
 MainTabDialog::~MainTabDialog()

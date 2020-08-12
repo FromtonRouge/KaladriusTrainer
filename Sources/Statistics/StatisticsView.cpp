@@ -17,39 +17,14 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "StatisticsView.h"
 
-#include <QtWidgets/QMainWindow>
-#include <QtCore/QScopedPointer>
-
-namespace Ui
+StatisticsView::StatisticsView(QWidget* pParent)
 {
-    class MainWindow;
+
 }
 
-class CountdownTimer;
-class WordCounter;
-
-class MainWindow : public QMainWindow
+StatisticsView::~StatisticsView()
 {
-    Q_OBJECT
 
-public:
-    MainWindow(QWidget* pParent = nullptr);
-    ~MainWindow();
-
-    void Init();
-
-protected slots:
-    void on_actionAbout_triggered();
-    void delayedRestoreState();
-    void onCountdownTimerDone();
-
-protected:
-    virtual bool event(QEvent* pEvent) override;
-
-private:
-    QScopedPointer<Ui::MainWindow> _pUi;
-    CountdownTimer* _pCountdownTimer = nullptr;
-    WordCounter* _pWordCounter = nullptr;
-};
+}

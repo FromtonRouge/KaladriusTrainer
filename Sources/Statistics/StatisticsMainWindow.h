@@ -19,37 +19,30 @@
 
 #pragma once
 
-#include <QtWidgets/QMainWindow>
+#include "../Main/MainTabWindow.h"
 #include <QtCore/QScopedPointer>
+
+class QItemSelection;
 
 namespace Ui
 {
-    class MainWindow;
+    class StatisticsMainWindow;
 }
 
-class CountdownTimer;
-class WordCounter;
-
-class MainWindow : public QMainWindow
+class StatisticsMainWindow : public MainTabWindow
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget* pParent = nullptr);
-    ~MainWindow();
+    StatisticsMainWindow(QWidget *parent = nullptr);
+    ~StatisticsMainWindow();
 
     void Init();
 
-protected slots:
+private slots:
+    void onLevelSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
     void on_actionAbout_triggered();
-    void delayedRestoreState();
-    void onCountdownTimerDone();
-
-protected:
-    virtual bool event(QEvent* pEvent) override;
 
 private:
-    QScopedPointer<Ui::MainWindow> _pUi;
-    CountdownTimer* _pCountdownTimer = nullptr;
-    WordCounter* _pWordCounter = nullptr;
+    QScopedPointer<Ui::StatisticsMainWindow> _pUi;
 };

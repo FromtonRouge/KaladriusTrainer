@@ -19,37 +19,12 @@
 
 #pragma once
 
-#include <QtWidgets/QMainWindow>
-#include <QtCore/QScopedPointer>
+#include <QtCharts/QChartView>
 
-namespace Ui
+class StatisticsView : public QtCharts::QChartView
 {
-    class MainWindow;
-}
-
-class CountdownTimer;
-class WordCounter;
-
-class MainWindow : public QMainWindow
-{
-    Q_OBJECT
-
 public:
-    MainWindow(QWidget* pParent = nullptr);
-    ~MainWindow();
-
-    void Init();
-
-protected slots:
-    void on_actionAbout_triggered();
-    void delayedRestoreState();
-    void onCountdownTimerDone();
-
-protected:
-    virtual bool event(QEvent* pEvent) override;
-
-private:
-    QScopedPointer<Ui::MainWindow> _pUi;
-    CountdownTimer* _pCountdownTimer = nullptr;
-    WordCounter* _pWordCounter = nullptr;
+    StatisticsView(QWidget* pParent = nullptr);
+    ~StatisticsView();
 };
+

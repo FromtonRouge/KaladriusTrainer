@@ -18,10 +18,12 @@
 // ======================================================================
 
 #include "LevelTreeItem.h"
+#include "../../Tree/Models/ItemDataRole.h"
 #include <QtCore/QRandomGenerator>
 #include <QtCore/QFile>
 #include <QtCore/QRegularExpression>
 #include <QtCore/QSettings>
+#include <QtCore/QDebug>
 
 LevelTreeItem::LevelTreeItem(LevelType levelType,
                              const QUuid& uuid,
@@ -31,6 +33,7 @@ LevelTreeItem::LevelTreeItem(LevelType levelType,
     , _uuid(uuid)
 {
     setText(sLabel);
+    setData(QString("Level %1").arg(_uuid.toString(QUuid::WithoutBraces)), LevelTableNameRole);
 
     QString sIconPath;
     switch (_levelType)

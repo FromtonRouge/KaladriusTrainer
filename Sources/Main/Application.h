@@ -33,6 +33,8 @@ class KeyboardModel;
 class UndoableKeyboardModel;
 class TheoryModel;
 class UndoableTheoryModel;
+class LevelsModel;
+
 class Application : public QApplication
 {
     Q_OBJECT
@@ -44,11 +46,14 @@ public:
     Application(int& argc, char** argv);
     ~Application();
 
+    void showAboutDialog();
+
     TheoryModel* getTheoryModel() const {return _pTheoryModel;}
     UndoableTheoryModel* getUndoableTheoryModel() const {return _pUndoableTheoryModel;}
     KeyboardModel* getKeyboardModel() const {return _pKeyboardModel;}
     UndoableKeyboardModel* getUndoableKeyboardModel() const {return _pUndoableKeyboardModel;}
     KeyboardGraphicsScene* getKeyboardGraphicsScene() const {return _pKeyboardGraphicsScene;}
+    LevelsModel* getLevelsModel() const {return _pLevelsModel;}
 
     bool openDatabase();
 
@@ -62,9 +67,10 @@ private:
     boost::iostreams::stream_buffer<StreamSink> _streamBufferCerr;
     std::streambuf* _pOldStreambufCerr;
 
-    TheoryModel* _pTheoryModel;
-    UndoableTheoryModel* _pUndoableTheoryModel;
-    KeyboardModel* _pKeyboardModel;
-    UndoableKeyboardModel* _pUndoableKeyboardModel;
-    KeyboardGraphicsScene* _pKeyboardGraphicsScene; ///< Only 1 scene and potentialy N views on this scene.
+    TheoryModel* _pTheoryModel = nullptr;
+    UndoableTheoryModel* _pUndoableTheoryModel = nullptr;
+    KeyboardModel* _pKeyboardModel = nullptr;
+    UndoableKeyboardModel* _pUndoableKeyboardModel = nullptr;
+    KeyboardGraphicsScene* _pKeyboardGraphicsScene = nullptr; ///< Only 1 scene and potentialy N views on this scene.
+    LevelsModel* _pLevelsModel = nullptr;
 };

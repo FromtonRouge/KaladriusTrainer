@@ -67,6 +67,9 @@ SOURCES += \
     Sources/Main/MainWindow.cpp \
     Sources/Main/main.cpp \
     Sources/Serialization/Serialize.cpp \
+    Sources/Statistics/StatisticsMainWindow.cpp \
+    Sources/Statistics/StatisticsView.cpp \
+    Sources/Statistics/StatisticsWidget.cpp \
     Sources/StrokesSolver/StrokesSolverTextEdit.cpp \
     Sources/StrokesSolver/StrokesSolverWidget.cpp \
     Sources/StrokesSolver/WordCounter.cpp \
@@ -134,6 +137,9 @@ HEADERS += \
     Sources/Main/MainWindow.h \
     Sources/Serialization/Qt/Serialize.h \
     Sources/Serialization/Serialize.h \
+    Sources/Statistics/StatisticsMainWindow.h \
+    Sources/Statistics/StatisticsView.h \
+    Sources/Statistics/StatisticsWidget.h \
     Sources/Streams/Iostream.h \
     Sources/Streams/StreamSink.h \
     Sources/StrokesSolver/StrokesSolverTextEdit.h \
@@ -179,6 +185,7 @@ FORMS += \
     Sources/Keycaps/KeycapWidget.ui \
     Sources/Main/MainTabDialog.ui \
     Sources/Main/MainWindow.ui \
+    Sources/Statistics/StatisticsMainWindow.ui \
     Sources/StrokesSolver/StrokesSolverWidget.ui \
     Sources/Theories/TheoryEditorMainWindow.ui
 

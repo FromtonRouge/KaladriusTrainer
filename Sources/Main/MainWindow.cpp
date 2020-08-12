@@ -34,7 +34,6 @@
 #include "../Levels/TreeItems/LevelTreeItem.h"
 #include "../Levels/LevelsTreeView.h"
 #include "ui_MainWindow.h"
-#include <QtWidgets/QMessageBox>
 #include <QtWidgets/QTextEdit>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
@@ -47,7 +46,6 @@
 MainWindow::MainWindow(QWidget* pParent)
     : QMainWindow(pParent)
     , _pUi(new Ui::MainWindow)
-    , _pLevelsModel(new LevelsModel(this))
     , _pCountdownTimer(new CountdownTimer(this))
     , _pWordCounter(new WordCounter(_pCountdownTimer, this))
 {
@@ -107,7 +105,7 @@ MainWindow::~MainWindow()
 void MainWindow::Init()
 {
     connect(_pUi->treeViewLevels, &LevelsTreeView::restarted, [&](const QString& sTableName) { _pUi->chartView->display(sTableName); });
-    _pUi->treeViewLevels->setModel(_pLevelsModel);
+    _pUi->treeViewLevels->setModel(qApp->getLevelsModel());
 }
 
 bool MainWindow::event(QEvent *pEvent)
@@ -129,18 +127,7 @@ bool MainWindow::event(QEvent *pEvent)
 
 void MainWindow::on_actionAbout_triggered()
 {
-    QMessageBox messageBox(this);
-    messageBox.setIcon(QMessageBox::Information);
-    messageBox.setWindowTitle(tr("About"));
-    messageBox.setTextFormat(Qt::RichText);
-
-    QString sText = tr("%1 %2").arg(Application::applicationName()).arg(Application::applicationVersion());
-    sText += tr("<p>Author: %1</p>").arg(Application::organizationName());
-    sText += tr("<p>Some icons by <a href='http://p.yusukekamiyamane.com/'>Yusuke Kamiyamane</a>. Licensed under a <a href='http://creativecommons.org/licenses/by/3.0/'>Creative Commons Attribution 3.0 License</a>.</p>");
-    sText += tr("<p>Application icon by <a href='http://chromatix.deviantart.com/'>Chromatix</a>. Licensed under a <a href='http://creativecommons.org/licenses/by-nc-nd/4.0/'>Creative Commons Attribution-Noncommercial-NoDerivate 4.0 License</a>.</p>");
-    sText += tr("<p>Record icon made by <a href='http://www.freepik.com/'>Freepik</a> from <a href='http://www.flaticon.com/'>www.flaticon.com</a>.</p>");
-    messageBox.setText(sText);
-    messageBox.exec();
+    qApp->showAboutDialog();
 }
 
 void MainWindow::delayedRestoreState()
@@ -171,7 +158,7 @@ void MainWindow::onCountdownTimerDone()
         {
         case TreeItem::Level:
             {
-                auto pLevelTreeItem = static_cast<LevelTreeItem*>(_pLevelsModel->itemFromIndex(indexCurrentLevel));
+                auto pLevelTreeItem = static_cast<LevelTreeItem*>(qApp->getLevelsModel()->itemFromIndex(indexCurrentLevel));
                 const QUuid& uuidLevel = pLevelTreeItem->getUuid();
                 const QString sTableName = QString("Level %1").arg(uuidLevel.toString(QUuid::WithoutBraces));
                 const QDateTime& currentTime = QDateTime::currentDateTime();
@@ -199,7 +186,7 @@ void MainWindow::onCountdownTimerDone()
                 if (fDeltaPercent > 0)
                 {
                     uint16_t uiNewProgress = uiProgression + 5 + 10*fDeltaPercent; // increase faster for good players
-                    _pLevelsModel->setProgression(indexCurrentLevel, uiNewProgress);
+                    qApp->getLevelsModel()->setProgression(indexCurrentLevel, uiNewProgress);
                     pLevelTreeItem->saveProgression();
                 }
 

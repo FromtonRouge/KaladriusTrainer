@@ -24,8 +24,10 @@
 #include "../Keyboards/Models/KeyboardModel.h"
 #include "../Keyboards/Models/UndoableKeyboardModel.h"
 #include "../Keyboards/KeyboardGraphicsScene.h"
+#include "../Levels/Models/LevelsModel.h"
 #include <QtSql/QSqlDatabase>
 #include <QtWidgets/QUndoStack>
+#include <QtWidgets/QMessageBox>
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QStandardPaths>
 #include <QtCore/QDir>
@@ -69,6 +71,8 @@ Application::Application(int& argc, char** argv)
     // Default factory for all item delegates
     QItemEditorFactory::setDefaultFactory(new UserEditorFactory());
 
+    _pLevelsModel = new LevelsModel(this);
+
     _pUndoableTheoryModel->setUndoStack(new QUndoStack(this));
     _pUndoableTheoryModel->setSourceModel(_pTheoryModel);
 
@@ -80,6 +84,22 @@ Application::~Application()
 {
     std::cerr.rdbuf(_pOldStreambufCerr);
     std::cout.rdbuf(_pOldStreambufCout);
+}
+
+void Application::showAboutDialog()
+{
+    QMessageBox messageBox(activeWindow());
+    messageBox.setIcon(QMessageBox::Information);
+    messageBox.setWindowTitle(tr("About"));
+    messageBox.setTextFormat(Qt::RichText);
+
+    QString sText = tr("%1 %2").arg(Application::applicationName()).arg(Application::applicationVersion());
+    sText += tr("<p>Author: %1</p>").arg(Application::organizationName());
+    sText += tr("<p>Some icons by <a href='http://p.yusukekamiyamane.com/'>Yusuke Kamiyamane</a>. Licensed under a <a href='http://creativecommons.org/licenses/by/3.0/'>Creative Commons Attribution 3.0 License</a>.</p>");
+    sText += tr("<p>Application icon by <a href='http://chromatix.deviantart.com/'>Chromatix</a>. Licensed under a <a href='http://creativecommons.org/licenses/by-nc-nd/4.0/'>Creative Commons Attribution-Noncommercial-NoDerivate 4.0 License</a>.</p>");
+    sText += tr("<p>Record icon made by <a href='http://www.freepik.com/'>Freepik</a> from <a href='http://www.flaticon.com/'>www.flaticon.com</a>.</p>");
+    messageBox.setText(sText);
+    messageBox.exec();
 }
 
 bool Application::openDatabase()

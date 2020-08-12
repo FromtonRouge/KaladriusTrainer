@@ -19,37 +19,41 @@
 
 #pragma once
 
-#include <QtWidgets/QMainWindow>
-#include <QtCore/QScopedPointer>
+#include <QtWidgets/QWidget>
+#include <QtCore/QStringList>
+#include <QtCore/QHash>
+#include <QtCore/QPointer>
+#include <QtCore/QModelIndexList>
 
-namespace Ui
+class StatisticsView;
+class QComboBox;
+class QItemSelection;
+namespace QtCharts
 {
-    class MainWindow;
+    class QLineSeries;
 }
 
-class CountdownTimer;
-class WordCounter;
-
-class MainWindow : public QMainWindow
+class StatisticsWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget* pParent = nullptr);
-    ~MainWindow();
+    StatisticsWidget(QWidget *parent = nullptr);
+    ~StatisticsWidget();
 
-    void Init();
-
-protected slots:
-    void on_actionAbout_triggered();
-    void delayedRestoreState();
-    void onCountdownTimerDone();
-
-protected:
-    virtual bool event(QEvent* pEvent) override;
+public slots:
+    void onChartSelectorCurrentIndexChanged(int iCurrentIndex);
+    void addSelectedLevels(const QItemSelection& selectedLevels);
+    void removeDeselectedLevels(const QItemSelection& deselectedLevels);
 
 private:
-    QScopedPointer<Ui::MainWindow> _pUi;
-    CountdownTimer* _pCountdownTimer = nullptr;
-    WordCounter* _pWordCounter = nullptr;
+    QModelIndexList getLevelsFromSelection(const QItemSelection& selection) const;
+    void addSeries(const QModelIndex& indexLevel);
+    void removeSeries(const QModelIndex& indexLevel);
+    QString getCurrentDataType() const;
+
+private:
+    StatisticsView* _pStatisticsView = nullptr;
+    QComboBox* _pChartSelector = nullptr;
+    QHash<QModelIndex, QPointer<QtCharts::QLineSeries>> _series;
 };
