@@ -189,7 +189,6 @@ void MainWindow::onCountdownTimerDone()
                 const float fAo5Spm = _pUi->chartView->getLastAo5Spm();
                 if (fAo5Spm > 0.f || bForceProgression)
                 {
-                    qDebug() << "ao5" << fAo5Spm;
                     const float fSpmDelta = (bForceProgression ? fSpm : fAo5Spm) - fNeededSpm;
                     const float fDeltaPercent = fSpmDelta/fNeededSpm;
                     if (fDeltaPercent > 0 && fSpm > fNeededSpm)
