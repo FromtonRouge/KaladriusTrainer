@@ -50,23 +50,22 @@ Item {
         font.pixelSize: 50
     }
 
-    Column {
-        id: column
-        x: 143
-        y: 88
-        width: 247
-        height: 148
-        anchors.horizontalCenter: parent.horizontalCenter
+    RowLayout {
+        id: rowLayout
+        x: 84
+        width: 404
+        height: 56
+        anchors.horizontalCenterOffset: 13
+        anchors.horizontalCenter: time.horizontalCenter
+        anchors.top: time.bottom
+        anchors.topMargin: 6
+        spacing: 0
 
         Text {
             id: wpm
-            font.pixelSize: 35
+            font.pixelSize: 28
             color: "blue"
             text: "240 WPM"
-            anchors.horizontalCenter: parent.horizontalCenter
-            horizontalAlignment: Text.AlignLeft
-            Layout.leftMargin: 40
-            Layout.fillWidth: true
             font.bold: true
         }
 
@@ -74,30 +73,30 @@ Item {
             id: spm
             text: "240 SPM"
             color: "lightBlue"
-            anchors.horizontalCenter: parent.horizontalCenter
             horizontalAlignment: Text.AlignLeft
-            Layout.leftMargin: 40
-            Layout.fillWidth: true
             font.bold: true
-            font.pixelSize: 35
+            font.pixelSize: 28
         }
 
         Text {
             id: accuracy
-            font.pixelSize: 35
+            font.pixelSize: 28
             color: "violet"
             text: "100 %"
-            anchors.horizontalCenter: parent.horizontalCenter
             horizontalAlignment: Text.AlignLeft
-            Layout.leftMargin: 40
-            Layout.fillWidth: true
             font.bold: true
         }
+
+
+
+
     }
+
 }
 
 /*##^##
 Designer {
     D{i:0;autoSize:true;height:480;width:640}D{i:2;anchors_height:60;anchors_x:204;anchors_y:124}
+D{i:3;anchors_y:113}
 }
 ##^##*/

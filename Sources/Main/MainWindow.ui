@@ -42,7 +42,7 @@
      <x>0</x>
      <y>0</y>
      <width>737</width>
-     <height>20</height>
+     <height>30</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHelp">
@@ -269,7 +269,13 @@
       <number>0</number>
      </property>
      <item row="0" column="0">
-      <widget class="ChartView" name="chartView"/>
+      <widget class="ChartView" name="chartView">
+       <property name="font">
+        <font>
+         <family>MS Shell Dlg 2</family>
+        </font>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
