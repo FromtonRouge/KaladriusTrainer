@@ -63,5 +63,5 @@ private:
     QStringList _words;
     uint16_t _uiRandomWordsCount = 1000;
     uint16_t _uiProgression = 5;
-    uint16_t _uiSPMNeededToProgress = 50;
+    uint16_t _uiSPMNeededToProgress = 70;
 };

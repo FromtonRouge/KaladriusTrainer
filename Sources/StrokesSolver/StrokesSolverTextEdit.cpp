@@ -20,9 +20,11 @@
 #include "StrokesSolverTextEdit.h"
 #include "../Main/Application.h"
 #include "WordCounter.h"
-#include <QtCore/QRegularExpression>
+#include <QtGui/QWindow>
+#include <QtGui/QScreen>
 #include <QtGui/QKeyEvent>
 #include <QtCore/QTimer>
+#include <QtCore/QRegularExpression>
 #include <QtCore/QSet>
 #include <QtCore/QDebug>
 
@@ -337,6 +339,13 @@ void StrokesSolverTextEdit::onTextChanged()
     if (_bCleanState)
     {
         _bCleanState = false;
+
+        // Move the cursor away...
+        QScreen* pScreen = window()->windowHandle()->screen();
+        const QSize& screenSize = pScreen->size();
+        QCursor cursor;
+        cursor.setPos(screenSize.width(), screenSize.height());
+
         emit started();
     }
 }
