@@ -19,6 +19,7 @@
 
 #include "ChartView.h"
 #include <QtCharts/QLineSeries>
+#include <QtWidgets/QGraphicsLayout>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
 #include <QtCore/QDebug>
@@ -27,6 +28,10 @@ ChartView::ChartView(QWidget* pParent)
     : QChartView(pParent)
     , _pChart(new QtCharts::QChart)
 {
+    _pChart->legend()->hide();
+    _pChart->setMargins(QMargins());
+    _pChart->setBackgroundRoundness(0);
+    _pChart->layout()->setContentsMargins(0, 0, 0, 0);
     setChart(_pChart);
     setRenderHint(QPainter::Antialiasing);
 }
@@ -69,5 +74,10 @@ void ChartView::display(const QString& sTableName)
     if (_pChart->axisX())
     {
         _pChart->axisX()->setLabelsVisible(false);
+    }
+
+    if (_pChart->axisY())
+    {
+        _pChart->axisY()->setMin(0);
     }
 }
