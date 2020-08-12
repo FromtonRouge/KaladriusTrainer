@@ -94,6 +94,7 @@ SOURCES += \
     Sources/Tree/TreeItems/ListTreeItem.cpp \
     Sources/Tree/TreeItems/TreeItem.cpp \
     Sources/Tree/TreeItems/ValueTreeItem.cpp \
+    Sources/Utils/AverageOf.cpp \
     Sources/Utils/CountdownTimer.cpp \
     Sources/Values/Editors/ColorEditor.cpp \
     Sources/Values/Editors/FingerSelector.cpp \
@@ -167,6 +168,7 @@ HEADERS += \
     Sources/Tree/TreeItems/ListTreeItem.h \
     Sources/Tree/TreeItems/TreeItem.h \
     Sources/Tree/TreeItems/ValueTreeItem.h \
+    Sources/Utils/AverageOf.h \
     Sources/Utils/CountdownTimer.h \
     Sources/Values/Editors/ColorEditor.h \
     Sources/Values/Editors/FingerSelector.h \

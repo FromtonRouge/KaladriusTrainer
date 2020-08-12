@@ -17,26 +17,27 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "AverageOf.h"
 
-#include <QtCharts/QChartView>
-#include <QtCore/QPointer>
-
-namespace QtCharts
+AverageOf::AverageOf(uint8_t uiSize)
+    : _uiSize(uiSize)
 {
-    class QChart;
-    class QLineSeries;
+
 }
 
-class ChartView : public QtCharts::QChartView
+void AverageOf::popValue()
 {
-public:
-    ChartView(QWidget* pParent = nullptr);
-    void createChart(const QString& sTableName);
+    if (size() == _uiSize)
+    {
+        _fAverage -= top();
+        pop();
+    }
+}
 
-    float getLastAo5Spm() const;
-
-private:
-    QtCharts::QChart* _pChart = nullptr;
-    QPointer<QtCharts::QLineSeries> _pAo5SpmSeries;
-};
+bool AverageOf::pushValue(float fValue)
+{
+    const float fValueToPush = fValue/_uiSize;
+    _fAverage += fValueToPush;
+    push(fValueToPush);
+    return size() == _uiSize;
+}

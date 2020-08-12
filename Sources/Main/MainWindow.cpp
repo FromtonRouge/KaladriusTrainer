@@ -104,7 +104,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::Init()
 {
-    connect(_pUi->treeViewLevels, &LevelsTreeView::restarted, [&](const QString& sTableName) { _pUi->chartView->display(sTableName); });
+    connect(_pUi->treeViewLevels, &LevelsTreeView::restarted, [&](const QString& sTableName) { _pUi->chartView->createChart(sTableName); });
     _pUi->treeViewLevels->setModel(qApp->getLevelsModel());
 }
 
@@ -176,18 +176,28 @@ void MainWindow::onCountdownTimerDone()
                 }
                 else
                 {
-                    _pUi->chartView->display(sTableName);
+                    _pUi->chartView->createChart(sTableName);
                 }
 
                 // Update progression
                 const uint16_t uiProgression = pLevelTreeItem->getProgression();
-                const float fSpmDelta = fSpm - pLevelTreeItem->getSPMNeededToProgress();
-                const float fDeltaPercent = fSpmDelta/pLevelTreeItem->getSPMNeededToProgress();
-                if (fDeltaPercent > 0)
+
+                // The progression is based on the Spm (Strokes per minute) average of 5
+                // or if the current Spm is 70% above the needed Spm
+                const float fNeededSpm = pLevelTreeItem->getSPMNeededToProgress();
+                const bool bForceProgression = fSpm > (1.7*fNeededSpm);
+                const float fAo5Spm = _pUi->chartView->getLastAo5Spm();
+                if (fAo5Spm > 0.f || bForceProgression)
                 {
-                    uint16_t uiNewProgress = uiProgression + 5 + 10*fDeltaPercent; // increase faster for good players
-                    qApp->getLevelsModel()->setProgression(indexCurrentLevel, uiNewProgress);
-                    pLevelTreeItem->saveProgression();
+                    qDebug() << "ao5" << fAo5Spm;
+                    const float fSpmDelta = (bForceProgression ? fSpm : fAo5Spm) - fNeededSpm;
+                    const float fDeltaPercent = fSpmDelta/fNeededSpm;
+                    if (fDeltaPercent > 0 && fSpm > fNeededSpm)
+                    {
+                        uint16_t uiNewProgress = uiProgression + 5 + 10*fDeltaPercent; // increase faster for good results
+                        qApp->getLevelsModel()->setProgression(indexCurrentLevel, uiNewProgress);
+                        pLevelTreeItem->saveProgression();
+                    }
                 }
 
                 break;

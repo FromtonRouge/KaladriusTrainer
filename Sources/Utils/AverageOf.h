@@ -19,24 +19,19 @@
 
 #pragma once
 
-#include <QtCharts/QChartView>
-#include <QtCore/QPointer>
+#include <QtCore/QStack>
 
-namespace QtCharts
-{
-    class QChart;
-    class QLineSeries;
-}
-
-class ChartView : public QtCharts::QChartView
+class AverageOf : public QStack<float>
 {
 public:
-    ChartView(QWidget* pParent = nullptr);
-    void createChart(const QString& sTableName);
+    AverageOf(uint8_t uiSize = 5);
 
-    float getLastAo5Spm() const;
+    void popValue();
+    bool pushValue(float fValue);
+    float getAverage() const {return _fAverage;}
 
 private:
-    QtCharts::QChart* _pChart = nullptr;
-    QPointer<QtCharts::QLineSeries> _pAo5SpmSeries;
+    float _fAverage = 0;
+    uint8_t _uiSize = 5;
 };
+
