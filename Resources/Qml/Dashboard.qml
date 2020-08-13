@@ -6,12 +6,13 @@ Item {
 
     Connections {
         target: dashboard
-        onLastWpmChanged: { wpmLast.text = value.toFixed(0) + " WPM" }
-        onLastSpmChanged: { spmLast.text = value.toFixed(0) + " SPM"}
-        onLastAccuracyChanged: { accuracyLast.text = value.toFixed(1) + " %" }
-        onMaxWpmChanged: { wpmMax.text = value.toFixed(0) + " WPM" }
-        onMaxSpmChanged: { spmMax.text = value.toFixed(0) + " SPM"}
-        onMaxAccuracyChanged: { accuracyMax.text = value.toFixed(1) + " %" }
+
+        function onLastWpmChanged(value) { wpmLast.text = value.toFixed(0) + " WPM" }
+        function onLastSpmChanged(value) { spmLast.text = value.toFixed(0) + " SPM"}
+        function onLastAccuracyChanged(value) { accuracyLast.text = value.toFixed(1) + " %" }
+        function onMaxWpmChanged(value) { wpmMax.text = value.toFixed(0) + " WPM" }
+        function onMaxSpmChanged(value) { spmMax.text = value.toFixed(0) + " SPM"}
+        function onMaxAccuracyChanged(value) { accuracyMax.text = value.toFixed(1) + " %" }
     }
 
     function update() {
