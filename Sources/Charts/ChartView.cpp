@@ -97,10 +97,10 @@ void ChartView::createChart(const QString& sLevelName)
         query.exec(sQuery);
         while (query.next())
         {
-            ao5.popValue();
+            ao5.popValueBack();
             const float fValue = query.value(0).toFloat();
             pSeries->append(rX, fValue);
-            if (pAo5Series && ao5.pushValue(fValue))
+            if (pAo5Series && ao5.pushValueFront(fValue))
             {
                 pAo5Series->append(rX, ao5.getAverage());
             }

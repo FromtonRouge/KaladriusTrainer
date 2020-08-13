@@ -19,15 +19,15 @@
 
 #pragma once
 
-#include <QtCore/QStack>
+#include <QtCore/QVector>
 
-class AverageOf : public QStack<float>
+class AverageOf : public QVector<float>
 {
 public:
     AverageOf(uint8_t uiSize = 5);
 
-    void popValue();
-    bool pushValue(float fValue);
+    void popValueBack();
+    bool pushValueFront(float fValue);
     float getAverage() const {return _fAverage;}
 
 private:

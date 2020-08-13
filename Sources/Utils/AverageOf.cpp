@@ -25,19 +25,19 @@ AverageOf::AverageOf(uint8_t uiSize)
 
 }
 
-void AverageOf::popValue()
+void AverageOf::popValueBack()
 {
     if (size() == _uiSize)
     {
-        _fAverage -= top();
-        pop();
+        _fAverage -= back();
+        pop_back();
     }
 }
 
-bool AverageOf::pushValue(float fValue)
+bool AverageOf::pushValueFront(float fValue)
 {
     const float fValueToPush = fValue/_uiSize;
     _fAverage += fValueToPush;
-    push(fValueToPush);
+    push_front(fValueToPush);
     return size() == _uiSize;
 }
