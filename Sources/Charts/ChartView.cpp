@@ -21,8 +21,11 @@
 #include "../Utils/AverageOf.h"
 #include <QtCharts/QLineSeries>
 #include <QtWidgets/QGraphicsLayout>
+#include <QtWidgets/QMenu>
+#include <QtGui/QCursor>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
+#include <QtCore/QSettings>
 #include <QtCore/QDebug>
 
 ChartView::ChartView(QWidget* pParent)
@@ -34,78 +37,82 @@ ChartView::ChartView(QWidget* pParent)
     _pChart->layout()->setContentsMargins(0, 0, 0, 0);
     setChart(_pChart);
     setRenderHint(QPainter::Antialiasing);
+
+    _seriesConfigurations << SeriesConfiguration("Wpm", Qt::blue, true, Qt::red);
+    _seriesConfigurations << SeriesConfiguration("Spm", "#add8e6", true, "#ffa500");
+    _seriesConfigurations << SeriesConfiguration("Accuracy", "#ee82ee", false);
+
+    _pActionAo5 = new QAction("Average of 5");
+    _pActionAo5->setCheckable(true);
+
+    QSettings settings;
+    for (const auto& config : _seriesConfigurations)
+    {
+        const bool bChecked = settings.value(QString("ChartView/%1").arg(config.name), config.bDefaultVisibility).toBool();
+        config.pAction->setChecked(bChecked);
+    }
+    _pActionAo5->setChecked(settings.value("ChartView/ao5", false).toBool());
 }
 
-void ChartView::createChart(const QString& sTableName)
+void ChartView::createChart(const QString& sLevelName)
 {
-    _pChart->removeAllSeries();
-    const QSqlDatabase& db = QSqlDatabase::database();
-    QSqlQuery query(db);
-    QString sQuery = "SELECT \"Wpm\", \"Spm\" FROM \"main\".\"%1\"";
-    sQuery = sQuery.arg(sTableName);
-    query.exec(sQuery);
-    qreal rX = 0;
-
-    auto pWpmSeries = new QtCharts::QLineSeries();
-    pWpmSeries->setName("Wpm");
-    QPen penWpm = pWpmSeries->pen();
-    penWpm.setWidth(3);
-    penWpm.setColor(Qt::blue);
-    pWpmSeries->setPen(penWpm);
-
-    auto pAo5WpmSeries = new QtCharts::QLineSeries();
-    pAo5WpmSeries->setName("Ao5 (Wpm)");
-    QPen penAo5Wpm = pAo5WpmSeries->pen();
-    penAo5Wpm.setWidth(1);
-    penAo5Wpm.setColor(Qt::red);
-    pAo5WpmSeries->setPen(penAo5Wpm);
-
-    auto pSpmSeries = new QtCharts::QLineSeries();
-    pSpmSeries->setName("Spm");
-    QPen penSpm = pSpmSeries->pen();
-    penSpm.setWidth(3);
-    penSpm.setColor(QColor("#add8e6"));
-    pSpmSeries->setPen(penSpm);
-
-    _pAo5SpmSeries = new QtCharts::QLineSeries();
-    _pAo5SpmSeries->setName("Ao5 (Spm)");
-    QPen penAo5Spm = _pAo5SpmSeries->pen();
-    penAo5Spm.setWidth(1);
-    penAo5Spm.setColor(QColor("#ffa500"));
-    _pAo5SpmSeries->setPen(penAo5Spm);
-
-    AverageOf ao5Wpm(5);
-    AverageOf ao5Spm(5);
-    while (query.next())
+    if (!sLevelName.isEmpty())
     {
-        // Wpm
-        ao5Wpm.popValue();
-        const float fWpm = query.value(0).toFloat();
-        pWpmSeries->append(rX, fWpm);
-        if (ao5Wpm.pushValue(fWpm))
-        {
-            pAo5WpmSeries->append(rX, ao5Wpm.getAverage());
-        }
-
-        // Spm
-        ao5Spm.popValue();
-        const float fSpm = query.value(1).toFloat();
-        pSpmSeries->append(rX, fSpm);
-        if (ao5Spm.pushValue(fSpm))
-        {
-            _pAo5SpmSeries->append(rX, ao5Spm.getAverage());
-        }
-
-        rX++;
+        _sTableName = sLevelName;
     }
 
-    // Wpm
-    _pChart->addSeries(pWpmSeries);
-    _pChart->addSeries(pAo5WpmSeries);
+    if (_sTableName.isEmpty())
+    {
+        return;
+    }
 
-    // Spm
-    _pChart->addSeries(pSpmSeries);
-    _pChart->addSeries(_pAo5SpmSeries);
+    _pChart->removeAllSeries();
+
+    const QSqlDatabase& db = QSqlDatabase::database();
+    QSqlQuery query(db);
+
+    for (const auto& config : _seriesConfigurations)
+    {
+        if (!config.pAction->isChecked())
+        {
+            continue;
+        }
+
+        const QString& sDataType = config.name;
+        QString sQuery = "SELECT \"%1\" FROM \"main\".\"%2\"";
+        sQuery = sQuery.arg(sDataType).arg(_sTableName);
+        qreal rX = 0;
+
+        auto pSeries = createSeries(sDataType, config.color, 2);
+
+        QtCharts::QLineSeries* pAo5Series = nullptr;
+        if (_pActionAo5->isChecked() && config.colorAo5.isValid())
+        {
+            pAo5Series = createSeries(QString("Ao5 (%1)").arg(sDataType), config.colorAo5, 4);
+        }
+
+        AverageOf ao5(5);
+        query.exec(sQuery);
+        while (query.next())
+        {
+            ao5.popValue();
+            const float fValue = query.value(0).toFloat();
+            pSeries->append(rX, fValue);
+            if (pAo5Series && ao5.pushValue(fValue))
+            {
+                pAo5Series->append(rX, ao5.getAverage());
+            }
+
+            rX++;
+        }
+
+        _pChart->addSeries(pSeries);
+
+        if (pAo5Series)
+        {
+            _pChart->addSeries(pAo5Series);
+        }
+    }
 
     _pChart->createDefaultAxes();
     if (_pChart->axisX())
@@ -128,4 +135,41 @@ float ChartView::getLastAo5Spm() const
         fResult = lastAo5Spm.y();
     }
     return fResult;
+}
+
+void ChartView::contextMenuEvent(QContextMenuEvent*)
+{
+    QMenu menu;
+
+    for (const auto& config : _seriesConfigurations)
+    {
+        menu.addAction(config.pAction);
+    }
+
+    menu.addSeparator();
+    menu.addAction(_pActionAo5);
+
+    QAction* pResult = menu.exec(QCursor::pos());
+    if (pResult)
+    {
+        QSettings settings;
+        for (const auto& config : _seriesConfigurations)
+        {
+            settings.setValue(QString("ChartView/%1").arg(config.name), config.pAction->isChecked());
+        }
+        settings.setValue("ChartView/ao5", _pActionAo5->isChecked());
+
+        createChart();
+    }
+}
+
+QtCharts::QLineSeries* ChartView::createSeries(const QString& sName, const QColor& color, int iWidth) const
+{
+    auto pLineSeries = new QtCharts::QLineSeries();
+    pLineSeries->setName(sName);
+    QPen pen = pLineSeries->pen();
+    pen.setWidth(iWidth);
+    pen.setColor(color);
+    pLineSeries->setPen(pen);
+    return pLineSeries;
 }

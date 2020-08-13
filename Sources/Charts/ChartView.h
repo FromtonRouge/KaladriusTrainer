@@ -20,7 +20,10 @@
 #pragma once
 
 #include <QtCharts/QChartView>
+#include <QtWidgets/QAction>
+#include <QtGui/QColor>
 #include <QtCore/QPointer>
+#include <QtCore/QVector>
 
 namespace QtCharts
 {
@@ -32,11 +35,39 @@ class ChartView : public QtCharts::QChartView
 {
 public:
     ChartView(QWidget* pParent = nullptr);
-    void createChart(const QString& sTableName);
+    void createChart(const QString& sLevelName = QString());
 
     float getLastAo5Spm() const;
 
+protected:
+    void contextMenuEvent(QContextMenuEvent* pEvent) override;
+
 private:
+    QtCharts::QLineSeries* createSeries(const QString& sName, const QColor& color, int iWidth = 3) const;
+
+private:
+    struct SeriesConfiguration
+    {
+        SeriesConfiguration(const QString& sName,
+                            const QColor& color,
+                            bool bDefaultVisibility,
+                            const QColor& colorAo5 = QColor())
+            : name(sName), color(color), colorAo5(colorAo5), bDefaultVisibility(bDefaultVisibility)
+        {
+            pAction = new QAction(sName);
+            pAction->setCheckable(true);
+        }
+
+        QString name;
+        QColor color;
+        bool bDefaultVisibility = true;
+        QColor colorAo5;
+        QAction* pAction = nullptr;
+    };
+
+    QString _sTableName;
+    QVector<SeriesConfiguration> _seriesConfigurations;
+    QAction* _pActionAo5 = nullptr;
     QtCharts::QChart* _pChart = nullptr;
     QPointer<QtCharts::QLineSeries> _pAo5SpmSeries;
 };
