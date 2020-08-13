@@ -33,6 +33,8 @@
 #include "../Levels/Models/LevelsModel.h"
 #include "../Levels/TreeItems/LevelTreeItem.h"
 #include "../Levels/LevelsTreeView.h"
+#include "../Dashboard/Dashboard.h"
+#include "../Database/Database.h"
 #include "ui_MainWindow.h"
 #include <QtWidgets/QTextEdit>
 #include <QtSql/QSqlDatabase>
@@ -48,6 +50,7 @@ MainWindow::MainWindow(QWidget* pParent)
     , _pUi(new Ui::MainWindow)
     , _pCountdownTimer(new CountdownTimer(this))
     , _pWordCounter(new WordCounter(_pCountdownTimer, this))
+    , _pDashboard(new Dashboard(this))
 {
     _pUi->setupUi(this);
     setDockOptions(dockOptions() | DockOption::GroupedDragging | DockOption::AllowNestedDocks);
@@ -84,6 +87,7 @@ MainWindow::MainWindow(QWidget* pParent)
     }
 
     auto pRootContext = _pUi->quickWidgetDashboard->rootContext();
+    pRootContext->setContextProperty("dashboard", _pDashboard);
     pRootContext->setContextProperty("countdownTimer", _pCountdownTimer);
     pRootContext->setContextProperty("wordCounter", _pWordCounter);
     _pUi->quickWidgetDashboard->setSource(QUrl("qrc:/Qml/Dashboard.qml"));
@@ -104,7 +108,19 @@ MainWindow::~MainWindow()
 
 void MainWindow::Init()
 {
-    connect(_pUi->treeViewLevels, &LevelsTreeView::restarted, [&](const QString& sTableName) { _pUi->chartView->createChart(sTableName); });
+    connect(_pUi->treeViewLevels, &LevelsTreeView::restarted, [&](const QString& sTableName)
+    {
+        _pUi->chartView->createChart(sTableName);
+        auto pDatabase = qApp->getDatabase();
+        _pDashboard->setLastWpm(pDatabase->getLastWpm(sTableName));
+        _pDashboard->setLastSpm(pDatabase->getLastSpm(sTableName));
+        _pDashboard->setLastAccuracy(pDatabase->getLastAccuracy(sTableName));
+
+        _pDashboard->setMaxWpm(pDatabase->getMaxWpm(sTableName));
+        _pDashboard->setMaxSpm(pDatabase->getMaxSpm(sTableName));
+        _pDashboard->setMaxAccuracy(pDatabase->getMaxAccuracy(sTableName));
+    });
+
     _pUi->treeViewLevels->setModel(qApp->getLevelsModel());
 }
 
@@ -199,6 +215,14 @@ void MainWindow::onCountdownTimerDone()
                     }
                 }
 
+                // Update last and pb
+                auto pDatabase = qApp->getDatabase();
+                _pDashboard->setLastWpm(pDatabase->getLastWpm(sTableName));
+                _pDashboard->setLastSpm(pDatabase->getLastSpm(sTableName));
+                _pDashboard->setLastAccuracy(pDatabase->getLastAccuracy(sTableName));
+                _pDashboard->setMaxWpm(pDatabase->getMaxWpm(sTableName));
+                _pDashboard->setMaxSpm(pDatabase->getMaxSpm(sTableName));
+                _pDashboard->setMaxAccuracy(pDatabase->getMaxAccuracy(sTableName));
                 break;
             }
         default:

@@ -39,6 +39,8 @@ RC_ICONS = Resources/KaladriusTrainer.ico
 
 SOURCES += \
     Sources/Charts/ChartView.cpp \
+    Sources/Dashboard/Dashboard.cpp \
+    Sources/Database/Database.cpp \
     Sources/Dictionaries/DictionariesModel.cpp \
     Sources/Dictionaries/DictionariesWidget.cpp \
     Sources/Dictionaries/Dictionary.cpp \
@@ -108,6 +110,8 @@ HEADERS += \
     Resources/KaladriusTrainer.rc \
     Resources/resource.h \
     Sources/Charts/ChartView.h \
+    Sources/Dashboard/Dashboard.h \
+    Sources/Database/Database.h \
     Sources/Dictionaries/DictionariesModel.h \
     Sources/Dictionaries/DictionariesWidget.h \
     Sources/Dictionaries/Dictionary.h \

@@ -17,41 +17,46 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "Dashboard.h"
 
-#include <QtWidgets/QMainWindow>
-#include <QtCore/QScopedPointer>
-
-namespace Ui
+Dashboard::Dashboard(QObject *pParent)
+    : QObject(pParent)
 {
-    class MainWindow;
+
 }
 
-class CountdownTimer;
-class WordCounter;
-class Dashboard;
-
-class MainWindow : public QMainWindow
+void Dashboard::setLastWpm(float fValue)
 {
-    Q_OBJECT
+    _fLastWpm = fValue;
+    emit lastWpmChanged(_fLastWpm);
+}
 
-public:
-    MainWindow(QWidget* pParent = nullptr);
-    ~MainWindow();
+void Dashboard::setLastSpm(float fValue)
+{
+    _fLastSpm = fValue;
+    emit lastSpmChanged(_fLastSpm);
+}
 
-    void Init();
+void Dashboard::setLastAccuracy(float fValue)
+{
+    _fLastAccuracy = fValue;
+    emit lastAccuracyChanged(_fLastAccuracy);
+}
 
-protected slots:
-    void on_actionAbout_triggered();
-    void delayedRestoreState();
-    void onCountdownTimerDone();
+void Dashboard::setMaxWpm(float fValue)
+{
+    _fMaxWpm = fValue;
+    emit maxWpmChanged(_fMaxWpm);
+}
 
-protected:
-    virtual bool event(QEvent* pEvent) override;
+void Dashboard::setMaxSpm(float fValue)
+{
+    _fMaxSpm = fValue;
+    emit maxSpmChanged(_fMaxSpm);
+}
 
-private:
-    QScopedPointer<Ui::MainWindow> _pUi;
-    CountdownTimer* _pCountdownTimer = nullptr;
-    WordCounter* _pWordCounter = nullptr;
-    Dashboard* _pDashboard = nullptr;
-};
+void Dashboard::setMaxAccuracy(float fValue)
+{
+    _fMaxAccuracy = fValue;
+    emit maxAccuracyChanged(_fMaxAccuracy);
+}

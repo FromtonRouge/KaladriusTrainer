@@ -34,6 +34,7 @@ class UndoableKeyboardModel;
 class TheoryModel;
 class UndoableTheoryModel;
 class LevelsModel;
+class Database;
 
 class Application : public QApplication
 {
@@ -48,6 +49,7 @@ public:
 
     void showAboutDialog();
 
+    Database* getDatabase() const {return _pDatabase;}
     TheoryModel* getTheoryModel() const {return _pTheoryModel;}
     UndoableTheoryModel* getUndoableTheoryModel() const {return _pUndoableTheoryModel;}
     KeyboardModel* getKeyboardModel() const {return _pKeyboardModel;}
@@ -55,11 +57,8 @@ public:
     KeyboardGraphicsScene* getKeyboardGraphicsScene() const {return _pKeyboardGraphicsScene;}
     LevelsModel* getLevelsModel() const {return _pLevelsModel;}
 
-    bool openDatabase();
-
 private:
     void toLogs(const QString& sText, int iWarningLevel = 0);
-    QString getDatabaseFilePath() const;
 
 private:
     boost::iostreams::stream_buffer<StreamSink> _streamBufferCout;
@@ -67,6 +66,7 @@ private:
     boost::iostreams::stream_buffer<StreamSink> _streamBufferCerr;
     std::streambuf* _pOldStreambufCerr;
 
+    Database* _pDatabase = nullptr;
     TheoryModel* _pTheoryModel = nullptr;
     UndoableTheoryModel* _pUndoableTheoryModel = nullptr;
     KeyboardModel* _pKeyboardModel = nullptr;

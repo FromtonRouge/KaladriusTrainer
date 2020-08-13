@@ -20,6 +20,7 @@
 #include "MainTabDialog.h"
 #include "Application.h"
 #include "../Streams/Iostream.h"
+#include "../Database/Database.h"
 #include "ui_MainTabDialog.h"
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QDesktopWidget>
@@ -34,7 +35,7 @@ MainTabDialog::MainTabDialog(QWidget* pParent)
     setWindowFlags(Qt::Window);
 
     connect(qApp, SIGNAL(logs(QString, int)), this, SLOT(logs(QString,int)));
-    qApp->openDatabase();
+    qApp->getDatabase()->open();
 
     // Restore geometry and window state
     QSettings settings;

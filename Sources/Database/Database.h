@@ -19,39 +19,31 @@
 
 #pragma once
 
-#include <QtWidgets/QMainWindow>
-#include <QtCore/QScopedPointer>
+#include <QtCore/QObject>
+#include <QtSql/QSqlQuery>
 
-namespace Ui
-{
-    class MainWindow;
-}
-
-class CountdownTimer;
-class WordCounter;
-class Dashboard;
-
-class MainWindow : public QMainWindow
+class Database : public QObject
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget* pParent = nullptr);
-    ~MainWindow();
+    Database(QObject* pParent = nullptr);
+    ~Database();
 
-    void Init();
+    bool open();
 
-protected slots:
-    void on_actionAbout_triggered();
-    void delayedRestoreState();
-    void onCountdownTimerDone();
+    float getLastWpm(const QString& sTableName) const;
+    float getLastSpm(const QString& sTableName) const;
+    float getLastAccuracy(const QString& sTableName) const;
 
-protected:
-    virtual bool event(QEvent* pEvent) override;
+    float getMaxWpm(const QString& sTableName) const;
+    float getMaxSpm(const QString& sTableName) const;
+    float getMaxAccuracy(const QString& sTableName) const;
 
 private:
-    QScopedPointer<Ui::MainWindow> _pUi;
-    CountdownTimer* _pCountdownTimer = nullptr;
-    WordCounter* _pWordCounter = nullptr;
-    Dashboard* _pDashboard = nullptr;
+    QSqlQuery getLastRecord(const QString& sTableName) const;
+    QSqlQuery getMax(const QString& sColumnName, const QString& sTableName) const;
+
+private:
+    QString getDatabaseFilePath() const;
 };

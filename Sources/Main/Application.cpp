@@ -25,19 +25,17 @@
 #include "../Keyboards/Models/UndoableKeyboardModel.h"
 #include "../Keyboards/KeyboardGraphicsScene.h"
 #include "../Levels/Models/LevelsModel.h"
-#include <QtSql/QSqlDatabase>
+#include "../Database/Database.h"
 #include <QtWidgets/QUndoStack>
 #include <QtWidgets/QMessageBox>
 #include <QtCore/QCommandLineParser>
-#include <QtCore/QStandardPaths>
-#include <QtCore/QDir>
-#include <QtCore/QFile>
 #include <iostream>
 
 Application::Application(int& argc, char** argv)
     : QApplication(argc, argv)
     , _pOldStreambufCout(std::cout.rdbuf())
     , _pOldStreambufCerr(std::cerr.rdbuf())
+    , _pDatabase(new Database(this))
     , _pTheoryModel(new TheoryModel(this))
     , _pUndoableTheoryModel(new UndoableTheoryModel(this))
     , _pKeyboardModel(new KeyboardModel(this))
@@ -100,54 +98,6 @@ void Application::showAboutDialog()
     sText += tr("<p>Record icon made by <a href='http://www.freepik.com/'>Freepik</a> from <a href='http://www.flaticon.com/'>www.flaticon.com</a>.</p>");
     messageBox.setText(sText);
     messageBox.exec();
-}
-
-bool Application::openDatabase()
-{
-    const QString& sDatabaseFilePath = getDatabaseFilePath();
-    if (sDatabaseFilePath.isEmpty() == false)
-    {
-        QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE");
-        if (database.isValid())
-        {
-            database.setDatabaseName(sDatabaseFilePath);
-            if (database.open())
-            {
-                return true;
-            }
-            else
-            {
-                QString sError = QString("Can't open database \"%1\"").arg(sDatabaseFilePath);
-                std::cerr << sError.toStdString() << std::endl;
-            }
-        }
-        else
-        {
-            QString sError = QString("Invalid database: %1. Available drivers=[%2]").arg(database.driverName()).arg(database.drivers().join(", "));
-            std::cerr << sError.toStdString() << std::endl;
-        }
-    }
-    return false;
-}
-
-QString Application::getDatabaseFilePath() const
-{
-    const QString& sAppLocalPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-    if (sAppLocalPath.isEmpty() == false)
-    {
-        // On linux we have to create the path first
-        if (!QFile::exists(sAppLocalPath))
-        {
-            QDir dir;
-            if (!dir.mkpath(sAppLocalPath))
-            {
-                return QString();
-            }
-        }
-
-        return QString("%1/%2.sqlite").arg(sAppLocalPath).arg("Statistics");
-    }
-    return QString();
 }
 
 void Application::toLogs(const QString& sText, int iWarningLevel)
