@@ -47,6 +47,7 @@ StatisticsWidget::StatisticsWidget(QWidget *parent)
     _pChartSelector->addItem(QIcon(), tr("Wpm"));
     _pChartSelector->addItem(QIcon(), tr("Spm"));
     _pChartSelector->addItem(QIcon(), tr("Accuracy"));
+    _pChartSelector->addItem(QIcon(), tr("Viscosity"));
     _pChartSelector->addItem(QIcon(), tr("Progress"));
     connect(_pChartSelector, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &StatisticsWidget::onChartSelectorCurrentIndexChanged);
     pHLayout->addWidget(_pChartSelector);

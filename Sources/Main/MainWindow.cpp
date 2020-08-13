@@ -182,6 +182,7 @@ void MainWindow::onCountdownTimerDone()
                 const float fWpm = _pWordCounter->getWPM();
                 const float fSpm = _pWordCounter->getSPM();
                 const float fAccuracy = _pWordCounter->getAccuracy();
+                const float fViscosity = _pWordCounter->getViscosity();
 
                 // Update progression
                 const uint16_t uiProgression = pLevelTreeItem->getProgression();
@@ -211,6 +212,7 @@ void MainWindow::onCountdownTimerDone()
                 values["Wpm"] = fWpm;
                 values["Spm"] = fSpm;
                 values["Accuracy"] = fAccuracy;
+                values["Viscosity"] = fViscosity;
                 values["Progress"] = pLevelTreeItem->getProgressionPercentage();
                 if (pDatabase->insertValues(sTableName, values))
                 {

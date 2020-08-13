@@ -68,6 +68,8 @@ private:
                const QStringList& dictionaries,
                HashSpecialKeysStates& rSpecialKeysStates) const;
 
+    void processChord(const QChar& character);
+
 private:
     QElapsedTimer _keyPressTimer;
     uint _uiInvalidCharacters = 0;
@@ -77,5 +79,4 @@ private:
     QColor _colorOk;
     QColor _colorError;
     QTimer* _pTimerSolve = nullptr;
-    QString _sCurrentChord;
 };

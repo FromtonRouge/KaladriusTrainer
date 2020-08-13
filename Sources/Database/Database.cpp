@@ -77,6 +77,7 @@ bool Database::createLevelTable(const QString& sTableName)
                                   "\"Wpm\"	REAL,"
                                   "\"Spm\"	REAL,"
                                   "\"Accuracy\"	REAL,"
+                                  "\"Viscosity\" REAL,"
                                   "\"Progress\"	REAL"
                                   ");";
 

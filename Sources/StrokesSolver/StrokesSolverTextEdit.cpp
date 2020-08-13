@@ -176,6 +176,8 @@ void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
     {
     case Qt::Key_Backspace:
         {
+            processChord(pKeyEvent->text().front());
+
             if (_uiInvalidCharacters)
             {
                 _uiInvalidCharacters--;
@@ -218,24 +220,9 @@ void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
     }
 
     Q_ASSERT(sInputText.size() == 1);
-    _sCurrentChord += sInputText;
+    const QChar& currentChar = sInputText.front();
 
-    // Measure elapsed time between two strokes
-    if (!_keyPressTimer.isValid())
-    {
-        _keyPressTimer.start();
-    }
-    else
-    {
-        const uint16_t MIN_TIME_TO_STROKE = 100; // milliseconds
-        const qint64 iElapsedTime = _keyPressTimer.restart();
-        if (iElapsedTime >= MIN_TIME_TO_STROKE)
-        {
-            // A chord happens
-            _pWordCounter->pushChord(_sCurrentChord, uint16_t(iElapsedTime));
-            _sCurrentChord.clear();
-        }
-    }
+    processChord(currentChar);
 
     cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
     const QString& sSelectedText = cursor.selectedText();
@@ -243,7 +230,7 @@ void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
     {
         if (_uiInvalidCharacters == 0)
         {
-            // Register at one and only one error for this position
+            // Register one and only one error for this position
             _pWordCounter->registerError(cursor.position());
         }
 
@@ -255,11 +242,7 @@ void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
         cursor.insertText(sInputText);
         _uiInvalidCharacters++;
 
-        // Remove the previous registered stroke
-        if (_sCurrentChord.isEmpty())
-        {
-            _pWordCounter->popChord();
-        }
+        _pWordCounter->markError();
     }
     else
     {
@@ -332,6 +315,36 @@ bool StrokesSolverTextEdit::solve(QString sText,
         }
     }
     return bAtLeastOneMatch;
+}
+
+void StrokesSolverTextEdit::processChord(const QChar& character)
+{
+    if (!_keyPressTimer.isValid())
+    {
+        _keyPressTimer.start();
+
+        // Start the record of the first chord
+        _pWordCounter->startChord(character, 0);
+    }
+    else
+    {
+        // Measure elapsed time between two strokes
+        const uint16_t MIN_TIME_TO_STROKE = 100; // milliseconds
+        const qint64 iTimestamp = _keyPressTimer.elapsed();
+        if ((iTimestamp - _pWordCounter->getLastTimestamp()) >= MIN_TIME_TO_STROKE)
+        {
+            // Save the chord being recorded...
+            _pWordCounter->endChord();
+
+            // ... and start the record of a new chord
+            _pWordCounter->startChord(character, iTimestamp);
+        }
+        else
+        {
+            // Continue the record of the chord
+            _pWordCounter->continueChord(character, iTimestamp);
+        }
+    }
 }
 
 void StrokesSolverTextEdit::onTextChanged()

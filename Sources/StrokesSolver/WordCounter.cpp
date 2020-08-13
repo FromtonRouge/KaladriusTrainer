@@ -34,6 +34,7 @@ void WordCounter::reset()
 {
     _uiValidCharacters = 0;
     _errors.clear();
+    _buffer.clear();
     _chords.clear();
 }
 
@@ -69,20 +70,53 @@ void WordCounter::registerValidCharacters(int iCharacters)
     _uiValidCharacters = iCharacters;
 }
 
-void WordCounter::pushChord(const QString& sChord, uint16_t uiTimeToStroke)
+void WordCounter::startChord(const QChar& c, qint64 iTimestamp)
 {
-    ChordData chord;
-    chord.chord = sChord;
-    chord.uiTimeToStroke = uiTimeToStroke;
-    _chords.push(chord);
+    _buffer.clear();
+
+    CharWithTimestamp data;
+    data.character = c;
+    data.timestamp = iTimestamp;
+    _buffer.push(data);
 }
 
-void WordCounter::popChord()
+void WordCounter::continueChord(const QChar& c, qint64 iTimestamp)
 {
-    if (!_chords.isEmpty())
+    CharWithTimestamp data;
+    data.character = c;
+    data.timestamp = iTimestamp;
+    _buffer.push(data);
+}
+
+void WordCounter::markError()
+{
+    Q_ASSERT(!_buffer.isEmpty());
+    _buffer.top().isError = true;
+}
+
+void WordCounter::endChord()
+{
+    QString sChord;
+    bool bError = false;
+    for (const CharWithTimestamp& data : _buffer)
     {
-        _chords.pop();
+        sChord += data.character;
+        bError = data.isError;
     }
+
+    if (!sChord.contains("\b") && !bError && !_buffer.isEmpty())
+    {
+        ChordData chordData;
+        chordData.timestamp = _buffer.front().timestamp;
+        chordData.chord = sChord;
+        _chords << chordData;
+    }
+}
+
+qint64 WordCounter::getLastTimestamp() const
+{
+    Q_ASSERT(!_buffer.isEmpty());
+    return _buffer.top().timestamp;
 }
 
 float WordCounter::getAccuracy() const
@@ -93,25 +127,37 @@ float WordCounter::getAccuracy() const
 
 float WordCounter::getViscosity() const
 {
+    // We need at least 2 strokes to mesure the time between them
+    if (_chords.count() < 2)
+    {
+        return 0.f;
+    }
+
     // Compute the "needed time to stroke" average
     float fSum = 0;
-    for (const ChordData& chordData : _chords)
+    QVector<float> timesBetweenStrokes;
+    const int iChords = _chords.count();
+    for (int i = 1; i < iChords; ++i)
     {
-        fSum += float(chordData.uiTimeToStroke);
+        const ChordData& chordData = _chords[i];
+        const float fDelta = chordData.timestamp - _chords[i-1].timestamp;
+        fSum += fDelta;
+        timesBetweenStrokes << fDelta;
     }
-    const float fAverage = fSum /_chords.count();
+    const float fAverage = fSum / timesBetweenStrokes.count();
 
     // Compute the variance
     float fVarianceNumerator = 0;
-    for (const ChordData& chordData : _chords)
+    for (float fXi : timesBetweenStrokes)
     {
-        const float fXi = chordData.uiTimeToStroke;
         fVarianceNumerator += (fXi - fAverage)*(fXi - fAverage);
     }
 
     // Compute the standard deviation of the "needed time to stroke" metric
-    // Its called "Viscosity" (0 means "fluid")
-    const float fVariance = fVarianceNumerator / _chords.count();
+    const float fVariance = fVarianceNumerator / timesBetweenStrokes.count();
     const float fStandardDeviation = sqrt(fVariance);
-    return fStandardDeviation;
+
+    // Finally we compute the "Coefficient of variance" of the "needed time to stroke" metric
+    // and we scale it 60 times, we call it the "Viscosity" (the lower the better, -> 0 means "fluid")
+    return 60.f*fStandardDeviation/fAverage;
 }

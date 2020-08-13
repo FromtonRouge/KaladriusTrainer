@@ -45,17 +45,31 @@ public:
 
     void registerError(int iIndex);
     void registerValidCharacters(int iCharacters);
-    void pushChord(const QString& sChord, uint16_t uiTimeToStroke);
-    void popChord();
+
+    // Chords count process
+    void startChord(const QChar& c, qint64 iTimestamp);
+    void continueChord(const QChar& c, qint64 iTimestamp);
+    void endChord();
+    void markError();
+    qint64 getLastTimestamp() const;
 
 private:
     CountdownTimer* _pCountdownTimer = nullptr;
     uint _uiValidCharacters = 0;
     QSet<int> _errors;
+
+    struct CharWithTimestamp
+    {
+        QChar character;
+        qint64 timestamp = 0;
+        bool isError = false;
+    };
+    QStack<CharWithTimestamp> _buffer;
+
     struct ChordData
     {
+        qint64 timestamp = 0;
         QString chord;
-        uint16_t uiTimeToStroke = 0;
     };
     QStack<ChordData> _chords;
 };

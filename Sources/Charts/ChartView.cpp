@@ -41,6 +41,7 @@ ChartView::ChartView(QWidget* pParent)
     _seriesConfigurations << SeriesConfiguration("Wpm", Qt::blue, true, Qt::red);
     _seriesConfigurations << SeriesConfiguration("Spm", "#add8e6", true, "#ffa500");
     _seriesConfigurations << SeriesConfiguration("Accuracy", "#ee82ee", false);
+    _seriesConfigurations << SeriesConfiguration("Viscosity", "#2e8b57", false);
     _seriesConfigurations << SeriesConfiguration("Progress", Qt::darkMagenta, false);
 
     _pActionAo5 = new QAction("Average of 5");
