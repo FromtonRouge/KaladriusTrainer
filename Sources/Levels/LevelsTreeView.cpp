@@ -22,6 +22,8 @@
 #include "TreeItems/LevelTreeItem.h"
 #include "../Tree/Models/ItemDataRole.h"
 #include "../Tree/TreeItems/TreeItem.h"
+#include "../Main/Application.h"
+#include "../Database/Database.h"
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>
@@ -72,27 +74,8 @@ void LevelsTreeView::restart()
                 QSettings settings;
                 settings.setValue("lastSelectedLevel", current.row());
 
-                const QString& sTableName = QString("Level %1").arg(uuidLevel.toString(QUuid::WithoutBraces));
-                const QSqlDatabase& db = QSqlDatabase::database();
-                if (!db.tables().contains(sTableName))
-                {
-                    QString sCreateDatabase = "CREATE TABLE IF NOT EXISTS \"%1\" ("
-                                              "\"Date\"	TEXT,"
-                                              "\"Wpm\"	REAL,"
-                                              "\"Spm\"	REAL,"
-                                              "\"Accuracy\"	REAL"
-                                              ");";
-
-                    sCreateDatabase = sCreateDatabase.arg(sTableName);
-
-                    QSqlQuery query(db);
-                    if (!query.exec(sCreateDatabase))
-                    {
-                        QString sError = QString("Can't create table: %1").arg(query.lastError().text());
-                        std::cerr << sError.toStdString() << std::endl;
-                    }
-                }
-
+                const QString& sTableName = current.data(LevelTableNameRole).toString();
+                qApp->getDatabase()->createLevelTable(sTableName);
                 emit restarted(sTableName);
                 break;
             }

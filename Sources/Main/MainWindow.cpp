@@ -182,18 +182,6 @@ void MainWindow::onCountdownTimerDone()
                 const float fWpm = _pWordCounter->getWPM();
                 const float fSpm = _pWordCounter->getSPM();
                 const float fAccuracy = _pWordCounter->getAccuracy();
-                QString sQuery = "INSERT INTO \"main\".\"%1\"(\"Date\",\"Wpm\",\"Spm\",\"Accuracy\") VALUES (\"%2\",%3, %4, %5);";
-                sQuery = sQuery.arg(sTableName).arg(sCurrentTime).arg(fWpm).arg(fSpm).arg(fAccuracy);
-                QSqlQuery query(QSqlDatabase::database());
-                if (!query.exec(sQuery))
-                {
-                    QString sError = QString("Can't insert result: %1").arg(query.lastError().text());
-                    std::cerr << sError.toStdString() << std::endl;
-                }
-                else
-                {
-                    _pUi->chartView->createChart(sTableName);
-                }
 
                 // Update progression
                 const uint16_t uiProgression = pLevelTreeItem->getProgression();
@@ -202,7 +190,9 @@ void MainWindow::onCountdownTimerDone()
                 // or if the current Spm is 70% above the needed Spm
                 const float fNeededSpm = pLevelTreeItem->getSPMNeededToProgress();
                 const bool bForceProgression = fSpm > (1.7*fNeededSpm);
-                const float fAo5Spm = _pUi->chartView->getLastAo5Spm();
+
+                auto pDatabase = qApp->getDatabase();
+                const float fAo5Spm = (pDatabase->getSumOfCount(sTableName, "Spm", 4) + fSpm)/5;
                 if (fAo5Spm > 0.f || bForceProgression)
                 {
                     const float fSpmDelta = (bForceProgression ? fSpm : fAo5Spm) - fNeededSpm;
@@ -215,8 +205,19 @@ void MainWindow::onCountdownTimerDone()
                     }
                 }
 
+                // Insert values in database
+                QMap<QString, QVariant> values;
+                values["Date"] = sCurrentTime;
+                values["Wpm"] = fWpm;
+                values["Spm"] = fSpm;
+                values["Accuracy"] = fAccuracy;
+                values["Progress"] = pLevelTreeItem->getProgressionPercentage();
+                if (pDatabase->insertValues(sTableName, values))
+                {
+                    _pUi->chartView->createChart(sTableName);
+                }
+
                 // Update last and pb
-                auto pDatabase = qApp->getDatabase();
                 _pDashboard->setLastWpm(pDatabase->getLastWpm(sTableName));
                 _pDashboard->setLastSpm(pDatabase->getLastSpm(sTableName));
                 _pDashboard->setLastAccuracy(pDatabase->getLastAccuracy(sTableName));

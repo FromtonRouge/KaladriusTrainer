@@ -19,8 +19,9 @@
 
 #pragma once
 
-#include <QtCore/QObject>
 #include <QtSql/QSqlQuery>
+#include <QtCore/QObject>
+#include <QtCore/QMap>
 
 class Database : public QObject
 {
@@ -31,6 +32,10 @@ public:
     ~Database();
 
     bool open();
+
+    bool createLevelTable(const QString& sTableName);
+    bool insertValues(const QString& sTableName, const QMap<QString, QVariant>& values);
+    float getSumOfCount(const QString& sTableName, const QString& sColumn, uint16_t uiCount) const;
 
     float getLastWpm(const QString& sTableName) const;
     float getLastSpm(const QString& sTableName) const;

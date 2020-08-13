@@ -41,6 +41,7 @@ ChartView::ChartView(QWidget* pParent)
     _seriesConfigurations << SeriesConfiguration("Wpm", Qt::blue, true, Qt::red);
     _seriesConfigurations << SeriesConfiguration("Spm", "#add8e6", true, "#ffa500");
     _seriesConfigurations << SeriesConfiguration("Accuracy", "#ee82ee", false);
+    _seriesConfigurations << SeriesConfiguration("Progress", Qt::darkMagenta, false);
 
     _pActionAo5 = new QAction("Average of 5");
     _pActionAo5->setCheckable(true);
@@ -124,17 +125,6 @@ void ChartView::createChart(const QString& sLevelName)
     {
         _pChart->axisY()->setMin(0);
     }
-}
-
-float ChartView::getLastAo5Spm() const
-{
-    float fResult = 0.f;
-    if (_pAo5SpmSeries && _pAo5SpmSeries->count())
-    {
-        const QPointF& lastAo5Spm = _pAo5SpmSeries->at(_pAo5SpmSeries->count()-1);
-        fResult = lastAo5Spm.y();
-    }
-    return fResult;
 }
 
 void ChartView::contextMenuEvent(QContextMenuEvent*)

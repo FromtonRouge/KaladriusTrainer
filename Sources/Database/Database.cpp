@@ -66,6 +66,93 @@ bool Database::open()
     return false;
 }
 
+bool Database::createLevelTable(const QString& sTableName)
+{
+    Q_ASSERT(!sTableName.isEmpty());
+    const QSqlDatabase& db = QSqlDatabase::database();
+    if (!db.tables().contains(sTableName))
+    {
+        QString sCreateDatabase = "CREATE TABLE IF NOT EXISTS \"%1\" ("
+                                  "\"Date\"	TEXT,"
+                                  "\"Wpm\"	REAL,"
+                                  "\"Spm\"	REAL,"
+                                  "\"Accuracy\"	REAL,"
+                                  "\"Progress\"	REAL"
+                                  ");";
+
+        sCreateDatabase = sCreateDatabase.arg(sTableName);
+
+        QSqlQuery query(db);
+        if (!query.exec(sCreateDatabase))
+        {
+            QString sError = QString("Can't create table: %1").arg(query.lastError().text());
+            std::cerr << sError.toStdString() << std::endl;
+            return false;
+        }
+    }
+    return true;
+}
+
+bool Database::insertValues(const QString& sTableName, const QMap<QString, QVariant>& mapValues)
+{
+    QStringList columns;
+    QStringList values;
+
+    auto it = mapValues.begin();
+    while (it != mapValues.end())
+    {
+        const QString& sColumnName = it.key();
+        const QVariant& value = it++.value();
+
+        columns << QString("\"%1\"").arg(sColumnName);
+
+        switch (value.type())
+        {
+        case QVariant::String:
+            {
+                values << QString("\"%1\"").arg(value.toString());
+                break;
+            }
+        default:
+            {
+                values << value.toString();
+                break;
+            }
+        }
+    }
+
+    QString sQuery = "INSERT INTO \"%1\"(%2) VALUES (%3);";
+    sQuery = sQuery.arg(sTableName).arg(columns.join(",")).arg(values.join(","));
+    QSqlQuery query(QSqlDatabase::database());
+    if (!query.exec(sQuery))
+    {
+        QString sError = QString("Can't insert result: %1").arg(query.lastError().text());
+        std::cerr << sError.toStdString() << std::endl;
+        return false;
+    }
+    return true;
+}
+
+float Database::getSumOfCount(const QString& sTableName, const QString& sColumnName, uint16_t uiCount) const
+{
+    QSqlQuery query(QSqlDatabase::database());
+    QString sQuery = "SELECT \"%1\" FROM \"%2\" ORDER BY ROWID DESC LIMIT %3";
+    sQuery = sQuery.arg(sColumnName).arg(sTableName).arg(uiCount);
+    if (!query.exec(sQuery))
+    {
+        QString sError = QString("Can't execute query: %1").arg(query.lastError().text());
+        std::cerr << sError.toStdString() << std::endl;
+        return 0;
+    }
+
+    float fResult = 0;
+    while (query.next())
+    {
+        fResult += query.value(0).toFloat();
+    }
+    return fResult;
+}
+
 float Database::getLastWpm(const QString& sTableName) const
 {
     QSqlQuery query = getLastRecord(sTableName);

@@ -22,7 +22,6 @@
 #include <QtCharts/QChartView>
 #include <QtWidgets/QAction>
 #include <QtGui/QColor>
-#include <QtCore/QPointer>
 #include <QtCore/QVector>
 
 namespace QtCharts
@@ -69,5 +68,4 @@ private:
     QVector<SeriesConfiguration> _seriesConfigurations;
     QAction* _pActionAo5 = nullptr;
     QtCharts::QChart* _pChart = nullptr;
-    QPointer<QtCharts::QLineSeries> _pAo5SpmSeries;
 };
