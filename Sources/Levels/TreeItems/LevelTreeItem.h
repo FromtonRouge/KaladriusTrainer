@@ -42,26 +42,17 @@ public:
     virtual int type() const override {return Level;}
     const QUuid& getUuid() const {return _uuid;}
 
-    void loadWords(const QString& sWordsFilePath);
-    const QStringList& getAllWords() const {return _words;}
-    QStringList getWords(uint16_t uiMin, uint16_t uiMax) const;
-    QStringList getCurrentWords() const;
+    void loadWords();
+
+    QStringList get5WordsToPractice() const;
     QStringList getRandomWords() const;
 
-    uint16_t getProgression() const {return _uiProgression;}
-    void setProgression(uint16_t uiProgression);
     float getProgressionPercentage() const;
-
-    void loadProgression();
-    void saveProgression() const;
-
-    uint16_t getSPMNeededToProgress() const {return _uiSPMNeededToProgress;}
 
 private:
     QUuid _uuid;
+    QString _sWordsFilePath;
     LevelType _levelType;
     QStringList _words;
     uint16_t _uiRandomWordsCount = 1000;
-    uint16_t _uiProgression = 5;
-    uint16_t _uiSPMNeededToProgress = 70;
 };

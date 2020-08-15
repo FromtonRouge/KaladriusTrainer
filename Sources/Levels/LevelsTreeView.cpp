@@ -66,7 +66,11 @@ void LevelsTreeView::restart()
         case TreeItem::Level:
             {
                 auto pLevelTreeItem = static_cast<LevelTreeItem*>(pLevelsModel->itemFromIndex(current));
-                const QUuid& uuidLevel = pLevelTreeItem->getUuid();
+
+                auto pDatabase = qApp->getDatabase();
+                pDatabase->createLevelWordsTable(current.data(LevelWordsTableNameRole).toString());
+                pLevelTreeItem->loadWords();
+
                 const QStringList& randomWords = pLevelTreeItem->getRandomWords();
                 const QString& sText = randomWords.join(" ");
                 emit sendText(sText);
@@ -74,9 +78,9 @@ void LevelsTreeView::restart()
                 QSettings settings;
                 settings.setValue("lastSelectedLevel", current.row());
 
-                const QString& sTableName = current.data(LevelTableNameRole).toString();
-                qApp->getDatabase()->createLevelTable(sTableName);
-                emit restarted(sTableName);
+                const QString& sLevelTableName = current.data(LevelTableNameRole).toString();
+                pDatabase->createLevelTable(sLevelTableName);
+                emit restarted(sLevelTableName);
                 break;
             }
         default:

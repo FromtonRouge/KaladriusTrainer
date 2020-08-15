@@ -74,6 +74,7 @@ SOURCES += \
     Sources/Statistics/StatisticsWidget.cpp \
     Sources/StrokesSolver/StrokesSolverTextEdit.cpp \
     Sources/StrokesSolver/StrokesSolverWidget.cpp \
+    Sources/StrokesSolver/TypingTestResult.cpp \
     Sources/StrokesSolver/WordCounter.cpp \
     Sources/Theories/Models/TheoryModel.cpp \
     Sources/Theories/Models/UndoableTheoryModel.cpp \
@@ -98,6 +99,7 @@ SOURCES += \
     Sources/Tree/TreeItems/ValueTreeItem.cpp \
     Sources/Utils/AverageOf.cpp \
     Sources/Utils/CountdownTimer.cpp \
+    Sources/Utils/Functions.cpp \
     Sources/Values/Editors/ColorEditor.cpp \
     Sources/Values/Editors/FingerSelector.cpp \
     Sources/Values/Editors/FontEditor.cpp \
@@ -149,6 +151,7 @@ HEADERS += \
     Sources/Streams/StreamSink.h \
     Sources/StrokesSolver/StrokesSolverTextEdit.h \
     Sources/StrokesSolver/StrokesSolverWidget.h \
+    Sources/StrokesSolver/TypingTestResult.h \
     Sources/StrokesSolver/WordCounter.h \
     Sources/Theories/Models/TheoryModel.h \
     Sources/Theories/Models/UndoableTheoryModel.h \
@@ -174,6 +177,7 @@ HEADERS += \
     Sources/Tree/TreeItems/ValueTreeItem.h \
     Sources/Utils/AverageOf.h \
     Sources/Utils/CountdownTimer.h \
+    Sources/Utils/Functions.h \
     Sources/Values/Editors/ColorEditor.h \
     Sources/Values/Editors/FingerSelector.h \
     Sources/Values/Editors/FontEditor.h \

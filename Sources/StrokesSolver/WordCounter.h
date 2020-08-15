@@ -18,6 +18,8 @@
 // ======================================================================
 #pragma once
 
+#include "TypingTestResult.h"
+#include <QtCore/QHash>
 #include <QtCore/QChar>
 #include <QtCore/QStack>
 #include <QtCore/QStringList>
@@ -37,6 +39,8 @@ public:
     WordCounter(CountdownTimer* pCountdownTimer, QObject* pParent = nullptr);
 
     void reset();
+    void typingTestDone();
+    const TypingTestResult& getTypingTestResult() const {return _typingTestResult;}
 
     float getWPM() const;
     float getSPM() const;
@@ -47,29 +51,32 @@ public:
     void registerValidCharacters(int iCharacters);
 
     // Chords count process
-    void startChord(const QChar& c, qint64 iTimestamp);
+    void startChord(const QChar& inputChar, const Word& word, qint64 iTimestamp);
     void continueChord(const QChar& c, qint64 iTimestamp);
     void endChord();
-    void markError();
+    void markBecomeError();
+    void markStillError();
     qint64 getLastTimestamp() const;
 
 private:
     CountdownTimer* _pCountdownTimer = nullptr;
     uint _uiValidCharacters = 0;
     QSet<int> _errors;
+    TypingTestResult _typingTestResult;
 
     struct CharWithTimestamp
     {
+        enum ErrorState
+        {
+            NoError,
+            BecomeError,
+            StillError
+        };
         QChar character;
+        Word wordBeingCompleted;
         qint64 timestamp = 0;
-        bool isError = false;
+        ErrorState errorState = NoError;
     };
     QStack<CharWithTimestamp> _buffer;
-
-    struct ChordData
-    {
-        qint64 timestamp = 0;
-        QString chord;
-    };
-    QStack<ChordData> _chords;
+    QStack<ChordData> _validChords;
 };

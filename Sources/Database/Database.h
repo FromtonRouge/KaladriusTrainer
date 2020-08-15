@@ -22,6 +22,8 @@
 #include <QtSql/QSqlQuery>
 #include <QtCore/QObject>
 #include <QtCore/QMap>
+#include <QtCore/QVector>
+#include <QtCore/QPair>
 
 class Database : public QObject
 {
@@ -33,8 +35,12 @@ public:
 
     bool open();
 
-    bool createLevelTable(const QString& sTableName);
-    bool insertValues(const QString& sTableName, const QMap<QString, QVariant>& values);
+    QSqlQuery execute(const QString& sQuery) const;
+
+    bool createLevelTable(const QString& sTableName) const;
+    bool createLevelWordsTable(const QString& sTableName) const;
+    bool insertValues(const QString& sTableName, const QMap<QString, QVariant>& values) const;
+    int getCount(const QString& sTableName) const;
     float getSumOfCount(const QString& sTableName, const QString& sColumn, uint16_t uiCount) const;
 
     float getLastWpm(const QString& sTableName) const;
@@ -48,7 +54,6 @@ public:
 private:
     QSqlQuery getLastRecord(const QString& sTableName) const;
     QSqlQuery getMax(const QString& sColumnName, const QString& sTableName) const;
-
-private:
+    bool createTable(const QString& sTableName, const QVector<QPair<QString, QString>>& columns) const;
     QString getDatabaseFilePath() const;
 };

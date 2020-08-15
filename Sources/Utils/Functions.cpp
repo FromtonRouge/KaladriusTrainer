@@ -17,20 +17,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "Functions.h"
+#include <QtCore/QPointF>
 
-#include "../../Tree/Models/TreeItemModel.h"
-
-class LevelsModel : public TreeItemModel
+float interpolate(const QPointF& p1, const QPointF& p2, float fX)
 {
-    Q_OBJECT
-
-public:
-    LevelsModel(QObject* pParent = nullptr);
-    ~LevelsModel();
-
-    void updateLevelDisplay(const QModelIndex& indexLevel);
-
-    virtual QVariant data(const QModelIndex &index, int iRole) const override;
-};
-
+    const float fA = (p2.y()-p1.y())/(p2.x()-p1.x());
+    const float fB = p1.y() - fA*p1.x();
+    return fA * fX + fB;
+}

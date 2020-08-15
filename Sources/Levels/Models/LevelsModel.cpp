@@ -33,15 +33,9 @@ LevelsModel::~LevelsModel()
 
 }
 
-void LevelsModel::setProgression(const QModelIndex& index, uint16_t uiProgression)
+void LevelsModel::updateLevelDisplay(const QModelIndex& indexLevel)
 {
-    const int iTreeItemType = index.data(TreeItemTypeRole).toInt();
-    if (iTreeItemType == TreeItem::Level)
-    {
-        auto pLevelTreeItem = static_cast<LevelTreeItem*>(itemFromIndex(index));
-        pLevelTreeItem->setProgression(uiProgression);
-        emit dataChanged(index, index.siblingAtColumn(1));
-    }
+    emit dataChanged(indexLevel.siblingAtColumn(0), indexLevel.siblingAtColumn(1), {Qt::DisplayRole});
 }
 
 QVariant LevelsModel::data(const QModelIndex& index, int iRole) const

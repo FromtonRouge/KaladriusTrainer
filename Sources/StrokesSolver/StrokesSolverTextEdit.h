@@ -21,6 +21,7 @@
 
 #include "../Theories/Models/TheoryModel.h"
 #include "../Keycaps/KeycapState.h"
+#include "WordCounter.h"
 #include <QtWidgets/QTextEdit>
 #include <QtGui/QColor>
 #include <QtCore/QElapsedTimer>
@@ -28,7 +29,6 @@
 #include <QtCore/QChar>
 
 class QTimer;
-class WordCounter;
 class StrokesSolverTextEdit : public QTextEdit
 {
     Q_OBJECT
@@ -69,6 +69,10 @@ private:
                HashSpecialKeysStates& rSpecialKeysStates) const;
 
     void processChord(const QChar& character);
+
+    Word getWordBeingCompleted() const;
+    QString getCurrentWord() const;
+    QString getExpectedText() const;
 
 private:
     QElapsedTimer _keyPressTimer;

@@ -19,18 +19,6 @@
 
 #pragma once
 
-#include "../../Tree/Models/TreeItemModel.h"
+class QPointF;
 
-class LevelsModel : public TreeItemModel
-{
-    Q_OBJECT
-
-public:
-    LevelsModel(QObject* pParent = nullptr);
-    ~LevelsModel();
-
-    void updateLevelDisplay(const QModelIndex& indexLevel);
-
-    virtual QVariant data(const QModelIndex &index, int iRole) const override;
-};
-
+float interpolate(const QPointF& p1, const QPointF& p2, float fX);

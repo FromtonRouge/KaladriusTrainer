@@ -19,6 +19,9 @@
 
 #include "LevelTreeItem.h"
 #include "../../Tree/Models/ItemDataRole.h"
+#include "../../Main/Application.h"
+#include "../../Database/Database.h"
+#include <QtSql/QSqlQuery>
 #include <QtCore/QRandomGenerator>
 #include <QtCore/QFile>
 #include <QtCore/QRegularExpression>
@@ -31,9 +34,11 @@ LevelTreeItem::LevelTreeItem(LevelType levelType,
                              const QString& sWordsFilePath)
     : _levelType(levelType)
     , _uuid(uuid)
+    , _sWordsFilePath(sWordsFilePath)
 {
     setText(sLabel);
     setData(QString("Level %1").arg(_uuid.toString(QUuid::WithoutBraces)), LevelTableNameRole);
+    setData(QString("Words %1").arg(_uuid.toString(QUuid::WithoutBraces)), LevelWordsTableNameRole);
 
     QString sIconPath;
     switch (_levelType)
@@ -56,10 +61,6 @@ LevelTreeItem::LevelTreeItem(LevelType levelType,
 
     setIcon(QIcon(sIconPath));
     setEditable(false);
-
-    loadWords(sWordsFilePath);
-
-    loadProgression();
 }
 
 LevelTreeItem::~LevelTreeItem()
@@ -67,76 +68,125 @@ LevelTreeItem::~LevelTreeItem()
 
 }
 
-void LevelTreeItem::loadWords(const QString& sWordsFilePath)
+void LevelTreeItem::loadWords()
 {
     _words.clear();
 
-    QFile file(sWordsFilePath);
+    QFile file(_sWordsFilePath);
     if (file.open(QIODevice::ReadOnly))
     {
         const QString& sWords = file.readAll();
         const QRegularExpression re("(\r\n)|(\n)|([ \t])");
         _words = sWords.split(re);
+
+        // Insert words in database if empty
+        const QString& sLevelWordsTableName = data(LevelWordsTableNameRole).toString();
+
+        auto pDatabase = qApp->getDatabase();
+        if (pDatabase->getCount(sLevelWordsTableName) == 0)
+        {
+            for (const QString& sWord : _words)
+            {
+                if (!sWord.isEmpty())
+                {
+                    QMap<QString, QVariant> values;
+                    values["Word"] = sWord;
+                    values["Progression"] = 0;
+                    values["Occurences"] = 0;
+                    values["AverageErrorsCount"] = 0.f;
+                    values["AverageChordsCount"] = 0.f;
+                    values["AverageTimeSpentForFirstStroke"] = 0.f;
+                    values["AverageTimeSpentToComplete"] = 0.f;
+                    pDatabase->insertValues(sLevelWordsTableName, values);
+                }
+            }
+        }
     }
 }
 
-QStringList LevelTreeItem::getCurrentWords() const
+QStringList LevelTreeItem::get5WordsToPractice() const
 {
-    return getWords(0, _uiProgression);
-}
-
-QStringList LevelTreeItem::getWords(uint16_t uiMin, uint16_t uiMax) const
-{
-    Q_ASSERT(uiMin < uiMax);
-    QStringList result;
-    const uint16_t uiBound = qMin<uint16_t>(uiMax, uint16_t(_words.size()));
-    for (uint16_t ui = uiMin; ui < uiBound; ++ui)
+    // Get 5 words with a Progression < 100
+    auto pDatabase = qApp->getDatabase();
+    QStringList wordsToPractice;
+    const QString& sLevelWordsTableName = data(LevelWordsTableNameRole).toString();
+    QString sQuery = QString("SELECT Word FROM \"%1\" WHERE Progression < 100 LIMIT 5").arg(sLevelWordsTableName);
+    QSqlQuery query = pDatabase->execute(sQuery);
+    while (query.next())
     {
-        result << _words[ui];
+        wordsToPractice << query.value(0).toString();
     }
-    return result;
+    return wordsToPractice;
 }
 
 QStringList LevelTreeItem::getRandomWords() const
 {
     QStringList result;
-    if (!_words.isEmpty())
+
+    auto pDatabase = qApp->getDatabase();
+    const QString& sLevelWordsTableName = data(LevelWordsTableNameRole).toString();
+    const int iTotalWords = pDatabase->getCount(sLevelWordsTableName);
+
+    // Get words to practice
+    const QStringList& wordsToPractice = get5WordsToPractice();
+
+    // Get words we don't practice often with a Progression == 100
+    QStringList otherWordsToPractice;
+    QString sQuery = QString("SELECT Word FROM \"%1\" WHERE Progression == 100 ORDER BY Occurences ASC LIMIT %2").arg(sLevelWordsTableName).arg(iTotalWords/3);
+    QSqlQuery query = pDatabase->execute(sQuery);
+    while (query.next())
     {
-        const uint16_t uiBound = qMin<uint16_t>(_uiProgression , uint16_t(_words.size()));
-        for (uint16_t i=0; i<_uiRandomWordsCount; i++)
+        otherWordsToPractice << query.value(0).toString();
+    }
+
+    auto getRandomWord = [](const QStringList& words) -> QString
+    {
+        if (!words.isEmpty())
         {
-            QString sWord;
-
-            // Note: avoid empty words and repetitions
-            do
-            {
-                const int iIndex = QRandomGenerator::global()->bounded(uiBound);
-                sWord = _words[iIndex];
-            } while (sWord.isEmpty() || (!result.isEmpty() && !sWord.isEmpty() && sWord == result.back()));
-
-            result << sWord;
+            return words[QRandomGenerator::global()->bounded(words.size())];
         }
+        return QString();
+    };
+
+    for (uint16_t i=0; i<_uiRandomWordsCount; i++)
+    {
+        QString sWord;
+
+        // Note: avoid empty words and repetitions
+        do
+        {
+            // Get a random number between 1 and 100
+            const int iDice = QRandomGenerator::global()->bounded(1, 101);
+            if (iDice >=1 && iDice <= 50)
+            {
+                sWord = getRandomWord(wordsToPractice);
+            }
+            else
+            {
+                sWord = getRandomWord(otherWordsToPractice);
+            }
+
+        } while (sWord.isEmpty() || (!result.isEmpty() && !sWord.isEmpty() && sWord == result.back()));
+
+        result << sWord;
     }
     return result;
 }
 
-void LevelTreeItem::setProgression(uint16_t uiProgression)
-{
-    _uiProgression = qBound<uint16_t>(5, uiProgression, _words.count());
-}
-
 float LevelTreeItem::getProgressionPercentage() const
 {
-    const int iTotalWords = _words.count();
-    return iTotalWords == 0 ? 0 : 100.f*float(_uiProgression)/iTotalWords;
-}
+    auto pDatabase = qApp->getDatabase();
 
-void LevelTreeItem::loadProgression()
-{
-    _uiProgression = QSettings().value(QString("Levels/%1/progress").arg(_uuid.toString()), _uiProgression).toUInt();
-}
-
-void LevelTreeItem::saveProgression() const
-{
-    QSettings().setValue(QString("Levels/%1/progress").arg(_uuid.toString()), _uiProgression);
+    const QString& sLevelWordsTableName = data(LevelWordsTableNameRole).toString();
+    const int iTotal = pDatabase->getCount(sLevelWordsTableName);
+    if (iTotal)
+    {
+        const QString sQuery = QString("SELECT COUNT(*) FROM \"%1\" WHERE Progression == 100").arg(sLevelWordsTableName);
+        QSqlQuery query = pDatabase->execute(sQuery);
+        if (query.next())
+        {
+            return 100.f*float(query.value(0).toInt())/iTotal;
+        }
+    }
+    return 0.f;
 }

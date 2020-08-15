@@ -33,5 +33,6 @@ enum ItemDataRole
     InputKeyBitsRole, ///< uint.
     EntriesIndexRole, ///< QModelIndex.
     LevelTableNameRole, ///< QString.
+    LevelWordsTableNameRole, ///< QString.
     MaxItemDataRole
 };

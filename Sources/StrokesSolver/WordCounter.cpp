@@ -35,7 +35,13 @@ void WordCounter::reset()
     _uiValidCharacters = 0;
     _errors.clear();
     _buffer.clear();
-    _chords.clear();
+    _validChords.clear();
+    _typingTestResult.clear();
+}
+
+void WordCounter::typingTestDone()
+{
+    _typingTestResult.compute();
 }
 
 float WordCounter::getWPM() const
@@ -57,7 +63,7 @@ float WordCounter::getSPM() const
     {
         fSeconds = float(_pCountdownTimer->getElapsedTime()) / 1000;
     }
-    return 60.f * _chords.count() / fSeconds;
+    return 60.f * _validChords.count() / fSeconds;
 }
 
 void WordCounter::registerError(int iIndex)
@@ -70,12 +76,13 @@ void WordCounter::registerValidCharacters(int iCharacters)
     _uiValidCharacters = iCharacters;
 }
 
-void WordCounter::startChord(const QChar& c, qint64 iTimestamp)
+void WordCounter::startChord(const QChar& inputChar, const Word& word, qint64 iTimestamp)
 {
     _buffer.clear();
 
     CharWithTimestamp data;
-    data.character = c;
+    data.character = inputChar;
+    data.wordBeingCompleted = word;
     data.timestamp = iTimestamp;
     _buffer.push(data);
 }
@@ -88,28 +95,51 @@ void WordCounter::continueChord(const QChar& c, qint64 iTimestamp)
     _buffer.push(data);
 }
 
-void WordCounter::markError()
+void WordCounter::markBecomeError()
 {
     Q_ASSERT(!_buffer.isEmpty());
-    _buffer.top().isError = true;
+
+    // Add info on the first character of the chord
+    CharWithTimestamp& rFirstCharacter = _buffer.front();
+    rFirstCharacter.errorState = CharWithTimestamp::BecomeError;
+}
+
+void WordCounter::markStillError()
+{
+    Q_ASSERT(!_buffer.isEmpty());
+
+    // Add info on the current character of the chord
+    _buffer.top().errorState = CharWithTimestamp::StillError;
 }
 
 void WordCounter::endChord()
 {
-    QString sChord;
-    bool bError = false;
-    for (const CharWithTimestamp& data : _buffer)
+    if (!_buffer.isEmpty())
     {
-        sChord += data.character;
-        bError = data.isError;
-    }
+        const CharWithTimestamp& firstData = _buffer.front();
 
-    if (!sChord.contains("\b") && !bError && !_buffer.isEmpty())
-    {
-        ChordData chordData;
-        chordData.timestamp = _buffer.front().timestamp;
-        chordData.chord = sChord;
-        _chords << chordData;
+        QString sChord;
+        for (const CharWithTimestamp& data : _buffer)
+        {
+            sChord += data.character;
+        }
+
+        if (!sChord.contains("\b"))
+        {
+            ChordData chordData;
+            chordData.timestamp = firstData.timestamp;
+            chordData.chord = sChord;
+
+            if (firstData.errorState == CharWithTimestamp::NoError)
+            {
+                _validChords << chordData;
+                _typingTestResult.addSuccess(firstData.wordBeingCompleted, chordData);
+            }
+            else if (firstData.errorState == CharWithTimestamp::BecomeError)
+            {
+                _typingTestResult.addError(firstData.wordBeingCompleted, chordData);
+            }
+        }
     }
 }
 
@@ -128,7 +158,7 @@ float WordCounter::getAccuracy() const
 float WordCounter::getViscosity() const
 {
     // We need at least 2 strokes to mesure the time between them
-    if (_chords.count() < 2)
+    if (_validChords.count() < 2)
     {
         return 0.f;
     }
@@ -136,11 +166,11 @@ float WordCounter::getViscosity() const
     // Compute the "needed time to stroke" average
     float fSum = 0;
     QVector<float> timesBetweenStrokes;
-    const int iChords = _chords.count();
+    const int iChords = _validChords.count();
     for (int i = 1; i < iChords; ++i)
     {
-        const ChordData& chordData = _chords[i];
-        const float fDelta = chordData.timestamp - _chords[i-1].timestamp;
+        const ChordData& chordData = _validChords[i];
+        const float fDelta = chordData.timestamp - _validChords[i-1].timestamp;
         fSum += fDelta;
         timesBetweenStrokes << fDelta;
     }

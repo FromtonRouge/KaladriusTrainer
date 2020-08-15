@@ -19,7 +19,6 @@
 
 #include "StrokesSolverTextEdit.h"
 #include "../Main/Application.h"
-#include "WordCounter.h"
 #include <QtGui/QWindow>
 #include <QtGui/QScreen>
 #include <QtGui/QKeyEvent>
@@ -232,6 +231,11 @@ void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
         {
             // Register one and only one error for this position
             _pWordCounter->registerError(cursor.position());
+            _pWordCounter->markBecomeError();
+        }
+        else
+        {
+            _pWordCounter->markStillError();
         }
 
         // Error dectected
@@ -241,8 +245,6 @@ void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
         cursor.setCharFormat(format);
         cursor.insertText(sInputText);
         _uiInvalidCharacters++;
-
-        _pWordCounter->markError();
     }
     else
     {
@@ -324,7 +326,7 @@ void StrokesSolverTextEdit::processChord(const QChar& character)
         _keyPressTimer.start();
 
         // Start the record of the first chord
-        _pWordCounter->startChord(character, 0);
+        _pWordCounter->startChord(character, getWordBeingCompleted(), 0);
     }
     else
     {
@@ -337,7 +339,7 @@ void StrokesSolverTextEdit::processChord(const QChar& character)
             _pWordCounter->endChord();
 
             // ... and start the record of a new chord
-            _pWordCounter->startChord(character, iTimestamp);
+            _pWordCounter->startChord(character, getWordBeingCompleted(), iTimestamp);
         }
         else
         {
@@ -345,6 +347,107 @@ void StrokesSolverTextEdit::processChord(const QChar& character)
             _pWordCounter->continueChord(character, iTimestamp);
         }
     }
+}
+
+Word StrokesSolverTextEdit::getWordBeingCompleted() const
+{
+    Word result;
+    if (document()->isEmpty())
+    {
+        return result;
+    }
+
+    QTextCursor cursor = textCursor();
+    if (cursor.atStart())
+    {
+        cursor.movePosition(QTextCursor::EndOfWord, QTextCursor::KeepAnchor);
+        result.position = 0;
+        result.word = cursor.selectedText();
+    }
+    else if (!cursor.atEnd())
+    {
+        // Note: the cursor should not be at the end of the document, we don't handle this case
+        cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor);
+        const QChar& leftChar = cursor.selectedText()[0];
+        cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, 2);
+        const QChar& rightChar = cursor.selectedText()[0];
+
+        if (leftChar != QChar::Space && rightChar != QChar::Space)
+        {
+            // We are in a word
+            cursor.movePosition(QTextCursor::StartOfWord, QTextCursor::MoveAnchor);
+            result.position = cursor.position();
+
+            cursor.movePosition(QTextCursor::EndOfWord, QTextCursor::KeepAnchor);
+            result.word = cursor.selectedText();
+        }
+        else if(leftChar == QChar::Space && rightChar != QChar::Space)
+        {
+            // We are at the beginning of a word and we want to complete it
+            result.position = cursor.position();
+            cursor.movePosition(QTextCursor::EndOfWord, QTextCursor::KeepAnchor);
+            result.word = cursor.selectedText();
+        }
+        else if(leftChar != QChar::Space && rightChar == QChar::Space)
+        {
+            // We are at the end of a word and we want to complete the next word
+            cursor.movePosition(QTextCursor::StartOfWord, QTextCursor::MoveAnchor);
+            result.position = cursor.position();
+            cursor.movePosition(QTextCursor::EndOfWord, QTextCursor::KeepAnchor);
+            result.word = cursor.selectedText();
+        }
+        else
+        {
+            // Should not happen
+        }
+    }
+
+    return result;
+}
+
+QString StrokesSolverTextEdit::getCurrentWord() const
+{
+    QTextCursor cursor = textCursor();
+    cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
+    const QString& sRightText = cursor.selectedText();
+    if (!sRightText.isEmpty() && sRightText != " ")
+    {
+        cursor.movePosition(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor, 2);
+        const QString& sLeftText = cursor.selectedText();
+        if (!sLeftText.isEmpty() && sLeftText != " ")
+        {
+            // We are in a word
+            cursor.movePosition(QTextCursor::StartOfWord, QTextCursor::MoveAnchor);
+            cursor.movePosition(QTextCursor::EndOfWord, QTextCursor::KeepAnchor);
+            return cursor.selectedText();
+        }
+    }
+    return QString();
+}
+
+QString StrokesSolverTextEdit::getExpectedText() const
+{
+    QString sExpectedText;
+    QTextCursor cursor = textCursor();
+    cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
+    const QString& sSelectedText = cursor.selectedText();
+    if (!sSelectedText.isEmpty())
+    {
+        if (sSelectedText == " ")
+        {
+            // We are at the end of a word and we look at the next word
+            cursor.movePosition(QTextCursor::StartOfWord, QTextCursor::KeepAnchor);
+            cursor.movePosition(QTextCursor::EndOfWord, QTextCursor::KeepAnchor);
+            sExpectedText = cursor.selectedText();
+        }
+        else
+        {
+            // We are at the beginning or in the middle of a word
+            cursor.movePosition(QTextCursor::EndOfWord, QTextCursor::KeepAnchor);
+            sExpectedText = cursor.selectedText();
+        }
+    }
+    return sExpectedText;
 }
 
 void StrokesSolverTextEdit::onTextChanged()

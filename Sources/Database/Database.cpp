@@ -66,35 +66,43 @@ bool Database::open()
     return false;
 }
 
-bool Database::createLevelTable(const QString& sTableName)
+QSqlQuery Database::execute(const QString& sQuery) const
 {
-    Q_ASSERT(!sTableName.isEmpty());
-    const QSqlDatabase& db = QSqlDatabase::database();
-    if (!db.tables().contains(sTableName))
+    QSqlQuery query(QSqlDatabase::database());
+    if (!query.exec(sQuery))
     {
-        QString sCreateDatabase = "CREATE TABLE IF NOT EXISTS \"%1\" ("
-                                  "\"Date\"	TEXT,"
-                                  "\"Wpm\"	REAL,"
-                                  "\"Spm\"	REAL,"
-                                  "\"Accuracy\"	REAL,"
-                                  "\"Viscosity\" REAL,"
-                                  "\"Progress\"	REAL"
-                                  ");";
-
-        sCreateDatabase = sCreateDatabase.arg(sTableName);
-
-        QSqlQuery query(db);
-        if (!query.exec(sCreateDatabase))
-        {
-            QString sError = QString("Can't create table: %1").arg(query.lastError().text());
-            std::cerr << sError.toStdString() << std::endl;
-            return false;
-        }
+        QString sError = QString("Can't create table: %1").arg(query.lastError().text());
+        std::cerr << sError.toStdString() << std::endl;
     }
-    return true;
+    return query;
 }
 
-bool Database::insertValues(const QString& sTableName, const QMap<QString, QVariant>& mapValues)
+bool Database::createLevelTable(const QString& sTableName) const
+{
+    QVector<QPair<QString, QString>> columns;
+    columns << QPair<QString, QString>("Date", "TEXT");
+    columns << QPair<QString, QString>("Wpm", "REAL");
+    columns << QPair<QString, QString>("Spm", "REAL");
+    columns << QPair<QString, QString>("Accuracy", "REAL");
+    columns << QPair<QString, QString>("Viscosity", "REAL");
+    columns << QPair<QString, QString>("Progress", "REAL");
+    return createTable(sTableName, columns);
+}
+
+bool Database::createLevelWordsTable(const QString& sTableName) const
+{
+    QVector<QPair<QString, QString>> columns;
+    columns << QPair<QString, QString>("Word", "TEXT PRIMARY KEY");
+    columns << QPair<QString, QString>("Progression", "INTEGER"); // from 0 to 100
+    columns << QPair<QString, QString>("Occurences", "INTEGER"); // Number of times you see the word
+    columns << QPair<QString, QString>("AverageErrorsCount", "REAL"); // Average of errors you did on this word
+    columns << QPair<QString, QString>("AverageChordsCount", "REAL"); // Average of chords needed to complete the whole word
+    columns << QPair<QString, QString>("AverageTimeSpentForFirstStroke", "REAL"); // Average time in ms needed to do the first chord of the word
+    columns << QPair<QString, QString>("AverageTimeSpentToComplete", "REAL"); // Average time spent to do all chords for the whole word
+    return createTable(sTableName, columns);
+}
+
+bool Database::insertValues(const QString& sTableName, const QMap<QString, QVariant>& mapValues) const
 {
     QStringList columns;
     QStringList values;
@@ -132,6 +140,24 @@ bool Database::insertValues(const QString& sTableName, const QMap<QString, QVari
         return false;
     }
     return true;
+}
+
+int Database::getCount(const QString& sTableName) const
+{
+    const auto& db = QSqlDatabase::database();
+    if (!db.tables().contains(sTableName))
+    {
+        return 0;
+    }
+
+    QSqlQuery query(db);
+    const QString sQuery = QString("SELECT COUNT(*) FROM \"%1\"").arg(sTableName);
+    if (!query.exec(sQuery))
+    {
+        QString sError = QString("Can't execute query: %1").arg(query.lastError().text());
+        std::cerr << sError.toStdString() << std::endl;
+    }
+    return query.next() ? query.value(0).toInt() : -1;
 }
 
 float Database::getSumOfCount(const QString& sTableName, const QString& sColumnName, uint16_t uiCount) const
@@ -214,6 +240,32 @@ QSqlQuery Database::getMax(const QString& sColumnName, const QString& sTableName
         std::cerr << sError.toStdString() << std::endl;
     }
     return query;
+}
+
+bool Database::createTable(const QString& sTableName, const QVector<QPair<QString, QString> >& columns) const
+{
+    Q_ASSERT(!sTableName.isEmpty());
+    const QSqlDatabase& db = QSqlDatabase::database();
+    if (!db.tables().contains(sTableName))
+    {
+        QStringList buffer;
+        for (const auto& pair : columns)
+        {
+            buffer << QString("\"%1\" %2").arg(pair.first).arg(pair.second);
+        }
+
+        QString sCreateDatabase = "CREATE TABLE IF NOT EXISTS \"%1\" (%2);";
+        sCreateDatabase = sCreateDatabase.arg(sTableName).arg(buffer.join(","));
+
+        QSqlQuery query(db);
+        if (!query.exec(sCreateDatabase))
+        {
+            QString sError = QString("Can't create table: %1").arg(query.lastError().text());
+            std::cerr << sError.toStdString() << std::endl;
+            return false;
+        }
+    }
+    return true;
 }
 
 QString Database::getDatabaseFilePath() const

@@ -20,6 +20,7 @@
 #include "StatisticsView.h"
 
 StatisticsView::StatisticsView(QWidget* pParent)
+    : QtCharts::QChartView(pParent)
 {
 
 }
