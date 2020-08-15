@@ -33,6 +33,22 @@ QDebug operator<<(QDebug debug, const Word& w);
 
 struct CharData
 {
+    enum Kind
+    {
+        NormalChar,
+        ChordStart,
+    };
+
+    enum State
+    {
+        DefaultState,
+        ValidState,
+        ErrorState,
+    };
+
+    Word expectedWord; // only when kind == ChordStart
+    Kind kind = NormalChar;
+    State state = DefaultState;
     int position = 0;
     qint64 timestamp = 0;
     QChar character;
@@ -46,6 +62,7 @@ struct ChordData
     quint64 timestampAtBegin() const {return characters.isEmpty() ? 0 : characters.front().timestamp;}
     quint64 timestampAtEnd() const {return characters.isEmpty() ? 0 : characters.back().timestamp;}
     bool contains(const QChar& c) const { return text().contains(c); }
+    void clear() {characters.clear();}
     QString text() const
     {
         QString sResult;
@@ -88,11 +105,14 @@ public:
     void clear();
     void compute();
 
-    void addValidChord(const Word& word, const ChordData& chordData);
-    void addErrorChord(const Word& word, const ChordData& chordData);
-    void addUndoChord(const Word& word, const ChordData& chordData);
+    void addValidChord(const ChordData& chordData);
+    void addErrorChord(const ChordData& chordData);
+    void addUndoChord(const ChordData& chordData);
+
+    int getValidChordsCount() const;
 
 private:
-    qint64 _iLastTimestamp = 0; // Used to fill DataAtLocation::timestamp
+    QVector<CharData> _textBuffer;
+    QHash<int, int> _errorsAtPosition;
 };
 

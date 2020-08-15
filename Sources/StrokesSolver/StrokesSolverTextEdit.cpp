@@ -331,7 +331,8 @@ void StrokesSolverTextEdit::processChord(const QChar& character)
         // Measure elapsed time between two strokes
         const uint16_t MIN_TIME_TO_STROKE = 100; // milliseconds
         const qint64 iTimestamp = _keyPressTimer.elapsed();
-        if ((iTimestamp - _pWordCounter->getLastTimestamp()) >= MIN_TIME_TO_STROKE)
+        const qint64 iElapsed = (iTimestamp - _pWordCounter->getLastTimestamp());
+        if (iElapsed >= MIN_TIME_TO_STROKE)
         {
             // Save the chord being recorded...
             _pWordCounter->endChord();

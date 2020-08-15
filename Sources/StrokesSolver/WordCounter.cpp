@@ -63,7 +63,7 @@ float WordCounter::getSPM() const
     {
         fSeconds = float(_pCountdownTimer->getElapsedTime()) / 1000;
     }
-    return 60.f * _validChords.count() / fSeconds;
+    return 60.f * _typingTestResult.getValidChordsCount() / fSeconds;
 }
 
 void WordCounter::registerError(int iIndex)
@@ -82,6 +82,7 @@ void WordCounter::startChord(int iPosition, const QChar& inputChar, const Word& 
     _recordedChord.wordBeingCompleted = word;
 
     CharData data;
+    data.kind = CharData::ChordStart;
     data.position = iPosition;
     data.timestamp = iTimestamp;
     data.character = inputChar;
@@ -104,21 +105,26 @@ void WordCounter::markError()
 
 void WordCounter::endChord()
 {
-    const ChordData& chordData = _recordedChord.chordData;
+    ChordData chordData = _recordedChord.chordData;
 
     if (chordData.contains('\b'))
     {
-        // It's an undo chord
-        _typingTestResult.addUndoChord(_recordedChord.wordBeingCompleted, chordData);
+        _typingTestResult.addUndoChord(chordData);
     }
     else if (_recordedChord.isError)
     {
-        _typingTestResult.addErrorChord(_recordedChord.wordBeingCompleted, chordData);
+        for (CharData& rData : chordData.characters) { rData.state = CharData::ErrorState; }
+        chordData.characters.front().expectedWord = _recordedChord.wordBeingCompleted;
+        _typingTestResult.addErrorChord(chordData);
     }
     else
     {
         _validChords << chordData;
-        _typingTestResult.addValidChord(_recordedChord.wordBeingCompleted, chordData);
+
+        for (CharData& rData : chordData.characters) { rData.state = CharData::ValidState; }
+        chordData.characters.front().expectedWord = _recordedChord.wordBeingCompleted;
+
+        _typingTestResult.addValidChord(chordData);
     }
 }
 

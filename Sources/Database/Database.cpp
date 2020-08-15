@@ -97,8 +97,8 @@ bool Database::createLevelWordsTable(const QString& sTableName) const
     columns << QPair<QString, QString>("Occurences", "INTEGER"); // Number of times you see the word
     columns << QPair<QString, QString>("AverageErrorsCount", "REAL"); // Average of errors you did on this word
     columns << QPair<QString, QString>("AverageChordsCount", "REAL"); // Average of chords needed to complete the whole word
-    columns << QPair<QString, QString>("AverageTimeSpentForFirstStroke", "REAL"); // Average time in ms needed to do the first chord of the word
     columns << QPair<QString, QString>("AverageTimeSpentToComplete", "REAL"); // Average time spent to do all chords for the whole word
+    columns << QPair<QString, QString>("AverageTimeSpentForFirstStroke", "REAL"); // Average time in ms needed to do the first chord of the word
     return createTable(sTableName, columns);
 }
 

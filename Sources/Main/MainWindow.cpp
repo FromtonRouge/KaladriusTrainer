@@ -230,8 +230,8 @@ void MainWindow::onCountdownTimerDone()
 
                         averageIfNeeded("AverageErrorsCount", fAverageErrorsCount);
                         averageIfNeeded("AverageChordsCount", fAverageChordsCount);
-                        averageIfNeeded("AverageTimeSpentForFirstStroke", fAverageTimeSpentForFirstStroke);
                         averageIfNeeded("AverageTimeSpentToComplete", fAverageTimeSpentToComplete);
+                        averageIfNeeded("AverageTimeSpentForFirstStroke", fAverageTimeSpentForFirstStroke);
                     }
 
                     // Compute the progression delta fx(timePerChord)
@@ -259,8 +259,8 @@ void MainWindow::onCountdownTimerDone()
                     values << QString("\"Occurences\" = %1").arg(iOccurences);
                     values << QString("\"AverageErrorsCount\" = %1").arg(fAverageErrorsCount);
                     values << QString("\"AverageChordsCount\" = %1").arg(fAverageChordsCount);
-                    values << QString("\"AverageTimeSpentForFirstStroke\" = %1").arg(fAverageTimeSpentForFirstStroke);
                     values << QString("\"AverageTimeSpentToComplete\" = %1").arg(fAverageTimeSpentToComplete);
+                    values << QString("\"AverageTimeSpentForFirstStroke\" = %1").arg(fAverageTimeSpentForFirstStroke);
 
                     QString sQueryUpdateWord = QString("UPDATE \"%1\" SET %2 WHERE Word == \"%3\"");
                     sQueryUpdateWord = sQueryUpdateWord.arg(sLevelWordsTableName).arg(values.join(",")).arg(sWord);
