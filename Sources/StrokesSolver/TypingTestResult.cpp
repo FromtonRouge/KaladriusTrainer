@@ -174,26 +174,13 @@ void TypingTestResult::compute()
 
 void TypingTestResult::addValidChord(const ChordData& chordData)
 {
-    qDebug() << "valid" << chordData;
-    if (_textBuffer.size() != chordData.position())
-    {
-        // Should not happen
-        qDebug() << "buffer size != chord size" << _textBuffer.size() << chordData;
-        Q_ASSERT(false);
-    }
+    Q_ASSERT(_textBuffer.size() == chordData.position());
     _textBuffer << chordData.characters;
 }
 
 void TypingTestResult::addErrorChord(const ChordData& chordData)
 {
-    qDebug() << "error" << chordData;
-    if (_textBuffer.size() != chordData.position())
-    {
-        // Should not happen
-        qDebug() << "buffer size != chord size" << _textBuffer.size() << chordData;
-        Q_ASSERT(false);
-    }
-
+    Q_ASSERT(_textBuffer.size() == chordData.position());
     _textBuffer << chordData.characters;
     const CharData& firstCharOfTheChord = chordData.characters.front();
     Q_ASSERT(firstCharOfTheChord.kind == CharData::ChordStart);
@@ -202,7 +189,6 @@ void TypingTestResult::addErrorChord(const ChordData& chordData)
 
 void TypingTestResult::addUndoChord(const ChordData& chordData)
 {
-    qDebug() << "undo" << chordData << chordData.characters.size();
     const int iCharactersToRemove = chordData.characters.size();
     for (int i = 0; i < iCharactersToRemove; ++i)
     {
@@ -213,16 +199,19 @@ void TypingTestResult::addUndoChord(const ChordData& chordData)
     }
 }
 
-int TypingTestResult::getValidChordsCount() const
+QPair<int, int> TypingTestResult::computeValidChordsAndCharactersCount()
 {
-    // TODO: Find something faster
-    int iResult = 0;
+    QPair<int, int> result; // first = Chords, second = Characters
     for (const CharData& charData : _textBuffer)
     {
-        if (charData.kind == CharData::ChordStart && charData.state == CharData::ValidState)
+        if (charData.state == CharData::ValidState)
         {
-            iResult++;
+            result.second++;
+            if (charData.kind == CharData::ChordStart)
+            {
+                result.first++;
+            }
         }
     }
-    return iResult;
+    return result;
 }

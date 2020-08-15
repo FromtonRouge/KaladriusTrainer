@@ -20,7 +20,6 @@
 #include "WordCounter.h"
 #include "../Utils/CountdownTimer.h"
 #include <QtCore/QDebug>
-#include <chrono>
 #include <cmath>
 
 WordCounter::WordCounter(CountdownTimer* pCountdownTimer, QObject* pParent)
@@ -32,11 +31,12 @@ WordCounter::WordCounter(CountdownTimer* pCountdownTimer, QObject* pParent)
 
 void WordCounter::reset()
 {
-    _uiValidCharacters = 0;
     _errors.clear();
     _recordedChord.clear();
     _validChords.clear();
     _typingTestResult.clear();
+    _iValidChordsCount = 0;
+    _iValidCharactersCount = 0;
 }
 
 void WordCounter::typingTestDone()
@@ -44,10 +44,10 @@ void WordCounter::typingTestDone()
     _typingTestResult.compute();
 }
 
-float WordCounter::getWPM() const
+float WordCounter::getWpm() const
 {
     const int AVERAGE_WORD_LENGTH = 5; // Same as www.10fastfingers.com
-    const float fWords = float(_uiValidCharacters) / AVERAGE_WORD_LENGTH;
+    const float fWords = float(_iValidCharactersCount) / AVERAGE_WORD_LENGTH;
     float fSeconds = _pCountdownTimer->getTotalTimeInSeconds();
     if (_pCountdownTimer->getRemainingTime() > 0)
     {
@@ -56,24 +56,26 @@ float WordCounter::getWPM() const
     return 60.f * fWords / fSeconds;
 }
 
-float WordCounter::getSPM() const
+float WordCounter::getSpm() const
 {
     float fSeconds = _pCountdownTimer->getTotalTimeInSeconds();
     if (_pCountdownTimer->getRemainingTime() > 0)
     {
         fSeconds = float(_pCountdownTimer->getElapsedTime()) / 1000;
     }
-    return 60.f * _typingTestResult.getValidChordsCount() / fSeconds;
+    return 60.f * _iValidChordsCount / fSeconds;
+}
+
+float WordCounter::getAccuracy() const
+{
+    const uint uiErrors = _errors.count();
+    return _iValidCharactersCount==0 ? 0 : 100.f*(qMax<uint>(_iValidCharactersCount-uiErrors, 0))/_iValidCharactersCount;
 }
 
 void WordCounter::registerError(int iIndex)
 {
+    // TODO: remove _errors and use data in _typingTestResult
     _errors.insert(iIndex);
-}
-
-void WordCounter::registerValidCharacters(int iCharacters)
-{
-    _uiValidCharacters = iCharacters;
 }
 
 void WordCounter::startChord(int iPosition, const QChar& inputChar, const Word& word, qint64 iTimestamp)
@@ -126,6 +128,8 @@ void WordCounter::endChord()
 
         _typingTestResult.addValidChord(chordData);
     }
+
+    computeLiveData();
 }
 
 qint64 WordCounter::getLastTimestamp() const
@@ -133,14 +137,26 @@ qint64 WordCounter::getLastTimestamp() const
     return _recordedChord.chordData.timestampAtEnd();
 }
 
-float WordCounter::getAccuracy() const
+bool WordCounter::hasLastRecordedChar() const
 {
-    const uint uiErrors = _errors.count();
-    return _uiValidCharacters==0 ? 0 : 100.f*(qMax<uint>(_uiValidCharacters-uiErrors, 0))/_uiValidCharacters;
+    return !_recordedChord.chordData.characters.isEmpty();
+}
+
+CharData WordCounter::getLastRecordedChar() const
+{
+    return _recordedChord.chordData.characters.back();
+}
+
+void WordCounter::computeLiveData()
+{
+    const auto& pair = _typingTestResult.computeValidChordsAndCharactersCount();
+    _iValidChordsCount = pair.first;
+    _iValidCharactersCount = pair.second;
 }
 
 float WordCounter::getViscosity() const
 {
+    // TODO: remove _validChords and use data in _typingTestResult
     // We need at least 2 strokes to mesure the time between them
     if (_validChords.count() < 2)
     {

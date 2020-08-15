@@ -77,7 +77,6 @@ private:
 private:
     QElapsedTimer _keyPressTimer;
     uint _uiInvalidCharacters = 0;
-    uint _uiValidCharacters = 0;
     bool _bCleanState = true;
     WordCounter* _pWordCounter = nullptr;
     QColor _colorOk;

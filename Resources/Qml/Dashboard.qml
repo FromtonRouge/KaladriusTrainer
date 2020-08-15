@@ -31,8 +31,8 @@ Item {
                 time.color = "green"
             }
         }
-        time.text = countdownTimer.remainingTimeString
 
+        time.text = countdownTimer.remainingTimeString
         wpm.text = wordCounter.wpm.toFixed(0) + " WPM"
         spm.text = wordCounter.spm.toFixed(0) + " SPM"
         accuracy.text = wordCounter.accuracy.toFixed(1) + " %"

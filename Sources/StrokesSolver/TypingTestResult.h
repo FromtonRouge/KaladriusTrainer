@@ -22,6 +22,7 @@
 #include <QtCore/QHash>
 #include <QtCore/QVector>
 #include <QtCore/QString>
+#include <QtCore/QPair>
 #include <QtCore/QDebug>
 
 struct Word
@@ -109,7 +110,7 @@ public:
     void addErrorChord(const ChordData& chordData);
     void addUndoChord(const ChordData& chordData);
 
-    int getValidChordsCount() const;
+    QPair<int, int> computeValidChordsAndCharactersCount();
 
 private:
     QVector<CharData> _textBuffer;

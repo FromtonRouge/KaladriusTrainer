@@ -64,7 +64,6 @@ void StrokesSolverTextEdit::restart(const QString& sText)
     _pTimerSolve->start();
 
     _uiInvalidCharacters = 0;
-    _uiValidCharacters = 0;
     _bCleanState = true;
     _keyPressTimer.invalidate();
 
@@ -199,12 +198,6 @@ void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
                 cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor);
                 setTextCursor(cursor);
             }
-
-            if (_uiValidCharacters > 0)
-            {
-                _uiValidCharacters--;
-            }
-            _pWordCounter->registerValidCharacters(_uiValidCharacters);
             return;
         }
     default:
@@ -251,8 +244,6 @@ void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
         cursor.setCharFormat(format);
         cursor.setPosition(cursor.position(), QTextCursor::MoveAnchor);
         setTextCursor(cursor);
-        _uiValidCharacters++;
-        _pWordCounter->registerValidCharacters(_uiValidCharacters);
     }
 }
 
@@ -332,18 +323,53 @@ void StrokesSolverTextEdit::processChord(const QChar& character)
         const uint16_t MIN_TIME_TO_STROKE = 100; // milliseconds
         const qint64 iTimestamp = _keyPressTimer.elapsed();
         const qint64 iElapsed = (iTimestamp - _pWordCounter->getLastTimestamp());
-        if (iElapsed >= MIN_TIME_TO_STROKE)
+        //qDebug() << "elapsed" << iElapsed;
+
+        auto startNewChord = [&]()
         {
             // Save the chord being recorded...
             _pWordCounter->endChord();
 
             // ... and start the record of a new chord
             _pWordCounter->startChord(cursor.position(), character, getWordBeingCompleted(), iTimestamp);
+        };
+
+        if (iElapsed >= MIN_TIME_TO_STROKE)
+        {
+            startNewChord();
         }
         else
         {
-            // Continue the record of the chord
-            _pWordCounter->continueChord(cursor.position(), character, iTimestamp);
+            // Note: Between 2 strokes it's possible to have a time < 20ms
+            // because the qmk_firmware sends characters at a very slow pace
+            // the user may stroke a 2nd chord while the keyboard is still sending data...
+            // and the OS see the 2 strokes as a big 1 :(
+            Q_ASSERT(_pWordCounter->hasLastRecordedChar());
+            const CharData& lastCharData = _pWordCounter->getLastRecordedChar();
+            const QChar& lastCharacter = lastCharData.character;
+
+            if (character == '\b' && lastCharacter != '\b')
+            {
+                // Easy case when current character is a Backspace and the previous one is not
+                qDebug() << "software chord split 1 : previous key was not a backspace";
+                startNewChord();
+            }
+            else if (character != '\b' && lastCharacter == '\b')
+            {
+                // Easy case when current character is not a Backspace and the previous one is a Backspace
+                qDebug() << "software chord split 2 : previous key was a backspace";
+                startNewChord();
+            }
+            else if (character == ' ' && lastCharacter.isLetterOrNumber())
+            {
+                qDebug() << "software chord split 3 : current char is a space, previous was a letter";
+                startNewChord();
+            }
+            else
+            {
+                // Continue the record of the chord
+                _pWordCounter->continueChord(cursor.position(), character, iTimestamp);
+            }
         }
     }
 }

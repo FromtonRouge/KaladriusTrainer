@@ -19,20 +19,17 @@
 #pragma once
 
 #include "TypingTestResult.h"
-#include <QtCore/QHash>
-#include <QtCore/QChar>
-#include <QtCore/QStack>
-#include <QtCore/QStringList>
-#include <QtCore/QVector>
-#include <QtCore/QSet>
 #include <QtCore/QObject>
+#include <QtCore/QStack>
+#include <QtCore/QSet>
+#include <QtCore/QChar>
 
 class CountdownTimer;
 class WordCounter : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(float wpm READ getWPM)
-    Q_PROPERTY(float spm READ getSPM)
+    Q_PROPERTY(float wpm READ getWpm)
+    Q_PROPERTY(float spm READ getSpm)
     Q_PROPERTY(float accuracy READ getAccuracy)
     Q_PROPERTY(float viscosity READ getViscosity)
 
@@ -43,13 +40,12 @@ public:
     void typingTestDone();
     const TypingTestResult& getTypingTestResult() const {return _typingTestResult;}
 
-    float getWPM() const;
-    float getSPM() const;
+    float getWpm() const;
+    float getSpm() const;
     float getAccuracy() const;
     float getViscosity() const;
 
     void registerError(int iIndex);
-    void registerValidCharacters(int iCharacters);
 
     // Chords count process
     void startChord(int iPosition, const QChar& inputChar, const Word& word, qint64 iTimestamp);
@@ -58,9 +54,14 @@ public:
     void markError();
     qint64 getLastTimestamp() const;
 
+    bool hasLastRecordedChar() const;
+    CharData getLastRecordedChar() const;
+
+private:
+    void computeLiveData();
+
 private:
     CountdownTimer* _pCountdownTimer = nullptr;
-    uint _uiValidCharacters = 0;
     QSet<int> _errors;
     TypingTestResult _typingTestResult;
 
@@ -74,4 +75,6 @@ private:
 
     RichChordData _recordedChord;
     QStack<ChordData> _validChords;
+    int _iValidChordsCount = 0;
+    int _iValidCharactersCount = 0;
 };

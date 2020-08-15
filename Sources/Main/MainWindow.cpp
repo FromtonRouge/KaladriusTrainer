@@ -186,8 +186,8 @@ void MainWindow::onCountdownTimerDone()
                 auto pDatabase = qApp->getDatabase();
                 QMap<QString, QVariant> values;
                 values["Date"] = QDateTime::currentDateTime().toString();
-                values["Wpm"] = _pWordCounter->getWPM();
-                values["Spm"] = _pWordCounter->getSPM();
+                values["Wpm"] = _pWordCounter->getWpm();
+                values["Spm"] = _pWordCounter->getSpm();
                 values["Accuracy"] = _pWordCounter->getAccuracy();
                 values["Viscosity"] = _pWordCounter->getViscosity();
                 values["Progress"] = pLevelTreeItem->getProgressionPercentage();
