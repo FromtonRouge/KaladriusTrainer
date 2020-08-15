@@ -27,8 +27,9 @@
 struct Word
 {
     int position = 0;
-    QString word;
+    QString text;
 };
+QDebug operator<<(QDebug debug, const Word& w);
 
 struct CharData
 {

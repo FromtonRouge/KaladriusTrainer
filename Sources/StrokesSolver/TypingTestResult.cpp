@@ -20,10 +20,17 @@
 #include "TypingTestResult.h"
 #include <QtCore/QDebug>
 
+QDebug operator<<(QDebug debug, const Word& w)
+{
+    QDebugStateSaver saver(debug);
+    debug.nospace() << "([" << w.position << "] : " << w.text << ")";
+    return debug;
+}
+
 QDebug operator<<(QDebug debug, const ChordData& c)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << '(' << c.position() << ", " << c.timestampAtBegin() << ", " << c.text() << ')';
+    debug.nospace() << "([" << c.position() << "][" << c.timestampAtBegin() << "] : " << c.text() << ")";
     return debug;
 }
 
@@ -93,7 +100,7 @@ void TypingTestResult::compute()
 
 void TypingTestResult::addValidChord(const Word& word, const ChordData& chordData)
 {
-    WordData& rWordData = wordData[word.word];
+    WordData& rWordData = wordData[word.text];
     DataAtLocation& rDataAtLocation = rWordData.dataAtLocation[word.position];
 
     // Append chord for this word
@@ -101,6 +108,35 @@ void TypingTestResult::addValidChord(const Word& word, const ChordData& chordDat
     {
         rDataAtLocation.timestamp = _iLastTimestamp;
     }
+    else
+    {
+        // Check if it's a redo of one chord in the current word
+        // (the user can do a valid chord then undo one or more chords and redo a valid chord again)
+        // It's a redo if the position of a chordData is <= at the last saved chord
+        const int iPositionNewChord = chordData.position();
+        if (iPositionNewChord <= rDataAtLocation.chords.back().position())
+        {
+            // Find in the chords list a chord at position iPositionNewChord
+            auto itChordToDelete = rDataAtLocation.chords.begin();
+            while (itChordToDelete != rDataAtLocation.chords.end())
+            {
+                const ChordData& oldChord = *(itChordToDelete);
+                if (oldChord.position() == iPositionNewChord)
+                {
+                    // We have to replace all chords from this one
+                    break;
+                }
+                itChordToDelete++;
+            }
+
+            // Remove all chords from itChordToDelete
+            if (itChordToDelete != rDataAtLocation.chords.end())
+            {
+                rDataAtLocation.chords.erase(itChordToDelete, rDataAtLocation.chords.end());
+            }
+        }
+    }
+
     rDataAtLocation.chords << chordData;
 
     _iLastTimestamp = chordData.timestampAtBegin();
@@ -108,11 +144,13 @@ void TypingTestResult::addValidChord(const Word& word, const ChordData& chordDat
 
 void TypingTestResult::addErrorChord(const Word& word, const ChordData&)
 {
-    WordData& rWordData = wordData[word.word];
+    WordData& rWordData = wordData[word.text];
     DataAtLocation& rDataAtLocation = rWordData.dataAtLocation[word.position];
     rDataAtLocation.errors++;
 }
 
 void TypingTestResult::addUndoChord(const Word& word, const ChordData& chordData)
 {
+    Q_UNUSED(word);
+    Q_UNUSED(chordData);
 }

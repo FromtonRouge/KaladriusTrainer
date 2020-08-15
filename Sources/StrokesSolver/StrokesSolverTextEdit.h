@@ -68,9 +68,9 @@ private:
                const QStringList& dictionaries,
                HashSpecialKeysStates& rSpecialKeysStates) const;
 
-    void processChord(const QChar& character, bool bUndoChord = false);
+    void processChord(const QChar& character);
 
-    Word getWordBeingCompleted(bool bUndo = false) const;
+    Word getWordBeingCompleted() const;
     QString getCurrentWord() const;
     QString getExpectedText() const;
 
