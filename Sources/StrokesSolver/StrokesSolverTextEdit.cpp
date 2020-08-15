@@ -175,7 +175,7 @@ void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
     {
     case Qt::Key_Backspace:
         {
-            processChord(pKeyEvent->text().front());
+            processChord(pKeyEvent->text().front(), true);
 
             if (_uiInvalidCharacters)
             {
@@ -231,11 +231,7 @@ void StrokesSolverTextEdit::keyPressEvent(QKeyEvent* pKeyEvent)
         {
             // Register one and only one error for this position
             _pWordCounter->registerError(cursor.position());
-            _pWordCounter->markBecomeError();
-        }
-        else
-        {
-            _pWordCounter->markStillError();
+            _pWordCounter->markError();
         }
 
         // Error dectected
@@ -319,14 +315,15 @@ bool StrokesSolverTextEdit::solve(QString sText,
     return bAtLeastOneMatch;
 }
 
-void StrokesSolverTextEdit::processChord(const QChar& character)
+void StrokesSolverTextEdit::processChord(const QChar& character, bool bUndoChord)
 {
+    const QTextCursor& cursor = textCursor();
     if (!_keyPressTimer.isValid())
     {
         _keyPressTimer.start();
 
         // Start the record of the first chord
-        _pWordCounter->startChord(character, getWordBeingCompleted(), 0);
+        _pWordCounter->startChord(cursor.position(), character, getWordBeingCompleted(bUndoChord), 0);
     }
     else
     {
@@ -339,17 +336,17 @@ void StrokesSolverTextEdit::processChord(const QChar& character)
             _pWordCounter->endChord();
 
             // ... and start the record of a new chord
-            _pWordCounter->startChord(character, getWordBeingCompleted(), iTimestamp);
+            _pWordCounter->startChord(cursor.position(), character, getWordBeingCompleted(bUndoChord), iTimestamp);
         }
         else
         {
             // Continue the record of the chord
-            _pWordCounter->continueChord(character, iTimestamp);
+            _pWordCounter->continueChord(cursor.position(), character, iTimestamp);
         }
     }
 }
 
-Word StrokesSolverTextEdit::getWordBeingCompleted() const
+Word StrokesSolverTextEdit::getWordBeingCompleted(bool bUndo) const
 {
     Word result;
     if (document()->isEmpty())
@@ -360,9 +357,12 @@ Word StrokesSolverTextEdit::getWordBeingCompleted() const
     QTextCursor cursor = textCursor();
     if (cursor.atStart())
     {
-        cursor.movePosition(QTextCursor::EndOfWord, QTextCursor::KeepAnchor);
-        result.position = 0;
-        result.word = cursor.selectedText();
+        if (!bUndo)
+        {
+            cursor.movePosition(QTextCursor::EndOfWord, QTextCursor::KeepAnchor);
+            result.position = 0;
+            result.word = cursor.selectedText();
+        }
     }
     else if (!cursor.atEnd())
     {
@@ -383,18 +383,37 @@ Word StrokesSolverTextEdit::getWordBeingCompleted() const
         }
         else if(leftChar == QChar::Space && rightChar != QChar::Space)
         {
-            // We are at the beginning of a word and we want to complete it
-            result.position = cursor.position();
-            cursor.movePosition(QTextCursor::EndOfWord, QTextCursor::KeepAnchor);
-            result.word = cursor.selectedText();
+            if (!bUndo)
+            {
+                // We are at the beginning of a word and we want to complete it
+                result.position = cursor.position();
+                cursor.movePosition(QTextCursor::EndOfWord, QTextCursor::KeepAnchor);
+                result.word = cursor.selectedText();
+            }
+            else
+            {
+                // TODO
+            }
         }
         else if(leftChar != QChar::Space && rightChar == QChar::Space)
         {
-            // We are at the end of a word and we want to complete the next word
-            cursor.movePosition(QTextCursor::StartOfWord, QTextCursor::MoveAnchor);
-            result.position = cursor.position();
-            cursor.movePosition(QTextCursor::EndOfWord, QTextCursor::KeepAnchor);
-            result.word = cursor.selectedText();
+            if (!bUndo)
+            {
+                // We are at the end of a word and we want to complete the next word
+                cursor.movePosition(QTextCursor::StartOfWord, QTextCursor::MoveAnchor);
+                result.position = cursor.position();
+                cursor.movePosition(QTextCursor::EndOfWord, QTextCursor::KeepAnchor);
+                result.word = cursor.selectedText();
+            }
+            else
+            {
+                // We are at the end of a word and we want to undo the last chord
+                cursor.movePosition(QTextCursor::PreviousWord, QTextCursor::MoveAnchor);
+                result.position = cursor.position();
+
+                cursor.movePosition(QTextCursor::EndOfWord, QTextCursor::KeepAnchor);
+                result.word = cursor.selectedText();
+            }
         }
         else
         {

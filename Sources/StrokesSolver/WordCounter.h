@@ -23,6 +23,7 @@
 #include <QtCore/QChar>
 #include <QtCore/QStack>
 #include <QtCore/QStringList>
+#include <QtCore/QVector>
 #include <QtCore/QSet>
 #include <QtCore/QObject>
 
@@ -51,11 +52,10 @@ public:
     void registerValidCharacters(int iCharacters);
 
     // Chords count process
-    void startChord(const QChar& inputChar, const Word& word, qint64 iTimestamp);
-    void continueChord(const QChar& c, qint64 iTimestamp);
+    void startChord(int iPosition, const QChar& inputChar, const Word& word, qint64 iTimestamp);
+    void continueChord(int iPosition, const QChar& inputChar, qint64 iTimestamp);
     void endChord();
-    void markBecomeError();
-    void markStillError();
+    void markError();
     qint64 getLastTimestamp() const;
 
 private:
@@ -64,19 +64,14 @@ private:
     QSet<int> _errors;
     TypingTestResult _typingTestResult;
 
-    struct CharWithTimestamp
+    struct RichChordData
     {
-        enum ErrorState
-        {
-            NoError,
-            BecomeError,
-            StillError
-        };
-        QChar character;
+        ChordData chordData;
         Word wordBeingCompleted;
-        qint64 timestamp = 0;
-        ErrorState errorState = NoError;
+        bool isError = false;
+        void clear() {chordData.characters.clear(); wordBeingCompleted = Word(); isError = false;}
     };
-    QStack<CharWithTimestamp> _buffer;
+
+    RichChordData _recordedChord;
     QStack<ChordData> _validChords;
 };

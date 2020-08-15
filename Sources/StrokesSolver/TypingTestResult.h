@@ -22,6 +22,7 @@
 #include <QtCore/QHash>
 #include <QtCore/QVector>
 #include <QtCore/QString>
+#include <QtCore/QDebug>
 
 struct Word
 {
@@ -29,11 +30,32 @@ struct Word
     QString word;
 };
 
+struct CharData
+{
+    int position = 0;
+    qint64 timestamp = 0;
+    QChar character;
+};
+
 struct ChordData
 {
-    qint64 timestamp = 0;
-    QString chord;
+    QVector<CharData> characters;
+
+    int position() const {return characters.isEmpty() ? -1 : characters.front().position;}
+    quint64 timestampAtBegin() const {return characters.isEmpty() ? 0 : characters.front().timestamp;}
+    quint64 timestampAtEnd() const {return characters.isEmpty() ? 0 : characters.back().timestamp;}
+    bool contains(const QChar& c) const { return text().contains(c); }
+    QString text() const
+    {
+        QString sResult;
+        for (const CharData& data : characters)
+        {
+            sResult += data.character;
+        }
+        return sResult;
+    }
 };
+QDebug operator<<(QDebug debug, const ChordData& c);
 
 struct DataAtLocation
 {
@@ -65,8 +87,9 @@ public:
     void clear();
     void compute();
 
-    void addSuccess(const Word& word, const ChordData& chordData);
-    void addError(const Word& word, const ChordData& chordData);
+    void addValidChord(const Word& word, const ChordData& chordData);
+    void addErrorChord(const Word& word, const ChordData& chordData);
+    void addUndoChord(const Word& word, const ChordData& chordData);
 
 private:
     qint64 _iLastTimestamp = 0; // Used to fill DataAtLocation::timestamp

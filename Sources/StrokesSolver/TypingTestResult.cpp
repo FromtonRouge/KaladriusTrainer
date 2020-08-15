@@ -20,6 +20,13 @@
 #include "TypingTestResult.h"
 #include <QtCore/QDebug>
 
+QDebug operator<<(QDebug debug, const ChordData& c)
+{
+    QDebugStateSaver saver(debug);
+    debug.nospace() << '(' << c.position() << ", " << c.timestampAtBegin() << ", " << c.text() << ')';
+    return debug;
+}
+
 TypingTestResult::TypingTestResult()
 {
 
@@ -60,17 +67,17 @@ void TypingTestResult::compute()
 
             // Compute time to chord for each chord
             qint64 iTimestamp = dataAtLoc.timestamp;
-            const qint64 iTimeSpentForFirstStroke = dataAtLoc.chords.front().timestamp - iTimestamp;
-            const qint64 iTimeSpentToComplete = iTimeSpentForFirstStroke + (dataAtLoc.chords.back().timestamp - dataAtLoc.chords.front().timestamp);
+            const qint64 iTimeSpentForFirstStroke = dataAtLoc.chords.front().timestampAtBegin() - iTimestamp;
+            const qint64 iTimeSpentToComplete = iTimeSpentForFirstStroke + (dataAtLoc.chords.back().timestampAtBegin() - dataAtLoc.chords.front().timestampAtBegin());
 
             rWordData.averageTimeSpentForFirstStroke += iTimeSpentForFirstStroke;
             rWordData.averageTimeSpentToComplete += iTimeSpentToComplete;
 
             for (const ChordData& chordData : dataAtLoc.chords)
             {
-                const qint64 iElapsed = chordData.timestamp - iTimestamp;
+                const qint64 iElapsed = chordData.timestampAtBegin() - iTimestamp;
                 Q_UNUSED(iElapsed); // TODO
-                iTimestamp = chordData.timestamp;
+                iTimestamp = chordData.timestampAtBegin();
             }
         }
 
@@ -84,7 +91,7 @@ void TypingTestResult::compute()
     }
 }
 
-void TypingTestResult::addSuccess(const Word& word, const ChordData& chordData)
+void TypingTestResult::addValidChord(const Word& word, const ChordData& chordData)
 {
     WordData& rWordData = wordData[word.word];
     DataAtLocation& rDataAtLocation = rWordData.dataAtLocation[word.position];
@@ -96,12 +103,16 @@ void TypingTestResult::addSuccess(const Word& word, const ChordData& chordData)
     }
     rDataAtLocation.chords << chordData;
 
-    _iLastTimestamp = chordData.timestamp;
+    _iLastTimestamp = chordData.timestampAtBegin();
 }
 
-void TypingTestResult::addError(const Word& word, const ChordData&)
+void TypingTestResult::addErrorChord(const Word& word, const ChordData&)
 {
     WordData& rWordData = wordData[word.word];
     DataAtLocation& rDataAtLocation = rWordData.dataAtLocation[word.position];
     rDataAtLocation.errors++;
+}
+
+void TypingTestResult::addUndoChord(const Word& word, const ChordData& chordData)
+{
 }

@@ -34,7 +34,7 @@ void WordCounter::reset()
 {
     _uiValidCharacters = 0;
     _errors.clear();
-    _buffer.clear();
+    _recordedChord.clear();
     _validChords.clear();
     _typingTestResult.clear();
 }
@@ -76,77 +76,55 @@ void WordCounter::registerValidCharacters(int iCharacters)
     _uiValidCharacters = iCharacters;
 }
 
-void WordCounter::startChord(const QChar& inputChar, const Word& word, qint64 iTimestamp)
+void WordCounter::startChord(int iPosition, const QChar& inputChar, const Word& word, qint64 iTimestamp)
 {
-    _buffer.clear();
+    _recordedChord.clear();
+    _recordedChord.wordBeingCompleted = word;
 
-    CharWithTimestamp data;
+    CharData data;
+    data.position = iPosition;
+    data.timestamp = iTimestamp;
     data.character = inputChar;
-    data.wordBeingCompleted = word;
+    _recordedChord.chordData.characters << data;
+}
+
+void WordCounter::continueChord(int iPosition, const QChar& inputChar, qint64 iTimestamp)
+{
+    CharData data;
+    data.position = iPosition;
     data.timestamp = iTimestamp;
-    _buffer.push(data);
+    data.character = inputChar;
+    _recordedChord.chordData.characters << data;
 }
 
-void WordCounter::continueChord(const QChar& c, qint64 iTimestamp)
+void WordCounter::markError()
 {
-    CharWithTimestamp data;
-    data.character = c;
-    data.timestamp = iTimestamp;
-    _buffer.push(data);
-}
-
-void WordCounter::markBecomeError()
-{
-    Q_ASSERT(!_buffer.isEmpty());
-
-    // Add info on the first character of the chord
-    CharWithTimestamp& rFirstCharacter = _buffer.front();
-    rFirstCharacter.errorState = CharWithTimestamp::BecomeError;
-}
-
-void WordCounter::markStillError()
-{
-    Q_ASSERT(!_buffer.isEmpty());
-
-    // Add info on the current character of the chord
-    _buffer.top().errorState = CharWithTimestamp::StillError;
+    _recordedChord.isError = true;
 }
 
 void WordCounter::endChord()
 {
-    if (!_buffer.isEmpty())
+    const ChordData& chordData = _recordedChord.chordData;
+
+    if (chordData.contains('\b'))
     {
-        const CharWithTimestamp& firstData = _buffer.front();
-
-        QString sChord;
-        for (const CharWithTimestamp& data : _buffer)
-        {
-            sChord += data.character;
-        }
-
-        if (!sChord.contains("\b"))
-        {
-            ChordData chordData;
-            chordData.timestamp = firstData.timestamp;
-            chordData.chord = sChord;
-
-            if (firstData.errorState == CharWithTimestamp::NoError)
-            {
-                _validChords << chordData;
-                _typingTestResult.addSuccess(firstData.wordBeingCompleted, chordData);
-            }
-            else if (firstData.errorState == CharWithTimestamp::BecomeError)
-            {
-                _typingTestResult.addError(firstData.wordBeingCompleted, chordData);
-            }
-        }
+        // It's an undo chord
+        _typingTestResult.addUndoChord(_recordedChord.wordBeingCompleted, chordData);
+    }
+    else if (_recordedChord.isError)
+    {
+        _typingTestResult.addErrorChord(_recordedChord.wordBeingCompleted, chordData);
+    }
+    else
+    {
+        _validChords << chordData;
+        _typingTestResult.addValidChord(_recordedChord.wordBeingCompleted, chordData);
     }
 }
 
 qint64 WordCounter::getLastTimestamp() const
 {
-    Q_ASSERT(!_buffer.isEmpty());
-    return _buffer.top().timestamp;
+    return _recordedChord.chordData.timestampAtEnd();
 }
 
 float WordCounter::getAccuracy() const
@@ -170,7 +148,7 @@ float WordCounter::getViscosity() const
     for (int i = 1; i < iChords; ++i)
     {
         const ChordData& chordData = _validChords[i];
-        const float fDelta = chordData.timestamp - _validChords[i-1].timestamp;
+        const float fDelta = chordData.timestampAtBegin() - _validChords[i-1].timestampAtBegin();
         fSum += fDelta;
         timesBetweenStrokes << fDelta;
     }
