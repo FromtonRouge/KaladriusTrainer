@@ -33,7 +33,6 @@ void WordCounter::reset()
 {
     _errors.clear();
     _recordedChord.clear();
-    _validChords.clear();
     _typingTestResult.clear();
     _iValidChordsCount = 0;
     _iValidCharactersCount = 0;
@@ -81,7 +80,7 @@ void WordCounter::registerError(int iIndex)
 void WordCounter::startChord(int iPosition, const QChar& inputChar, const Word& word, qint64 iTimestamp)
 {
     _recordedChord.clear();
-    _recordedChord.wordBeingCompleted = word;
+    _recordedChord.chordData.expectedWord = word;
 
     CharData data;
     data.kind = CharData::ChordStart;
@@ -116,17 +115,12 @@ void WordCounter::endChord()
     else if (_recordedChord.isError)
     {
         for (CharData& rData : chordData.characters) { rData.state = CharData::ErrorState; }
-        chordData.characters.front().expectedWord = _recordedChord.wordBeingCompleted;
         _typingTestResult.addErrorChord(chordData);
     }
     else
     {
-        _validChords << chordData;
-
         for (CharData& rData : chordData.characters) { rData.state = CharData::ValidState; }
-        chordData.characters.front().expectedWord = _recordedChord.wordBeingCompleted;
-
-        _typingTestResult.addValidChord(chordData);
+        _typingTestResult.addValidChord(&chordData);
     }
 
     computeLiveData();
@@ -156,9 +150,10 @@ void WordCounter::computeLiveData()
 
 float WordCounter::getViscosity() const
 {
-    // TODO: remove _validChords and use data in _typingTestResult
+    const auto& validChords = _typingTestResult.getValidChords();
+
     // We need at least 2 strokes to mesure the time between them
-    if (_validChords.count() < 2)
+    if (validChords.count() < 2)
     {
         return 0.f;
     }
@@ -166,13 +161,13 @@ float WordCounter::getViscosity() const
     // Compute the "needed time to stroke" average
     float fSum = 0;
     QVector<float> timesBetweenStrokes;
-    const int iChords = _validChords.count();
+    const int iChords = validChords.count();
     for (int i = 1; i < iChords; ++i)
     {
-        const ChordData& chordData = _validChords[i];
-        const float fDelta = chordData.timestampAtBegin() - _validChords[i-1].timestampAtBegin();
-        fSum += fDelta;
-        timesBetweenStrokes << fDelta;
+        const ChordData& chordData = validChords[i];
+        Q_ASSERT(chordData.timeToStroke != 0);
+        fSum += chordData.timeToStroke;
+        timesBetweenStrokes << chordData.timeToStroke;
     }
     const float fAverage = fSum / timesBetweenStrokes.count();
 
@@ -188,6 +183,9 @@ float WordCounter::getViscosity() const
     const float fStandardDeviation = sqrt(fVariance);
 
     // Finally we compute the "Coefficient of variance" of the "needed time to stroke" metric
-    // and we scale it 60 times, we call it the "Viscosity" (the lower the better, -> 0 means "fluid")
-    return 60.f*fStandardDeviation/fAverage;
+    const float fCoefficientOfVariance = fStandardDeviation/fAverage;
+
+    // Square it to emphasize amplitude and scale it. We call it the "Viscosity" (the lower the better, -> 0 means "fluid")
+    const float fViscosity = fCoefficientOfVariance*fCoefficientOfVariance * 150.f;
+    return fViscosity;
 }

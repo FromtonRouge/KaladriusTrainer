@@ -49,89 +49,32 @@ void TypingTestResult::clear()
     wordData.clear();
     _textBuffer.clear();
     _errorsAtPosition.clear();
+    _validChords.clear();
 }
 
 void TypingTestResult::compute()
 {
     wordData.clear();
 
-    // Build word data from the text buffer
-    qint64 iPreviousTimestamp = 0;
-    ChordData currentChord;
-    DataAtLocation* pDataAtLocation = nullptr;
-    const int iCharacters = _textBuffer.size();
-    for (int i = 0; i < iCharacters; ++i)
+    // Store errors and chords at word locations
+    for (const ChordData& chordData : _validChords)
     {
-        const CharData& charData = _textBuffer[i];
-        if (charData.state == CharData::ValidState)
+        const Word& expectedWord = chordData.expectedWord;
+        WordData& rWordData = wordData[expectedWord.text];
+        DataAtLocation& rDataAtLocation = rWordData.dataAtLocation[expectedWord.position];
+
+        // Save errors done on this word
+        auto itErrors = _errorsAtPosition.find(expectedWord.position);
+        if (itErrors != _errorsAtPosition.end())
         {
-            switch (charData.kind)
-            {
-            case CharData::ChordStart:
-                {
-                    Q_ASSERT(pDataAtLocation == nullptr);
-                    const Word& expectedWord = charData.expectedWord;
-                    WordData& rWordData = wordData[expectedWord.text];
-                    pDataAtLocation = &(rWordData.dataAtLocation[expectedWord.position]);
-
-                    // Save errors done on this word
-                    auto itErrors = _errorsAtPosition.find(expectedWord.position);
-                    if (itErrors != _errorsAtPosition.end())
-                    {
-                        pDataAtLocation->errors = itErrors.value();
-                    }
-
-                    if (pDataAtLocation->chords.isEmpty())
-                    {
-                        pDataAtLocation->timestamp = iPreviousTimestamp;
-                    }
-
-                    currentChord.clear();
-                    currentChord.characters << charData;
-                    iPreviousTimestamp = charData.timestamp;
-                    break;
-                }
-            case CharData::NormalChar:
-                {
-                    Q_ASSERT(pDataAtLocation);
-                    currentChord.characters << charData;
-
-                    // Check next character to know if we are at the end of the chord
-                    bool bEndOfTheChord = false;
-                    if (i+1 < iCharacters)
-                    {
-                        const CharData& nextChar = _textBuffer[i+1];
-                        bEndOfTheChord = nextChar.kind == CharData::ChordStart;
-                    }
-                    else
-                    {
-                        // End of buffer
-                        bEndOfTheChord = true;
-                    }
-
-                    if (bEndOfTheChord)
-                    {
-                        // Save the chord
-                        pDataAtLocation->chords << currentChord;
-
-                        // Reset data
-                        pDataAtLocation = nullptr;
-                        currentChord.clear();
-                    }
-                    break;
-                }
-            default:
-                {
-                    break;
-                }
-            }
+            rDataAtLocation.errors = itErrors.value();
         }
-        else
-        {
-            break;
-        }
+
+        // Save all chords done for this word
+        rDataAtLocation.chords << chordData;
     }
 
+    // Compute words statistics
     auto it = wordData.begin();
     while (it != wordData.end())
     {
@@ -140,26 +83,20 @@ void TypingTestResult::compute()
         auto itLocation = rWordData.dataAtLocation.begin();
         while (itLocation != rWordData.dataAtLocation.end())
         {
-            const int iLocation = itLocation.key();
             const DataAtLocation& dataAtLoc = itLocation++.value();
 
             rWordData.averageChordsCount += dataAtLoc.chords.count();
             rWordData.averageErrorsCount += dataAtLoc.errors;
 
-            // Compute time to chord for each chord
-            qint64 iTimestamp = dataAtLoc.timestamp;
-            const qint64 iTimeSpentForFirstStroke = dataAtLoc.chords.front().timestampAtBegin() - iTimestamp;
-            const qint64 iTimeSpentToComplete = iTimeSpentForFirstStroke + (dataAtLoc.chords.back().timestampAtBegin() - dataAtLoc.chords.front().timestampAtBegin());
-
-            rWordData.averageTimeSpentForFirstStroke += iTimeSpentForFirstStroke;
-            rWordData.averageTimeSpentToComplete += iTimeSpentToComplete;
-
+            // Compute the time needed to do all chords for this word
+            qint64 iTimeSpentToComplete = 0;
             for (const ChordData& chordData : dataAtLoc.chords)
             {
-                const qint64 iElapsed = chordData.timestampAtBegin() - iTimestamp;
-                Q_UNUSED(iElapsed); // TODO
-                iTimestamp = chordData.timestampAtBegin();
+                iTimeSpentToComplete += chordData.timeToStroke;
             }
+
+            rWordData.averageTimeSpentForFirstStroke += dataAtLoc.chords.front().timeToStroke;
+            rWordData.averageTimeSpentToComplete += iTimeSpentToComplete;
         }
 
         // Compute averages
@@ -172,19 +109,26 @@ void TypingTestResult::compute()
     }
 }
 
-void TypingTestResult::addValidChord(const ChordData& chordData)
+void TypingTestResult::addValidChord(ChordData* pChordData)
 {
-    Q_ASSERT(_textBuffer.size() == chordData.position());
-    _textBuffer << chordData.characters;
+    Q_ASSERT(_textBuffer.size() == pChordData->position());
+
+    // Compute the time elapsed between this valid chord with the last one
+    if (!_validChords.isEmpty())
+    {
+        const qint64 iLastValidTimestamp = _validChords.top().timestampAtBegin();
+        pChordData->timeToStroke = pChordData->timestampAtBegin() - iLastValidTimestamp;
+    }
+
+    _textBuffer << pChordData->characters;
+    _validChords.push(*pChordData);
 }
 
 void TypingTestResult::addErrorChord(const ChordData& chordData)
 {
     Q_ASSERT(_textBuffer.size() == chordData.position());
     _textBuffer << chordData.characters;
-    const CharData& firstCharOfTheChord = chordData.characters.front();
-    Q_ASSERT(firstCharOfTheChord.kind == CharData::ChordStart);
-    _errorsAtPosition[firstCharOfTheChord.expectedWord.position]++;
+    _errorsAtPosition[chordData.expectedWord.position]++;
 }
 
 void TypingTestResult::addUndoChord(const ChordData& chordData)
@@ -194,6 +138,16 @@ void TypingTestResult::addUndoChord(const ChordData& chordData)
     {
         if (!_textBuffer.isEmpty())
         {
+            // Pop char from the buffer, if the char is a beginning of a valid chord
+            // we also remove the valid chord from the stack
+            const CharData& charData = _textBuffer.back();
+            if (charData.kind == CharData::ChordStart && charData.state == CharData::ValidState)
+            {
+                const ChordData& lastValidChord = _validChords.top();
+                Q_ASSERT(lastValidChord.position() == charData.position);
+                _validChords.pop();
+            }
+
             _textBuffer.pop_back();
         }
     }
@@ -202,16 +156,10 @@ void TypingTestResult::addUndoChord(const ChordData& chordData)
 QPair<int, int> TypingTestResult::computeValidChordsAndCharactersCount()
 {
     QPair<int, int> result; // first = Chords, second = Characters
-    for (const CharData& charData : _textBuffer)
+    result.first = _validChords.count();
+    for (const ChordData& chordData : _validChords)
     {
-        if (charData.state == CharData::ValidState)
-        {
-            result.second++;
-            if (charData.kind == CharData::ChordStart)
-            {
-                result.first++;
-            }
-        }
+        result.second += chordData.characters.count();
     }
     return result;
 }

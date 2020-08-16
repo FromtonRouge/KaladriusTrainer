@@ -20,7 +20,6 @@
 
 #include "TypingTestResult.h"
 #include <QtCore/QObject>
-#include <QtCore/QStack>
 #include <QtCore/QSet>
 #include <QtCore/QChar>
 
@@ -68,13 +67,11 @@ private:
     struct RichChordData
     {
         ChordData chordData;
-        Word wordBeingCompleted;
         bool isError = false;
-        void clear() {chordData.characters.clear(); wordBeingCompleted = Word(); isError = false;}
+        void clear() {chordData.clear(); isError = false;}
     };
 
     RichChordData _recordedChord;
-    QStack<ChordData> _validChords;
     int _iValidChordsCount = 0;
     int _iValidCharactersCount = 0;
 };

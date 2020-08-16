@@ -20,6 +20,7 @@
 #pragma once
 
 #include <QtCore/QHash>
+#include <QtCore/QStack>
 #include <QtCore/QVector>
 #include <QtCore/QString>
 #include <QtCore/QPair>
@@ -29,6 +30,7 @@ struct Word
 {
     int position = 0;
     QString text;
+    void clear() {text.clear(); position = 0;}
 };
 QDebug operator<<(QDebug debug, const Word& w);
 
@@ -47,7 +49,6 @@ struct CharData
         ErrorState,
     };
 
-    Word expectedWord; // only when kind == ChordStart
     Kind kind = NormalChar;
     State state = DefaultState;
     int position = 0;
@@ -58,12 +59,14 @@ struct CharData
 struct ChordData
 {
     QVector<CharData> characters;
+    Word expectedWord;
+    qint64 timeToStroke = 0;
 
     int position() const {return characters.isEmpty() ? -1 : characters.front().position;}
     quint64 timestampAtBegin() const {return characters.isEmpty() ? 0 : characters.front().timestamp;}
     quint64 timestampAtEnd() const {return characters.isEmpty() ? 0 : characters.back().timestamp;}
     bool contains(const QChar& c) const { return text().contains(c); }
-    void clear() {characters.clear();}
+    void clear() {characters.clear(); timeToStroke = 0; expectedWord.clear();}
     QString text() const
     {
         QString sResult;
@@ -78,7 +81,6 @@ QDebug operator<<(QDebug debug, const ChordData& c);
 
 struct DataAtLocation
 {
-    qint64 timestamp = 0; // Last known time before the first chord
     int errors = 0; // Number of failed chords for this word at this location
     QVector<ChordData> chords; // Chords needed to complete the whole word
 };
@@ -106,14 +108,16 @@ public:
     void clear();
     void compute();
 
-    void addValidChord(const ChordData& chordData);
+    void addValidChord(ChordData* pChordData);
     void addErrorChord(const ChordData& chordData);
     void addUndoChord(const ChordData& chordData);
 
     QPair<int, int> computeValidChordsAndCharactersCount();
+    const QStack<ChordData>& getValidChords() const {return _validChords;}
 
 private:
     QVector<CharData> _textBuffer;
     QHash<int, int> _errorsAtPosition;
+    QStack<ChordData> _validChords;
 };
 
