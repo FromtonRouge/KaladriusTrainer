@@ -51,7 +51,7 @@ private:
                             const QColor& color,
                             bool bDefaultVisibility,
                             const QColor& colorAo5 = QColor())
-            : name(sName), color(color), colorAo5(colorAo5), bDefaultVisibility(bDefaultVisibility)
+            : name(sName), color(color), bDefaultVisibility(bDefaultVisibility), colorAo5(colorAo5)
         {
             pAction = new QAction(sName);
             pAction->setCheckable(true);

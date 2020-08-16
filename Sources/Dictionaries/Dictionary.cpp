@@ -60,7 +60,6 @@ Dictionary::~Dictionary()
 void Dictionary::addEntry(const Keycodes& keycodes, uint nKeyBits)
 {
     Entry entry(keycodes, _uiBitsCount, nKeyBits);
-    _entryToKeyBits.insertMulti(entry, entry.bits);
     _keyBitsToEntry << entry;
 }
 

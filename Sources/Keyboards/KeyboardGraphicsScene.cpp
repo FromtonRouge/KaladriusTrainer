@@ -159,7 +159,7 @@ void KeyboardGraphicsScene::onRowsInserted(const QModelIndex& parent, int iFirst
 
             // Search for the first list element under the keyboard
             const QModelIndex& indexKeyboard = matches.front();
-            matches = _pUndoableKeyboardModel->match(indexKeyboard.child(0, 0), TreeItemTypeRole, TreeItem::List, 1, Qt::MatchExactly);
+            matches = _pUndoableKeyboardModel->match(_pUndoableKeyboardModel->index(0, 0, indexKeyboard), TreeItemTypeRole, TreeItem::List, 1, Qt::MatchExactly);
             if (matches.isEmpty())
             {
                 return;
@@ -170,7 +170,7 @@ void KeyboardGraphicsScene::onRowsInserted(const QModelIndex& parent, int iFirst
             const int iKeycaps = _pUndoableKeyboardModel->rowCount(indexKeycaps);
             for (int iKeycap = 0; iKeycap < iKeycaps; ++iKeycap)
             {
-                const QModelIndex& indexKeycap = indexKeycaps.child(iKeycap, 0);
+                const QModelIndex& indexKeycap = _pUndoableKeyboardModel->index(iKeycap, 0, indexKeycaps);
                 const QString& sKeycapId = indexKeycap.data().toString();
                 const qreal& dRotationAngle = indexKeycap.data(RotationAngleRole).toReal();
                 const QPointF& rotationOrigin = indexKeycap.data(RotationOriginRole).toPointF();
@@ -191,7 +191,7 @@ void KeyboardGraphicsScene::onRowsInserted(const QModelIndex& parent, int iFirst
                     const int iRows = _pUndoableKeyboardModel->rowCount(index);
                     for (int iRow = 0; iRow < iRows; ++iRow)
                     {
-                        traverse(index.child(iRow, 0));
+                        traverse(_pUndoableKeyboardModel->index(iRow, 0, index));
                     }
                 };
                 traverse(indexKeycap);

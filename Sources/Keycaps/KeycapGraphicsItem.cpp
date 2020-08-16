@@ -45,9 +45,9 @@ KeycapGraphicsItem::KeycapGraphicsItem( const QString& sKeycapId,
                                         QSvgRenderer* pSvgRenderer,
                                         QGraphicsItem* pParent)
     : QGraphicsSvgItem(pParent)
-    , _iTextPixelSize(20)
     , _dRotationAngle(dRotationAngle)
     , _rotationOrigin(rotationOrigin)
+    , _iTextPixelSize(20)
     , _rectOuterBorder(rectOuterBorder)
 {
     setSharedRenderer(pSvgRenderer);

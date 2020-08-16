@@ -117,14 +117,11 @@ void ChartView::createChart(const QString& sLevelName)
     }
 
     _pChart->createDefaultAxes();
-    if (_pChart->axisX())
+    const auto& axes = _pChart->axes();
+    if (axes.isEmpty() == false)
     {
-        _pChart->axisX()->setLabelsVisible(false);
-    }
-
-    if (_pChart->axisY())
-    {
-        _pChart->axisY()->setMin(0);
+        axes[0]->setLabelsVisible(false);
+        axes[1]->setMin(0);
     }
 }
 

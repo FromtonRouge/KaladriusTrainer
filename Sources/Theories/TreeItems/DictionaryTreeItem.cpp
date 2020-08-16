@@ -37,7 +37,7 @@ DictionaryTreeItem::DictionaryTreeItem(const QString& sText, const QVector<QStri
     {
         pKeysTreeItem->appendRow({new ListTreeItem(QIcon(":/Icons/keyboard.png")), new ValueTreeItem(sKeyLabel)});
     }
-    appendRow({pKeysTreeItem, new ValueTreeItem(qVariantFromValue(ListValue(QObject::tr("Labels"), QString())))});
+    appendRow({pKeysTreeItem, new ValueTreeItem(QVariant::fromValue(ListValue(QObject::tr("Labels"), QString())))});
 
     auto pEntriesTreeItem = new ListTreeItem(QIcon(":/Icons/book-brown.png"), QObject::tr("Entries"));
     appendRow({pEntriesTreeItem, new EmptyTreeItem()});

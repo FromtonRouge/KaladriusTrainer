@@ -190,7 +190,7 @@ void KeyboardTreeView::onLinkTheory()
             const int iKeys = pKeys->rowCount();
             for (int iKey = 0; iKey < iKeys; ++iKey)
             {
-                pLinkedKeys->appendRow({new ListTreeItem(), new ValueTreeItem(qVariantFromValue(KeycapRef()))});
+                pLinkedKeys->appendRow({new ListTreeItem(), new ValueTreeItem(QVariant::fromValue(KeycapRef()))});
             }
 
             pLinkedDictionaries->appendRow({pLinkedDictionary, new EmptyTreeItem()});

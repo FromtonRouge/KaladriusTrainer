@@ -42,6 +42,6 @@ void FingerSelector::setValue(const QVariant& value)
 
 void FingerSelector::onCurrentIndexChanged(int iIndex)
 {
-    _value = qVariantFromValue(Finger(Finger::Id(iIndex - 1)));
+    _value = QVariant::fromValue(Finger(Finger::Id(iIndex - 1)));
     apply();
 }

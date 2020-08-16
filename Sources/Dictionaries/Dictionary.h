@@ -21,7 +21,6 @@
 
 #include "Keycode.h"
 
-#include <QtCore/QHash>
 #include <QtCore/QMap>
 #include <QtCore/QVector>
 #include <QtCore/QStringList>
@@ -44,7 +43,6 @@ public:
         QString bitsAsString;
     };
     typedef QVector<Entry> KeyBitsToEntry;
-    typedef QHash<Entry, Entry::KeyBits> EntryToKeyBits;
     typedef QVector<QString> KeysLabels;
     typedef QVector<int> KeyBitsReadingOrder;
 
@@ -61,7 +59,6 @@ public:
     const QString& getMarkdownFileName() const { return _sMarkdownFileName; }
     void addEntry(const Keycodes& keycodes, uint uiKeyBits);
     const KeyBitsToEntry& getKeyBitsToEntry() const { return _keyBitsToEntry; }
-    const EntryToKeyBits& getEntryToKeyBits() const { return _entryToKeyBits; }
     QString getKeysLabelsInReadingOrder(const Entry& entry, const QString& sSep = QString("|")) const;
     const KeysLabels& getKeysLabels() const {return _keysLabels;}
 
@@ -72,7 +69,6 @@ private:
     KeysLabels _keysLabels;
     KeyBitsReadingOrder _keyBitsReadingOrder;
     KeyBitsToEntry _keyBitsToEntry;
-    EntryToKeyBits _entryToKeyBits;
 };
 
 typedef QMap<QString, Dictionary> Dictionaries;

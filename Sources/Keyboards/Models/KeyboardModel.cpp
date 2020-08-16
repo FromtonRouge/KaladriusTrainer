@@ -237,7 +237,7 @@ void KeyboardModel::selectLinkedKeys(const QString& sDictionaryName, const QVect
     if (indexLinkedTheories.isValid() && hasChildren(indexLinkedTheories))
     {
         // Find the first index with the name sDictionaryName
-        const auto& matches = match(indexLinkedTheories.child(0, 0), Qt::DisplayRole, sDictionaryName, 1, Qt::MatchExactly|Qt::MatchRecursive);
+        const auto& matches = match(index(0, 0, indexLinkedTheories), Qt::DisplayRole, sDictionaryName, 1, Qt::MatchExactly|Qt::MatchRecursive);
         if (!matches.isEmpty())
         {
             const QModelIndex& indexLinkedDictionary = matches.front();
@@ -254,7 +254,7 @@ void KeyboardModel::selectLinkedKeys(const QString& sDictionaryName, const QVect
                     KeycapsStates keycapsStates(iLinkedKeycaps);
                     for (int iLinkedKeycap = 0; iLinkedKeycap < iLinkedKeycaps; ++iLinkedKeycap)
                     {
-                        const QModelIndex& indexKeycapId = indexLinkedKeys.child(iLinkedKeycap, 1);
+                        const QModelIndex& indexKeycapId = index(iLinkedKeycap, 1, indexLinkedKeys);
                         const QVariant& variant = indexKeycapId.data(Qt::EditRole);
                         if (variant.isValid())
                         {
@@ -287,7 +287,7 @@ void KeyboardModel::selectLinkedSpecialKeys(const HashSpecialKeysStates& special
     const QModelIndex& indexLinkedTheories = getKeyboardTreeItem()->getLinkedTheories()->index();
     if (indexLinkedTheories.isValid() && hasChildren(indexLinkedTheories))
     {
-        const auto& matches = match(indexLinkedTheories.child(0, 0), Qt::DisplayRole, QStringLiteral("Linked Special Keys"), 1, Qt::MatchExactly|Qt::MatchRecursive);
+        const auto& matches = match(index(0, 0, indexLinkedTheories), Qt::DisplayRole, QStringLiteral("Linked Special Keys"), 1, Qt::MatchExactly|Qt::MatchRecursive);
         if (!matches.isEmpty())
         {
             const QModelIndex& indexLinkedSpecialKeys = matches.front();

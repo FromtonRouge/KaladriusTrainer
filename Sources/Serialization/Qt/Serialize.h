@@ -165,19 +165,19 @@ namespace boost
                 {
                     KeycapRef data;
                     ar >> make_nvp("variant", data);
-                    obj = qVariantFromValue(data);
+                    obj = QVariant::fromValue(data);
                 }
                 else if (sTypeName == QMetaType::typeName(qMetaTypeId<ListValue>()))
                 {
                     ListValue data;
                     ar >> make_nvp("variant", data);
-                    obj = qVariantFromValue(data);
+                    obj = QVariant::fromValue(data);
                 }
                 else if (sTypeName == QMetaType::typeName(qMetaTypeId<Finger>()))
                 {
                     Finger data;
                     ar >> make_nvp("variant", data);
-                    obj = qVariantFromValue(data);
+                    obj = QVariant::fromValue(data);
                 }
                 else
                 {

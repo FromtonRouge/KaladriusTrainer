@@ -32,9 +32,9 @@ LevelTreeItem::LevelTreeItem(LevelType levelType,
                              const QUuid& uuid,
                              const QString& sLabel,
                              const QString& sWordsFilePath)
-    : _levelType(levelType)
-    , _uuid(uuid)
+    : _uuid(uuid)
     , _sWordsFilePath(sWordsFilePath)
+    , _levelType(levelType)
 {
     setText(sLabel);
     setData(QString("Level %1").arg(_uuid.toString(QUuid::WithoutBraces)), LevelTableNameRole);

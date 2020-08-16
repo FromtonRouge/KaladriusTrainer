@@ -41,7 +41,7 @@ private:
     void updateRootIndexFromSelection(const QItemSelection& selected = QItemSelection(), const QItemSelection& deselected = QItemSelection());
 
 private:
-    DiffModel* _pDiffModel;
     UndoableProxyModel* _pUndoableKeyboardModel;
     QItemSelectionModel* _pItemSelectionModel;
+    DiffModel* _pDiffModel;
 };

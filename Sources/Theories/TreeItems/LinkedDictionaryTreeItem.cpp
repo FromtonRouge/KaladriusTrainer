@@ -31,7 +31,7 @@ LinkedDictionaryTreeItem::LinkedDictionaryTreeItem(const QString& sDictionaryNam
     setEditable(false);
 
     _pLinkedKeysTreeItem = new ListTreeItem(QIcon(":/Icons/keyboard-full.png"), QObject::tr("Linked Keys"));
-    auto pValueTreeItem = new ValueTreeItem(qVariantFromValue(ListValue(QObject::tr("Keycaps"), qVariantFromValue(KeycapRef()))));
+    auto pValueTreeItem = new ValueTreeItem(QVariant::fromValue(ListValue(QObject::tr("Keycaps"), QVariant::fromValue(KeycapRef()))));
     appendRow({_pLinkedKeysTreeItem, pValueTreeItem});
 }
 

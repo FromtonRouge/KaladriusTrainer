@@ -58,7 +58,7 @@ bool UndoableKeyboardModel::setData(const QModelIndex& index, const QVariant& va
                     const QModelIndex& indexLinkedDictionary = Utils::findParent(index, TreeItem::LinkedDictionary);
                     if (indexLinkedDictionary.isValid())
                     {
-                        const auto& matches = match(proxyIndexKeycapsIndex.child(0,0), Qt::DisplayRole, sKeycapId, 1, Qt::MatchExactly);
+                        const auto& matches = match(this->index(0, 0, proxyIndexKeycapsIndex), Qt::DisplayRole, sKeycapId, 1, Qt::MatchExactly);
                         if (!matches.isEmpty())
                         {
                             const QModelIndex& proxyIndexKeycap = matches.front();
@@ -90,7 +90,7 @@ bool UndoableKeyboardModel::setData(const QModelIndex& index, const QVariant& va
                     else
                     {
                         // Special keys case
-                        const auto& matches = match(proxyIndexKeycapsIndex.child(0,0), Qt::DisplayRole, sKeycapId, 1, Qt::MatchExactly);
+                        const auto& matches = match(this->index(0, 0, proxyIndexKeycapsIndex), Qt::DisplayRole, sKeycapId, 1, Qt::MatchExactly);
                         if (!matches.isEmpty())
                         {
                             const QModelIndex& proxyIndexKeycap = matches.front();
@@ -140,7 +140,7 @@ bool UndoableKeyboardModel::dropMimeData(const QMimeData* pMimeData, Qt::DropAct
         QDataStream stream(&data, QIODevice::ReadOnly);
         QString sKeycapId;
         stream >> sKeycapId;
-        setData(parent, qVariantFromValue(KeycapRef(sKeycapId)));
+        setData(parent, QVariant::fromValue(KeycapRef(sKeycapId)));
     }
     return UndoableProxyModel::dropMimeData(pMimeData, action, iRow, iColumn, parent);
 }

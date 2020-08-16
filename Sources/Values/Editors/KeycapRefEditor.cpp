@@ -56,11 +56,11 @@ void KeycapRefEditor::onCurrentIndexChanged(const QString& sKeycapId)
 {
     if (_pComboBox->currentIndex() == 0)
     {
-        _value = qVariantFromValue(KeycapRef());
+        _value = QVariant::fromValue(KeycapRef());
     }
     else
     {
-        _value = qVariantFromValue(KeycapRef(sKeycapId));
+        _value = QVariant::fromValue(KeycapRef(sKeycapId));
     }
     apply();
 }

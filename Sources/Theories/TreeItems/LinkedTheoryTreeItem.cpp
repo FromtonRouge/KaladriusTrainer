@@ -30,8 +30,8 @@ LinkedTheoryTreeItem::LinkedTheoryTreeItem(const QString& sTheoryName)
     setEditable(false);
 
     _pLinkedSpecialKeys = new ListTreeItem(QIcon(":/Icons/keyboard-full.png"), QObject::tr("Linked Special Keys"));
-    const QVariant& defaultSubList = qVariantFromValue(ListValue(QObject::tr("Keycaps"), qVariantFromValue(KeycapRef())));
-    auto pValueTreeItem = new ValueTreeItem(qVariantFromValue(ListValue(QObject::tr("Keycaps List"), defaultSubList, ListValue::NameIsEditable)));
+    const QVariant& defaultSubList = QVariant::fromValue(ListValue(QObject::tr("Keycaps"), QVariant::fromValue(KeycapRef())));
+    auto pValueTreeItem = new ValueTreeItem(QVariant::fromValue(ListValue(QObject::tr("Keycaps List"), defaultSubList, ListValue::NameIsEditable)));
     appendRow({_pLinkedSpecialKeys, pValueTreeItem});
 
     _pLinkedDictionaries = new ListTreeItem(QIcon(":/Icons/books-brown.png"), QObject::tr("Linked Dictionaries"));

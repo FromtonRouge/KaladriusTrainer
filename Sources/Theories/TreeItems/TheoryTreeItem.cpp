@@ -32,7 +32,7 @@ TheoryTreeItem::TheoryTreeItem()
 
     addAttribute(QObject::tr("Name"), QString());
     addAttribute(QObject::tr("Description"), QString());
-    auto pValueTreeItem = new ValueTreeItem(qVariantFromValue(ListValue(QObject::tr("Labels"), QString(), ListValue::NameIsEditable)));
+    auto pValueTreeItem = new ValueTreeItem(QVariant::fromValue(ListValue(QObject::tr("Labels"), QString(), ListValue::NameIsEditable)));
     appendRow({new ListTreeItem(QIcon(":/Icons/keyboard-full.png"), QObject::tr("Special Keys")), pValueTreeItem });
     appendRow({new ListTreeItem(QIcon(":/Icons/books-brown.png"), QObject::tr("Dictionaries")), new EmptyTreeItem()});
 }

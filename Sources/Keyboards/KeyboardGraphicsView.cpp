@@ -125,14 +125,14 @@ void KeyboardGraphicsView::keyReleaseEvent(QKeyEvent* pEvent)
                     const QModelIndex& indexKeycaps = pUndoableKeyboardModel->mapFromSource(pKeyboardModel->getKeycapsIndex());
                     if (pUndoableKeyboardModel->hasChildren(indexKeycaps))
                     {
-                        const QModelIndex& start = indexKeycaps.child(0,0);
+                        const QModelIndex& start = pUndoableKeyboardModel->index(0, 0, indexKeycaps);
                         for (const auto& sKeycap : selectedKeycaps)
                         {
                             const auto& matches = pUndoableKeyboardModel->match(start, Qt::DisplayRole, sKeycap, 1, Qt::MatchExactly);
                             if (!matches.isEmpty())
                             {
                                 const QModelIndex& index = matches.front();
-                                const QModelIndex& indexLabelValue = index.child(0,1);
+                                const QModelIndex& indexLabelValue = pUndoableKeyboardModel->index(0, 1, index);
                                 pUndoableKeyboardModel->setData(indexLabelValue, sKey, Qt::EditRole);
                             }
                         }

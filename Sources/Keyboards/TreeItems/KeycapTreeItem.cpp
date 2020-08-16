@@ -37,7 +37,7 @@ KeycapTreeItem::KeycapTreeItem(const QString& sKeycapId)
     pLabelItem->addAttribute(QObject::tr("X"), qreal(0));
     pLabelItem->addAttribute(QObject::tr("Y"), qreal(0));
     addAttribute(QObject::tr("Color"), QColor());
-    addAttribute(QObject::tr("Finger"), qVariantFromValue(Finger()));
+    addAttribute(QObject::tr("Finger"), QVariant::fromValue(Finger()));
 }
 
 KeycapTreeItem::~KeycapTreeItem()

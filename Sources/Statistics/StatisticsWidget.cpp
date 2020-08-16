@@ -153,14 +153,12 @@ void StatisticsWidget::addSeries(const QModelIndex& indexLevel)
     pCurrentChart->addSeries(pSeries);
 
     pCurrentChart->createDefaultAxes();
-    if (pCurrentChart->axisX())
-    {
-        pCurrentChart->axisX()->setLabelsVisible(false);
-    }
 
-    if (pCurrentChart->axisY())
+    const auto& axes = pCurrentChart->axes();
+    if (axes.isEmpty() == false)
     {
-        pCurrentChart->axisY()->setMin(0);
+        axes[0]->setLabelsVisible(false);
+        axes[1]->setMin(0);
     }
 }
 
