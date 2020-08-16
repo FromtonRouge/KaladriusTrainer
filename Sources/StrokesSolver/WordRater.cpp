@@ -17,41 +17,26 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "WordRater.h"
 
-#include <QtWidgets/QMainWindow>
-#include <QtCore/QScopedPointer>
-
-namespace Ui
+WordRater::WordRater(QObject *pParent)
+    : QObject(pParent)
 {
-    class MainWindow;
+
 }
 
-class CountdownTimer;
-class WordCounter;
-class Dashboard;
-
-class MainWindow : public QMainWindow
+WordRater::~WordRater()
 {
-    Q_OBJECT
 
-public:
-    MainWindow(QWidget* pParent = nullptr);
-    ~MainWindow();
+}
 
-    void Init();
+QString WordRater::getWordToComplete() const
+{
+    return _sWordToComplete;
+}
 
-protected slots:
-    void on_actionAbout_triggered();
-    void delayedRestoreState();
-    void onCountdownTimerDone();
-
-protected:
-    virtual bool event(QEvent* pEvent) override;
-
-private:
-    QScopedPointer<Ui::MainWindow> _pUi;
-    CountdownTimer* _pCountdownTimer = nullptr;
-    Dashboard* _pDashboard = nullptr;
-    WordCounter* _pWordCounter = nullptr;
-};
+void WordRater::setWordToComplete(const QString& sWordToComplete)
+{
+    _sWordToComplete = sWordToComplete;
+    emit wordToCompleteChanged(_sWordToComplete);
+}

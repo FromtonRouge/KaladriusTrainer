@@ -51,8 +51,8 @@ MainWindow::MainWindow(QWidget* pParent)
     : QMainWindow(pParent)
     , _pUi(new Ui::MainWindow)
     , _pCountdownTimer(new CountdownTimer(this))
-    , _pWordCounter(new WordCounter(_pCountdownTimer, this))
     , _pDashboard(new Dashboard(this))
+    , _pWordCounter(new WordCounter(_pCountdownTimer, this))
 {
     _pUi->setupUi(this);
     setDockOptions(dockOptions() | DockOption::GroupedDragging | DockOption::AllowNestedDocks);

@@ -58,5 +58,6 @@
         <file>Icons/controller.png</file>
         <file>Icons/clock--arrow.png</file>
         <file>Icons/document-text.png</file>
+        <file>Qml/WordRater.qml</file>
     </qresource>
 </RCC>

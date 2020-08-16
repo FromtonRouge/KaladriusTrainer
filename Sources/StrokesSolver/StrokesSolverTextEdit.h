@@ -28,6 +28,7 @@
 #include <QtCore/QVector>
 #include <QtCore/QChar>
 
+class WordRater;
 class QTimer;
 class StrokesSolverTextEdit : public QTextEdit
 {
@@ -45,6 +46,7 @@ public:
 
     void restart(const QString& sText = QString());
     void setWordCounter(WordCounter* pWordCounter);
+    void setWordRater(WordRater* pWordRater);
 
 public slots:
     void stopTraining();
@@ -79,6 +81,7 @@ private:
     uint _uiInvalidCharacters = 0;
     bool _bCleanState = true;
     WordCounter* _pWordCounter = nullptr;
+    WordRater* _pWordRater = nullptr;
     QColor _colorOk;
     QColor _colorError;
     QTimer* _pTimerSolve = nullptr;

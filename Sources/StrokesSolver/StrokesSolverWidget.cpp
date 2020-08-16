@@ -18,8 +18,10 @@
 // ======================================================================
 
 #include "StrokesSolverWidget.h"
+#include "WordRater.h"
 #include "ui_StrokesSolverWidget.h"
 #include <QtGui/QFontDatabase>
+#include <QtQml/QQmlContext>
 #include <QtCore/QSettings>
 #include <QtCore/QSignalBlocker>
 #include <QtCore/QFile>
@@ -28,8 +30,11 @@
 StrokesSolverWidget::StrokesSolverWidget(QWidget* pParent)
     : QWidget(pParent)
     , _pUi(new Ui::StrokesSolverWidget())
+    , _pWordRater(new WordRater(this))
 {
     _pUi->setupUi(this);
+
+    _pUi->textEdit->setWordRater(_pWordRater);
 
     // We don't want to trigger the connected slots
     QSignalBlocker blockerFontSize(_pUi->comboBoxFontSize);
@@ -50,6 +55,10 @@ StrokesSolverWidget::StrokesSolverWidget(QWidget* pParent)
     _pUi->comboBoxFontSize->setCurrentIndex(sizes.indexOf(wantedFont.pointSize()));
     _pUi->textEdit->setFont(wantedFont);
     _pUi->pushButtonRestart->click();
+
+    auto pRootContext = _pUi->quickWidgetWordRater->rootContext();
+    pRootContext->setContextProperty("wordRater", _pWordRater);
+    _pUi->quickWidgetWordRater->setSource(QUrl("qrc:/Qml/WordRater.qml"));
 }
 
 StrokesSolverWidget::~StrokesSolverWidget()

@@ -76,6 +76,7 @@ SOURCES += \
     Sources/StrokesSolver/StrokesSolverWidget.cpp \
     Sources/StrokesSolver/TypingTestResult.cpp \
     Sources/StrokesSolver/WordCounter.cpp \
+    Sources/StrokesSolver/WordRater.cpp \
     Sources/Theories/Models/TheoryModel.cpp \
     Sources/Theories/Models/UndoableTheoryModel.cpp \
     Sources/Theories/TheoryEditorMainWindow.cpp \
@@ -153,6 +154,7 @@ HEADERS += \
     Sources/StrokesSolver/StrokesSolverWidget.h \
     Sources/StrokesSolver/TypingTestResult.h \
     Sources/StrokesSolver/WordCounter.h \
+    Sources/StrokesSolver/WordRater.h \
     Sources/Theories/Models/TheoryModel.h \
     Sources/Theories/Models/UndoableTheoryModel.h \
     Sources/Theories/TheoryEditorMainWindow.h \

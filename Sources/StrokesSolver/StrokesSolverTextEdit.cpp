@@ -18,6 +18,7 @@
 // ======================================================================
 
 #include "StrokesSolverTextEdit.h"
+#include "WordRater.h"
 #include "../Main/Application.h"
 #include <QtGui/QWindow>
 #include <QtGui/QScreen>
@@ -71,18 +72,29 @@ void StrokesSolverTextEdit::restart(const QString& sText)
     {
         _pWordCounter->reset();
     }
+
+    _pWordRater->setWordToComplete(getWordBeingCompleted().text);
+
     setFocus();
     emit reset();
 }
 
 void StrokesSolverTextEdit::setWordCounter(WordCounter* pWordCounter)
 {
-   _pWordCounter = pWordCounter;
+    _pWordCounter = pWordCounter;
+}
+
+void StrokesSolverTextEdit::setWordRater(WordRater* pWordRater)
+{
+    _pWordRater = pWordRater;
 }
 
 void StrokesSolverTextEdit::onCursorPositionChanged()
 {
     _pTimerSolve->start();
+
+    const Word& wordToComplete = getWordBeingCompleted();
+    _pWordRater->setWordToComplete(wordToComplete.text);
 }
 
 void StrokesSolverTextEdit::onTimerSolve()

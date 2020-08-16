@@ -32,19 +32,6 @@
    <item row="0" column="1">
     <widget class="QFontComboBox" name="fontComboBox"/>
    </item>
-   <item row="0" column="4">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
    <item row="1" column="0" colspan="5">
     <widget class="StrokesSolverTextEdit" name="textEdit">
      <property name="acceptRichText">
@@ -69,9 +56,27 @@
      </property>
     </widget>
    </item>
+   <item row="0" column="4">
+    <widget class="QQuickWidget" name="quickWidgetWordRater">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="resizeMode">
+      <enum>QQuickWidget::SizeRootObjectToView</enum>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>QQuickWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">QtQuickWidgets/QQuickWidget</header>
+  </customwidget>
   <customwidget>
    <class>StrokesSolverTextEdit</class>
    <extends>QTextEdit</extends>

@@ -19,39 +19,24 @@
 
 #pragma once
 
-#include <QtWidgets/QMainWindow>
-#include <QtCore/QScopedPointer>
+#include <QtCore/QObject>
 
-namespace Ui
-{
-    class MainWindow;
-}
-
-class CountdownTimer;
-class WordCounter;
-class Dashboard;
-
-class MainWindow : public QMainWindow
+class WordRater : public QObject
 {
     Q_OBJECT
 
+    Q_PROPERTY(QString wordToComplete READ getWordToComplete WRITE setWordToComplete NOTIFY wordToCompleteChanged)
+
+signals:
+    void wordToCompleteChanged(const QString& sWordToComplete) const;
+
 public:
-    MainWindow(QWidget* pParent = nullptr);
-    ~MainWindow();
+    WordRater(QObject* pParent = nullptr);
+    ~WordRater();
 
-    void Init();
-
-protected slots:
-    void on_actionAbout_triggered();
-    void delayedRestoreState();
-    void onCountdownTimerDone();
-
-protected:
-    virtual bool event(QEvent* pEvent) override;
+    QString getWordToComplete() const;
+    void setWordToComplete(const QString& sWordToComplete);
 
 private:
-    QScopedPointer<Ui::MainWindow> _pUi;
-    CountdownTimer* _pCountdownTimer = nullptr;
-    Dashboard* _pDashboard = nullptr;
-    WordCounter* _pWordCounter = nullptr;
+    QString _sWordToComplete;
 };
