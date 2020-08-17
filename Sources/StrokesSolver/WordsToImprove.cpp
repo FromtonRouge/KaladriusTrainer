@@ -17,26 +17,26 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "WordsToImprove.h"
 
-#include <QtCore/QObject>
-
-class WordRater : public QObject
+WordsToImprove::WordsToImprove(QObject *pParent)
+    : QObject(pParent)
 {
-    Q_OBJECT
 
-    Q_PROPERTY(QString wordToComplete READ getWordToComplete WRITE setWordToComplete NOTIFY wordToCompleteChanged)
+}
 
-signals:
-    void wordToCompleteChanged(const QString& sWordToComplete) const;
+WordsToImprove::~WordsToImprove()
+{
 
-public:
-    WordRater(QObject* pParent = nullptr);
-    ~WordRater();
+}
 
-    QString getWordToComplete() const;
-    void setWordToComplete(const QString& sWordToComplete);
+QStringList WordsToImprove::getWordsToImprove() const
+{
+    return _wordsToImprove;
+}
 
-private:
-    QString _sWordToComplete;
-};
+void WordsToImprove::setWordsToImprove(const QStringList& wordsToImprove)
+{
+    _wordsToImprove = wordsToImprove;
+    emit wordsToImproveChanged(wordsToImprove);
+}

@@ -18,7 +18,7 @@
 // ======================================================================
 
 #include "StrokesSolverTextEdit.h"
-#include "WordRater.h"
+#include "WordsToImprove.h"
 #include "../Main/Application.h"
 #include <QtGui/QWindow>
 #include <QtGui/QScreen>
@@ -73,8 +73,6 @@ void StrokesSolverTextEdit::restart(const QString& sText)
         _pWordCounter->reset();
     }
 
-    _pWordRater->setWordToComplete(getWordBeingCompleted().text);
-
     setFocus();
     emit reset();
 }
@@ -84,17 +82,14 @@ void StrokesSolverTextEdit::setWordCounter(WordCounter* pWordCounter)
     _pWordCounter = pWordCounter;
 }
 
-void StrokesSolverTextEdit::setWordRater(WordRater* pWordRater)
+void StrokesSolverTextEdit::setWordsToImprove(WordsToImprove* pWordsToImprove)
 {
-    _pWordRater = pWordRater;
+    _pWordsToImprove = pWordsToImprove;
 }
 
 void StrokesSolverTextEdit::onCursorPositionChanged()
 {
     _pTimerSolve->start();
-
-    const Word& wordToComplete = getWordBeingCompleted();
-    _pWordRater->setWordToComplete(wordToComplete.text);
 }
 
 void StrokesSolverTextEdit::onTimerSolve()
@@ -506,4 +501,9 @@ void StrokesSolverTextEdit::onTextChanged()
 void StrokesSolverTextEdit::stopTraining()
 {
     setDisabled(true);
+}
+
+void StrokesSolverTextEdit::setWordsToPractice(const QStringList& words)
+{
+    _pWordsToImprove->setWordsToImprove(words);
 }

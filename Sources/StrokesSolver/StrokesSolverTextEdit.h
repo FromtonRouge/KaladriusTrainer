@@ -28,7 +28,7 @@
 #include <QtCore/QVector>
 #include <QtCore/QChar>
 
-class WordRater;
+class WordsToImprove;
 class QTimer;
 class StrokesSolverTextEdit : public QTextEdit
 {
@@ -46,10 +46,11 @@ public:
 
     void restart(const QString& sText = QString());
     void setWordCounter(WordCounter* pWordCounter);
-    void setWordRater(WordRater* pWordRater);
+    void setWordsToImprove(WordsToImprove* pWordsToImprove);
 
 public slots:
     void stopTraining();
+    void setWordsToPractice(const QStringList& words);
 
 protected slots:
     void onCursorPositionChanged();
@@ -81,7 +82,7 @@ private:
     uint _uiInvalidCharacters = 0;
     bool _bCleanState = true;
     WordCounter* _pWordCounter = nullptr;
-    WordRater* _pWordRater = nullptr;
+    WordsToImprove* _pWordsToImprove = nullptr;
     QColor _colorOk;
     QColor _colorError;
     QTimer* _pTimerSolve = nullptr;

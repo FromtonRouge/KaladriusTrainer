@@ -85,6 +85,7 @@ MainWindow::MainWindow(QWidget* pParent)
         connect(pStrokesSolverTextEdit, &StrokesSolverTextEdit::started, _pCountdownTimer, &CountdownTimer::start);
         connect(_pCountdownTimer, &CountdownTimer::done, this, &MainWindow::onCountdownTimerDone);
         connect(_pUi->treeViewLevels, &LevelsTreeView::sendText, pStrokesSolverTextEdit, &StrokesSolverTextEdit::restart);
+        connect(_pUi->treeViewLevels, &LevelsTreeView::sendWordsToPractice, pStrokesSolverTextEdit, &StrokesSolverTextEdit::setWordsToPractice);
         connect(_pUi->widgetStrokesSolver, &StrokesSolverWidget::restartNeeded, _pUi->treeViewLevels, &LevelsTreeView::restart);
     }
 

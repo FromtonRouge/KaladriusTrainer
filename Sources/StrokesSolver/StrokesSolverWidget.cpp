@@ -18,23 +18,21 @@
 // ======================================================================
 
 #include "StrokesSolverWidget.h"
-#include "WordRater.h"
+#include "WordsToImprove.h"
 #include "ui_StrokesSolverWidget.h"
 #include <QtGui/QFontDatabase>
 #include <QtQml/QQmlContext>
 #include <QtCore/QSettings>
 #include <QtCore/QSignalBlocker>
-#include <QtCore/QFile>
-#include <QtCore/QRandomGenerator>
 
 StrokesSolverWidget::StrokesSolverWidget(QWidget* pParent)
     : QWidget(pParent)
     , _pUi(new Ui::StrokesSolverWidget())
-    , _pWordRater(new WordRater(this))
+    , _pWordsToImprove(new WordsToImprove(this))
 {
     _pUi->setupUi(this);
 
-    _pUi->textEdit->setWordRater(_pWordRater);
+    _pUi->textEdit->setWordsToImprove(_pWordsToImprove);
 
     // We don't want to trigger the connected slots
     QSignalBlocker blockerFontSize(_pUi->comboBoxFontSize);
@@ -56,9 +54,9 @@ StrokesSolverWidget::StrokesSolverWidget(QWidget* pParent)
     _pUi->textEdit->setFont(wantedFont);
     _pUi->pushButtonRestart->click();
 
-    auto pRootContext = _pUi->quickWidgetWordRater->rootContext();
-    pRootContext->setContextProperty("wordRater", _pWordRater);
-    _pUi->quickWidgetWordRater->setSource(QUrl("qrc:/Qml/WordRater.qml"));
+    auto pRootContext = _pUi->quickWidgetWordsToImprove->rootContext();
+    pRootContext->setContextProperty("wordsToImprove", _pWordsToImprove);
+    _pUi->quickWidgetWordsToImprove->setSource(QUrl("qrc:/Qml/WordsToImprove.qml"));
 }
 
 StrokesSolverWidget::~StrokesSolverWidget()

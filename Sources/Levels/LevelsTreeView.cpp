@@ -71,6 +71,9 @@ void LevelsTreeView::restart()
                 pDatabase->createLevelWordsTable(current.data(LevelWordsTableNameRole).toString());
                 pLevelTreeItem->loadWords();
 
+                const QStringList& wordsToPractice = pLevelTreeItem->get5WordsToPractice();
+                emit sendWordsToPractice(wordsToPractice);
+
                 const QStringList& randomWords = pLevelTreeItem->getRandomWords();
                 const QString& sText = randomWords.join(" ");
                 emit sendText(sText);

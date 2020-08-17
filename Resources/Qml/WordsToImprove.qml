@@ -3,11 +3,13 @@ import QtQuick.Layouts 1.3
 
 Item {
     id: main
-    visible: false
 
     Connections {
-        target: wordRater
-        function onWordToCompleteChanged(value) { textToRate.text = value }
+        target: wordsToImprove
+        function onWordsToImproveChanged(words)
+        {
+            textToRate.text = words.join(" ");
+        }
     }
 
     Text {

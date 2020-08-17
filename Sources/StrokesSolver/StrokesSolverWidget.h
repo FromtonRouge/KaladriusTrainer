@@ -27,7 +27,7 @@ namespace Ui
     class StrokesSolverWidget;
 }
 
-class WordRater;
+class WordsToImprove;
 
 class StrokesSolverWidget : public QWidget
 {
@@ -50,5 +50,5 @@ protected slots:
 
 private:
     QScopedPointer<Ui::StrokesSolverWidget> _pUi;
-    WordRater* _pWordRater = nullptr;
+    WordsToImprove* _pWordsToImprove = nullptr;
 };
