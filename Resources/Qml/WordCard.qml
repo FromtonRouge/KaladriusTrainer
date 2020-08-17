@@ -20,7 +20,7 @@ Item {
         else
         {
             progress.text = prg;
-            progress.color = "darkBlue";
+            progress.color = "#636363";
             progress.font.pixelSize = 20;
             progress.font.italic = false;
         }
