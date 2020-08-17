@@ -22,6 +22,7 @@
 #include "../../Tree/TreeItems/TreeItem.h"
 #include <QtCore/QStringList>
 #include <QtCore/QUuid>
+#include <QtCore/QPair>
 
 class LevelTreeItem : public TreeItem
 {
@@ -44,7 +45,7 @@ public:
 
     void loadWords();
 
-    QStringList get5WordsToPractice() const;
+    QStringList get5WordsToPractice(QVector<int>* pProgressValues = nullptr) const;
     QStringList getRandomWords() const;
 
     float getProgressionPercentage() const;

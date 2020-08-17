@@ -217,7 +217,7 @@ void MainWindow::onCountdownTimerDone()
 
                     if (queryGetValues.next())
                     {
-                        iProgression =  queryGetValues.value("Progression").toInt();
+                        iProgression =  queryGetValues.value("Progression").toInt(); // Can be -1 when it's a "NEW" word
                         iOccurences += queryGetValues.value("Occurences").toInt();
 
                         auto averageIfNeeded = [&queryGetValues](const QString& sColumnName, float& rfAverageForThisTest)
@@ -256,7 +256,7 @@ void MainWindow::onCountdownTimerDone()
                     iProgression += iDeltaProgression;
 
                     QStringList values;
-                    values << QString("\"Progression\" = %1").arg(qBound(0, iProgression, 100));
+                    values << QString("\"Progression\" = %1").arg(qBound(0, iProgression, 100)); // Progression can't goes back to -1 (which means "NEW" word)
                     values << QString("\"Occurences\" = %1").arg(iOccurences);
                     values << QString("\"AverageErrorsCount\" = %1").arg(fAverageErrorsCount);
                     values << QString("\"AverageChordsCount\" = %1").arg(fAverageChordsCount);

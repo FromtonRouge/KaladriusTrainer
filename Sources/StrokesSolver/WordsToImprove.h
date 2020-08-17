@@ -21,23 +21,29 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
+#include <QtCore/QVector>
 
 class WordsToImprove : public QObject
 {
     Q_OBJECT
 
     Q_PROPERTY(QStringList wordsToImprove READ getWordsToImprove WRITE setWordsToImprove NOTIFY wordsToImproveChanged)
+    Q_PROPERTY(QVector<int> progressValues READ getProgressValues WRITE setProgressValues NOTIFY progressValuesChanged)
 
 signals:
     void wordsToImproveChanged(const QStringList& wordsToImprove) const;
+    void progressValuesChanged(const QVector<int>& progressValues) const;
 
 public:
     WordsToImprove(QObject* pParent = nullptr);
     ~WordsToImprove();
 
-    QStringList getWordsToImprove() const;
+    const QStringList& getWordsToImprove() const {return _wordsToImprove;}
     void setWordsToImprove(const QStringList& wordsToImprove);
+    const QVector<int>& getProgressValues() const {return _progressValues;}
+    void setProgressValues(const QVector<int>& values);
 
 private:
     QStringList _wordsToImprove;
+    QVector<int> _progressValues;
 };

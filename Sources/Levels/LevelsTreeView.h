@@ -26,7 +26,7 @@ class LevelsTreeView : public QTreeView
     Q_OBJECT
 
 signals:
-    void sendWordsToPractice(const QStringList& words) const;
+    void sendWordsToPractice(const QStringList& words, const QVector<int>& progressValues) const;
     void sendText(const QString& sText) const;
     void restarted(const QString& sTableName) const;
 

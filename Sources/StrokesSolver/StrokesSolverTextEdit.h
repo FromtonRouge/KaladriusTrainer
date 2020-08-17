@@ -50,7 +50,7 @@ public:
 
 public slots:
     void stopTraining();
-    void setWordsToPractice(const QStringList& words);
+    void setWordsToPractice(const QStringList& words, const QVector<int>& progressValues);
 
 protected slots:
     void onCursorPositionChanged();

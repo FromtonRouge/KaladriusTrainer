@@ -503,7 +503,8 @@ void StrokesSolverTextEdit::stopTraining()
     setDisabled(true);
 }
 
-void StrokesSolverTextEdit::setWordsToPractice(const QStringList& words)
+void StrokesSolverTextEdit::setWordsToPractice(const QStringList& words, const QVector<int>& progressValues)
 {
     _pWordsToImprove->setWordsToImprove(words);
+    _pWordsToImprove->setProgressValues(progressValues);
 }

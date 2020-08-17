@@ -93,7 +93,7 @@ bool Database::createLevelWordsTable(const QString& sTableName) const
 {
     QVector<QPair<QString, QString>> columns;
     columns << QPair<QString, QString>("Word", "TEXT PRIMARY KEY");
-    columns << QPair<QString, QString>("Progression", "INTEGER"); // from 0 to 100
+    columns << QPair<QString, QString>("Progression", "INTEGER"); // from -1 to 100 (-1 means NEW word to learn)
     columns << QPair<QString, QString>("Occurences", "INTEGER"); // Number of times you see the word
     columns << QPair<QString, QString>("AverageErrorsCount", "REAL"); // Average of errors you did on this word
     columns << QPair<QString, QString>("AverageChordsCount", "REAL"); // Average of chords needed to complete the whole word

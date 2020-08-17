@@ -59,5 +59,6 @@
         <file>Icons/clock--arrow.png</file>
         <file>Icons/document-text.png</file>
         <file>Qml/WordsToImprove.qml</file>
+        <file>Qml/WordCard.qml</file>
     </qresource>
 </RCC>

@@ -6,25 +6,54 @@ Item {
 
     Connections {
         target: wordsToImprove
+
         function onWordsToImproveChanged(words)
         {
-            textToRate.text = words.join(" ");
+            var i = 0;
+
+            // Hide all cards by default
+            for (i = 1; i < 5; ++i)
+            {
+                repeaterWordCards.itemAt(i).visible = false;
+            }
+
+            i = 0;
+            for (i in words)
+            {
+                repeaterWordCards.itemAt(i).visible = true;
+                repeaterWordCards.itemAt(i).setWord(words[i]);
+            }
+        }
+
+        function onProgressValuesChanged(progressValues)
+        {
+            var i = 0;
+
+            // Hide all cards by default
+            for (i = 1; i < 5; ++i)
+            {
+                repeaterWordCards.itemAt(i).visible = false;
+            }
+
+            i = 0;
+            for (i in progressValues)
+            {
+                repeaterWordCards.itemAt(i).visible = true;
+                repeaterWordCards.itemAt(i).setProgress(progressValues[i]);
+            }
         }
     }
 
-    Text {
-        id: textToRate
-        y: 183
-        width: 419
-        height: 47
-        text: qsTr("complete")
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenterOffset: 1
-        anchors.verticalCenter: parent.verticalCenter
-        font.bold: true
-        verticalAlignment: Text.AlignVCenter
-        horizontalAlignment: Text.AlignHCenter
-        font.pixelSize: 34
+    Row {
+        y: 3
+        spacing: 8
+        Repeater {
+            id: repeaterWordCards
+            model: 5
+
+            WordCard {
+            }
+        }
     }
 }
 

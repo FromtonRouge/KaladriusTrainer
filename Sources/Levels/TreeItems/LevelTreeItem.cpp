@@ -91,7 +91,7 @@ void LevelTreeItem::loadWords()
                 {
                     QMap<QString, QVariant> values;
                     values["Word"] = sWord;
-                    values["Progression"] = 0;
+                    values["Progression"] = -1;
                     values["Occurences"] = 0;
                     values["AverageErrorsCount"] = 0.f;
                     values["AverageChordsCount"] = 0.f;
@@ -104,17 +104,28 @@ void LevelTreeItem::loadWords()
     }
 }
 
-QStringList LevelTreeItem::get5WordsToPractice() const
+QStringList LevelTreeItem::get5WordsToPractice(QVector<int>* pProgressValues) const
 {
+    if (pProgressValues)
+    {
+        pProgressValues->clear();
+    }
+
     // Get 5 words with a Progression < 100
     auto pDatabase = qApp->getDatabase();
     QStringList wordsToPractice;
     const QString& sLevelWordsTableName = data(LevelWordsTableNameRole).toString();
-    QString sQuery = QString("SELECT Word FROM \"%1\" WHERE Progression < 100 LIMIT 5").arg(sLevelWordsTableName);
+
+    QString sQuery = QString("SELECT Word, Progression FROM \"%1\" WHERE Progression < 100 LIMIT 5").arg(sLevelWordsTableName);
     QSqlQuery query = pDatabase->execute(sQuery);
     while (query.next())
     {
         wordsToPractice << query.value(0).toString();
+
+        if (pProgressValues)
+        {
+            (*pProgressValues) << query.value(1).toInt();
+        }
     }
     return wordsToPractice;
 }

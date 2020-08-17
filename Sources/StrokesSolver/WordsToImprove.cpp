@@ -30,13 +30,14 @@ WordsToImprove::~WordsToImprove()
 
 }
 
-QStringList WordsToImprove::getWordsToImprove() const
-{
-    return _wordsToImprove;
-}
-
 void WordsToImprove::setWordsToImprove(const QStringList& wordsToImprove)
 {
     _wordsToImprove = wordsToImprove;
     emit wordsToImproveChanged(wordsToImprove);
+}
+
+void WordsToImprove::setProgressValues(const QVector<int>& values)
+{
+    _progressValues = values;
+    emit progressValuesChanged(_progressValues);
 }
