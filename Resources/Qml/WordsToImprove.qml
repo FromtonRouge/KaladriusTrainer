@@ -42,6 +42,15 @@ Item {
                 repeaterWordCards.itemAt(i).setProgress(progressValues[i]);
             }
         }
+
+        function onShowResults(progressValues)
+        {
+            var i = 0;
+            for (i in progressValues)
+            {
+                repeaterWordCards.itemAt(i).setProgressResult(progressValues[i]);
+            }
+        }
     }
 
     Row {

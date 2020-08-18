@@ -33,6 +33,7 @@ class WordsToImprove : public QObject
 signals:
     void wordsToImproveChanged(const QStringList& wordsToImprove) const;
     void progressValuesChanged(const QVector<int>& progressValues) const;
+    void showResults(const QVector<int>& progressValues) const;
 
 public:
     WordsToImprove(QObject* pParent = nullptr);

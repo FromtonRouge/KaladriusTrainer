@@ -29,6 +29,7 @@
 #include "../StrokesSolver/StrokesSolverTextEdit.h"
 #include "../StrokesSolver/StrokesSolverWidget.h"
 #include "../StrokesSolver/WordCounter.h"
+#include "../StrokesSolver/WordsToImprove.h"
 #include "../Utils/CountdownTimer.h"
 #include "../Levels/Models/LevelsModel.h"
 #include "../Levels/TreeItems/LevelTreeItem.h"
@@ -46,6 +47,7 @@
 #include <QtCore/QTimer>
 #include <QtCore/QDateTime>
 #include <QtCore/QLineF>
+#include <QtCore/QHash>
 
 MainWindow::MainWindow(QWidget* pParent)
     : QMainWindow(pParent)
@@ -197,6 +199,10 @@ void MainWindow::onCountdownTimerDone()
                     _pUi->chartView->createChart(sLevelTableName);
                 }
 
+                const auto pWordsToImprove = _pUi->widgetStrokesSolver->getWordsToImprove();
+                const QStringList& currentWords = pWordsToImprove->getWordsToImprove();
+                QHash<QString, int> progressValuesByWord;
+
                 // Insert values in the level words table
                 auto itWordData = typingTestResult.wordData.begin();
                 while (itWordData != typingTestResult.wordData.end())
@@ -255,8 +261,11 @@ void MainWindow::onCountdownTimerDone()
 
                     iProgression += iDeltaProgression;
 
+                    const int iFinalProgression = qBound(0, iProgression, 100);
+                    progressValuesByWord[sWord] = iFinalProgression;
+
                     QStringList values;
-                    values << QString("\"Progression\" = %1").arg(qBound(0, iProgression, 100)); // Progression can't goes back to -1 (which means "NEW" word)
+                    values << QString("\"Progression\" = %1").arg(iFinalProgression); // Progression can't goes back to -1 (which means "NEW" word)
                     values << QString("\"Occurences\" = %1").arg(iOccurences);
                     values << QString("\"AverageErrorsCount\" = %1").arg(fAverageErrorsCount);
                     values << QString("\"AverageChordsCount\" = %1").arg(fAverageChordsCount);
@@ -278,6 +287,14 @@ void MainWindow::onCountdownTimerDone()
                 _pDashboard->setMaxWpm(pDatabase->getMaxWpm(sLevelTableName));
                 _pDashboard->setMaxSpm(pDatabase->getMaxSpm(sLevelTableName));
                 _pDashboard->setMaxAccuracy(pDatabase->getMaxAccuracy(sLevelTableName));
+
+                QVector<int> newProgressions;
+                for (const QString& sWord : currentWords)
+                {
+                    newProgressions << progressValuesByWord[sWord];
+                }
+
+                pWordsToImprove->showResults(newProgressions);
                 break;
             }
         default:

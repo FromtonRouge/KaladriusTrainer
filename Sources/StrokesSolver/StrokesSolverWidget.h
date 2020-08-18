@@ -40,6 +40,8 @@ public:
     StrokesSolverWidget(QWidget* pParent = nullptr);
     ~StrokesSolverWidget();
 
+    WordsToImprove* getWordsToImprove() const {return _pWordsToImprove;}
+
 public slots:
     void restart(const QString& sText);
 

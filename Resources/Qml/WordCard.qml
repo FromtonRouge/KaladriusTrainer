@@ -5,6 +5,8 @@ Item {
     id: main
     width: rectangle.width
     height: rectangle.height
+    property var currentProgression: 0
+    property var newProgression: 0
 
     function setWord(txt) {word.text = txt}
     function setProgress(prg)
@@ -24,6 +26,40 @@ Item {
             progress.font.pixelSize = 20;
             progress.font.italic = false;
         }
+        currentProgression = prg;
+    }
+
+    function setProgressResult(prg)
+    {
+        newProgression = prg;
+        timer.start();
+    }
+
+    function animateProgress()
+    {
+        if (currentProgression < newProgression)
+        {
+            currentProgression += 1;
+        }
+        else if (currentProgression > newProgression)
+        {
+            currentProgression -= 1;
+        }
+        else
+        {
+            timer.stop();
+        }
+
+        setProgress(currentProgression);
+    }
+
+    Timer {
+        id: timer
+        interval: 5
+        repeat: true
+        running: false
+        triggeredOnStart: false
+        onTriggered: main.animateProgress()
     }
 
     AnimationController {
