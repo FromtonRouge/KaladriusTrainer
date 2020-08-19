@@ -12,7 +12,7 @@ Item {
             var i = 0;
 
             // Hide all cards by default
-            for (i = 1; i < 5; ++i)
+            for (i = 0; i < 5; ++i)
             {
                 repeaterWordCards.itemAt(i).visible = false;
             }
@@ -30,7 +30,7 @@ Item {
             var i = 0;
 
             // Hide all cards by default
-            for (i = 1; i < 5; ++i)
+            for (i = 0; i < 5; ++i)
             {
                 repeaterWordCards.itemAt(i).visible = false;
             }

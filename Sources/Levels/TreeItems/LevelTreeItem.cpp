@@ -127,6 +127,22 @@ QStringList LevelTreeItem::get5WordsToPractice(QVector<int>* pProgressValues) co
             (*pProgressValues) << query.value(1).toInt();
         }
     }
+
+    if (wordsToPractice.size() < 5)
+    {
+        QString sQuery = QString("SELECT Word, Progression FROM \"%1\" WHERE Progression == 100 ORDER BY AverageTimeSpentToComplete/AverageChordsCount DESC LIMIT %2").arg(sLevelWordsTableName).arg(5-wordsToPractice.size());
+        QSqlQuery query = pDatabase->execute(sQuery);
+        while (query.next())
+        {
+            wordsToPractice << query.value(0).toString();
+
+            if (pProgressValues)
+            {
+                (*pProgressValues) << query.value(1).toInt();
+            }
+        }
+    }
+
     return wordsToPractice;
 }
 
