@@ -186,6 +186,6 @@ float WordCounter::getViscosity() const
     const float fCoefficientOfVariance = fStandardDeviation/fAverage;
 
     // Square it to emphasize amplitude and scale it. We call it the "Viscosity" (the lower the better, -> 0 means "fluid")
-    const float fViscosity = fCoefficientOfVariance*fCoefficientOfVariance * 150.f;
+    const float fViscosity = fCoefficientOfVariance*fCoefficientOfVariance * 80.f;
     return fViscosity;
 }
