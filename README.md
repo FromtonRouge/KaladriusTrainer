@@ -4,5 +4,5 @@
 
 Learn to type on a Kaladrius Keyboard with this application [WORK IN PROGRESS]
 
-![Work in progress](https://i.imgur.com/57XyMzc.png)
+![Work in progress](Resources/Screenshots/1.png)
 
