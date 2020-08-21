@@ -60,5 +60,6 @@
         <file>Icons/document-text.png</file>
         <file>Qml/WordsToImprove.qml</file>
         <file>Qml/WordCard.qml</file>
+        <file>Icons/edit-comma.png</file>
     </qresource>
 </RCC>

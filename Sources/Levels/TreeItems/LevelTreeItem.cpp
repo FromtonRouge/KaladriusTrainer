@@ -48,6 +48,11 @@ LevelTreeItem::LevelTreeItem(LevelType levelType,
             sIconPath = ":/Icons/clock--arrow.png";
             break;
         }
+    case PunctuationMarks:
+        {
+            sIconPath = ":/Icons/edit-comma.png";
+            break;
+        }
     case FreeText:
         {
             sIconPath = ":/Icons/document-text.png";

@@ -29,6 +29,7 @@
 #include <QtSql/QSqlError>
 #include <QtCore/QSettings>
 #include <QtCore/QUuid>
+#include <QtCore/QRandomGenerator>
 #include <iostream>
 
 LevelsTreeView::LevelsTreeView(QWidget* pParent)
@@ -76,7 +77,42 @@ void LevelsTreeView::restart()
                 emit sendWordsToPractice(wordsToPractice, progressValues);
 
                 const QStringList& randomWords = pLevelTreeItem->getRandomWords();
-                const QString& sText = randomWords.join(" ");
+
+                QString sText;
+                if (pLevelTreeItem->getLevelType() == LevelTreeItem::PunctuationMarks)
+                {
+                    const QStringList punctuationMarks = {".", "...", "?", "!", ",", ":"};
+
+                    QStringList finalRandomWords;
+                    int iPreviousRandomIndex = 0;
+                    for (QString sWord : randomWords)
+                    {
+                        QString sPunctuation;
+                        const int iFortune = QRandomGenerator::global()->bounded(1, 101);
+                        int iRandomIndex = -1;
+
+                        if (iFortune >= 1 && iFortune <= 20)
+                        {
+                            iRandomIndex = QRandomGenerator::global()->bounded(punctuationMarks.size());
+                            sPunctuation = punctuationMarks[iRandomIndex];
+                        }
+
+                        if (iPreviousRandomIndex >= 0 && iPreviousRandomIndex <= 3)
+                        {
+                            sWord.replace(0, 1, sWord[0].toUpper());
+                        }
+
+                        finalRandomWords << (sWord + sPunctuation);
+                        iPreviousRandomIndex = iRandomIndex;
+                    }
+
+                    sText = finalRandomWords.join(" ");
+                }
+                else
+                {
+                    sText = randomWords.join(" ");
+                }
+
                 emit sendText(sText);
 
                 QSettings settings;

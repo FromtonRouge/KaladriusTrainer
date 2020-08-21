@@ -30,6 +30,7 @@ public:
     enum LevelType
     {
         TimedRandomWords,
+        PunctuationMarks,
         FreeText,
     };
 
@@ -42,6 +43,7 @@ public:
 
     virtual int type() const override {return Level;}
     const QUuid& getUuid() const {return _uuid;}
+    LevelType getLevelType() const {return _levelType;}
 
     void loadWords();
 
