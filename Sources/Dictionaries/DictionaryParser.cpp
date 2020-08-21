@@ -158,8 +158,20 @@ bool DictionaryParser::parse()
         QString sFileContent = file.readAll();
         file.close();
 
+        // Go to the first #include directive
+        QRegularExpression reInclude("#include.*");
+        const int iIncludePosition = sFileContent.indexOf(reInclude);
+        if (iIncludePosition == -1)
+        {
+            CERR(QObject::tr("Parse error in file \"%1\": can't find #include directive").arg(_sFilePath));
+            return bResult;
+        }
+
+        // Ignoring code before the first include
+        sFileContent.remove(0, iIncludePosition);
+
         // Removing comments and #include lines
-        sFileContent.remove(QRegularExpression("#include.*"));
+        sFileContent.remove(reInclude);
         sFileContent.remove(QRegularExpression("//.*"));
 
         using qi::expectation_failure;

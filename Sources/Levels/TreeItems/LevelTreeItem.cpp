@@ -50,7 +50,7 @@ LevelTreeItem::LevelTreeItem(LevelType levelType,
         }
     case PunctuationMarks:
         {
-            sIconPath = ":/Icons/edit-comma.png";
+            sIconPath = ":/Icons/clock--arrow-comma.png";
             break;
         }
     case FreeText:

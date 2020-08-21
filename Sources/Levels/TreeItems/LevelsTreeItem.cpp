@@ -30,7 +30,9 @@ LevelsTreeItem::LevelsTreeItem()
     appendRow({new LevelTreeItem(LevelTreeItem::TimedRandomWords, "4d685a55-f8f9-4584-b8de-4cce1012fa14",  QObject::tr("Short words"), ":/Words/first200ShortWords.txt"), new EmptyTreeItem()});
     appendRow({new LevelTreeItem(LevelTreeItem::PunctuationMarks, "a22eb342-841e-4099-84b7-5c38f4ce0584",  QObject::tr("Punctuation Marks"), ":/Words/first200ShortWords.txt"), new EmptyTreeItem()});
     appendRow({new LevelTreeItem(LevelTreeItem::TimedRandomWords, "ed2f7d01-6fc3-4fc1-bdbe-147cd278948c", QObject::tr("Medium words"), ":/Words/first200MediumWords.txt"), new EmptyTreeItem()});
+    appendRow({new LevelTreeItem(LevelTreeItem::PunctuationMarks, "4da0b177-0bed-4f15-af80-f44e8042a8a6",  QObject::tr("Punctuation Marks"), ":/Words/first200MediumWords.txt"), new EmptyTreeItem()});
     appendRow({new LevelTreeItem(LevelTreeItem::TimedRandomWords, "aae7e2e5-a877-485f-84e5-b896c6a61cc5", QObject::tr("Long words"), ":/Words/first200LongWords.txt"), new EmptyTreeItem()});
+    appendRow({new LevelTreeItem(LevelTreeItem::PunctuationMarks, "ac64e2bf-4bab-4e4b-9b9b-6f82f5c5fb3d",  QObject::tr("Punctuation Marks"), ":/Words/first200LongWords.txt"), new EmptyTreeItem()});
 }
 
 LevelsTreeItem::~LevelsTreeItem()

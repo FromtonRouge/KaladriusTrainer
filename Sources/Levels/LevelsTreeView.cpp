@@ -81,7 +81,7 @@ void LevelsTreeView::restart()
                 QString sText;
                 if (pLevelTreeItem->getLevelType() == LevelTreeItem::PunctuationMarks)
                 {
-                    const QStringList punctuationMarks = {".", "...", "?", "!", ",", ":"};
+                    const QStringList punctuationMarks = {".", "...", "?", "!", ",", ":", ";"};
 
                     QStringList finalRandomWords;
                     int iPreviousRandomIndex = 0;
@@ -91,7 +91,7 @@ void LevelsTreeView::restart()
                         const int iFortune = QRandomGenerator::global()->bounded(1, 101);
                         int iRandomIndex = -1;
 
-                        if (iFortune >= 1 && iFortune <= 20)
+                        if (iFortune >= 1 && iFortune <= 25)
                         {
                             iRandomIndex = QRandomGenerator::global()->bounded(punctuationMarks.size());
                             sPunctuation = punctuationMarks[iRandomIndex];

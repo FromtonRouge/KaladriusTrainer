@@ -21,7 +21,7 @@
 
 #include "Keycode.h"
 
-#include <QtCore/QMap>
+#include <QtCore/QMultiMap>
 #include <QtCore/QVector>
 #include <QtCore/QStringList>
 #include <QtCore/QString>
@@ -71,7 +71,7 @@ private:
     KeyBitsToEntry _keyBitsToEntry;
 };
 
-typedef QMap<QString, Dictionary> Dictionaries;
+typedef QMultiMap<QString, Dictionary> Dictionaries;
 inline uint qHash(const Dictionary::Entry& entry, uint nSeed = 0)
 {
     QtPrivate::QHashCombine hash;
