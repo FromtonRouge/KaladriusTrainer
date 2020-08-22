@@ -19,80 +19,21 @@
 
 #pragma once
 
+#include "QStandardItem.h"
+#include "QVector.h"
+#include "QByteArray.h"
+#include "QString.h"
 #include "../../Values/Types/KeycapRef.h"
 #include "../../Values/Types/ListValue.h"
 #include "../../Values/Types/Finger.h"
 #include "../../Streams/Iostream.h"
-#include <QtGui/QTextFormat>
-#include <QtGui/QTextCursor>
-#include <QtGui/QTextFrame>
-#include <QtGui/QTextTable>
-#include <QtGui/QStandardItem>
 #include <QtCore/QDataStream>
-#include <QtCore/QByteArray>
 #include <QtCore/QVariant>
-#include <QtCore/QVector>
 #include <QtCore/QDebug>
-#include <boost/serialization/binary_object.hpp>
-#include <boost/serialization/string.hpp>
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/nvp.hpp>
-#include <boost/serialization/export.hpp>
 #include <boost/serialization/version.hpp>
 #include <boost/serialization/split_free.hpp>
-
-BOOST_CLASS_VERSION(QByteArray, 0)
-namespace boost
-{
-    namespace serialization
-    {
-        template<class Archive> void serialize(Archive& ar, QByteArray& obj,  const unsigned int fileVersion)
-        {
-            split_free(ar, obj, fileVersion);
-        }
-
-        template<class Archive> void save(Archive& ar, const QByteArray& obj,  const unsigned int)
-        {
-            int iSize = obj.size();
-            ar << make_nvp("size", iSize);
-            void* pBinaryData = const_cast<void*>(static_cast<const void*>(obj.data()));
-            ar << make_nvp("bytes", make_binary_object(pBinaryData, size_t(iSize)));
-        }
-
-        template<class Archive> void load(Archive& ar, QByteArray& obj,  const unsigned int)
-        {
-            int iSize = 0;
-            ar >> make_nvp("size", iSize);
-            obj.resize(iSize);
-            ar >> make_nvp("bytes", make_binary_object(obj.data(), size_t(iSize)));
-        }
-    }
-}
-
-BOOST_CLASS_VERSION(QString, 0)
-namespace boost
-{
-    namespace serialization
-    {
-        template<class Archive> void serialize(Archive& ar, QString& obj,  const unsigned int fileVersion)
-        {
-            split_free(ar, obj, fileVersion);
-        }
-
-        template<class Archive> void save(Archive& ar, const QString& obj,  const unsigned int)
-        {
-            const std::string& sString = obj.toStdString();
-            ar << make_nvp("string", sString);
-        }
-
-        template<class Archive> void load(Archive& ar, QString& obj,  const unsigned int)
-        {
-            std::string sString;
-            ar >> make_nvp("string", sString);
-            obj = QString::fromStdString(sString);
-        }
-    }
-}
 
 BOOST_CLASS_VERSION(QVariant, 0)
 namespace boost
@@ -187,17 +128,6 @@ namespace boost
     }
 }
 
-BOOST_CLASS_VERSION(QStandardItem, 0)
-namespace boost
-{
-    namespace serialization
-    {
-        template<class Archive> void serialize(Archive&, QStandardItem&,  const unsigned int)
-        {
-        }
-    }
-}
-
 BOOST_CLASS_VERSION(KeycapRef, 0)
 namespace boost
 {
@@ -232,95 +162,6 @@ namespace boost
             ar & make_nvp("label", obj.sLabel);
             ar & make_nvp("default_value", obj.defaultValue);
             ar & make_nvp("naming_policy", obj.namingPolicy);
-        }
-    }
-}
-
-BOOST_CLASS_VERSION(QTextFormat, 0)
-namespace boost
-{
-    namespace serialization
-    {
-        template<class Archive> void serialize(Archive& ar, QTextFormat& obj,  const unsigned int fileVersion)
-        {
-            split_free(ar, obj, fileVersion);
-        }
-
-        template<class Archive> void save(Archive& ar, const QTextFormat& obj,  const unsigned int fileVersion)
-        {
-            const int iFormatType = obj.type();
-            ar << make_nvp("format_type", iFormatType);
-
-            const auto& properties = obj.properties();
-            const int iProperties = properties.size();
-            ar << make_nvp("properties", iProperties);
-            auto it = properties.begin();
-            while (it != properties.end())
-            {
-                const int iPropertyId = it.key();
-                const QVariant& propertyValue = it++.value();
-                ar << make_nvp("id", iPropertyId);
-                ar << make_nvp("value", propertyValue);
-            }
-        }
-
-        template<class Archive> void load(Archive& ar, QTextFormat& obj,  const unsigned int fileVersion)
-        {
-            int iFormatType;
-            ar >> make_nvp("format_type", iFormatType);
-            obj = QTextFormat(iFormatType);
-
-            int iProperties;
-            ar >> make_nvp("properties", iProperties);
-            for (int iProperty = 0; iProperty < iProperties; ++iProperty)
-            {
-                int iPropertyId;
-                QVariant propertyValue;
-                ar >> make_nvp("id", iPropertyId);
-                ar >> make_nvp("value", propertyValue);
-                obj.setProperty(iPropertyId, propertyValue);
-            }
-        }
-    }
-}
-
-// Generic QVector<T> serialization
-namespace boost
-{
-    namespace serialization
-    {
-        template<class T> struct version<QVector<T>>
-        {
-            typedef mpl::int_<0> type; // Increment the version number here, must be between 0 and 255
-            typedef mpl::integral_c_tag tag;
-            BOOST_STATIC_CONSTANT(int, value = version::type::value);
-        };
-
-        template<class Archive, class T> void serialize(Archive& ar, QVector<T>& obj, const unsigned int fileVersion)
-        {
-            split_free(ar, obj, fileVersion);
-        }
-
-        template<class Archive, class T> void save(Archive& ar, const QVector<T>& obj,  const unsigned int fileVersion)
-        {
-            const int iCount = obj.size();
-            ar << make_nvp("count", iCount);
-            for (const auto& element : obj)
-            {
-                ar << make_nvp("element", element);
-            }
-        }
-
-        template<class Archive, class T> void load(Archive& ar, QVector<T>& obj,  const unsigned int fileVersion)
-        {
-            int iCount;
-            ar >> make_nvp("count", iCount);
-            for (int i = 0; i < iCount; ++i)
-            {
-                T element;
-                ar >> make_nvp("element", element);
-                obj << element;
-            }
         }
     }
 }
