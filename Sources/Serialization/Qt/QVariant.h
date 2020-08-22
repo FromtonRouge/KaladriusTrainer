@@ -17,17 +17,17 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "QStandardItem.h"
-#include "../ExplicitInstanciation.h"
+#pragma once
 
-EXPLICIT_INSTANCIATION(QStandardItem)
+#include <QtCore/QVariant>
+#include <boost/serialization/version.hpp>
 
 namespace boost
 {
     namespace serialization
     {
-        template<class Archive> void serialize(Archive&, QStandardItem&,  const unsigned int)
-        {
-        }
+        template<class Archive> void serialize(Archive& ar, QVariant& obj,  const unsigned int fileVersion);
     }
 }
+
+BOOST_CLASS_VERSION(QVariant, 0)

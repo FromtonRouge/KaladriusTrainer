@@ -17,17 +17,19 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "QStandardItem.h"
-#include "../ExplicitInstanciation.h"
+#include "Finger.h"
+#include <boost/serialization/nvp.hpp>
+#include "ExplicitInstanciation.h"
 
-EXPLICIT_INSTANCIATION(QStandardItem)
+EXPLICIT_INSTANCIATION(Finger)
 
 namespace boost
 {
     namespace serialization
     {
-        template<class Archive> void serialize(Archive&, QStandardItem&,  const unsigned int)
+        template<class Archive> void serialize(Archive& ar, Finger& obj,  const unsigned int)
         {
+            ar & make_nvp("finger_id", obj.id);
         }
     }
 }

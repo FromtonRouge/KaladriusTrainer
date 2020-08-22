@@ -19,23 +19,15 @@
 
 #pragma once
 
-#include <boost/archive/binary_iarchive.hpp>
-#include <boost/archive/binary_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/xml_iarchive.hpp>
-#include <boost/archive/xml_oarchive.hpp>
+#include "../Values/Types/Finger.h"
+#include <boost/serialization/version.hpp>
 
-#define EXPLICIT_INSTANCIATION(T)\
-namespace boost\
-{\
-    namespace serialization\
-    {\
-        template void serialize(boost::archive::text_iarchive&, T&, const unsigned int);\
-        template void serialize(boost::archive::text_oarchive&, T&, const unsigned int);\
-        template void serialize(boost::archive::binary_iarchive&, T&, const unsigned int);\
-        template void serialize(boost::archive::binary_oarchive&, T&, const unsigned int);\
-        template void serialize(boost::archive::xml_iarchive&, T&, const unsigned int);\
-        template void serialize(boost::archive::xml_oarchive&, T&, const unsigned int);\
-    }\
+namespace boost
+{
+    namespace serialization
+    {
+        template<class Archive> void serialize(Archive& ar, Finger& obj,  const unsigned int);
+    }
 }
+
+BOOST_CLASS_VERSION(Finger, 0)

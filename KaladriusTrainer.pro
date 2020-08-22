@@ -68,9 +68,13 @@ SOURCES += \
     Sources/Main/MainTabWindow.cpp \
     Sources/Main/MainWindow.cpp \
     Sources/Main/main.cpp \
+    Sources/Serialization/Finger.cpp \
+    Sources/Serialization/KeycapRef.cpp \
+    Sources/Serialization/ListValue.cpp \
     Sources/Serialization/Qt/QByteArray.cpp \
     Sources/Serialization/Qt/QStandardItem.cpp \
     Sources/Serialization/Qt/QString.cpp \
+    Sources/Serialization/Qt/QVariant.cpp \
     Sources/Serialization/Serialize.cpp \
     Sources/Statistics/StatisticsMainWindow.cpp \
     Sources/Statistics/StatisticsView.cpp \
@@ -146,12 +150,15 @@ HEADERS += \
     Sources/Main/MainTabDialog.h \
     Sources/Main/MainTabWindow.h \
     Sources/Main/MainWindow.h \
-    Sources/Serialization/Qt/ExplicitInstanciation.h \
+    Sources/Serialization/Finger.h \
+    Sources/Serialization/KeycapRef.h \
+    Sources/Serialization/ListValue.h \
+    Sources/Serialization/ExplicitInstanciation.h \
     Sources/Serialization/Qt/QByteArray.h \
     Sources/Serialization/Qt/QStandardItem.h \
     Sources/Serialization/Qt/QString.h \
+    Sources/Serialization/Qt/QVariant.h \
     Sources/Serialization/Qt/QVector.h \
-    Sources/Serialization/Qt/Serialize.h \
     Sources/Serialization/Serialize.h \
     Sources/Statistics/StatisticsMainWindow.h \
     Sources/Statistics/StatisticsView.h \

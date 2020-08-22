@@ -17,25 +17,19 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
-
-#include "QStandardItem.h"
-#include "QVector.h"
+#include "QVariant.h"
 #include "QByteArray.h"
 #include "QString.h"
-#include "../../Values/Types/KeycapRef.h"
-#include "../../Values/Types/ListValue.h"
-#include "../../Values/Types/Finger.h"
-#include "../../Streams/Iostream.h"
+#include "../ListValue.h"
+#include "../Finger.h"
+#include "../KeycapRef.h"
 #include <QtCore/QDataStream>
-#include <QtCore/QVariant>
-#include <QtCore/QDebug>
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/nvp.hpp>
-#include <boost/serialization/version.hpp>
 #include <boost/serialization/split_free.hpp>
+#include <boost/serialization/nvp.hpp>
+#include "../ExplicitInstanciation.h"
 
-BOOST_CLASS_VERSION(QVariant, 0)
+EXPLICIT_INSTANCIATION(QVariant)
+
 namespace boost
 {
     namespace serialization
@@ -124,44 +118,6 @@ namespace boost
                     Q_ASSERT_X(false, "Qt/Serialize.h", "Can't load: Unknown QVariant user type");
                 }
             }
-        }
-    }
-}
-
-BOOST_CLASS_VERSION(KeycapRef, 0)
-namespace boost
-{
-    namespace serialization
-    {
-        template<class Archive> void serialize(Archive& ar, KeycapRef& obj,  const unsigned int)
-        {
-            ar & make_nvp("keycap_id", obj.keycapId);
-        }
-    }
-}
-
-BOOST_CLASS_VERSION(Finger, 0)
-namespace boost
-{
-    namespace serialization
-    {
-        template<class Archive> void serialize(Archive& ar, Finger& obj,  const unsigned int)
-        {
-            ar & make_nvp("finger_id", obj.id);
-        }
-    }
-}
-
-BOOST_CLASS_VERSION(ListValue, 0)
-namespace boost
-{
-    namespace serialization
-    {
-        template<class Archive> void serialize(Archive& ar, ListValue& obj,  const unsigned int)
-        {
-            ar & make_nvp("label", obj.sLabel);
-            ar & make_nvp("default_value", obj.defaultValue);
-            ar & make_nvp("naming_policy", obj.namingPolicy);
         }
     }
 }

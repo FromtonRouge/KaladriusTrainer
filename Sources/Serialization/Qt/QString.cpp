@@ -21,7 +21,7 @@
 #include <boost/serialization/split_free.hpp>
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/string.hpp>
-#include "ExplicitInstanciation.h"
+#include "../ExplicitInstanciation.h"
 
 EXPLICIT_INSTANCIATION(QString)
 

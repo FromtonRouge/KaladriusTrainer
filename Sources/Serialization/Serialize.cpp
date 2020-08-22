@@ -18,7 +18,9 @@
 // ======================================================================
 
 #include "Serialize.h"
-#include "Qt/Serialize.h"
+#include "Qt/QByteArray.h"
+#include "Qt/QVariant.h"
+#include "Qt/QStandardItem.h"
 #include "../Keyboards/Models/KeyboardModel.h"
 #include "../Theories/Models/TheoryModel.h"
 #include "../Keyboards/TreeItems/KeyboardTreeItem.h"

@@ -21,7 +21,7 @@
 #include <boost/serialization/binary_object.hpp>
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/split_free.hpp>
-#include "ExplicitInstanciation.h"
+#include "../ExplicitInstanciation.h"
 
 EXPLICIT_INSTANCIATION(QByteArray)
 
