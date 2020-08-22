@@ -25,6 +25,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QVariant>
+#include <QtCore/QDebug>
 #include <iostream>
 
 Database::Database(QObject *pParent)
@@ -102,36 +103,38 @@ bool Database::createLevelWordsTable(const QString& sTableName) const
     return createTable(sTableName, columns);
 }
 
-bool Database::insertValues(const QString& sTableName, const QMap<QString, QVariant>& mapValues) const
+bool Database::insertValues(const QString& sTableName, const QStringList& columns, const QVector<QVariantList>& rows) const
 {
-    QStringList columns;
-    QStringList values;
+    QStringList fixedColumns;
+    QStringList fixedRows;
 
-    auto it = mapValues.begin();
-    while (it != mapValues.end())
+    // Fix column string format
+    for (const QString& sColumnName : columns)
     {
-        const QString& sColumnName = it.key();
-        const QVariant& value = it++.value();
-
-        columns << QString("\"%1\"").arg(sColumnName);
-
-        switch (value.type())
-        {
-        case QVariant::String:
-            {
-                values << QString("\"%1\"").arg(value.toString());
-                break;
-            }
-        default:
-            {
-                values << value.toString();
-                break;
-            }
-        }
+        fixedColumns << QString("\"%1\"").arg(sColumnName);
     }
 
-    QString sQuery = "INSERT INTO \"%1\"(%2) VALUES (%3);";
-    sQuery = sQuery.arg(sTableName).arg(columns.join(",")).arg(values.join(","));
+    // Fix string format in rows
+    for (const QVariantList& row : rows)
+    {
+        QStringList fixedRow;
+        for (const QVariant& value : row)
+        {
+            if (value.type() == QVariant::String)
+            {
+                fixedRow << QString("\"%1\"").arg(value.toString());
+            }
+            else
+            {
+                fixedRow << value.toString();
+            }
+        }
+
+        fixedRows << QString("(%1)").arg(fixedRow.join(", "));
+    }
+
+    QString sQuery = "INSERT INTO \"%1\" (%2) VALUES %3;";
+    sQuery = sQuery.arg(sTableName).arg(fixedColumns.join(",")).arg(fixedRows.join(","));
     QSqlQuery query(QSqlDatabase::database());
     if (!query.exec(sQuery))
     {

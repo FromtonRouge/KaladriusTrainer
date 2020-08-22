@@ -90,21 +90,34 @@ void LevelTreeItem::loadWords()
         auto pDatabase = qApp->getDatabase();
         if (pDatabase->getCount(sLevelWordsTableName) == 0)
         {
+            QStringList columns;
+            columns << "Word";
+            columns << "Progression";
+            columns << "Occurences";
+            columns << "AverageErrorsCount";
+            columns << "AverageChordsCount";
+            columns << "AverageTimeSpentForFirstStroke";
+            columns << "AverageTimeSpentToComplete";
+
+            QVector<QVariantList> rows;
             for (const QString& sWord : _words)
             {
                 if (!sWord.isEmpty())
                 {
-                    QMap<QString, QVariant> values;
-                    values["Word"] = sWord;
-                    values["Progression"] = -1;
-                    values["Occurences"] = 0;
-                    values["AverageErrorsCount"] = 0.f;
-                    values["AverageChordsCount"] = 0.f;
-                    values["AverageTimeSpentForFirstStroke"] = 0.f;
-                    values["AverageTimeSpentToComplete"] = 0.f;
-                    pDatabase->insertValues(sLevelWordsTableName, values);
+                    QVariantList row;
+                    row << sWord;
+                    row << -1;
+                    row << 0;
+                    row << 0.f;
+                    row << 0.f;
+                    row << 0.f;
+                    row << 0.f;
+
+                    rows << row;
                 }
             }
+
+            pDatabase->insertValues(sLevelWordsTableName, columns, rows);
         }
     }
 }

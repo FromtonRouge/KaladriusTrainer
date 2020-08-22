@@ -23,6 +23,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QMap>
 #include <QtCore/QVector>
+#include <QtCore/QVariant>
 #include <QtCore/QPair>
 
 class Database : public QObject
@@ -39,7 +40,7 @@ public:
 
     bool createLevelTable(const QString& sTableName) const;
     bool createLevelWordsTable(const QString& sTableName) const;
-    bool insertValues(const QString& sTableName, const QMap<QString, QVariant>& values) const;
+    bool insertValues(const QString& sTableName, const QStringList& columns, const QVector<QVariantList>& rows) const;
     int getCount(const QString& sTableName) const;
     float getSumOfCount(const QString& sTableName, const QString& sColumn, uint16_t uiCount) const;
 

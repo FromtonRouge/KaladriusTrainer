@@ -60,5 +60,7 @@
         <file>Qml/WordsToImprove.qml</file>
         <file>Qml/WordCard.qml</file>
         <file>Icons/clock--arrow-comma.png</file>
+        <file>Words/first400ShortMediumWords.txt</file>
+        <file>Words/first600ShortMediumLongWords.txt</file>
     </qresource>
 </RCC>

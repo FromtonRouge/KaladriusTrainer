@@ -186,15 +186,24 @@ void MainWindow::onCountdownTimerDone()
                 const QString sLevelWordsTableName = indexCurrentLevel.data(LevelWordsTableNameRole).toString();
 
                 // Insert values in the level table
+                QStringList columns;
+                columns << "Date";
+                columns << "Wpm";
+                columns << "Spm";
+                columns << "Accuracy";
+                columns << "Viscosity";
+                columns << "Progress";
+
+                QVariantList values;
+                values << QDateTime::currentDateTime().toString();
+                values << _pWordCounter->getWpm();
+                values << _pWordCounter->getSpm();
+                values << _pWordCounter->getAccuracy();
+                values << _pWordCounter->getViscosity();
+                values << pLevelTreeItem->getProgressionPercentage();
+
                 auto pDatabase = qApp->getDatabase();
-                QMap<QString, QVariant> values;
-                values["Date"] = QDateTime::currentDateTime().toString();
-                values["Wpm"] = _pWordCounter->getWpm();
-                values["Spm"] = _pWordCounter->getSpm();
-                values["Accuracy"] = _pWordCounter->getAccuracy();
-                values["Viscosity"] = _pWordCounter->getViscosity();
-                values["Progress"] = pLevelTreeItem->getProgressionPercentage();
-                if (pDatabase->insertValues(sLevelTableName, values))
+                if (pDatabase->insertValues(sLevelTableName, columns, {values}))
                 {
                     _pUi->chartView->createChart(sLevelTableName);
                 }
