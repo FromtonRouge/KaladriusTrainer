@@ -20,7 +20,7 @@
 #pragma once
 
 #include <QtSvg/QGraphicsSvgItem>
-#include <QtGui/QMatrix>
+#include <QtGui/QTransform>
 #include <QtCore/QRectF>
 #include <QtCore/QPointF>
 
@@ -65,7 +65,7 @@ private:
     void centerText();
 
 private:
-    QMatrix _matrixScene;
+    QTransform _transformScene;
     QGraphicsRectItem* _pOuterBorderItem;
     QGraphicsSimpleTextItem* _pTextItem;
     qreal _dRotationAngle;

@@ -30,7 +30,6 @@
 #include <QtGui/QBitmap>
 #include <QtGui/QFont>
 #include <QtGui/QPainter>
-#include <QtGui/QMatrix>
 #include <QtGui/QPixmap>
 #include <QtSvg/QSvgRenderer>
 #include <QtCore/QMimeData>
@@ -54,9 +53,9 @@ KeycapGraphicsItem::KeycapGraphicsItem( const QString& sKeycapId,
     setFlag(QGraphicsItem::ItemIsSelectable);
     setElementId(sKeycapId);
 
-    _matrixScene = pSvgRenderer->matrixForElement(sKeycapId);
+    _transformScene = pSvgRenderer->transformForElement(sKeycapId);
     const auto& rectItem = pSvgRenderer->boundsOnElement(sKeycapId);
-    const auto& rectScene = _matrixScene.mapRect(rectItem);
+    const auto& rectScene = _transformScene.mapRect(rectItem);
     const QPointF& pointScene = rectScene.topLeft();
     setPos(pointScene);
     auto pGraphicsEffect = new KeycapColorEffect(this);
@@ -64,11 +63,11 @@ KeycapGraphicsItem::KeycapGraphicsItem( const QString& sKeycapId,
     pGraphicsEffect->setEnabled(false);
 
     // We only use this rect as an invisible parent for _pTextItem
-    const QPointF& pointOuterBorderInScene = _matrixScene.map(_rectOuterBorder.topLeft());
+    const QPointF& pointOuterBorderInScene = _transformScene.map(_rectOuterBorder.topLeft());
     const QPointF& pointInParentItem = mapFromScene(pointOuterBorderInScene);
     _pOuterBorderItem = new QGraphicsRectItem(QRectF(QPointF(), _rectOuterBorder.size()), this);
     _pOuterBorderItem->setPos(pointInParentItem);
-    const QPointF& pointRotationInParentItem = mapFromScene(_matrixScene.map(_rotationOrigin));
+    const QPointF& pointRotationInParentItem = mapFromScene(_transformScene.map(_rotationOrigin));
     const QPointF& poinRotationInRectItem = _pOuterBorderItem->mapFromParent(pointRotationInParentItem);
     _pRotation = new QGraphicsRotation(this);
     _pRotation->setAngle(_dRotationAngle);
@@ -122,7 +121,7 @@ QPainterPath KeycapGraphicsItem::shape() const
 
     // Rebuild the rotation transform
     QMatrix4x4 m;
-    const QPointF& pointRotationInItem = mapFromScene(_matrixScene.map(_rotationOrigin));
+    const QPointF& pointRotationInItem = mapFromScene(_transformScene.map(_rotationOrigin));
     QGraphicsRotation rotation;
     rotation.setAngle(_dRotationAngle);
     rotation.setOrigin(QVector3D(pointRotationInItem.x(), pointRotationInItem.y(), 0));
