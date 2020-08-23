@@ -68,14 +68,26 @@ SOURCES += \
     Sources/Main/MainTabWindow.cpp \
     Sources/Main/MainWindow.cpp \
     Sources/Main/main.cpp \
-    Sources/Serialization/Finger.cpp \
-    Sources/Serialization/KeycapRef.cpp \
-    Sources/Serialization/ListValue.cpp \
+    Sources/Serialization/DictionaryTreeItemSerialize.cpp \
+    Sources/Serialization/EmptyTreeItemSerialize.cpp \
+    Sources/Serialization/FingerSerialize.cpp \
+    Sources/Serialization/InputKeysTreeItemSerialize.cpp \
+    Sources/Serialization/KeyboardTreeItemSerialize.cpp \
+    Sources/Serialization/KeycapRefSerialize.cpp \
+    Sources/Serialization/KeycapTreeItemSerialize.cpp \
+    Sources/Serialization/LinkedDictionaryTreeItemSerialize.cpp \
+    Sources/Serialization/LinkedTheoryTreeItemSerialize.cpp \
+    Sources/Serialization/ListTreeItemSerialize.cpp \
+    Sources/Serialization/ListValueSerialize.cpp \
+    Sources/Serialization/OutputTextTreeItemSerialize.cpp \
     Sources/Serialization/Qt/QByteArray.cpp \
     Sources/Serialization/Qt/QStandardItem.cpp \
     Sources/Serialization/Qt/QString.cpp \
     Sources/Serialization/Qt/QVariant.cpp \
     Sources/Serialization/Serialize.cpp \
+    Sources/Serialization/TheoryTreeItemSerialize.cpp \
+    Sources/Serialization/TreeItemSerialize.cpp \
+    Sources/Serialization/ValueTreeItemSerialize.cpp \
     Sources/Statistics/StatisticsMainWindow.cpp \
     Sources/Statistics/StatisticsView.cpp \
     Sources/Statistics/StatisticsWidget.cpp \
@@ -150,16 +162,28 @@ HEADERS += \
     Sources/Main/MainTabDialog.h \
     Sources/Main/MainTabWindow.h \
     Sources/Main/MainWindow.h \
-    Sources/Serialization/Finger.h \
-    Sources/Serialization/KeycapRef.h \
-    Sources/Serialization/ListValue.h \
+    Sources/Serialization/DictionaryTreeItemSerialize.h \
+    Sources/Serialization/EmptyTreeItemSerialize.h \
+    Sources/Serialization/FingerSerialize.h \
+    Sources/Serialization/InputKeysTreeItemSerialize.h \
+    Sources/Serialization/KeyboardTreeItemSerialize.h \
+    Sources/Serialization/KeycapRefSerialize.h \
+    Sources/Serialization/KeycapTreeItemSerialize.h \
+    Sources/Serialization/LinkedDictionaryTreeItemSerialize.h \
+    Sources/Serialization/LinkedTheoryTreeItemSerialize.h \
+    Sources/Serialization/ListTreeItemSerialize.h \
     Sources/Serialization/ExplicitInstanciation.h \
+    Sources/Serialization/ListValueSerialize.h \
+    Sources/Serialization/OutputTextTreeItemSerialize.h \
     Sources/Serialization/Qt/QByteArray.h \
     Sources/Serialization/Qt/QStandardItem.h \
     Sources/Serialization/Qt/QString.h \
     Sources/Serialization/Qt/QVariant.h \
     Sources/Serialization/Qt/QVector.h \
     Sources/Serialization/Serialize.h \
+    Sources/Serialization/TheoryTreeItemSerialize.h \
+    Sources/Serialization/TreeItemSerialize.h \
+    Sources/Serialization/ValueTreeItemSerialize.h \
     Sources/Statistics/StatisticsMainWindow.h \
     Sources/Statistics/StatisticsView.h \
     Sources/Statistics/StatisticsWidget.h \

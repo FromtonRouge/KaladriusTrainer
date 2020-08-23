@@ -17,3 +17,22 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
+#include "EmptyTreeItemSerialize.h"
+#include "TreeItemSerialize.h"
+#include <boost/serialization/nvp.hpp>
+#include <boost/serialization/base_object.hpp>
+#include "ExplicitInstanciation.h"
+
+EXPLICIT_INSTANCIATION(EmptyTreeItem)
+BOOST_CLASS_EXPORT_IMPLEMENT(EmptyTreeItem) // For serializing from a base pointer
+
+namespace boost
+{
+    namespace serialization
+    {
+        template<class Archive> void serialize(Archive& ar, EmptyTreeItem& obj,  const unsigned int)
+        {
+            ar & make_nvp("base", base_object<TreeItem>(obj));
+        }
+    }
+}

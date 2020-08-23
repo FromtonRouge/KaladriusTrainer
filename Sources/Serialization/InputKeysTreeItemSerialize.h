@@ -17,3 +17,19 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
+#pragma once
+
+#include "../Theories/TreeItems/InputKeysTreeItem.h"
+#include <boost/serialization/version.hpp>
+#include <boost/serialization/export.hpp>
+
+namespace boost
+{
+    namespace serialization
+    {
+        template<class Archive> void serialize(Archive& ar, InputKeysTreeItem& obj,  const unsigned int fileVersion);
+    }
+}
+
+BOOST_CLASS_VERSION(InputKeysTreeItem, 0)
+BOOST_CLASS_EXPORT_KEY(InputKeysTreeItem) // For serializing from a base pointer

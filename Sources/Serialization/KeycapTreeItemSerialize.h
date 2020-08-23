@@ -17,3 +17,19 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
+#pragma once
+
+#include "../Keyboards/TreeItems/KeycapTreeItem.h"
+#include <boost/serialization/version.hpp>
+#include <boost/serialization/export.hpp>
+
+namespace boost
+{
+    namespace serialization
+    {
+        template<class Archive> void serialize(Archive& ar, KeycapTreeItem& obj,  const unsigned int fileVersion);
+    }
+}
+
+BOOST_CLASS_VERSION(KeycapTreeItem, 1)
+BOOST_CLASS_EXPORT_KEY(KeycapTreeItem) // For serializing from a base pointer

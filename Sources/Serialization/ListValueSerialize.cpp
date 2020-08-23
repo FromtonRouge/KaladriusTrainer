@@ -17,20 +17,24 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "KeycapRef.h"
+#include "ListValueSerialize.h"
+#include "Qt/QVariant.h"
 #include "Qt/QString.h"
+#include <boost/serialization/split_free.hpp>
 #include <boost/serialization/nvp.hpp>
 #include "ExplicitInstanciation.h"
 
-EXPLICIT_INSTANCIATION(KeycapRef)
+EXPLICIT_INSTANCIATION(ListValue)
 
 namespace boost
 {
     namespace serialization
     {
-        template<class Archive> void serialize(Archive& ar, KeycapRef& obj,  const unsigned int)
+        template<class Archive> void serialize(Archive& ar, ListValue& obj,  const unsigned int)
         {
-            ar & make_nvp("keycap_id", obj.keycapId);
+            ar & make_nvp("label", obj.sLabel);
+            ar & make_nvp("default_value", obj.defaultValue);
+            ar & make_nvp("naming_policy", obj.namingPolicy);
         }
     }
 }

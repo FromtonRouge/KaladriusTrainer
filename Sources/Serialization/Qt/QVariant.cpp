@@ -20,9 +20,9 @@
 #include "QVariant.h"
 #include "QByteArray.h"
 #include "QString.h"
-#include "../ListValue.h"
-#include "../Finger.h"
-#include "../KeycapRef.h"
+#include "../ListValueSerialize.h"
+#include "../FingerSerialize.h"
+#include "../KeycapRefSerialize.h"
 #include <QtCore/QDataStream>
 #include <boost/serialization/split_free.hpp>
 #include <boost/serialization/nvp.hpp>

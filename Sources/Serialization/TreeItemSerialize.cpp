@@ -1,7 +1,7 @@
 // ======================================================================
 // This file is a part of the KaladriusTrainer project
 //
-// Copyright (C) 2017  Vissale NEANG <fromtonrouge at gmail dot com>
+// Copyright (C) 2020  Vissale NEANG <fromtonrouge at gmail dot com>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,24 +17,21 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "ListValue.h"
-#include "Qt/QVariant.h"
-#include "Qt/QString.h"
-#include <boost/serialization/split_free.hpp>
+#include "TreeItemSerialize.h"
+#include "Qt/QStandardItem.h"
 #include <boost/serialization/nvp.hpp>
+#include <boost/serialization/base_object.hpp>
 #include "ExplicitInstanciation.h"
 
-EXPLICIT_INSTANCIATION(ListValue)
-
+EXPLICIT_INSTANCIATION(TreeItem)
+BOOST_CLASS_EXPORT_IMPLEMENT(TreeItem) // For serializing from a base pointer
 namespace boost
 {
     namespace serialization
     {
-        template<class Archive> void serialize(Archive& ar, ListValue& obj,  const unsigned int)
+        template<class Archive> void serialize(Archive& ar, TreeItem& obj,  const unsigned int)
         {
-            ar & make_nvp("label", obj.sLabel);
-            ar & make_nvp("default_value", obj.defaultValue);
-            ar & make_nvp("naming_policy", obj.namingPolicy);
+            ar & make_nvp("base", base_object<QStandardItem>(obj));
         }
     }
 }

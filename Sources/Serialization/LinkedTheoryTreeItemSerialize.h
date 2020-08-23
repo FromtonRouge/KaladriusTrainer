@@ -17,3 +17,19 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
+#pragma once
+
+#include "../Theories/TreeItems/LinkedTheoryTreeItem.h"
+#include <boost/serialization/version.hpp>
+#include <boost/serialization/export.hpp>
+
+namespace boost
+{
+    namespace serialization
+    {
+        template<class Archive> void serialize(Archive& ar, LinkedTheoryTreeItem& obj,  const unsigned int fileVersion);
+    }
+}
+
+BOOST_CLASS_VERSION(LinkedTheoryTreeItem, 0)
+BOOST_CLASS_EXPORT_KEY(LinkedTheoryTreeItem) // For serializing from a base pointer
