@@ -126,6 +126,7 @@ void StrokesSolverTextEdit::onTimerSolve()
         cursor.setPosition(findCursor.position(), QTextCursor::KeepAnchor);
     }
 
+    HashSpecialKeysStates hashSpecialKeysStates;
     bool bNoSpace = true;
     QString sTextToSolve = cursor.selectedText();
     if (sTextToSolve == " ")
@@ -133,13 +134,49 @@ void StrokesSolverTextEdit::onTimerSolve()
         cursor.movePosition(QTextCursor::EndOfWord, QTextCursor::KeepAnchor);
         sTextToSolve = cursor.selectedText();
         bNoSpace = false;
+
+        // Check if the next word starts with an uppercase character
+        if (sTextToSolve.size() > 2)
+        {
+            const QChar& nextChar = sTextToSolve[1];
+            if (nextChar.isLetter() && nextChar.isUpper())
+            {
+                // The next word starts with an uppercase character
+                // The user have to hit the L5 key
+                hashSpecialKeysStates["skUppercase"] = true;
+            }
+        }
     }
-    else if (!sTextToSolve.isEmpty())
+    else
     {
-        const QChar firstChar = sTextToSolve.front();
+        // Check if have to use the "Auto case" key
+        const QChar& firstChar = sTextToSolve.front();
         if (!firstChar.isLetter())
         {
             bNoSpace = false;
+
+            // Check if the next word starts with an uppercase character
+            cursor.movePosition(QTextCursor::Right, QTextCursor::MoveAnchor);
+            cursor.movePosition(QTextCursor::EndOfWord, QTextCursor::KeepAnchor);
+            const QString& sNext = cursor.selectedText();
+            if (sNext.isEmpty() == false)
+            {
+                const QChar& nextChar = sNext.front();
+                if (nextChar.isLetter() && nextChar.isUpper())
+                {
+                    // The next word starts with an uppercase character
+                    // The user have to hit the R1 key
+                    hashSpecialKeysStates["skAutocase"] = true;
+                }
+            }
+        }
+        else
+        {
+            if (firstChar.isUpper())
+            {
+                // The user have to hit the L5 key
+                hashSpecialKeysStates["skUppercase"] = true;
+            }
         }
     }
 
@@ -148,7 +185,6 @@ void StrokesSolverTextEdit::onTimerSolve()
         sTextToSolve = sTextToSolve.trimmed().toUpper(); // Remove leading space
 
         // Get all special keys
-        HashSpecialKeysStates hashSpecialKeysStates;
         const QModelIndex& indexSpecialKeys = pTheoryModel->getSpecialKeysIndex();
         if (indexSpecialKeys.isValid())
         {

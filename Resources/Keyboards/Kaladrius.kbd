@@ -6461,7 +6461,7 @@ AAAAFABAS4AAAAAAAEBrIAAAAAAAQEoAAAAAAABASgAAAAAAAA==
 				<variant>
 					<size>9</size>
 					<bytes>
-AAAACgAAAAAA
+AAAACgD/////
 					</bytes>
 				</variant>
 			</label>
@@ -6555,7 +6555,7 @@ AAAAFABAW0AAAAAAAEBrIAAAAAAAQEoAAAAAAABASgAAAAAAAA==
 				<variant>
 					<size>9</size>
 					<bytes>
-AAAACgAAAAAA
+AAAACgD/////
 					</bytes>
 				</variant>
 			</label>
@@ -6931,7 +6931,7 @@ AAAAFABAhfgAAAAAAEBrIAAAAAAAQEoAAAAAAABASgAAAAAAAA==
 				<variant>
 					<size>9</size>
 					<bytes>
-AAAACgAAAAAA
+AAAACgD/////
 					</bytes>
 				</variant>
 			</label>
@@ -7025,7 +7025,7 @@ AAAAFABAh6gAAAAAAEBrIAAAAAAAQEoAAAAAAABASgAAAAAAAA==
 				<variant>
 					<size>9</size>
 					<bytes>
-AAAACgAAAAAA
+AAAACgD/////
 					</bytes>
 				</variant>
 			</label>
@@ -8040,7 +8040,7 @@ AAAAQwAB////////f38AAA==
 					<base object_id="_297"></base>
 				</base>
 				<name_is_editable>0</name_is_editable>
-				<rows>3</rows>
+				<rows>5</rows>
 				<columns>2</columns>
 				<item class_id_reference="4" object_id="_298">
 					<base>
@@ -8297,122 +8297,148 @@ AAAAQwAB////////f38AAA==
 						</variant>
 					</value>
 				</item>
+				<item class_id_reference="4" object_id="_334">
+					<base>
+						<base object_id="_335"></base>
+					</base>
+					<name_is_editable>1</name_is_editable>
+					<name>skAutocase</name>
+					<rows>1</rows>
+					<columns>2</columns>
+					<item class_id_reference="4" object_id="_336">
+						<base>
+							<base object_id="_337"></base>
+						</base>
+						<name_is_editable>0</name_is_editable>
+						<rows>0</rows>
+						<columns>0</columns>
+					</item>
+					<item class_id_reference="11" object_id="_338">
+						<base>
+							<base object_id="_339"></base>
+						</base>
+						<value>
+							<type>1024</type>
+							<user_type_name>
+								<string>KeycapRef</string>
+							</user_type_name>
+							<variant>
+								<keycap_id>
+									<string>g2888</string>
+								</keycap_id>
+							</variant>
+						</value>
+					</item>
+				</item>
+				<item class_id_reference="11" object_id="_340">
+					<base>
+						<base object_id="_341"></base>
+					</base>
+					<value>
+						<type>1024</type>
+						<user_type_name>
+							<string>ListValue</string>
+						</user_type_name>
+						<variant>
+							<label>
+								<string>Keycaps</string>
+							</label>
+							<default_value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
+										<string></string>
+									</keycap_id>
+								</variant>
+							</default_value>
+							<naming_policy>2</naming_policy>
+						</variant>
+					</value>
+				</item>
+				<item class_id_reference="4" object_id="_342">
+					<base>
+						<base object_id="_343"></base>
+					</base>
+					<name_is_editable>1</name_is_editable>
+					<name>skUppercase</name>
+					<rows>1</rows>
+					<columns>2</columns>
+					<item class_id_reference="4" object_id="_344">
+						<base>
+							<base object_id="_345"></base>
+						</base>
+						<name_is_editable>0</name_is_editable>
+						<rows>0</rows>
+						<columns>0</columns>
+					</item>
+					<item class_id_reference="11" object_id="_346">
+						<base>
+							<base object_id="_347"></base>
+						</base>
+						<value>
+							<type>1024</type>
+							<user_type_name>
+								<string>KeycapRef</string>
+							</user_type_name>
+							<variant>
+								<keycap_id>
+									<string>g3088</string>
+								</keycap_id>
+							</variant>
+						</value>
+					</item>
+				</item>
+				<item class_id_reference="11" object_id="_348">
+					<base>
+						<base object_id="_349"></base>
+					</base>
+					<value>
+						<type>1024</type>
+						<user_type_name>
+							<string>ListValue</string>
+						</user_type_name>
+						<variant>
+							<label>
+								<string>Keycaps</string>
+							</label>
+							<default_value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
+										<string></string>
+									</keycap_id>
+								</variant>
+							</default_value>
+							<naming_policy>2</naming_policy>
+						</variant>
+					</value>
+				</item>
 			</linked_special_keys>
-			<linked_dictionaries object_id="_334">
+			<linked_dictionaries object_id="_350">
 				<base>
-					<base object_id="_335"></base>
+					<base object_id="_351"></base>
 				</base>
 				<name_is_editable>0</name_is_editable>
 				<rows>9</rows>
 				<columns>2</columns>
-				<item class_id="14" class_name="LinkedDictionaryTreeItem" tracking_level="1" version="0" object_id="_336">
+				<item class_id="14" class_name="LinkedDictionaryTreeItem" tracking_level="1" version="0" object_id="_352">
 					<base>
-						<base object_id="_337"></base>
+						<base object_id="_353"></base>
 					</base>
 					<name>Left Controls Dictionary</name>
-					<linked_keys object_id="_338">
+					<linked_keys object_id="_354">
 						<base>
-							<base object_id="_339"></base>
+							<base object_id="_355"></base>
 						</base>
 						<name_is_editable>0</name_is_editable>
 						<rows>6</rows>
 						<columns>2</columns>
-						<item class_id_reference="4" object_id="_340">
-							<base>
-								<base object_id="_341"></base>
-							</base>
-							<name_is_editable>0</name_is_editable>
-							<rows>0</rows>
-							<columns>0</columns>
-						</item>
-						<item class_id_reference="11" object_id="_342">
-							<base>
-								<base object_id="_343"></base>
-							</base>
-							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g2848</string>
-									</keycap_id>
-								</variant>
-							</value>
-						</item>
-						<item class_id_reference="4" object_id="_344">
-							<base>
-								<base object_id="_345"></base>
-							</base>
-							<name_is_editable>0</name_is_editable>
-							<rows>0</rows>
-							<columns>0</columns>
-						</item>
-						<item class_id_reference="11" object_id="_346">
-							<base>
-								<base object_id="_347"></base>
-							</base>
-							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g2838</string>
-									</keycap_id>
-								</variant>
-							</value>
-						</item>
-						<item class_id_reference="4" object_id="_348">
-							<base>
-								<base object_id="_349"></base>
-							</base>
-							<name_is_editable>0</name_is_editable>
-							<rows>0</rows>
-							<columns>0</columns>
-						</item>
-						<item class_id_reference="11" object_id="_350">
-							<base>
-								<base object_id="_351"></base>
-							</base>
-							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g2828</string>
-									</keycap_id>
-								</variant>
-							</value>
-						</item>
-						<item class_id_reference="4" object_id="_352">
-							<base>
-								<base object_id="_353"></base>
-							</base>
-							<name_is_editable>0</name_is_editable>
-							<rows>0</rows>
-							<columns>0</columns>
-						</item>
-						<item class_id_reference="11" object_id="_354">
-							<base>
-								<base object_id="_355"></base>
-							</base>
-							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g2818</string>
-									</keycap_id>
-								</variant>
-							</value>
-						</item>
 						<item class_id_reference="4" object_id="_356">
 							<base>
 								<base object_id="_357"></base>
@@ -8432,7 +8458,7 @@ AAAAQwAB////////f38AAA==
 								</user_type_name>
 								<variant>
 									<keycap_id>
-										<string>g2948</string>
+										<string>g2848</string>
 									</keycap_id>
 								</variant>
 							</value>
@@ -8456,6 +8482,102 @@ AAAAQwAB////////f38AAA==
 								</user_type_name>
 								<variant>
 									<keycap_id>
+										<string>g2838</string>
+									</keycap_id>
+								</variant>
+							</value>
+						</item>
+						<item class_id_reference="4" object_id="_364">
+							<base>
+								<base object_id="_365"></base>
+							</base>
+							<name_is_editable>0</name_is_editable>
+							<rows>0</rows>
+							<columns>0</columns>
+						</item>
+						<item class_id_reference="11" object_id="_366">
+							<base>
+								<base object_id="_367"></base>
+							</base>
+							<value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
+										<string>g2828</string>
+									</keycap_id>
+								</variant>
+							</value>
+						</item>
+						<item class_id_reference="4" object_id="_368">
+							<base>
+								<base object_id="_369"></base>
+							</base>
+							<name_is_editable>0</name_is_editable>
+							<rows>0</rows>
+							<columns>0</columns>
+						</item>
+						<item class_id_reference="11" object_id="_370">
+							<base>
+								<base object_id="_371"></base>
+							</base>
+							<value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
+										<string>g2818</string>
+									</keycap_id>
+								</variant>
+							</value>
+						</item>
+						<item class_id_reference="4" object_id="_372">
+							<base>
+								<base object_id="_373"></base>
+							</base>
+							<name_is_editable>0</name_is_editable>
+							<rows>0</rows>
+							<columns>0</columns>
+						</item>
+						<item class_id_reference="11" object_id="_374">
+							<base>
+								<base object_id="_375"></base>
+							</base>
+							<value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
+										<string>g2948</string>
+									</keycap_id>
+								</variant>
+							</value>
+						</item>
+						<item class_id_reference="4" object_id="_376">
+							<base>
+								<base object_id="_377"></base>
+							</base>
+							<name_is_editable>0</name_is_editable>
+							<rows>0</rows>
+							<columns>0</columns>
+						</item>
+						<item class_id_reference="11" object_id="_378">
+							<base>
+								<base object_id="_379"></base>
+							</base>
+							<value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
 										<string>g3088</string>
 									</keycap_id>
 								</variant>
@@ -8463,119 +8585,23 @@ AAAAQwAB////////f38AAA==
 						</item>
 					</linked_keys>
 				</item>
-				<item class_id_reference="9" object_id="_364">
+				<item class_id_reference="9" object_id="_380">
 					<base>
-						<base object_id="_365"></base>
+						<base object_id="_381"></base>
 					</base>
 				</item>
-				<item class_id_reference="14" object_id="_366">
+				<item class_id_reference="14" object_id="_382">
 					<base>
-						<base object_id="_367"></base>
+						<base object_id="_383"></base>
 					</base>
 					<name>Left Hand Shelton Dictionary</name>
-					<linked_keys object_id="_368">
+					<linked_keys object_id="_384">
 						<base>
-							<base object_id="_369"></base>
+							<base object_id="_385"></base>
 						</base>
 						<name_is_editable>0</name_is_editable>
 						<rows>8</rows>
 						<columns>2</columns>
-						<item class_id_reference="4" object_id="_370">
-							<base>
-								<base object_id="_371"></base>
-							</base>
-							<name_is_editable>0</name_is_editable>
-							<rows>0</rows>
-							<columns>0</columns>
-						</item>
-						<item class_id_reference="11" object_id="_372">
-							<base>
-								<base object_id="_373"></base>
-							</base>
-							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g2988</string>
-									</keycap_id>
-								</variant>
-							</value>
-						</item>
-						<item class_id_reference="4" object_id="_374">
-							<base>
-								<base object_id="_375"></base>
-							</base>
-							<name_is_editable>0</name_is_editable>
-							<rows>0</rows>
-							<columns>0</columns>
-						</item>
-						<item class_id_reference="11" object_id="_376">
-							<base>
-								<base object_id="_377"></base>
-							</base>
-							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3128</string>
-									</keycap_id>
-								</variant>
-							</value>
-						</item>
-						<item class_id_reference="4" object_id="_378">
-							<base>
-								<base object_id="_379"></base>
-							</base>
-							<name_is_editable>0</name_is_editable>
-							<rows>0</rows>
-							<columns>0</columns>
-						</item>
-						<item class_id_reference="11" object_id="_380">
-							<base>
-								<base object_id="_381"></base>
-							</base>
-							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g2978</string>
-									</keycap_id>
-								</variant>
-							</value>
-						</item>
-						<item class_id_reference="4" object_id="_382">
-							<base>
-								<base object_id="_383"></base>
-							</base>
-							<name_is_editable>0</name_is_editable>
-							<rows>0</rows>
-							<columns>0</columns>
-						</item>
-						<item class_id_reference="11" object_id="_384">
-							<base>
-								<base object_id="_385"></base>
-							</base>
-							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3118</string>
-									</keycap_id>
-								</variant>
-							</value>
-						</item>
 						<item class_id_reference="4" object_id="_386">
 							<base>
 								<base object_id="_387"></base>
@@ -8595,7 +8621,7 @@ AAAAQwAB////////f38AAA==
 								</user_type_name>
 								<variant>
 									<keycap_id>
-										<string>g2968</string>
+										<string>g2988</string>
 									</keycap_id>
 								</variant>
 							</value>
@@ -8619,7 +8645,7 @@ AAAAQwAB////////f38AAA==
 								</user_type_name>
 								<variant>
 									<keycap_id>
-										<string>g3108</string>
+										<string>g3128</string>
 									</keycap_id>
 								</variant>
 							</value>
@@ -8643,7 +8669,7 @@ AAAAQwAB////////f38AAA==
 								</user_type_name>
 								<variant>
 									<keycap_id>
-										<string>g2958</string>
+										<string>g2978</string>
 									</keycap_id>
 								</variant>
 							</value>
@@ -8667,6 +8693,102 @@ AAAAQwAB////////f38AAA==
 								</user_type_name>
 								<variant>
 									<keycap_id>
+										<string>g3118</string>
+									</keycap_id>
+								</variant>
+							</value>
+						</item>
+						<item class_id_reference="4" object_id="_402">
+							<base>
+								<base object_id="_403"></base>
+							</base>
+							<name_is_editable>0</name_is_editable>
+							<rows>0</rows>
+							<columns>0</columns>
+						</item>
+						<item class_id_reference="11" object_id="_404">
+							<base>
+								<base object_id="_405"></base>
+							</base>
+							<value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
+										<string>g2968</string>
+									</keycap_id>
+								</variant>
+							</value>
+						</item>
+						<item class_id_reference="4" object_id="_406">
+							<base>
+								<base object_id="_407"></base>
+							</base>
+							<name_is_editable>0</name_is_editable>
+							<rows>0</rows>
+							<columns>0</columns>
+						</item>
+						<item class_id_reference="11" object_id="_408">
+							<base>
+								<base object_id="_409"></base>
+							</base>
+							<value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
+										<string>g3108</string>
+									</keycap_id>
+								</variant>
+							</value>
+						</item>
+						<item class_id_reference="4" object_id="_410">
+							<base>
+								<base object_id="_411"></base>
+							</base>
+							<name_is_editable>0</name_is_editable>
+							<rows>0</rows>
+							<columns>0</columns>
+						</item>
+						<item class_id_reference="11" object_id="_412">
+							<base>
+								<base object_id="_413"></base>
+							</base>
+							<value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
+										<string>g2958</string>
+									</keycap_id>
+								</variant>
+							</value>
+						</item>
+						<item class_id_reference="4" object_id="_414">
+							<base>
+								<base object_id="_415"></base>
+							</base>
+							<name_is_editable>0</name_is_editable>
+							<rows>0</rows>
+							<columns>0</columns>
+						</item>
+						<item class_id_reference="11" object_id="_416">
+							<base>
+								<base object_id="_417"></base>
+							</base>
+							<value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
 										<string>g3098</string>
 									</keycap_id>
 								</variant>
@@ -8674,119 +8796,23 @@ AAAAQwAB////////f38AAA==
 						</item>
 					</linked_keys>
 				</item>
-				<item class_id_reference="9" object_id="_402">
+				<item class_id_reference="9" object_id="_418">
 					<base>
-						<base object_id="_403"></base>
+						<base object_id="_419"></base>
 					</base>
 				</item>
-				<item class_id_reference="14" object_id="_404">
+				<item class_id_reference="14" object_id="_420">
 					<base>
-						<base object_id="_405"></base>
+						<base object_id="_421"></base>
 					</base>
 					<name>Left Punctuation Dictionary</name>
-					<linked_keys object_id="_406">
+					<linked_keys object_id="_422">
 						<base>
-							<base object_id="_407"></base>
+							<base object_id="_423"></base>
 						</base>
 						<name_is_editable>0</name_is_editable>
 						<rows>8</rows>
 						<columns>2</columns>
-						<item class_id_reference="4" object_id="_408">
-							<base>
-								<base object_id="_409"></base>
-							</base>
-							<name_is_editable>0</name_is_editable>
-							<rows>0</rows>
-							<columns>0</columns>
-						</item>
-						<item class_id_reference="11" object_id="_410">
-							<base>
-								<base object_id="_411"></base>
-							</base>
-							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g2988</string>
-									</keycap_id>
-								</variant>
-							</value>
-						</item>
-						<item class_id_reference="4" object_id="_412">
-							<base>
-								<base object_id="_413"></base>
-							</base>
-							<name_is_editable>0</name_is_editable>
-							<rows>0</rows>
-							<columns>0</columns>
-						</item>
-						<item class_id_reference="11" object_id="_414">
-							<base>
-								<base object_id="_415"></base>
-							</base>
-							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3128</string>
-									</keycap_id>
-								</variant>
-							</value>
-						</item>
-						<item class_id_reference="4" object_id="_416">
-							<base>
-								<base object_id="_417"></base>
-							</base>
-							<name_is_editable>0</name_is_editable>
-							<rows>0</rows>
-							<columns>0</columns>
-						</item>
-						<item class_id_reference="11" object_id="_418">
-							<base>
-								<base object_id="_419"></base>
-							</base>
-							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g2978</string>
-									</keycap_id>
-								</variant>
-							</value>
-						</item>
-						<item class_id_reference="4" object_id="_420">
-							<base>
-								<base object_id="_421"></base>
-							</base>
-							<name_is_editable>0</name_is_editable>
-							<rows>0</rows>
-							<columns>0</columns>
-						</item>
-						<item class_id_reference="11" object_id="_422">
-							<base>
-								<base object_id="_423"></base>
-							</base>
-							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3118</string>
-									</keycap_id>
-								</variant>
-							</value>
-						</item>
 						<item class_id_reference="4" object_id="_424">
 							<base>
 								<base object_id="_425"></base>
@@ -8806,7 +8832,7 @@ AAAAQwAB////////f38AAA==
 								</user_type_name>
 								<variant>
 									<keycap_id>
-										<string>g2968</string>
+										<string>g2988</string>
 									</keycap_id>
 								</variant>
 							</value>
@@ -8830,7 +8856,7 @@ AAAAQwAB////////f38AAA==
 								</user_type_name>
 								<variant>
 									<keycap_id>
-										<string>g3108</string>
+										<string>g3128</string>
 									</keycap_id>
 								</variant>
 							</value>
@@ -8854,7 +8880,7 @@ AAAAQwAB////////f38AAA==
 								</user_type_name>
 								<variant>
 									<keycap_id>
-										<string>g2958</string>
+										<string>g2978</string>
 									</keycap_id>
 								</variant>
 							</value>
@@ -8878,6 +8904,102 @@ AAAAQwAB////////f38AAA==
 								</user_type_name>
 								<variant>
 									<keycap_id>
+										<string>g3118</string>
+									</keycap_id>
+								</variant>
+							</value>
+						</item>
+						<item class_id_reference="4" object_id="_440">
+							<base>
+								<base object_id="_441"></base>
+							</base>
+							<name_is_editable>0</name_is_editable>
+							<rows>0</rows>
+							<columns>0</columns>
+						</item>
+						<item class_id_reference="11" object_id="_442">
+							<base>
+								<base object_id="_443"></base>
+							</base>
+							<value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
+										<string>g2968</string>
+									</keycap_id>
+								</variant>
+							</value>
+						</item>
+						<item class_id_reference="4" object_id="_444">
+							<base>
+								<base object_id="_445"></base>
+							</base>
+							<name_is_editable>0</name_is_editable>
+							<rows>0</rows>
+							<columns>0</columns>
+						</item>
+						<item class_id_reference="11" object_id="_446">
+							<base>
+								<base object_id="_447"></base>
+							</base>
+							<value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
+										<string>g3108</string>
+									</keycap_id>
+								</variant>
+							</value>
+						</item>
+						<item class_id_reference="4" object_id="_448">
+							<base>
+								<base object_id="_449"></base>
+							</base>
+							<name_is_editable>0</name_is_editable>
+							<rows>0</rows>
+							<columns>0</columns>
+						</item>
+						<item class_id_reference="11" object_id="_450">
+							<base>
+								<base object_id="_451"></base>
+							</base>
+							<value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
+										<string>g2958</string>
+									</keycap_id>
+								</variant>
+							</value>
+						</item>
+						<item class_id_reference="4" object_id="_452">
+							<base>
+								<base object_id="_453"></base>
+							</base>
+							<name_is_editable>0</name_is_editable>
+							<rows>0</rows>
+							<columns>0</columns>
+						</item>
+						<item class_id_reference="11" object_id="_454">
+							<base>
+								<base object_id="_455"></base>
+							</base>
+							<value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
 										<string>g3098</string>
 									</keycap_id>
 								</variant>
@@ -8885,119 +9007,23 @@ AAAAQwAB////////f38AAA==
 						</item>
 					</linked_keys>
 				</item>
-				<item class_id_reference="9" object_id="_440">
+				<item class_id_reference="9" object_id="_456">
 					<base>
-						<base object_id="_441"></base>
+						<base object_id="_457"></base>
 					</base>
 				</item>
-				<item class_id_reference="14" object_id="_442">
+				<item class_id_reference="14" object_id="_458">
 					<base>
-						<base object_id="_443"></base>
+						<base object_id="_459"></base>
 					</base>
 					<name>Right Controls Dictionary</name>
-					<linked_keys object_id="_444">
+					<linked_keys object_id="_460">
 						<base>
-							<base object_id="_445"></base>
+							<base object_id="_461"></base>
 						</base>
 						<name_is_editable>0</name_is_editable>
 						<rows>5</rows>
 						<columns>2</columns>
-						<item class_id_reference="4" object_id="_446">
-							<base>
-								<base object_id="_447"></base>
-							</base>
-							<name_is_editable>0</name_is_editable>
-							<rows>0</rows>
-							<columns>0</columns>
-						</item>
-						<item class_id_reference="11" object_id="_448">
-							<base>
-								<base object_id="_449"></base>
-							</base>
-							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g2878</string>
-									</keycap_id>
-								</variant>
-							</value>
-						</item>
-						<item class_id_reference="4" object_id="_450">
-							<base>
-								<base object_id="_451"></base>
-							</base>
-							<name_is_editable>0</name_is_editable>
-							<rows>0</rows>
-							<columns>0</columns>
-						</item>
-						<item class_id_reference="11" object_id="_452">
-							<base>
-								<base object_id="_453"></base>
-							</base>
-							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g2888</string>
-									</keycap_id>
-								</variant>
-							</value>
-						</item>
-						<item class_id_reference="4" object_id="_454">
-							<base>
-								<base object_id="_455"></base>
-							</base>
-							<name_is_editable>0</name_is_editable>
-							<rows>0</rows>
-							<columns>0</columns>
-						</item>
-						<item class_id_reference="11" object_id="_456">
-							<base>
-								<base object_id="_457"></base>
-							</base>
-							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g2898</string>
-									</keycap_id>
-								</variant>
-							</value>
-						</item>
-						<item class_id_reference="4" object_id="_458">
-							<base>
-								<base object_id="_459"></base>
-							</base>
-							<name_is_editable>0</name_is_editable>
-							<rows>0</rows>
-							<columns>0</columns>
-						</item>
-						<item class_id_reference="11" object_id="_460">
-							<base>
-								<base object_id="_461"></base>
-							</base>
-							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g2908</string>
-									</keycap_id>
-								</variant>
-							</value>
-						</item>
 						<item class_id_reference="4" object_id="_462">
 							<base>
 								<base object_id="_463"></base>
@@ -9017,6 +9043,102 @@ AAAAQwAB////////f38AAA==
 								</user_type_name>
 								<variant>
 									<keycap_id>
+										<string>g2878</string>
+									</keycap_id>
+								</variant>
+							</value>
+						</item>
+						<item class_id_reference="4" object_id="_466">
+							<base>
+								<base object_id="_467"></base>
+							</base>
+							<name_is_editable>0</name_is_editable>
+							<rows>0</rows>
+							<columns>0</columns>
+						</item>
+						<item class_id_reference="11" object_id="_468">
+							<base>
+								<base object_id="_469"></base>
+							</base>
+							<value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
+										<string>g2888</string>
+									</keycap_id>
+								</variant>
+							</value>
+						</item>
+						<item class_id_reference="4" object_id="_470">
+							<base>
+								<base object_id="_471"></base>
+							</base>
+							<name_is_editable>0</name_is_editable>
+							<rows>0</rows>
+							<columns>0</columns>
+						</item>
+						<item class_id_reference="11" object_id="_472">
+							<base>
+								<base object_id="_473"></base>
+							</base>
+							<value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
+										<string>g2898</string>
+									</keycap_id>
+								</variant>
+							</value>
+						</item>
+						<item class_id_reference="4" object_id="_474">
+							<base>
+								<base object_id="_475"></base>
+							</base>
+							<name_is_editable>0</name_is_editable>
+							<rows>0</rows>
+							<columns>0</columns>
+						</item>
+						<item class_id_reference="11" object_id="_476">
+							<base>
+								<base object_id="_477"></base>
+							</base>
+							<value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
+										<string>g2908</string>
+									</keycap_id>
+								</variant>
+							</value>
+						</item>
+						<item class_id_reference="4" object_id="_478">
+							<base>
+								<base object_id="_479"></base>
+							</base>
+							<name_is_editable>0</name_is_editable>
+							<rows>0</rows>
+							<columns>0</columns>
+						</item>
+						<item class_id_reference="11" object_id="_480">
+							<base>
+								<base object_id="_481"></base>
+							</base>
+							<value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
 										<string>g2918</string>
 									</keycap_id>
 								</variant>
@@ -9024,119 +9146,23 @@ AAAAQwAB////////f38AAA==
 						</item>
 					</linked_keys>
 				</item>
-				<item class_id_reference="9" object_id="_466">
+				<item class_id_reference="9" object_id="_482">
 					<base>
-						<base object_id="_467"></base>
+						<base object_id="_483"></base>
 					</base>
 				</item>
-				<item class_id_reference="14" object_id="_468">
+				<item class_id_reference="14" object_id="_484">
 					<base>
-						<base object_id="_469"></base>
+						<base object_id="_485"></base>
 					</base>
 					<name>Right Hand Shelton Dictionary</name>
-					<linked_keys object_id="_470">
+					<linked_keys object_id="_486">
 						<base>
-							<base object_id="_471"></base>
+							<base object_id="_487"></base>
 						</base>
 						<name_is_editable>0</name_is_editable>
 						<rows>8</rows>
 						<columns>2</columns>
-						<item class_id_reference="4" object_id="_472">
-							<base>
-								<base object_id="_473"></base>
-							</base>
-							<name_is_editable>0</name_is_editable>
-							<rows>0</rows>
-							<columns>0</columns>
-						</item>
-						<item class_id_reference="11" object_id="_474">
-							<base>
-								<base object_id="_475"></base>
-							</base>
-							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3018</string>
-									</keycap_id>
-								</variant>
-							</value>
-						</item>
-						<item class_id_reference="4" object_id="_476">
-							<base>
-								<base object_id="_477"></base>
-							</base>
-							<name_is_editable>0</name_is_editable>
-							<rows>0</rows>
-							<columns>0</columns>
-						</item>
-						<item class_id_reference="11" object_id="_478">
-							<base>
-								<base object_id="_479"></base>
-							</base>
-							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3138</string>
-									</keycap_id>
-								</variant>
-							</value>
-						</item>
-						<item class_id_reference="4" object_id="_480">
-							<base>
-								<base object_id="_481"></base>
-							</base>
-							<name_is_editable>0</name_is_editable>
-							<rows>0</rows>
-							<columns>0</columns>
-						</item>
-						<item class_id_reference="11" object_id="_482">
-							<base>
-								<base object_id="_483"></base>
-							</base>
-							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3028</string>
-									</keycap_id>
-								</variant>
-							</value>
-						</item>
-						<item class_id_reference="4" object_id="_484">
-							<base>
-								<base object_id="_485"></base>
-							</base>
-							<name_is_editable>0</name_is_editable>
-							<rows>0</rows>
-							<columns>0</columns>
-						</item>
-						<item class_id_reference="11" object_id="_486">
-							<base>
-								<base object_id="_487"></base>
-							</base>
-							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3148</string>
-									</keycap_id>
-								</variant>
-							</value>
-						</item>
 						<item class_id_reference="4" object_id="_488">
 							<base>
 								<base object_id="_489"></base>
@@ -9156,7 +9182,7 @@ AAAAQwAB////////f38AAA==
 								</user_type_name>
 								<variant>
 									<keycap_id>
-										<string>g3038</string>
+										<string>g3018</string>
 									</keycap_id>
 								</variant>
 							</value>
@@ -9180,7 +9206,7 @@ AAAAQwAB////////f38AAA==
 								</user_type_name>
 								<variant>
 									<keycap_id>
-										<string>g3158</string>
+										<string>g3138</string>
 									</keycap_id>
 								</variant>
 							</value>
@@ -9204,7 +9230,7 @@ AAAAQwAB////////f38AAA==
 								</user_type_name>
 								<variant>
 									<keycap_id>
-										<string>g3048</string>
+										<string>g3028</string>
 									</keycap_id>
 								</variant>
 							</value>
@@ -9228,6 +9254,102 @@ AAAAQwAB////////f38AAA==
 								</user_type_name>
 								<variant>
 									<keycap_id>
+										<string>g3148</string>
+									</keycap_id>
+								</variant>
+							</value>
+						</item>
+						<item class_id_reference="4" object_id="_504">
+							<base>
+								<base object_id="_505"></base>
+							</base>
+							<name_is_editable>0</name_is_editable>
+							<rows>0</rows>
+							<columns>0</columns>
+						</item>
+						<item class_id_reference="11" object_id="_506">
+							<base>
+								<base object_id="_507"></base>
+							</base>
+							<value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
+										<string>g3038</string>
+									</keycap_id>
+								</variant>
+							</value>
+						</item>
+						<item class_id_reference="4" object_id="_508">
+							<base>
+								<base object_id="_509"></base>
+							</base>
+							<name_is_editable>0</name_is_editable>
+							<rows>0</rows>
+							<columns>0</columns>
+						</item>
+						<item class_id_reference="11" object_id="_510">
+							<base>
+								<base object_id="_511"></base>
+							</base>
+							<value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
+										<string>g3158</string>
+									</keycap_id>
+								</variant>
+							</value>
+						</item>
+						<item class_id_reference="4" object_id="_512">
+							<base>
+								<base object_id="_513"></base>
+							</base>
+							<name_is_editable>0</name_is_editable>
+							<rows>0</rows>
+							<columns>0</columns>
+						</item>
+						<item class_id_reference="11" object_id="_514">
+							<base>
+								<base object_id="_515"></base>
+							</base>
+							<value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
+										<string>g3048</string>
+									</keycap_id>
+								</variant>
+							</value>
+						</item>
+						<item class_id_reference="4" object_id="_516">
+							<base>
+								<base object_id="_517"></base>
+							</base>
+							<name_is_editable>0</name_is_editable>
+							<rows>0</rows>
+							<columns>0</columns>
+						</item>
+						<item class_id_reference="11" object_id="_518">
+							<base>
+								<base object_id="_519"></base>
+							</base>
+							<value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
 										<string>g3168</string>
 									</keycap_id>
 								</variant>
@@ -9235,34 +9357,34 @@ AAAAQwAB////////f38AAA==
 						</item>
 					</linked_keys>
 				</item>
-				<item class_id_reference="9" object_id="_504">
+				<item class_id_reference="9" object_id="_520">
 					<base>
-						<base object_id="_505"></base>
+						<base object_id="_521"></base>
 					</base>
 				</item>
-				<item class_id_reference="14" object_id="_506">
+				<item class_id_reference="14" object_id="_522">
 					<base>
-						<base object_id="_507"></base>
+						<base object_id="_523"></base>
 					</base>
 					<name>Right Pinky Dictionary</name>
-					<linked_keys object_id="_508">
+					<linked_keys object_id="_524">
 						<base>
-							<base object_id="_509"></base>
+							<base object_id="_525"></base>
 						</base>
 						<name_is_editable>0</name_is_editable>
 						<rows>2</rows>
 						<columns>2</columns>
-						<item class_id_reference="4" object_id="_510">
+						<item class_id_reference="4" object_id="_526">
 							<base>
-								<base object_id="_511"></base>
+								<base object_id="_527"></base>
 							</base>
 							<name_is_editable>0</name_is_editable>
 							<rows>0</rows>
 							<columns>0</columns>
 						</item>
-						<item class_id_reference="11" object_id="_512">
+						<item class_id_reference="11" object_id="_528">
 							<base>
-								<base object_id="_513"></base>
+								<base object_id="_529"></base>
 							</base>
 							<value>
 								<type>1024</type>
@@ -9276,17 +9398,17 @@ AAAAQwAB////////f38AAA==
 								</variant>
 							</value>
 						</item>
-						<item class_id_reference="4" object_id="_514">
+						<item class_id_reference="4" object_id="_530">
 							<base>
-								<base object_id="_515"></base>
+								<base object_id="_531"></base>
 							</base>
 							<name_is_editable>0</name_is_editable>
 							<rows>0</rows>
 							<columns>0</columns>
 						</item>
-						<item class_id_reference="11" object_id="_516">
+						<item class_id_reference="11" object_id="_532">
 							<base>
-								<base object_id="_517"></base>
+								<base object_id="_533"></base>
 							</base>
 							<value>
 								<type>1024</type>
@@ -9302,119 +9424,23 @@ AAAAQwAB////////f38AAA==
 						</item>
 					</linked_keys>
 				</item>
-				<item class_id_reference="9" object_id="_518">
+				<item class_id_reference="9" object_id="_534">
 					<base>
-						<base object_id="_519"></base>
+						<base object_id="_535"></base>
 					</base>
 				</item>
-				<item class_id_reference="14" object_id="_520">
+				<item class_id_reference="14" object_id="_536">
 					<base>
-						<base object_id="_521"></base>
+						<base object_id="_537"></base>
 					</base>
 					<name>Right Punctuation Dictionary</name>
-					<linked_keys object_id="_522">
+					<linked_keys object_id="_538">
 						<base>
-							<base object_id="_523"></base>
+							<base object_id="_539"></base>
 						</base>
 						<name_is_editable>0</name_is_editable>
 						<rows>8</rows>
 						<columns>2</columns>
-						<item class_id_reference="4" object_id="_524">
-							<base>
-								<base object_id="_525"></base>
-							</base>
-							<name_is_editable>0</name_is_editable>
-							<rows>0</rows>
-							<columns>0</columns>
-						</item>
-						<item class_id_reference="11" object_id="_526">
-							<base>
-								<base object_id="_527"></base>
-							</base>
-							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3018</string>
-									</keycap_id>
-								</variant>
-							</value>
-						</item>
-						<item class_id_reference="4" object_id="_528">
-							<base>
-								<base object_id="_529"></base>
-							</base>
-							<name_is_editable>0</name_is_editable>
-							<rows>0</rows>
-							<columns>0</columns>
-						</item>
-						<item class_id_reference="11" object_id="_530">
-							<base>
-								<base object_id="_531"></base>
-							</base>
-							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3138</string>
-									</keycap_id>
-								</variant>
-							</value>
-						</item>
-						<item class_id_reference="4" object_id="_532">
-							<base>
-								<base object_id="_533"></base>
-							</base>
-							<name_is_editable>0</name_is_editable>
-							<rows>0</rows>
-							<columns>0</columns>
-						</item>
-						<item class_id_reference="11" object_id="_534">
-							<base>
-								<base object_id="_535"></base>
-							</base>
-							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3028</string>
-									</keycap_id>
-								</variant>
-							</value>
-						</item>
-						<item class_id_reference="4" object_id="_536">
-							<base>
-								<base object_id="_537"></base>
-							</base>
-							<name_is_editable>0</name_is_editable>
-							<rows>0</rows>
-							<columns>0</columns>
-						</item>
-						<item class_id_reference="11" object_id="_538">
-							<base>
-								<base object_id="_539"></base>
-							</base>
-							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3148</string>
-									</keycap_id>
-								</variant>
-							</value>
-						</item>
 						<item class_id_reference="4" object_id="_540">
 							<base>
 								<base object_id="_541"></base>
@@ -9434,7 +9460,7 @@ AAAAQwAB////////f38AAA==
 								</user_type_name>
 								<variant>
 									<keycap_id>
-										<string>g3038</string>
+										<string>g3018</string>
 									</keycap_id>
 								</variant>
 							</value>
@@ -9458,7 +9484,7 @@ AAAAQwAB////////f38AAA==
 								</user_type_name>
 								<variant>
 									<keycap_id>
-										<string>g3158</string>
+										<string>g3138</string>
 									</keycap_id>
 								</variant>
 							</value>
@@ -9482,7 +9508,7 @@ AAAAQwAB////////f38AAA==
 								</user_type_name>
 								<variant>
 									<keycap_id>
-										<string>g3048</string>
+										<string>g3028</string>
 									</keycap_id>
 								</variant>
 							</value>
@@ -9506,6 +9532,102 @@ AAAAQwAB////////f38AAA==
 								</user_type_name>
 								<variant>
 									<keycap_id>
+										<string>g3148</string>
+									</keycap_id>
+								</variant>
+							</value>
+						</item>
+						<item class_id_reference="4" object_id="_556">
+							<base>
+								<base object_id="_557"></base>
+							</base>
+							<name_is_editable>0</name_is_editable>
+							<rows>0</rows>
+							<columns>0</columns>
+						</item>
+						<item class_id_reference="11" object_id="_558">
+							<base>
+								<base object_id="_559"></base>
+							</base>
+							<value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
+										<string>g3038</string>
+									</keycap_id>
+								</variant>
+							</value>
+						</item>
+						<item class_id_reference="4" object_id="_560">
+							<base>
+								<base object_id="_561"></base>
+							</base>
+							<name_is_editable>0</name_is_editable>
+							<rows>0</rows>
+							<columns>0</columns>
+						</item>
+						<item class_id_reference="11" object_id="_562">
+							<base>
+								<base object_id="_563"></base>
+							</base>
+							<value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
+										<string>g3158</string>
+									</keycap_id>
+								</variant>
+							</value>
+						</item>
+						<item class_id_reference="4" object_id="_564">
+							<base>
+								<base object_id="_565"></base>
+							</base>
+							<name_is_editable>0</name_is_editable>
+							<rows>0</rows>
+							<columns>0</columns>
+						</item>
+						<item class_id_reference="11" object_id="_566">
+							<base>
+								<base object_id="_567"></base>
+							</base>
+							<value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
+										<string>g3048</string>
+									</keycap_id>
+								</variant>
+							</value>
+						</item>
+						<item class_id_reference="4" object_id="_568">
+							<base>
+								<base object_id="_569"></base>
+							</base>
+							<name_is_editable>0</name_is_editable>
+							<rows>0</rows>
+							<columns>0</columns>
+						</item>
+						<item class_id_reference="11" object_id="_570">
+							<base>
+								<base object_id="_571"></base>
+							</base>
+							<value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
 										<string>g3168</string>
 									</keycap_id>
 								</variant>
@@ -9513,119 +9635,23 @@ AAAAQwAB////////f38AAA==
 						</item>
 					</linked_keys>
 				</item>
-				<item class_id_reference="9" object_id="_556">
+				<item class_id_reference="9" object_id="_572">
 					<base>
-						<base object_id="_557"></base>
+						<base object_id="_573"></base>
 					</base>
 				</item>
-				<item class_id_reference="14" object_id="_558">
+				<item class_id_reference="14" object_id="_574">
 					<base>
-						<base object_id="_559"></base>
+						<base object_id="_575"></base>
 					</base>
 					<name>Thumbs Bigrams Dictionary</name>
-					<linked_keys object_id="_560">
+					<linked_keys object_id="_576">
 						<base>
-							<base object_id="_561"></base>
+							<base object_id="_577"></base>
 						</base>
 						<name_is_editable>0</name_is_editable>
 						<rows>6</rows>
 						<columns>2</columns>
-						<item class_id_reference="4" object_id="_562">
-							<base>
-								<base object_id="_563"></base>
-							</base>
-							<name_is_editable>0</name_is_editable>
-							<rows>0</rows>
-							<columns>0</columns>
-						</item>
-						<item class_id_reference="11" object_id="_564">
-							<base>
-								<base object_id="_565"></base>
-							</base>
-							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3298</string>
-									</keycap_id>
-								</variant>
-							</value>
-						</item>
-						<item class_id_reference="4" object_id="_566">
-							<base>
-								<base object_id="_567"></base>
-							</base>
-							<name_is_editable>0</name_is_editable>
-							<rows>0</rows>
-							<columns>0</columns>
-						</item>
-						<item class_id_reference="11" object_id="_568">
-							<base>
-								<base object_id="_569"></base>
-							</base>
-							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3308</string>
-									</keycap_id>
-								</variant>
-							</value>
-						</item>
-						<item class_id_reference="4" object_id="_570">
-							<base>
-								<base object_id="_571"></base>
-							</base>
-							<name_is_editable>0</name_is_editable>
-							<rows>0</rows>
-							<columns>0</columns>
-						</item>
-						<item class_id_reference="11" object_id="_572">
-							<base>
-								<base object_id="_573"></base>
-							</base>
-							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3318</string>
-									</keycap_id>
-								</variant>
-							</value>
-						</item>
-						<item class_id_reference="4" object_id="_574">
-							<base>
-								<base object_id="_575"></base>
-							</base>
-							<name_is_editable>0</name_is_editable>
-							<rows>0</rows>
-							<columns>0</columns>
-						</item>
-						<item class_id_reference="11" object_id="_576">
-							<base>
-								<base object_id="_577"></base>
-							</base>
-							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3338</string>
-									</keycap_id>
-								</variant>
-							</value>
-						</item>
 						<item class_id_reference="4" object_id="_578">
 							<base>
 								<base object_id="_579"></base>
@@ -9645,7 +9671,7 @@ AAAAQwAB////////f38AAA==
 								</user_type_name>
 								<variant>
 									<keycap_id>
-										<string>g3368</string>
+										<string>g3298</string>
 									</keycap_id>
 								</variant>
 							</value>
@@ -9669,89 +9695,22 @@ AAAAQwAB////////f38AAA==
 								</user_type_name>
 								<variant>
 									<keycap_id>
-										<string>g3348</string>
-									</keycap_id>
-								</variant>
-							</value>
-						</item>
-					</linked_keys>
-				</item>
-				<item class_id_reference="9" object_id="_586">
-					<base>
-						<base object_id="_587"></base>
-					</base>
-				</item>
-				<item class_id_reference="14" object_id="_588">
-					<base>
-						<base object_id="_589"></base>
-					</base>
-					<name>Thumbs Dictionary</name>
-					<linked_keys object_id="_590">
-						<base>
-							<base object_id="_591"></base>
-						</base>
-						<name_is_editable>0</name_is_editable>
-						<rows>6</rows>
-						<columns>2</columns>
-						<item class_id_reference="4" object_id="_592">
-							<base>
-								<base object_id="_593"></base>
-							</base>
-							<name_is_editable>0</name_is_editable>
-							<rows>0</rows>
-							<columns>0</columns>
-						</item>
-						<item class_id_reference="11" object_id="_594">
-							<base>
-								<base object_id="_595"></base>
-							</base>
-							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3298</string>
-									</keycap_id>
-								</variant>
-							</value>
-						</item>
-						<item class_id_reference="4" object_id="_596">
-							<base>
-								<base object_id="_597"></base>
-							</base>
-							<name_is_editable>0</name_is_editable>
-							<rows>0</rows>
-							<columns>0</columns>
-						</item>
-						<item class_id_reference="11" object_id="_598">
-							<base>
-								<base object_id="_599"></base>
-							</base>
-							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
 										<string>g3308</string>
 									</keycap_id>
 								</variant>
 							</value>
 						</item>
-						<item class_id_reference="4" object_id="_600">
+						<item class_id_reference="4" object_id="_586">
 							<base>
-								<base object_id="_601"></base>
+								<base object_id="_587"></base>
 							</base>
 							<name_is_editable>0</name_is_editable>
 							<rows>0</rows>
 							<columns>0</columns>
 						</item>
-						<item class_id_reference="11" object_id="_602">
+						<item class_id_reference="11" object_id="_588">
 							<base>
-								<base object_id="_603"></base>
+								<base object_id="_589"></base>
 							</base>
 							<value>
 								<type>1024</type>
@@ -9765,17 +9724,17 @@ AAAAQwAB////////f38AAA==
 								</variant>
 							</value>
 						</item>
-						<item class_id_reference="4" object_id="_604">
+						<item class_id_reference="4" object_id="_590">
 							<base>
-								<base object_id="_605"></base>
+								<base object_id="_591"></base>
 							</base>
 							<name_is_editable>0</name_is_editable>
 							<rows>0</rows>
 							<columns>0</columns>
 						</item>
-						<item class_id_reference="11" object_id="_606">
+						<item class_id_reference="11" object_id="_592">
 							<base>
-								<base object_id="_607"></base>
+								<base object_id="_593"></base>
 							</base>
 							<value>
 								<type>1024</type>
@@ -9789,6 +9748,73 @@ AAAAQwAB////////f38AAA==
 								</variant>
 							</value>
 						</item>
+						<item class_id_reference="4" object_id="_594">
+							<base>
+								<base object_id="_595"></base>
+							</base>
+							<name_is_editable>0</name_is_editable>
+							<rows>0</rows>
+							<columns>0</columns>
+						</item>
+						<item class_id_reference="11" object_id="_596">
+							<base>
+								<base object_id="_597"></base>
+							</base>
+							<value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
+										<string>g3368</string>
+									</keycap_id>
+								</variant>
+							</value>
+						</item>
+						<item class_id_reference="4" object_id="_598">
+							<base>
+								<base object_id="_599"></base>
+							</base>
+							<name_is_editable>0</name_is_editable>
+							<rows>0</rows>
+							<columns>0</columns>
+						</item>
+						<item class_id_reference="11" object_id="_600">
+							<base>
+								<base object_id="_601"></base>
+							</base>
+							<value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
+										<string>g3348</string>
+									</keycap_id>
+								</variant>
+							</value>
+						</item>
+					</linked_keys>
+				</item>
+				<item class_id_reference="9" object_id="_602">
+					<base>
+						<base object_id="_603"></base>
+					</base>
+				</item>
+				<item class_id_reference="14" object_id="_604">
+					<base>
+						<base object_id="_605"></base>
+					</base>
+					<name>Thumbs Dictionary</name>
+					<linked_keys object_id="_606">
+						<base>
+							<base object_id="_607"></base>
+						</base>
+						<name_is_editable>0</name_is_editable>
+						<rows>6</rows>
+						<columns>2</columns>
 						<item class_id_reference="4" object_id="_608">
 							<base>
 								<base object_id="_609"></base>
@@ -9808,7 +9834,7 @@ AAAAQwAB////////f38AAA==
 								</user_type_name>
 								<variant>
 									<keycap_id>
-										<string>g3368</string>
+										<string>g3298</string>
 									</keycap_id>
 								</variant>
 							</value>
@@ -9832,6 +9858,102 @@ AAAAQwAB////////f38AAA==
 								</user_type_name>
 								<variant>
 									<keycap_id>
+										<string>g3308</string>
+									</keycap_id>
+								</variant>
+							</value>
+						</item>
+						<item class_id_reference="4" object_id="_616">
+							<base>
+								<base object_id="_617"></base>
+							</base>
+							<name_is_editable>0</name_is_editable>
+							<rows>0</rows>
+							<columns>0</columns>
+						</item>
+						<item class_id_reference="11" object_id="_618">
+							<base>
+								<base object_id="_619"></base>
+							</base>
+							<value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
+										<string>g3318</string>
+									</keycap_id>
+								</variant>
+							</value>
+						</item>
+						<item class_id_reference="4" object_id="_620">
+							<base>
+								<base object_id="_621"></base>
+							</base>
+							<name_is_editable>0</name_is_editable>
+							<rows>0</rows>
+							<columns>0</columns>
+						</item>
+						<item class_id_reference="11" object_id="_622">
+							<base>
+								<base object_id="_623"></base>
+							</base>
+							<value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
+										<string>g3338</string>
+									</keycap_id>
+								</variant>
+							</value>
+						</item>
+						<item class_id_reference="4" object_id="_624">
+							<base>
+								<base object_id="_625"></base>
+							</base>
+							<name_is_editable>0</name_is_editable>
+							<rows>0</rows>
+							<columns>0</columns>
+						</item>
+						<item class_id_reference="11" object_id="_626">
+							<base>
+								<base object_id="_627"></base>
+							</base>
+							<value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
+										<string>g3368</string>
+									</keycap_id>
+								</variant>
+							</value>
+						</item>
+						<item class_id_reference="4" object_id="_628">
+							<base>
+								<base object_id="_629"></base>
+							</base>
+							<name_is_editable>0</name_is_editable>
+							<rows>0</rows>
+							<columns>0</columns>
+						</item>
+						<item class_id_reference="11" object_id="_630">
+							<base>
+								<base object_id="_631"></base>
+							</base>
+							<value>
+								<type>1024</type>
+								<user_type_name>
+									<string>KeycapRef</string>
+								</user_type_name>
+								<variant>
+									<keycap_id>
 										<string>g3348</string>
 									</keycap_id>
 								</variant>
@@ -9839,9 +9961,9 @@ AAAAQwAB////////f38AAA==
 						</item>
 					</linked_keys>
 				</item>
-				<item class_id_reference="9" object_id="_616">
+				<item class_id_reference="9" object_id="_632">
 					<base>
-						<base object_id="_617"></base>
+						<base object_id="_633"></base>
 					</base>
 				</item>
 			</linked_dictionaries>
