@@ -1,7 +1,7 @@
 // ======================================================================
 // This file is a part of the KaladriusTrainer project
 //
-// Copyright (C) 2017  Vissale NEANG <fromtonrouge at gmail dot com>
+// Copyright (C) 2020  Vissale NEANG <fromtonrouge at gmail dot com>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
