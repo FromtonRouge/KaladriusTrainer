@@ -134,9 +134,13 @@ void StrokesSolverTextEdit::onTimerSolve()
         sTextToSolve = cursor.selectedText();
         bNoSpace = false;
     }
-    else if (sTextToSolve.startsWith('.') || sTextToSolve.startsWith(',') || sTextToSolve.startsWith(';'))
+    else if (!sTextToSolve.isEmpty())
     {
-        bNoSpace = false;
+        const QChar firstChar = sTextToSolve.front();
+        if (!firstChar.isLetter())
+        {
+            bNoSpace = false;
+        }
     }
 
     if (!sTextToSolve.isEmpty())
