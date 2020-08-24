@@ -22,10 +22,10 @@
 #include "ListTreeItemSerialize.h"
 #include "../Tree/TreeItems/AttributeTreeItem.h"
 #include "../Tree/TreeItems/ValueTreeItem.h"
-#include "Qt/QVariant.h"
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/base_object.hpp>
 #include "ExplicitInstanciation.h"
+#include "Qt/QString.h"
 
 EXPLICIT_INSTANCIATION(TheoryTreeItem)
 
@@ -41,12 +41,12 @@ namespace boost
 
         template<class Archive> void save(Archive& ar, const TheoryTreeItem& obj,  const unsigned int)
         {
-            QVariant value;
-            value = obj.getName()->getValue()->data(Qt::EditRole);
-            ar << make_nvp("name", value);
+            QString sValue;
+            sValue = obj.getName()->getValue()->data(Qt::EditRole).toString();
+            ar << make_nvp("name", sValue);
 
-            value = obj.getDescription()->getValue()->data(Qt::EditRole);
-            ar << make_nvp("description", value);
+            sValue = obj.getDescription()->getValue()->data(Qt::EditRole).toString();
+            ar << make_nvp("description", sValue);
 
             auto pSpecialKeys = obj.getSpecialKeys();
             ar << make_nvp("special_keys", *pSpecialKeys);
@@ -57,14 +57,14 @@ namespace boost
 
         template<class Archive> void load(Archive& ar, TheoryTreeItem& obj,  const unsigned int)
         {
-            QVariant value;
+            QString sValue;
             auto pValue = obj.getName()->getValue();
-            ar >> make_nvp("name", value);
-            pValue->setData(value, Qt::EditRole);
+            ar >> make_nvp("name", sValue);
+            pValue->setData(sValue, Qt::EditRole);
 
             pValue = obj.getDescription()->getValue();
-            ar >> make_nvp("description", value);
-            pValue->setData(value, Qt::EditRole);
+            ar >> make_nvp("description", sValue);
+            pValue->setData(sValue, Qt::EditRole);
 
             auto pSpecialKeys = obj.getSpecialKeys();
             ar >> make_nvp("special_keys", *pSpecialKeys);

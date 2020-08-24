@@ -20,9 +20,9 @@
 #include "DictionaryTreeItemSerialize.h"
 #include "TreeItemSerialize.h"
 #include "ListTreeItemSerialize.h"
+#include "Qt/QString.h"
 #include "../Tree/TreeItems/AttributeTreeItem.h"
 #include "../Tree/TreeItems/ValueTreeItem.h"
-#include "Qt/QVariant.h"
 #include "../Tree/Models/ItemDataRole.h"
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/base_object.hpp>
@@ -46,8 +46,8 @@ namespace boost
             std::string sText = obj.text().toStdString();
             ar << make_nvp("name", sText);
 
-            QVariant value = obj.getMandatoryKey()->getValue()->data(Qt::EditRole);
-            ar << make_nvp("mandatory_key", value);
+            QString sValue = obj.getMandatoryKey()->getValue()->data(Qt::EditRole).toString();
+            ar << make_nvp("mandatory_key", sValue);
 
             auto pKeysTreeItem = obj.getKeys();
             ar << make_nvp("keys", *pKeysTreeItem);
@@ -62,9 +62,9 @@ namespace boost
             ar >> make_nvp("name", sText);
             obj.setText(QString::fromStdString(sText));
 
-            QVariant value;
-            ar >> make_nvp("mandatory_key", value);
-            obj.getMandatoryKey()->getValue()->setData(value, Qt::EditRole);
+            QString sValue;
+            ar >> make_nvp("mandatory_key", sValue);
+            obj.getMandatoryKey()->getValue()->setData(sValue, Qt::EditRole);
 
             auto pKeysTreeItem = obj.getKeys();
             ar >> make_nvp("keys", *pKeysTreeItem);
