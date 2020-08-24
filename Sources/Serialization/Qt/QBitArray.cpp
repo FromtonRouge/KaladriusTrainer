@@ -17,45 +17,47 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#include "InputKeysTreeItemSerialize.h"
-#include "TreeItemSerialize.h"
-#include "Qt/QBitArray.h"
-#include "../Tree/Models/ItemDataRole.h"
+#include "QBitArray.h"
 #include <boost/serialization/nvp.hpp>
-#include <boost/serialization/base_object.hpp>
-#include "ExplicitInstanciation.h"
+#include <boost/serialization/split_free.hpp>
+#include <boost/serialization/vector.hpp>
+#include "../ExplicitInstanciation.h"
+#include <vector>
 
-EXPLICIT_INSTANCIATION(InputKeysTreeItem)
-BOOST_CLASS_EXPORT_IMPLEMENT(InputKeysTreeItem) // For serializing from a base pointer
+EXPLICIT_INSTANCIATION(QBitArray)
 
 namespace boost
 {
     namespace serialization
     {
-        template<class Archive> void serialize(Archive& ar, InputKeysTreeItem& obj,  const unsigned int fileVersion)
+        template<class Archive> void serialize(Archive& ar, QBitArray& obj,  const unsigned int fileVersion)
         {
-            ar & make_nvp("base", base_object<TreeItem>(obj));
             split_free(ar, obj, fileVersion);
         }
 
-        template<class Archive> void save(Archive& ar, const InputKeysTreeItem& obj,  const unsigned int)
+        template<class Archive> void save(Archive& ar, const QBitArray& obj,  const unsigned int)
         {
-            std::string sText = obj.text().toStdString();
-            ar << make_nvp("keys", sText);
-
-            const QBitArray& bits = obj.data(InputKeyBitsRole).toBitArray();
+            const int iSize = obj.size();
+            std::vector<bool> bits(iSize, false);
+            for (int i=0; i<iSize; ++i)
+            {
+                bits[i] = obj.at(i);
+            }
             ar << make_nvp("bits", bits);
         }
 
-        template<class Archive> void load(Archive& ar, InputKeysTreeItem& obj,  const unsigned int)
+        template<class Archive> void load(Archive& ar, QBitArray& obj,  const unsigned int)
         {
-            std::string sText;
-            ar >> make_nvp("keys", sText);
-            obj.setText(QString::fromStdString(sText));
-
-            QBitArray bits;
+            std::vector<bool> bits;
             ar >> make_nvp("bits", bits);
-            obj.setKeyBits(bits);
+
+            const int iSize = int(bits.size());
+            obj.clear();
+            obj.resize(iSize);
+            for (int i=0; i<iSize; ++i)
+            {
+                obj.setBit(i, bits[i]);
+            }
         }
     }
 }

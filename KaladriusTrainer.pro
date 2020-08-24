@@ -80,6 +80,7 @@ SOURCES += \
     Sources/Serialization/ListTreeItemSerialize.cpp \
     Sources/Serialization/ListValueSerialize.cpp \
     Sources/Serialization/OutputTextTreeItemSerialize.cpp \
+    Sources/Serialization/Qt/QBitArray.cpp \
     Sources/Serialization/Qt/QByteArray.cpp \
     Sources/Serialization/Qt/QStandardItem.cpp \
     Sources/Serialization/Qt/QString.cpp \
@@ -175,6 +176,7 @@ HEADERS += \
     Sources/Serialization/ExplicitInstanciation.h \
     Sources/Serialization/ListValueSerialize.h \
     Sources/Serialization/OutputTextTreeItemSerialize.h \
+    Sources/Serialization/Qt/QBitArray.h \
     Sources/Serialization/Qt/QByteArray.h \
     Sources/Serialization/Qt/QStandardItem.h \
     Sources/Serialization/Qt/QString.h \
