@@ -20,7 +20,6 @@
 #include "ListTreeItemSerialize.h"
 #include "../Values/Types/ListValue.h"
 #include "TreeItemSerialize.h"
-#include "Qt/QVariant.h"
 #include "Qt/QStandardItem.h"
 #include "../Tree/Models/ItemDataRole.h"
 #include <boost/serialization/nvp.hpp>
