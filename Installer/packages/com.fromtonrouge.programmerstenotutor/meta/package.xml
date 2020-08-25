@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Package>
-    <DisplayName>Programmer Steno Tutor</DisplayName>
-    <Description>Learn Programmer Steno with this application.</Description>
-    <Version>0.1.0</Version>
-    <ReleaseDate>2018-03-06</ReleaseDate>
-    <Default>script</Default>
-    <Script>installscript.qs</Script>
-</Package>

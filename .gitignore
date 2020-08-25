@@ -5,3 +5,5 @@
 /build
 /Installer/setup
 /Installer/setup.exe
+/Installer/packages/com.fromtonrouge.kaladriustrainer/data
+/Installer/KaladriusTrainerInstaller.exe
