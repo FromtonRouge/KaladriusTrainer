@@ -193,6 +193,7 @@ HEADERS += \
     Sources/Serialization/Serialize.h \
     Sources/Serialization/TheoryTreeItemSerialize.h \
     Sources/Serialization/TreeItemSerialize.h \
+    Sources/Serialization/ValueSerialize.h \
     Sources/Serialization/ValueTreeItemSerialize.h \
     Sources/Statistics/StatisticsMainWindow.h \
     Sources/Statistics/StatisticsView.h \

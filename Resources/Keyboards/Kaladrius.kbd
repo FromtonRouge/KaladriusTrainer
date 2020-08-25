@@ -1254,7 +1254,7 @@ Pgo=
 		<name_is_editable>0</name_is_editable>
 		<rows>72</rows>
 		<columns>2</columns>
-		<item class_id="5" class_name="KeycapTreeItem" tracking_level="1" version="2" object_id="_4">
+		<item class_id="5" class_name="KeycapTreeItem" tracking_level="1" version="0" object_id="_4">
 			<base>
 				<base object_id="_5"></base>
 			</base>
@@ -4652,21 +4652,16 @@ Pgo=
 						<user_type_name>
 							<string>ListValue</string>
 						</user_type_name>
-						<variant class_id="17" tracking_level="0" version="0">
+						<variant class_id="17" tracking_level="0" version="1">
 							<label>
 								<string>Keycaps</string>
 							</label>
-							<default_value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string></string>
-									</keycap_id>
-								</variant>
-							</default_value>
+							<type_name>KeycapRef</type_name>
+							<value>
+								<keycap_id>
+									<string></string>
+								</keycap_id>
+							</value>
 							<naming_policy>2</naming_policy>
 						</variant>
 					</value>
@@ -4741,17 +4736,12 @@ Pgo=
 							<label>
 								<string>Keycaps</string>
 							</label>
-							<default_value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string></string>
-									</keycap_id>
-								</variant>
-							</default_value>
+							<type_name>KeycapRef</type_name>
+							<value>
+								<keycap_id>
+									<string></string>
+								</keycap_id>
+							</value>
 							<naming_policy>2</naming_policy>
 						</variant>
 					</value>
@@ -4826,17 +4816,12 @@ Pgo=
 							<label>
 								<string>Keycaps</string>
 							</label>
-							<default_value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string></string>
-									</keycap_id>
-								</variant>
-							</default_value>
+							<type_name>KeycapRef</type_name>
+							<value>
+								<keycap_id>
+									<string></string>
+								</keycap_id>
+							</value>
 							<naming_policy>2</naming_policy>
 						</variant>
 					</value>
@@ -4887,17 +4872,12 @@ Pgo=
 							<label>
 								<string>Keycaps</string>
 							</label>
-							<default_value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string></string>
-									</keycap_id>
-								</variant>
-							</default_value>
+							<type_name>KeycapRef</type_name>
+							<value>
+								<keycap_id>
+									<string></string>
+								</keycap_id>
+							</value>
 							<naming_policy>2</naming_policy>
 						</variant>
 					</value>
@@ -4948,17 +4928,12 @@ Pgo=
 							<label>
 								<string>Keycaps</string>
 							</label>
-							<default_value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string></string>
-									</keycap_id>
-								</variant>
-							</default_value>
+							<type_name>KeycapRef</type_name>
+							<value>
+								<keycap_id>
+									<string></string>
+								</keycap_id>
+							</value>
 							<naming_policy>2</naming_policy>
 						</variant>
 					</value>

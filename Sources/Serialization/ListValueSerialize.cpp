@@ -18,7 +18,7 @@
 // ======================================================================
 
 #include "ListValueSerialize.h"
-#include "Qt/QVariant.h"
+#include "ValueSerialize.h"
 #include "Qt/QString.h"
 #include <boost/serialization/split_free.hpp>
 #include <boost/serialization/nvp.hpp>
@@ -30,10 +30,22 @@ namespace boost
 {
     namespace serialization
     {
-        template<class Archive> void serialize(Archive& ar, ListValue& obj,  const unsigned int)
+        template<class Archive> void serialize(Archive& ar, ListValue& obj,  const unsigned int iVersion)
+        {
+            split_free(ar, obj, iVersion);
+        }
+
+        template<class Archive> void save(Archive& ar, const ListValue& obj,  const unsigned int)
         {
             ar & make_nvp("label", obj.sLabel);
-            ar & make_nvp("default_value", obj.defaultValue);
+            saveValue(ar, obj.defaultValue);
+            ar & make_nvp("naming_policy", obj.namingPolicy);
+        }
+
+        template<class Archive> void load(Archive& ar, ListValue& obj,  const unsigned int)
+        {
+            ar & make_nvp("label", obj.sLabel);
+            loadValue(ar, obj.defaultValue);
             ar & make_nvp("naming_policy", obj.namingPolicy);
         }
     }
