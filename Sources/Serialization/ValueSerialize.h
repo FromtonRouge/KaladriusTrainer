@@ -20,6 +20,8 @@
 #pragma once
 
 #include "KeycapRefSerialize.h"
+#include "ListValueSerialize.h"
+#include "FingerSerialize.h"
 #include "Qt/QBitArray.h"
 #include "Qt/QByteArray.h"
 #include "Qt/QColor.h"
@@ -71,6 +73,14 @@ namespace boost
                         {
                             save<Archive, KeycapRef>(ar, value);
                         }
+                        else if (qMetaTypeId<ListValue>() == iUserType)
+                        {
+                            save<Archive, ListValue>(ar, value);
+                        }
+                        else if (qMetaTypeId<Finger>() == iUserType)
+                        {
+                            save<Archive, Finger>(ar, value);
+                        }
                         else
                         {
                             qDebug() << "saveValue: Unhandled type" << QString::fromStdString(sTypeName);
@@ -105,6 +115,14 @@ namespace boost
                         if (qMetaTypeId<KeycapRef>() == iUserType)
                         {
                             load<Archive, KeycapRef>(ar, value);
+                        }
+                        else if (qMetaTypeId<ListValue>() == iUserType)
+                        {
+                            load<Archive, ListValue>(ar, value);
+                        }
+                        else if (qMetaTypeId<Finger>() == iUserType)
+                        {
+                            load<Archive, Finger>(ar, value);
                         }
                         else
                         {

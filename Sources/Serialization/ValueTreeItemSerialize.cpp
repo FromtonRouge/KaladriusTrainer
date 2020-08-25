@@ -19,7 +19,7 @@
 
 #include "ValueTreeItemSerialize.h"
 #include "TreeItemSerialize.h"
-#include "Qt/QVariant.h"
+#include "ValueSerialize.h"
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/base_object.hpp>
 #include "ExplicitInstanciation.h"
@@ -40,13 +40,13 @@ namespace boost
         template<class Archive> void save(Archive& ar, const ValueTreeItem& obj,  const unsigned int)
         {
             const QVariant& value = obj.data(Qt::EditRole);
-            ar << make_nvp("value", value);
+            saveValue(ar, value);
         }
 
         template<class Archive> void load(Archive& ar, ValueTreeItem& obj,  const unsigned int)
         {
             QVariant value;
-            ar >> make_nvp("value", value);
+            loadValue(ar, value);
             obj.setData(value, Qt::EditRole);
         }
     }

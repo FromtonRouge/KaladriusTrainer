@@ -4602,20 +4602,15 @@ Pgo=
 						<rows>0</rows>
 						<columns>0</columns>
 					</item>
-					<item class_id="14" class_name="ValueTreeItem" tracking_level="1" version="0" object_id="_302">
+					<item class_id="14" class_name="ValueTreeItem" tracking_level="1" version="1" object_id="_302">
 						<base>
 							<base object_id="_303"></base>
 						</base>
+						<type_name>KeycapRef</type_name>
 						<value class_id="15" tracking_level="0" version="0">
-							<type>1024</type>
-							<user_type_name>
-								<string>KeycapRef</string>
-							</user_type_name>
-							<variant class_id="16" tracking_level="0" version="0">
-								<keycap_id>
-									<string>g3008</string>
-								</keycap_id>
-							</variant>
+							<keycap_id>
+								<string>g3008</string>
+							</keycap_id>
 						</value>
 					</item>
 					<item class_id_reference="4" object_id="_304">
@@ -4630,16 +4625,11 @@ Pgo=
 						<base>
 							<base object_id="_307"></base>
 						</base>
+						<type_name>KeycapRef</type_name>
 						<value>
-							<type>1024</type>
-							<user_type_name>
-								<string>KeycapRef</string>
-							</user_type_name>
-							<variant>
-								<keycap_id>
-									<string>g3328</string>
-								</keycap_id>
-							</variant>
+							<keycap_id>
+								<string>g3328</string>
+							</keycap_id>
 						</value>
 					</item>
 				</item>
@@ -4647,23 +4637,18 @@ Pgo=
 					<base>
 						<base object_id="_309"></base>
 					</base>
-					<value>
-						<type>1024</type>
-						<user_type_name>
-							<string>ListValue</string>
-						</user_type_name>
-						<variant class_id="17" tracking_level="0" version="1">
-							<label>
-								<string>Keycaps</string>
-							</label>
-							<type_name>KeycapRef</type_name>
-							<value>
-								<keycap_id>
-									<string></string>
-								</keycap_id>
-							</value>
-							<naming_policy>2</naming_policy>
-						</variant>
+					<type_name>ListValue</type_name>
+					<value class_id="16" tracking_level="0" version="0">
+						<label>
+							<string>Keycaps</string>
+						</label>
+						<type_name>KeycapRef</type_name>
+						<value>
+							<keycap_id>
+								<string></string>
+							</keycap_id>
+						</value>
+						<naming_policy>2</naming_policy>
 					</value>
 				</item>
 				<item class_id_reference="4" object_id="_310">
@@ -4686,16 +4671,11 @@ Pgo=
 						<base>
 							<base object_id="_315"></base>
 						</base>
+						<type_name>KeycapRef</type_name>
 						<value>
-							<type>1024</type>
-							<user_type_name>
-								<string>KeycapRef</string>
-							</user_type_name>
-							<variant>
-								<keycap_id>
-									<string>g2998</string>
-								</keycap_id>
-							</variant>
+							<keycap_id>
+								<string>g2998</string>
+							</keycap_id>
 						</value>
 					</item>
 					<item class_id_reference="4" object_id="_316">
@@ -4710,16 +4690,11 @@ Pgo=
 						<base>
 							<base object_id="_319"></base>
 						</base>
+						<type_name>KeycapRef</type_name>
 						<value>
-							<type>1024</type>
-							<user_type_name>
-								<string>KeycapRef</string>
-							</user_type_name>
-							<variant>
-								<keycap_id>
-									<string>g3278</string>
-								</keycap_id>
-							</variant>
+							<keycap_id>
+								<string>g3278</string>
+							</keycap_id>
 						</value>
 					</item>
 				</item>
@@ -4727,23 +4702,18 @@ Pgo=
 					<base>
 						<base object_id="_321"></base>
 					</base>
+					<type_name>ListValue</type_name>
 					<value>
-						<type>1024</type>
-						<user_type_name>
-							<string>ListValue</string>
-						</user_type_name>
-						<variant>
-							<label>
-								<string>Keycaps</string>
-							</label>
-							<type_name>KeycapRef</type_name>
-							<value>
-								<keycap_id>
-									<string></string>
-								</keycap_id>
-							</value>
-							<naming_policy>2</naming_policy>
-						</variant>
+						<label>
+							<string>Keycaps</string>
+						</label>
+						<type_name>KeycapRef</type_name>
+						<value>
+							<keycap_id>
+								<string></string>
+							</keycap_id>
+						</value>
+						<naming_policy>2</naming_policy>
 					</value>
 				</item>
 				<item class_id_reference="4" object_id="_322">
@@ -4766,16 +4736,11 @@ Pgo=
 						<base>
 							<base object_id="_327"></base>
 						</base>
+						<type_name>KeycapRef</type_name>
 						<value>
-							<type>1024</type>
-							<user_type_name>
-								<string>KeycapRef</string>
-							</user_type_name>
-							<variant>
-								<keycap_id>
-									<string>g3358</string>
-								</keycap_id>
-							</variant>
+							<keycap_id>
+								<string>g3358</string>
+							</keycap_id>
 						</value>
 					</item>
 					<item class_id_reference="4" object_id="_328">
@@ -4790,16 +4755,11 @@ Pgo=
 						<base>
 							<base object_id="_331"></base>
 						</base>
+						<type_name>KeycapRef</type_name>
 						<value>
-							<type>1024</type>
-							<user_type_name>
-								<string>KeycapRef</string>
-							</user_type_name>
-							<variant>
-								<keycap_id>
-									<string>g3288</string>
-								</keycap_id>
-							</variant>
+							<keycap_id>
+								<string>g3288</string>
+							</keycap_id>
 						</value>
 					</item>
 				</item>
@@ -4807,23 +4767,18 @@ Pgo=
 					<base>
 						<base object_id="_333"></base>
 					</base>
+					<type_name>ListValue</type_name>
 					<value>
-						<type>1024</type>
-						<user_type_name>
-							<string>ListValue</string>
-						</user_type_name>
-						<variant>
-							<label>
-								<string>Keycaps</string>
-							</label>
-							<type_name>KeycapRef</type_name>
-							<value>
-								<keycap_id>
-									<string></string>
-								</keycap_id>
-							</value>
-							<naming_policy>2</naming_policy>
-						</variant>
+						<label>
+							<string>Keycaps</string>
+						</label>
+						<type_name>KeycapRef</type_name>
+						<value>
+							<keycap_id>
+								<string></string>
+							</keycap_id>
+						</value>
+						<naming_policy>2</naming_policy>
 					</value>
 				</item>
 				<item class_id_reference="4" object_id="_334">
@@ -4846,16 +4801,11 @@ Pgo=
 						<base>
 							<base object_id="_339"></base>
 						</base>
+						<type_name>KeycapRef</type_name>
 						<value>
-							<type>1024</type>
-							<user_type_name>
-								<string>KeycapRef</string>
-							</user_type_name>
-							<variant>
-								<keycap_id>
-									<string>g2888</string>
-								</keycap_id>
-							</variant>
+							<keycap_id>
+								<string>g2888</string>
+							</keycap_id>
 						</value>
 					</item>
 				</item>
@@ -4863,23 +4813,18 @@ Pgo=
 					<base>
 						<base object_id="_341"></base>
 					</base>
+					<type_name>ListValue</type_name>
 					<value>
-						<type>1024</type>
-						<user_type_name>
-							<string>ListValue</string>
-						</user_type_name>
-						<variant>
-							<label>
-								<string>Keycaps</string>
-							</label>
-							<type_name>KeycapRef</type_name>
-							<value>
-								<keycap_id>
-									<string></string>
-								</keycap_id>
-							</value>
-							<naming_policy>2</naming_policy>
-						</variant>
+						<label>
+							<string>Keycaps</string>
+						</label>
+						<type_name>KeycapRef</type_name>
+						<value>
+							<keycap_id>
+								<string></string>
+							</keycap_id>
+						</value>
+						<naming_policy>2</naming_policy>
 					</value>
 				</item>
 				<item class_id_reference="4" object_id="_342">
@@ -4902,16 +4847,11 @@ Pgo=
 						<base>
 							<base object_id="_347"></base>
 						</base>
+						<type_name>KeycapRef</type_name>
 						<value>
-							<type>1024</type>
-							<user_type_name>
-								<string>KeycapRef</string>
-							</user_type_name>
-							<variant>
-								<keycap_id>
-									<string>g3088</string>
-								</keycap_id>
-							</variant>
+							<keycap_id>
+								<string>g3088</string>
+							</keycap_id>
 						</value>
 					</item>
 				</item>
@@ -4919,23 +4859,18 @@ Pgo=
 					<base>
 						<base object_id="_349"></base>
 					</base>
+					<type_name>ListValue</type_name>
 					<value>
-						<type>1024</type>
-						<user_type_name>
-							<string>ListValue</string>
-						</user_type_name>
-						<variant>
-							<label>
-								<string>Keycaps</string>
-							</label>
-							<type_name>KeycapRef</type_name>
-							<value>
-								<keycap_id>
-									<string></string>
-								</keycap_id>
-							</value>
-							<naming_policy>2</naming_policy>
-						</variant>
+						<label>
+							<string>Keycaps</string>
+						</label>
+						<type_name>KeycapRef</type_name>
+						<value>
+							<keycap_id>
+								<string></string>
+							</keycap_id>
+						</value>
+						<naming_policy>2</naming_policy>
 					</value>
 				</item>
 			</linked_special_keys>
@@ -4946,7 +4881,7 @@ Pgo=
 				<name_is_editable>0</name_is_editable>
 				<rows>9</rows>
 				<columns>2</columns>
-				<item class_id="18" class_name="LinkedDictionaryTreeItem" tracking_level="1" version="0" object_id="_352">
+				<item class_id="17" class_name="LinkedDictionaryTreeItem" tracking_level="1" version="0" object_id="_352">
 					<base>
 						<base object_id="_353"></base>
 					</base>
@@ -4970,16 +4905,11 @@ Pgo=
 							<base>
 								<base object_id="_359"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g2848</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g2848</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_360">
@@ -4994,16 +4924,11 @@ Pgo=
 							<base>
 								<base object_id="_363"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g2838</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g2838</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_364">
@@ -5018,16 +4943,11 @@ Pgo=
 							<base>
 								<base object_id="_367"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g2828</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g2828</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_368">
@@ -5042,16 +4962,11 @@ Pgo=
 							<base>
 								<base object_id="_371"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g2818</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g2818</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_372">
@@ -5066,16 +4981,11 @@ Pgo=
 							<base>
 								<base object_id="_375"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g2948</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g2948</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_376">
@@ -5090,16 +5000,11 @@ Pgo=
 							<base>
 								<base object_id="_379"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3088</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3088</string>
+								</keycap_id>
 							</value>
 						</item>
 					</linked_keys>
@@ -5109,7 +5014,7 @@ Pgo=
 						<base object_id="_381"></base>
 					</base>
 				</item>
-				<item class_id_reference="18" object_id="_382">
+				<item class_id_reference="17" object_id="_382">
 					<base>
 						<base object_id="_383"></base>
 					</base>
@@ -5133,16 +5038,11 @@ Pgo=
 							<base>
 								<base object_id="_389"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g2988</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g2988</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_390">
@@ -5157,16 +5057,11 @@ Pgo=
 							<base>
 								<base object_id="_393"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3128</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3128</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_394">
@@ -5181,16 +5076,11 @@ Pgo=
 							<base>
 								<base object_id="_397"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g2978</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g2978</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_398">
@@ -5205,16 +5095,11 @@ Pgo=
 							<base>
 								<base object_id="_401"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3118</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3118</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_402">
@@ -5229,16 +5114,11 @@ Pgo=
 							<base>
 								<base object_id="_405"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g2968</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g2968</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_406">
@@ -5253,16 +5133,11 @@ Pgo=
 							<base>
 								<base object_id="_409"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3108</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3108</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_410">
@@ -5277,16 +5152,11 @@ Pgo=
 							<base>
 								<base object_id="_413"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g2958</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g2958</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_414">
@@ -5301,16 +5171,11 @@ Pgo=
 							<base>
 								<base object_id="_417"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3098</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3098</string>
+								</keycap_id>
 							</value>
 						</item>
 					</linked_keys>
@@ -5320,7 +5185,7 @@ Pgo=
 						<base object_id="_419"></base>
 					</base>
 				</item>
-				<item class_id_reference="18" object_id="_420">
+				<item class_id_reference="17" object_id="_420">
 					<base>
 						<base object_id="_421"></base>
 					</base>
@@ -5344,16 +5209,11 @@ Pgo=
 							<base>
 								<base object_id="_427"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g2988</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g2988</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_428">
@@ -5368,16 +5228,11 @@ Pgo=
 							<base>
 								<base object_id="_431"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3128</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3128</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_432">
@@ -5392,16 +5247,11 @@ Pgo=
 							<base>
 								<base object_id="_435"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g2978</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g2978</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_436">
@@ -5416,16 +5266,11 @@ Pgo=
 							<base>
 								<base object_id="_439"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3118</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3118</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_440">
@@ -5440,16 +5285,11 @@ Pgo=
 							<base>
 								<base object_id="_443"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g2968</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g2968</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_444">
@@ -5464,16 +5304,11 @@ Pgo=
 							<base>
 								<base object_id="_447"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3108</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3108</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_448">
@@ -5488,16 +5323,11 @@ Pgo=
 							<base>
 								<base object_id="_451"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g2958</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g2958</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_452">
@@ -5512,16 +5342,11 @@ Pgo=
 							<base>
 								<base object_id="_455"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3098</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3098</string>
+								</keycap_id>
 							</value>
 						</item>
 					</linked_keys>
@@ -5531,7 +5356,7 @@ Pgo=
 						<base object_id="_457"></base>
 					</base>
 				</item>
-				<item class_id_reference="18" object_id="_458">
+				<item class_id_reference="17" object_id="_458">
 					<base>
 						<base object_id="_459"></base>
 					</base>
@@ -5555,16 +5380,11 @@ Pgo=
 							<base>
 								<base object_id="_465"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g2878</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g2878</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_466">
@@ -5579,16 +5399,11 @@ Pgo=
 							<base>
 								<base object_id="_469"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g2888</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g2888</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_470">
@@ -5603,16 +5418,11 @@ Pgo=
 							<base>
 								<base object_id="_473"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g2898</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g2898</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_474">
@@ -5627,16 +5437,11 @@ Pgo=
 							<base>
 								<base object_id="_477"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g2908</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g2908</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_478">
@@ -5651,16 +5456,11 @@ Pgo=
 							<base>
 								<base object_id="_481"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g2918</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g2918</string>
+								</keycap_id>
 							</value>
 						</item>
 					</linked_keys>
@@ -5670,7 +5470,7 @@ Pgo=
 						<base object_id="_483"></base>
 					</base>
 				</item>
-				<item class_id_reference="18" object_id="_484">
+				<item class_id_reference="17" object_id="_484">
 					<base>
 						<base object_id="_485"></base>
 					</base>
@@ -5694,16 +5494,11 @@ Pgo=
 							<base>
 								<base object_id="_491"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3018</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3018</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_492">
@@ -5718,16 +5513,11 @@ Pgo=
 							<base>
 								<base object_id="_495"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3138</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3138</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_496">
@@ -5742,16 +5532,11 @@ Pgo=
 							<base>
 								<base object_id="_499"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3028</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3028</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_500">
@@ -5766,16 +5551,11 @@ Pgo=
 							<base>
 								<base object_id="_503"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3148</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3148</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_504">
@@ -5790,16 +5570,11 @@ Pgo=
 							<base>
 								<base object_id="_507"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3038</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3038</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_508">
@@ -5814,16 +5589,11 @@ Pgo=
 							<base>
 								<base object_id="_511"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3158</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3158</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_512">
@@ -5838,16 +5608,11 @@ Pgo=
 							<base>
 								<base object_id="_515"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3048</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3048</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_516">
@@ -5862,16 +5627,11 @@ Pgo=
 							<base>
 								<base object_id="_519"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3168</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3168</string>
+								</keycap_id>
 							</value>
 						</item>
 					</linked_keys>
@@ -5881,7 +5641,7 @@ Pgo=
 						<base object_id="_521"></base>
 					</base>
 				</item>
-				<item class_id_reference="18" object_id="_522">
+				<item class_id_reference="17" object_id="_522">
 					<base>
 						<base object_id="_523"></base>
 					</base>
@@ -5905,16 +5665,11 @@ Pgo=
 							<base>
 								<base object_id="_529"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3058</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3058</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_530">
@@ -5929,16 +5684,11 @@ Pgo=
 							<base>
 								<base object_id="_533"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3178</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3178</string>
+								</keycap_id>
 							</value>
 						</item>
 					</linked_keys>
@@ -5948,7 +5698,7 @@ Pgo=
 						<base object_id="_535"></base>
 					</base>
 				</item>
-				<item class_id_reference="18" object_id="_536">
+				<item class_id_reference="17" object_id="_536">
 					<base>
 						<base object_id="_537"></base>
 					</base>
@@ -5972,16 +5722,11 @@ Pgo=
 							<base>
 								<base object_id="_543"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3018</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3018</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_544">
@@ -5996,16 +5741,11 @@ Pgo=
 							<base>
 								<base object_id="_547"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3138</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3138</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_548">
@@ -6020,16 +5760,11 @@ Pgo=
 							<base>
 								<base object_id="_551"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3028</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3028</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_552">
@@ -6044,16 +5779,11 @@ Pgo=
 							<base>
 								<base object_id="_555"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3148</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3148</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_556">
@@ -6068,16 +5798,11 @@ Pgo=
 							<base>
 								<base object_id="_559"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3038</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3038</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_560">
@@ -6092,16 +5817,11 @@ Pgo=
 							<base>
 								<base object_id="_563"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3158</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3158</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_564">
@@ -6116,16 +5836,11 @@ Pgo=
 							<base>
 								<base object_id="_567"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3048</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3048</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_568">
@@ -6140,16 +5855,11 @@ Pgo=
 							<base>
 								<base object_id="_571"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3168</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3168</string>
+								</keycap_id>
 							</value>
 						</item>
 					</linked_keys>
@@ -6159,7 +5869,7 @@ Pgo=
 						<base object_id="_573"></base>
 					</base>
 				</item>
-				<item class_id_reference="18" object_id="_574">
+				<item class_id_reference="17" object_id="_574">
 					<base>
 						<base object_id="_575"></base>
 					</base>
@@ -6183,16 +5893,11 @@ Pgo=
 							<base>
 								<base object_id="_581"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3298</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3298</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_582">
@@ -6207,16 +5912,11 @@ Pgo=
 							<base>
 								<base object_id="_585"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3308</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3308</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_586">
@@ -6231,16 +5931,11 @@ Pgo=
 							<base>
 								<base object_id="_589"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3318</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3318</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_590">
@@ -6255,16 +5950,11 @@ Pgo=
 							<base>
 								<base object_id="_593"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3338</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3338</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_594">
@@ -6279,16 +5969,11 @@ Pgo=
 							<base>
 								<base object_id="_597"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3368</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3368</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_598">
@@ -6303,16 +5988,11 @@ Pgo=
 							<base>
 								<base object_id="_601"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3348</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3348</string>
+								</keycap_id>
 							</value>
 						</item>
 					</linked_keys>
@@ -6322,7 +6002,7 @@ Pgo=
 						<base object_id="_603"></base>
 					</base>
 				</item>
-				<item class_id_reference="18" object_id="_604">
+				<item class_id_reference="17" object_id="_604">
 					<base>
 						<base object_id="_605"></base>
 					</base>
@@ -6346,16 +6026,11 @@ Pgo=
 							<base>
 								<base object_id="_611"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3298</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3298</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_612">
@@ -6370,16 +6045,11 @@ Pgo=
 							<base>
 								<base object_id="_615"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3308</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3308</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_616">
@@ -6394,16 +6064,11 @@ Pgo=
 							<base>
 								<base object_id="_619"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3318</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3318</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_620">
@@ -6418,16 +6083,11 @@ Pgo=
 							<base>
 								<base object_id="_623"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3338</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3338</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_624">
@@ -6442,16 +6102,11 @@ Pgo=
 							<base>
 								<base object_id="_627"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3368</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3368</string>
+								</keycap_id>
 							</value>
 						</item>
 						<item class_id_reference="4" object_id="_628">
@@ -6466,16 +6121,11 @@ Pgo=
 							<base>
 								<base object_id="_631"></base>
 							</base>
+							<type_name>KeycapRef</type_name>
 							<value>
-								<type>1024</type>
-								<user_type_name>
-									<string>KeycapRef</string>
-								</user_type_name>
-								<variant>
-									<keycap_id>
-										<string>g3348</string>
-									</keycap_id>
-								</variant>
+								<keycap_id>
+									<string>g3348</string>
+								</keycap_id>
 							</value>
 						</item>
 					</linked_keys>

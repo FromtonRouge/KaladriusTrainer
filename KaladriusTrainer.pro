@@ -88,7 +88,6 @@ SOURCES += \
     Sources/Serialization/Qt/QRectF.cpp \
     Sources/Serialization/Qt/QStandardItem.cpp \
     Sources/Serialization/Qt/QString.cpp \
-    Sources/Serialization/Qt/QVariant.cpp \
     Sources/Serialization/Serialize.cpp \
     Sources/Serialization/TheoryTreeItemSerialize.cpp \
     Sources/Serialization/TreeItemSerialize.cpp \
