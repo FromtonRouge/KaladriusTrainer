@@ -36,7 +36,11 @@ namespace boost
 
         template<class Archive> void save(Archive& ar, const QColor& obj,  const unsigned int)
         {
-            const std::string& sColor = obj.name(QColor::HexArgb).toStdString();
+            std::string sColor;
+            if (obj.isValid())
+            {
+                sColor = obj.name(QColor::HexArgb).toStdString();
+            }
             ar << make_nvp("color", sColor);
         }
 
@@ -44,7 +48,15 @@ namespace boost
         {
             std::string sColor;
             ar >> make_nvp("color", sColor);
-            obj.setNamedColor(QString::fromStdString(sColor));
+
+            if (!sColor.empty())
+            {
+                obj.setNamedColor(QString::fromStdString(sColor));
+            }
+            else
+            {
+                obj = QColor();
+            }
         }
     }
 }

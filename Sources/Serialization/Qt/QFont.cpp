@@ -53,6 +53,9 @@ namespace boost
 
             b = obj.underline();
             ar & make_nvp("underline", b);
+
+            s = obj.styleName();
+            ar & make_nvp("styleName", s);
         }
 
         template<class Archive> void load(Archive& ar, QFont& obj,  const unsigned int)
@@ -77,6 +80,9 @@ namespace boost
 
             ar & make_nvp("underline", b);
             obj.setUnderline(b);
+
+            ar & make_nvp("styleName", s);
+            obj.setStyleName(s);
         }
     }
 }

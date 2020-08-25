@@ -31,5 +31,5 @@ namespace boost
     }
 }
 
-BOOST_CLASS_VERSION(KeycapTreeItem, 1)
+BOOST_CLASS_VERSION(KeycapTreeItem, 0)
 BOOST_CLASS_EXPORT_KEY(KeycapTreeItem) // For serializing from a base pointer
