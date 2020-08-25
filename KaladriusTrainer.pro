@@ -82,6 +82,10 @@ SOURCES += \
     Sources/Serialization/OutputTextTreeItemSerialize.cpp \
     Sources/Serialization/Qt/QBitArray.cpp \
     Sources/Serialization/Qt/QByteArray.cpp \
+    Sources/Serialization/Qt/QColor.cpp \
+    Sources/Serialization/Qt/QFont.cpp \
+    Sources/Serialization/Qt/QPointF.cpp \
+    Sources/Serialization/Qt/QRectF.cpp \
     Sources/Serialization/Qt/QStandardItem.cpp \
     Sources/Serialization/Qt/QString.cpp \
     Sources/Serialization/Qt/QVariant.cpp \
@@ -178,6 +182,10 @@ HEADERS += \
     Sources/Serialization/OutputTextTreeItemSerialize.h \
     Sources/Serialization/Qt/QBitArray.h \
     Sources/Serialization/Qt/QByteArray.h \
+    Sources/Serialization/Qt/QColor.h \
+    Sources/Serialization/Qt/QFont.h \
+    Sources/Serialization/Qt/QPointF.h \
+    Sources/Serialization/Qt/QRectF.h \
     Sources/Serialization/Qt/QStandardItem.h \
     Sources/Serialization/Qt/QString.h \
     Sources/Serialization/Qt/QVariant.h \

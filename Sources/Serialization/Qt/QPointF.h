@@ -19,20 +19,15 @@
 
 #pragma once
 
-#include <QtCore/qnamespace.h>
+#include <QtCore/QPointF>
+#include <boost/serialization/version.hpp>
 
-enum ItemDataRole
+namespace boost
 {
-    TreeItemTypeRole = Qt::UserRole + 1, ///< int. TreeItem::Type.
-    TreeItemIndexRole, ///< QModelIndex.
-    ListValueRole, ///< ListValue. Get the ListValue data of the index if possible.
-    BranchRole, ///< QByteArray.
-    RotationAngleRole, ///< qreal.
-    RotationOriginRole, ///< QPointF.
-    OuterBorderRole, ///< QRectF.
-    InputKeyBitsRole, ///< QBitArray.
-    EntriesIndexRole, ///< QModelIndex.
-    LevelTableNameRole, ///< QString.
-    LevelWordsTableNameRole, ///< QString.
-    MaxItemDataRole
-};
+    namespace serialization
+    {
+        template<class Archive> void serialize(Archive& ar, QPointF& obj,  const unsigned int fileVersion);
+    }
+}
+
+BOOST_CLASS_VERSION(QPointF, 0)

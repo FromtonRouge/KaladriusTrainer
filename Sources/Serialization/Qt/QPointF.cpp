@@ -17,22 +17,20 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================================
 
-#pragma once
+#include "QPointF.h"
+#include <boost/serialization/nvp.hpp>
+#include "../ExplicitInstanciation.h"
 
-#include <QtCore/qnamespace.h>
+EXPLICIT_INSTANCIATION(QPointF)
 
-enum ItemDataRole
+namespace boost
 {
-    TreeItemTypeRole = Qt::UserRole + 1, ///< int. TreeItem::Type.
-    TreeItemIndexRole, ///< QModelIndex.
-    ListValueRole, ///< ListValue. Get the ListValue data of the index if possible.
-    BranchRole, ///< QByteArray.
-    RotationAngleRole, ///< qreal.
-    RotationOriginRole, ///< QPointF.
-    OuterBorderRole, ///< QRectF.
-    InputKeyBitsRole, ///< QBitArray.
-    EntriesIndexRole, ///< QModelIndex.
-    LevelTableNameRole, ///< QString.
-    LevelWordsTableNameRole, ///< QString.
-    MaxItemDataRole
-};
+    namespace serialization
+    {
+        template<class Archive> void serialize(Archive& ar, QPointF& obj,  const unsigned int)
+        {
+            ar & make_nvp("x", obj.rx());
+            ar & make_nvp("y", obj.ry());
+        }
+    }
+}
