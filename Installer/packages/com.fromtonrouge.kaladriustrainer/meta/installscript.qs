@@ -38,6 +38,11 @@ Component.prototype.createOperations = function()
 
     if (systemInfo.productType === "windows")
     {
+        // Start menu shortcuts
         component.addOperation("CreateShortcut", "@TargetDir@/KaladriusTrainer.exe", "@StartMenuDir@/KaladriusTrainer.lnk", "workingDirectory=@TargetDir@");
+        component.addOperation("CreateShortcut", "@TargetDir@/maintenancetool.exe", "@StartMenuDir@/uninstall.lnk", "workingDirectory=@TargetDir@");
+
+        // Desktop shortcut
+        component.addOperation("CreateShortcut", "@TargetDir@/KaladriusTrainer.exe", "@DesktopDir@/KaladriusTrainer.lnk", "workingDirectory=@TargetDir@");
     }
 }
