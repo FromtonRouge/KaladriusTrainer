@@ -33,6 +33,7 @@
 #include <QtCore/QMetaType>
 #include <QtCore/QDebug>
 #include <boost/serialization/string.hpp>
+#include <boost/serialization/nvp.hpp>
 #include <string>
 
 namespace boost
