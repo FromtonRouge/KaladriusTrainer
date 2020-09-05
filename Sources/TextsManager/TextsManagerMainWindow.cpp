@@ -18,6 +18,7 @@
 // ======================================================================
 
 #include "TextsManagerMainWindow.h"
+#include "TextsModel.h"
 #include "../Main/Application.h"
 #include "../Database/Database.h"
 #include <ui_TextsManagerMainWindow.h>
@@ -35,6 +36,7 @@
 TextsManagerMainWindow::TextsManagerMainWindow(QWidget* pParent)
     : MainTabWindow(pParent)
     , _pUi(new Ui::TextsManagerMainWindow)
+    , _pTextsModel(new TextsModel(this))
 {
     _pUi->setupUi(this);
     _pUi->textEdit->setReadOnly(true);
@@ -51,6 +53,25 @@ void TextsManagerMainWindow::Init()
     auto pDatabase = qApp->getDatabase();
     pDatabase->createTextFilesTable();
     pDatabase->createTextsTable();
+
+    _pUi->treeViewTexts->setModel(_pTextsModel);
+    auto pItemSelectionModel = _pUi->treeViewTexts->selectionModel();
+    connect(pItemSelectionModel, &QItemSelectionModel::currentChanged, [&](const QModelIndex& current, const QModelIndex&)
+    {
+        if (current.parent().isValid())
+        {
+            const int iTextId = current.data(Qt::UserRole + 1).toInt();
+
+            QString sQuery = "SELECT Text FROM \"Texts\" WHERE ROWID == %1";
+            sQuery = sQuery.arg(iTextId);
+            QSqlQuery query = pDatabase->execute(sQuery);
+            if (query.next())
+            {
+                const QString& sText = query.value(0).toString();
+                _pUi->textEdit->setText(sText);
+            }
+        }
+    });
 }
 
 void TextsManagerMainWindow::on_actionAbout_triggered()
@@ -69,6 +90,8 @@ void TextsManagerMainWindow::on_actionImport_Text_triggered()
 
         QFileInfo fileInfo(sTextFilePath);
         settings.setValue("lastTextImportDirectory", fileInfo.absoluteDir().absolutePath());
+
+        _pTextsModel->reset();
     }
 }
 
@@ -82,6 +105,8 @@ void TextsManagerMainWindow::on_actionImport_Directory_triggered()
         importDirectory(sDirectory);
 
         settings.setValue("lastTextImportDirectory", sDirectory);
+
+        _pTextsModel->reset();
     }
 }
 
@@ -186,7 +211,7 @@ void TextsManagerMainWindow::importTextFile(const QString& sFilePath)
 
                 if (bSplitText)
                 {
-                    if (sText.size() > 100 && sText.size() <= 500)
+                    if (sText.size() > 100)
                     {
                         QString sSimplified = sText.simplified();
 

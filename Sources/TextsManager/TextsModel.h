@@ -19,37 +19,18 @@
 
 #pragma once
 
-#include "../Main/MainTabWindow.h"
-#include <QtCore/QScopedPointer>
+#include <QtGui/QStandardItemModel>
 
-namespace Ui
+class TextsModel : public QStandardItemModel
 {
-    class TextsManagerMainWindow;
-}
-
-class TextsModel;
-
-class TextsManagerMainWindow : public MainTabWindow
-{
-    Q_OBJECT
-
 public:
-    TextsManagerMainWindow(QWidget* pParent = nullptr);
-    ~TextsManagerMainWindow();
+    TextsModel(QObject* pParent = nullptr);
 
-    void Init() override;
+    void reset();
 
-protected slots:
-    void on_actionAbout_triggered();
-    void on_actionImport_Text_triggered();
-    void on_actionImport_Directory_triggered();
-
-private:
-    void importDirectory(const QString& sDirectory);
-    void importTextFile(const QString& sFilePath);
-
-private:
-    QScopedPointer<Ui::TextsManagerMainWindow> _pUi;
-    TextsModel* _pTextsModel = nullptr;
+    bool hasChildren(const QModelIndex &parent) const override;
+    bool canFetchMore(const QModelIndex &parent) const override;
+    void fetchMore(const QModelIndex &parent) override;
+    QVariant headerData(int iSection, Qt::Orientation orientation, int iRole) const override;
 };
 
