@@ -313,11 +313,11 @@ void TextsManagerMainWindow::importTextFile(const QString& sFilePath)
                 QVector<QVariantList> rows;
                 for (const QString& sText : texts)
                 {
-                    QVariantList values = {sText, iTextFileId};
+                    QVariantList values = {sText, sText.size(), sText.contains("\""), iTextFileId};
                     rows << values;
                 }
 
-                if (pDatabase->insertValues("Texts", {"Text", "TextFileId"}, rows))
+                if (pDatabase->insertValues("Texts", {"Text", "Characters", "HasQuotes", "TextFileId"}, rows))
                 {
                     const QString sOutput = QString("%1 texts imported from \"%2\"").arg(texts.size()).arg(fi.fileName());
                     std::cout << sOutput.toStdString() << std::endl;

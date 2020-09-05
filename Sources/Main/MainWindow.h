@@ -44,7 +44,7 @@ public:
 protected slots:
     void on_actionAbout_triggered();
     void delayedRestoreState();
-    void onCountdownTimerDone();
+    void onTypingTestDone();
 
 protected:
     virtual bool event(QEvent* pEvent) override;

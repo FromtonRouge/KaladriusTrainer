@@ -79,19 +79,29 @@ void LevelsTreeView::restart()
                     {
                         emit sendWordsToPractice({}, {});
 
-                        QString sQuery = "SELECT COUNT(ROWID) FROM \"Texts\"";
+                        // TODO: Progression system
+                        const int iNbCharactersLimit = 200;
+                        const bool bHasQuotes = false;
+
+                        QString sQuery = "SELECT ROWID FROM \"Texts\" WHERE Characters < %1 AND HasQuotes == %2";
+                        sQuery = sQuery.arg(iNbCharactersLimit).arg(bHasQuotes);
                         QSqlQuery query = pDatabase->execute(sQuery);
-                        int iTextId = 0;
-                        if (query.next())
+                        QVector<int> textIds;
+                        while (query.next())
                         {
-                            const int iCount = query.value(0).toInt();
-                            iTextId = QRandomGenerator::global()->bounded(1, iCount+1);
+                            textIds << query.value(0).toInt();
                         }
 
-                        if (iTextId)
+                        int iRow = -1;
+                        if (textIds.isEmpty() == false)
+                        {
+                            iRow = QRandomGenerator::global()->bounded(0, textIds.size());
+                        }
+
+                        if (iRow != -1)
                         {
                             sQuery = "SELECT Text FROM \"Texts\" WHERE ROWID == %1";
-                            sQuery = sQuery.arg(iTextId);
+                            sQuery = sQuery.arg(textIds[iRow]);
                             QSqlQuery query = pDatabase->execute(sQuery);
                             if (query.next())
                             {
@@ -152,7 +162,7 @@ void LevelsTreeView::restart()
                     }
                 }
 
-                emit sendText(sText);
+                emit sendText(sText, iLevelType);
 
                 QSettings settings;
                 settings.setValue("lastSelectedLevel", current.row());

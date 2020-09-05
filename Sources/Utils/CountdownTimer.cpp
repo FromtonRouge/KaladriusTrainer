@@ -35,10 +35,18 @@ void CountdownTimer::start()
     _timer.start();
 }
 
-void CountdownTimer::reset()
+void CountdownTimer::stop()
 {
+    _elapsedTimeOnStop = getElapsedTime();
+    _timer.invalidate();
+}
+
+void CountdownTimer::reset(int iMode)
+{
+    _mode = Mode(iMode);
     _timer.invalidate();
     _bDone = false;
+    _elapsedTimeOnStop = 0;
 }
 
 int CountdownTimer::getRemainingTime() const
@@ -49,7 +57,7 @@ int CountdownTimer::getRemainingTime() const
 
 int CountdownTimer::getElapsedTime() const
 {
-    return _timer.elapsed();
+    return _timer.isValid() ? _timer.elapsed() : _elapsedTimeOnStop;
 }
 
 QString CountdownTimer::getRemainingTimeString() const
@@ -62,8 +70,23 @@ QString CountdownTimer::getRemainingTimeString() const
     return QString("%1:%2.%3").arg(iMinutes).arg(iSeconds, 2, 10, QChar('0')).arg(iMilliseconds, 3, 10, QChar('0'));
 }
 
+QString CountdownTimer::getElapsedTimeString() const
+{
+    using namespace std::chrono;
+    milliseconds ms(getElapsedTime());
+    const auto iMinutes = duration_cast<minutes>(ms).count();
+    const auto iSeconds = duration_cast<seconds>(ms).count() - iMinutes*60;
+    const auto iMilliseconds = ms.count() - iMinutes*60*1000 - iSeconds*1000;
+    return QString("%1:%2.%3").arg(iMinutes).arg(iSeconds, 2, 10, QChar('0')).arg(iMilliseconds, 3, 10, QChar('0'));
+}
+
 bool CountdownTimer::isDone()
 {
+    if (_mode == Mode::Timer)
+    {
+        return false;
+    }
+
     const bool bResult = getRemainingTime() == 0;
     if (bResult && !_bDone)
     {
@@ -76,5 +99,5 @@ bool CountdownTimer::isDone()
 void CountdownTimer::setTotalTime(float fSeconds)
 {
     _iTotalTime = int(fSeconds * 1000);
-    reset();
+    reset(int(_mode));
 }

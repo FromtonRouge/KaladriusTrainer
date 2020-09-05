@@ -27,6 +27,7 @@ class CountdownTimer : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString remainingTimeString READ getRemainingTimeString)
+    Q_PROPERTY(QString elapsedTimeString READ getElapsedTimeString)
     Q_PROPERTY(int remainingTime READ getRemainingTime)
     Q_PROPERTY(int totalTime READ getTotalTime)
     Q_PROPERTY(bool done READ isDone)
@@ -36,22 +37,36 @@ signals:
     void done() const;
 
 public:
+    enum class Mode
+    {
+        Countdown,
+        Timer,
+    };
+
+
+public:
     CountdownTimer(QObject* pParent = nullptr);
 
     QString getRemainingTimeString() const;
+    QString getElapsedTimeString() const;
     int getRemainingTime() const;
     int getElapsedTime() const;
     float getTotalTime() const {return _iTotalTime;}
     float getTotalTimeInSeconds() const {return float(_iTotalTime) / 1000;}
     bool isDone();
+    bool isRunning() const {return _timer.isValid();}
 
 public slots:
     void start();
-    void reset();
+    void stop();
+    void reset(int iMode);
     void setTotalTime(float fSeconds);
+    bool isCountdownMode() const {return _mode == Mode::Countdown;}
 
 private:
+    Mode _mode = Mode::Countdown;
     bool _bDone = false;
     int _iTotalTime = 60000; // in ms
     QElapsedTimer _timer;
+    qint64 _elapsedTimeOnStop = 0;
 };

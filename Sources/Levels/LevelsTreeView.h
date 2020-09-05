@@ -27,7 +27,7 @@ class LevelsTreeView : public QTreeView
 
 signals:
     void sendWordsToPractice(const QStringList& words, const QVector<int>& progressValues) const;
-    void sendText(const QString& sText) const;
+    void sendText(const QString& sText, int iLevelType) const;
     void restarted(const QString& sTableName) const;
 
 public:

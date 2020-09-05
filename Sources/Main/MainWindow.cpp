@@ -83,9 +83,27 @@ MainWindow::MainWindow(QWidget* pParent)
         connect(pStrokesSolverTextEdit, SIGNAL(dictionaryMatch(QString, QVector<QBitArray>)), pKeyboardModel, SLOT(selectLinkedKeys(QString, QVector<QBitArray>)));
         connect(pStrokesSolverTextEdit, SIGNAL(notifySpecialKeys(HashSpecialKeysStates)), pKeyboardModel, SLOT(selectLinkedSpecialKeys(HashSpecialKeysStates)));
         connect(pStrokesSolverTextEdit, SIGNAL(solverStarted()), pKeyboardGraphicsScene, SLOT(clearSelection()));
-        connect(pStrokesSolverTextEdit, &StrokesSolverTextEdit::reset, _pCountdownTimer, &CountdownTimer::reset);
+        connect(pStrokesSolverTextEdit, &StrokesSolverTextEdit::reset, [this](int iLevelType)
+        {
+            CountdownTimer::Mode mode;
+            switch (iLevelType)
+            {
+            case LevelTreeItem::Text:
+                {
+                    mode = CountdownTimer::Mode::Timer;
+                    break;
+                }
+            default:
+                {
+                    mode = CountdownTimer::Mode::Countdown;
+                    break;
+                }
+            }
+            _pCountdownTimer->reset(int(mode));
+        });
         connect(pStrokesSolverTextEdit, &StrokesSolverTextEdit::started, _pCountdownTimer, &CountdownTimer::start);
-        connect(_pCountdownTimer, &CountdownTimer::done, this, &MainWindow::onCountdownTimerDone);
+        connect(pStrokesSolverTextEdit, &StrokesSolverTextEdit::done, this, &MainWindow::onTypingTestDone);
+        connect(_pCountdownTimer, &CountdownTimer::done, this, &MainWindow::onTypingTestDone);
         connect(_pUi->treeViewLevels, &LevelsTreeView::sendText, pStrokesSolverTextEdit, &StrokesSolverTextEdit::restart);
         connect(_pUi->treeViewLevels, &LevelsTreeView::sendWordsToPractice, pStrokesSolverTextEdit, &StrokesSolverTextEdit::setWordsToPractice);
         connect(_pUi->widgetStrokesSolver, &StrokesSolverWidget::restartNeeded, _pUi->treeViewLevels, &LevelsTreeView::restart);
@@ -165,11 +183,13 @@ void MainWindow::delayedRestoreState()
     }
 }
 
-void MainWindow::onCountdownTimerDone()
+void MainWindow::onTypingTestDone()
 {
     auto pStrokesSolverTextEdit = _pUi->widgetStrokesSolver->findChild<StrokesSolverTextEdit*>("textEdit");
     pStrokesSolverTextEdit->stopTraining();
+    const int iLevelType = pStrokesSolverTextEdit->getLevelType();
     _pWordCounter->typingTestDone();
+
     const TypingTestResult& typingTestResult = _pWordCounter->getTypingTestResult();
 
     // Save result in database
@@ -185,125 +205,132 @@ void MainWindow::onCountdownTimerDone()
                 const QString sLevelTableName = indexCurrentLevel.data(LevelTableNameRole).toString();
                 const QString sLevelWordsTableName = indexCurrentLevel.data(LevelWordsTableNameRole).toString();
 
-                // Insert values in the level table
-                QStringList columns;
-                columns << "Date";
-                columns << "Wpm";
-                columns << "Spm";
-                columns << "Accuracy";
-                columns << "Viscosity";
-                columns << "Progress";
-
-                QVariantList values;
-                values << QDateTime::currentDateTime().toString();
-                values << _pWordCounter->getWpm();
-                values << _pWordCounter->getSpm();
-                values << _pWordCounter->getAccuracy();
-                values << _pWordCounter->getViscosity();
-                values << pLevelTreeItem->getProgressionPercentage();
-
-                auto pDatabase = qApp->getDatabase();
-                if (pDatabase->insertValues(sLevelTableName, columns, {values}))
+                if (iLevelType != LevelTreeItem::Text)
                 {
-                    _pUi->chartView->createChart(sLevelTableName);
-                }
+                    // Insert values in the level table
+                    QStringList columns;
+                    columns << "Date";
+                    columns << "Wpm";
+                    columns << "Spm";
+                    columns << "Accuracy";
+                    columns << "Viscosity";
+                    columns << "Progress";
 
-                const auto pWordsToImprove = _pUi->widgetStrokesSolver->getWordsToImprove();
-                const QStringList& currentWords = pWordsToImprove->getWordsToImprove();
-                QHash<QString, int> progressValuesByWord;
+                    QVariantList values;
+                    values << QDateTime::currentDateTime().toString();
+                    values << _pWordCounter->getWpm();
+                    values << _pWordCounter->getSpm();
+                    values << _pWordCounter->getAccuracy();
+                    values << _pWordCounter->getViscosity();
+                    values << pLevelTreeItem->getProgressionPercentage();
 
-                // Insert values in the level words table
-                auto itWordData = typingTestResult.wordData.begin();
-                while (itWordData != typingTestResult.wordData.end())
-                {
-                    const QString& sWord = itWordData.key();
-                    const WordData& wordData = itWordData++.value();
-
-                    QString sQueryGetValues = "SELECT * FROM \"%1\" WHERE Word == \"%2\"";
-                    sQueryGetValues = sQueryGetValues.arg(sLevelWordsTableName).arg(sWord);
-                    QSqlQuery queryGetValues = pDatabase->execute(sQueryGetValues);
-
-                    int iProgression =  0;
-                    int iOccurences = wordData.occurences;
-                    float fAverageErrorsCount = wordData.averageErrorsCount;
-                    float fAverageChordsCount = wordData.averageChordsCount;
-                    float fAverageTimeSpentForFirstStroke = wordData.averageTimeSpentForFirstStroke;
-                    float fAverageTimeSpentToComplete = wordData.averageTimeSpentToComplete;
-
-                    if (queryGetValues.next())
+                    auto pDatabase = qApp->getDatabase();
+                    if (pDatabase->insertValues(sLevelTableName, columns, {values}))
                     {
-                        iProgression =  queryGetValues.value("Progression").toInt(); // Can be -1 when it's a "NEW" word
-                        iOccurences += queryGetValues.value("Occurences").toInt();
-
-                        auto averageIfNeeded = [&queryGetValues](const QString& sColumnName, float& rfAverageForThisTest)
-                        {
-                            const float fValueInDb = queryGetValues.value(sColumnName).toFloat();
-                            if ( fValueInDb > 0)
-                            {
-                                rfAverageForThisTest = (rfAverageForThisTest + fValueInDb)/2;
-                            }
-                        };
-
-                        averageIfNeeded("AverageErrorsCount", fAverageErrorsCount);
-                        averageIfNeeded("AverageChordsCount", fAverageChordsCount);
-                        averageIfNeeded("AverageTimeSpentToComplete", fAverageTimeSpentToComplete);
-                        averageIfNeeded("AverageTimeSpentForFirstStroke", fAverageTimeSpentForFirstStroke);
+                        _pUi->chartView->createChart(sLevelTableName);
                     }
 
-                    // Compute the progression delta fx(timePerChord)
-                    //  with timePerChord of 500 ms (120 spm) we want a deltaProgress = 100
-                    //  with timePerChord of 2000 (30 spm) we want a deltaProgress = 5
-                    const float MIN_TIME_PER_CHORD = 500;
-                    const float MAX_DELTA_PROGRESSION = 100;
-                    const float MAX_TIME_PER_CHORD = 2000;
-                    const float MIN_DELTA_PROGRESSION = 5;
-                    const QPointF p1(MIN_TIME_PER_CHORD, MAX_DELTA_PROGRESSION);
-                    const QPointF p2(MAX_TIME_PER_CHORD, MIN_DELTA_PROGRESSION);
+                    const auto pWordsToImprove = _pUi->widgetStrokesSolver->getWordsToImprove();
+                    const QStringList& currentWords = pWordsToImprove->getWordsToImprove();
+                    QHash<QString, int> progressValuesByWord;
 
-                    const float fAverageStrokeTimePerChord = wordData.averageTimeSpentToComplete / wordData.averageChordsCount;
-                    int iDeltaProgression = int(interpolate(p1, p2, fAverageStrokeTimePerChord));
+                    // Insert values in the level words table
+                    auto itWordData = typingTestResult.wordData.begin();
+                    while (itWordData != typingTestResult.wordData.end())
+                    {
+                        const QString& sWord = itWordData.key();
+                        const WordData& wordData = itWordData++.value();
 
-                    // Computing errors penalties
-                    const int iErrors = int(wordData.averageErrorsCount * wordData.occurences);
-                    const int iPenalty = iErrors * 10; // -10% per error on this word
-                    iDeltaProgression -= iPenalty;
+                        QString sQueryGetValues = "SELECT * FROM \"%1\" WHERE Word == \"%2\"";
+                        sQueryGetValues = sQueryGetValues.arg(sLevelWordsTableName).arg(sWord);
+                        QSqlQuery queryGetValues = pDatabase->execute(sQueryGetValues);
 
-                    iProgression += iDeltaProgression;
+                        int iProgression =  0;
+                        int iOccurences = wordData.occurences;
+                        float fAverageErrorsCount = wordData.averageErrorsCount;
+                        float fAverageChordsCount = wordData.averageChordsCount;
+                        float fAverageTimeSpentForFirstStroke = wordData.averageTimeSpentForFirstStroke;
+                        float fAverageTimeSpentToComplete = wordData.averageTimeSpentToComplete;
 
-                    const int iFinalProgression = qBound(0, iProgression, 100);
-                    progressValuesByWord[sWord] = iFinalProgression;
+                        if (queryGetValues.next())
+                        {
+                            iProgression =  queryGetValues.value("Progression").toInt(); // Can be -1 when it's a "NEW" word
+                            iOccurences += queryGetValues.value("Occurences").toInt();
 
-                    QStringList values;
-                    values << QString("\"Progression\" = %1").arg(iFinalProgression); // Progression can't goes back to -1 (which means "NEW" word)
-                    values << QString("\"Occurences\" = %1").arg(iOccurences);
-                    values << QString("\"AverageErrorsCount\" = %1").arg(fAverageErrorsCount);
-                    values << QString("\"AverageChordsCount\" = %1").arg(fAverageChordsCount);
-                    values << QString("\"AverageTimeSpentToComplete\" = %1").arg(fAverageTimeSpentToComplete);
-                    values << QString("\"AverageTimeSpentForFirstStroke\" = %1").arg(fAverageTimeSpentForFirstStroke);
+                            auto averageIfNeeded = [&queryGetValues](const QString& sColumnName, float& rfAverageForThisTest)
+                            {
+                                const float fValueInDb = queryGetValues.value(sColumnName).toFloat();
+                                if ( fValueInDb > 0)
+                                {
+                                    rfAverageForThisTest = (rfAverageForThisTest + fValueInDb)/2;
+                                }
+                            };
 
-                    QString sQueryUpdateWord = QString("UPDATE \"%1\" SET %2 WHERE Word == \"%3\"");
-                    sQueryUpdateWord = sQueryUpdateWord.arg(sLevelWordsTableName).arg(values.join(",")).arg(sWord);
-                    pDatabase->execute(sQueryUpdateWord);
+                            averageIfNeeded("AverageErrorsCount", fAverageErrorsCount);
+                            averageIfNeeded("AverageChordsCount", fAverageChordsCount);
+                            averageIfNeeded("AverageTimeSpentToComplete", fAverageTimeSpentToComplete);
+                            averageIfNeeded("AverageTimeSpentForFirstStroke", fAverageTimeSpentForFirstStroke);
+                        }
+
+                        // Compute the progression delta fx(timePerChord)
+                        //  with timePerChord of 500 ms (120 spm) we want a deltaProgress = 100
+                        //  with timePerChord of 2000 (30 spm) we want a deltaProgress = 5
+                        const float MIN_TIME_PER_CHORD = 500;
+                        const float MAX_DELTA_PROGRESSION = 100;
+                        const float MAX_TIME_PER_CHORD = 2000;
+                        const float MIN_DELTA_PROGRESSION = 5;
+                        const QPointF p1(MIN_TIME_PER_CHORD, MAX_DELTA_PROGRESSION);
+                        const QPointF p2(MAX_TIME_PER_CHORD, MIN_DELTA_PROGRESSION);
+
+                        const float fAverageStrokeTimePerChord = wordData.averageTimeSpentToComplete / wordData.averageChordsCount;
+                        int iDeltaProgression = int(interpolate(p1, p2, fAverageStrokeTimePerChord));
+
+                        // Computing errors penalties
+                        const int iErrors = int(wordData.averageErrorsCount * wordData.occurences);
+                        const int iPenalty = iErrors * 10; // -10% per error on this word
+                        iDeltaProgression -= iPenalty;
+
+                        iProgression += iDeltaProgression;
+
+                        const int iFinalProgression = qBound(0, iProgression, 100);
+                        progressValuesByWord[sWord] = iFinalProgression;
+
+                        QStringList values;
+                        values << QString("\"Progression\" = %1").arg(iFinalProgression); // Progression can't goes back to -1 (which means "NEW" word)
+                        values << QString("\"Occurences\" = %1").arg(iOccurences);
+                        values << QString("\"AverageErrorsCount\" = %1").arg(fAverageErrorsCount);
+                        values << QString("\"AverageChordsCount\" = %1").arg(fAverageChordsCount);
+                        values << QString("\"AverageTimeSpentToComplete\" = %1").arg(fAverageTimeSpentToComplete);
+                        values << QString("\"AverageTimeSpentForFirstStroke\" = %1").arg(fAverageTimeSpentForFirstStroke);
+
+                        QString sQueryUpdateWord = QString("UPDATE \"%1\" SET %2 WHERE Word == \"%3\"");
+                        sQueryUpdateWord = sQueryUpdateWord.arg(sLevelWordsTableName).arg(values.join(",")).arg(sWord);
+                        pDatabase->execute(sQueryUpdateWord);
+                    }
+
+                    // Update the Level indicator
+                    qApp->getLevelsModel()->updateLevelDisplay(indexCurrentLevel);
+
+                    // Update last and pb
+                    _pDashboard->setLastWpm(pDatabase->getLastWpm(sLevelTableName));
+                    _pDashboard->setLastSpm(pDatabase->getLastSpm(sLevelTableName));
+                    _pDashboard->setLastAccuracy(pDatabase->getLastAccuracy(sLevelTableName));
+                    _pDashboard->setMaxWpm(pDatabase->getMaxWpm(sLevelTableName));
+                    _pDashboard->setMaxSpm(pDatabase->getMaxSpm(sLevelTableName));
+                    _pDashboard->setMaxAccuracy(pDatabase->getMaxAccuracy(sLevelTableName));
+
+                    QVector<int> newProgressions;
+                    for (const QString& sWord : currentWords)
+                    {
+                        newProgressions << progressValuesByWord[sWord];
+                    }
+
+                    pWordsToImprove->showResults(newProgressions);
                 }
-
-                // Update the Level indicator
-                qApp->getLevelsModel()->updateLevelDisplay(indexCurrentLevel);
-
-                // Update last and pb
-                _pDashboard->setLastWpm(pDatabase->getLastWpm(sLevelTableName));
-                _pDashboard->setLastSpm(pDatabase->getLastSpm(sLevelTableName));
-                _pDashboard->setLastAccuracy(pDatabase->getLastAccuracy(sLevelTableName));
-                _pDashboard->setMaxWpm(pDatabase->getMaxWpm(sLevelTableName));
-                _pDashboard->setMaxSpm(pDatabase->getMaxSpm(sLevelTableName));
-                _pDashboard->setMaxAccuracy(pDatabase->getMaxAccuracy(sLevelTableName));
-
-                QVector<int> newProgressions;
-                for (const QString& sWord : currentWords)
+                else
                 {
-                    newProgressions << progressValuesByWord[sWord];
+                    _pCountdownTimer->stop();
                 }
-
-                pWordsToImprove->showResults(newProgressions);
                 break;
             }
         default:

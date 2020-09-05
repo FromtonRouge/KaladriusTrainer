@@ -38,15 +38,17 @@ signals:
     void solverStarted() const;
     void dictionaryMatch(const QString& sDictionaryName, const QVector<QBitArray>& possibleBits) const;
     void notifySpecialKeys(const HashSpecialKeysStates& specialKeysStates) const;
-    void reset() const;
+    void reset(int iLevelType) const;
     void started() const;
+    void done() const;
 
 public:
     StrokesSolverTextEdit(QWidget* pParent = nullptr);
 
-    void restart(const QString& sText = QString());
+    void restart(const QString& sText, int iLevelType);
     void setWordCounter(WordCounter* pWordCounter);
     void setWordsToImprove(WordsToImprove* pWordsToImprove);
+    int getLevelType() const {return _iLevelType;}
 
 public slots:
     void stopTraining();
@@ -86,4 +88,5 @@ private:
     QColor _colorOk;
     QColor _colorError;
     QTimer* _pTimerSolve = nullptr;
+    int _iLevelType = -1;
 };

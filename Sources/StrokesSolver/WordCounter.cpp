@@ -48,9 +48,20 @@ float WordCounter::getWpm() const
     const int AVERAGE_WORD_LENGTH = 5; // Same as www.10fastfingers.com
     const float fWords = float(_iValidCharactersCount) / AVERAGE_WORD_LENGTH;
     float fSeconds = _pCountdownTimer->getTotalTimeInSeconds();
-    if (_pCountdownTimer->getRemainingTime() > 0)
+    if (_pCountdownTimer->isCountdownMode())
+    {
+        if (_pCountdownTimer->isRunning() && _pCountdownTimer->getRemainingTime() > 0)
+        {
+            fSeconds = float(_pCountdownTimer->getElapsedTime()) / 1000;
+        }
+    }
+    else
     {
         fSeconds = float(_pCountdownTimer->getElapsedTime()) / 1000;
+        if (fSeconds == 0.f)
+        {
+            return 0.f;
+        }
     }
     return 60.f * fWords / fSeconds;
 }
@@ -58,9 +69,20 @@ float WordCounter::getWpm() const
 float WordCounter::getSpm() const
 {
     float fSeconds = _pCountdownTimer->getTotalTimeInSeconds();
-    if (_pCountdownTimer->getRemainingTime() > 0)
+    if (_pCountdownTimer->isCountdownMode())
+    {
+        if (_pCountdownTimer->isRunning() && _pCountdownTimer->getRemainingTime() > 0)
+        {
+            fSeconds = float(_pCountdownTimer->getElapsedTime()) / 1000;
+        }
+    }
+    else
     {
         fSeconds = float(_pCountdownTimer->getElapsedTime()) / 1000;
+        if (fSeconds == 0.f)
+        {
+            return 0.f;
+        }
     }
     return 60.f * _iValidChordsCount / fSeconds;
 }

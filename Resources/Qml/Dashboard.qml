@@ -16,23 +16,32 @@ Item {
     }
 
     function update() {
-        if (countdownTimer.done)
+        if (countdownTimer.isCountdownMode())
         {
-            time.color = "red"
-        }
-        else
-        {
-            if (countdownTimer.remainingTime < 10000)
+            if (countdownTimer.done)
             {
-                time.color = "orange"
+                time.color = "red"
             }
             else
             {
-                time.color = "green"
+                if (countdownTimer.remainingTime < 10000)
+                {
+                    time.color = "orange"
+                }
+                else
+                {
+                    time.color = "green"
+                }
             }
+
+            time.text = countdownTimer.remainingTimeString
+        }
+        else
+        {
+            time.text = countdownTimer.elapsedTimeString
+            time.color = "black"
         }
 
-        time.text = countdownTimer.remainingTimeString
         wpm.text = wordCounter.wpm.toFixed(0) + " WPM"
         spm.text = wordCounter.spm.toFixed(0) + " SPM"
         accuracy.text = wordCounter.accuracy.toFixed(1) + " %"

@@ -84,6 +84,8 @@ bool Database::createTextsTable() const
 {
     QVector<QPair<QString, QString>> columns;
     columns << QPair<QString, QString>("Text", "TEXT");
+    columns << QPair<QString, QString>("Characters", "INTEGER");
+    columns << QPair<QString, QString>("HasQuotes", "INTEGER");
     columns << QPair<QString, QString>("TextFileId", "INTEGER");
     return createTable("Texts", columns);
 }

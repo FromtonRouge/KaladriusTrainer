@@ -88,12 +88,11 @@ MainTabDialog::MainTabDialog(QWidget* pParent)
     const int iCurrentTabIndex = settings.value("currentTabIndex", 0).toInt();
     _pUi->tabWidget->setCurrentIndex(iCurrentTabIndex);
 
-    _pUi->mainWindowLearningMode->Init();
-
     for (const auto& pChild : findChildren<MainTabWindow*>())
     {
         pChild->Init();
     }
+    _pUi->mainWindowLearningMode->Init();
 }
 
 MainTabDialog::~MainTabDialog()
