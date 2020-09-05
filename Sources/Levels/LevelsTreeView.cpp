@@ -78,7 +78,27 @@ void LevelsTreeView::restart()
                 case LevelTreeItem::Text:
                     {
                         emit sendWordsToPractice({}, {});
-                        sText = "It can also be argued that DNA is nothing more than a program designed to preserve itself. Life has become more complex in the overwhelming sea of information. And life, when organized into species, relies upon genes to be its memory system. So, man is an individual only because of his intangible memory... and memory cannot be defined, but it defines mankind. The advent of computers, and the subsequent accumulation of incalculable data has given rise to a new system of memory and thought parallel to your own. Humanity has underestimated the consequences of computerization.";
+
+                        QString sQuery = "SELECT COUNT(ROWID) FROM \"Texts\"";
+                        QSqlQuery query = pDatabase->execute(sQuery);
+                        int iTextId = 0;
+                        if (query.next())
+                        {
+                            const int iCount = query.value(0).toInt();
+                            iTextId = QRandomGenerator::global()->bounded(1, iCount+1);
+                        }
+
+                        if (iTextId)
+                        {
+                            sQuery = "SELECT Text FROM \"Texts\" WHERE ROWID == %1";
+                            sQuery = sQuery.arg(iTextId);
+                            QSqlQuery query = pDatabase->execute(sQuery);
+                            if (query.next())
+                            {
+                                sText = query.value(0).toString();
+                            }
+                        }
+
                         break;
                     }
                 case LevelTreeItem::TimedRandomWords:
