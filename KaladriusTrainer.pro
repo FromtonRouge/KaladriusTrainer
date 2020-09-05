@@ -100,6 +100,7 @@ SOURCES += \
     Sources/StrokesSolver/TypingTestResult.cpp \
     Sources/StrokesSolver/WordCounter.cpp \
     Sources/StrokesSolver/WordsToImprove.cpp \
+    Sources/TextsManager/TextsManagerMainWindow.cpp \
     Sources/Theories/Models/TheoryModel.cpp \
     Sources/Theories/Models/UndoableTheoryModel.cpp \
     Sources/Theories/TheoryEditorMainWindow.cpp \
@@ -204,6 +205,7 @@ HEADERS += \
     Sources/StrokesSolver/TypingTestResult.h \
     Sources/StrokesSolver/WordCounter.h \
     Sources/StrokesSolver/WordsToImprove.h \
+    Sources/TextsManager/TextsManagerMainWindow.h \
     Sources/Theories/Models/TheoryModel.h \
     Sources/Theories/Models/UndoableTheoryModel.h \
     Sources/Theories/TheoryEditorMainWindow.h \
@@ -248,6 +250,7 @@ FORMS += \
     Sources/Main/MainWindow.ui \
     Sources/Statistics/StatisticsMainWindow.ui \
     Sources/StrokesSolver/StrokesSolverWidget.ui \
+    Sources/TextsManager/TextsManagerMainWindow.ui \
     Sources/Theories/TheoryEditorMainWindow.ui
 
 # Default rules for deployment.

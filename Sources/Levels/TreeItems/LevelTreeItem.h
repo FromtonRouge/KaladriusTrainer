@@ -31,14 +31,14 @@ public:
     {
         TimedRandomWords,
         PunctuationMarks,
-        FreeText,
+        Text,
     };
 
 public:
     LevelTreeItem(LevelType levelType,
                   const QUuid& uuid,
                   const QString& sLabel,
-                  const QString& sWordsFilePath);
+                  const QString& sWordsFilePath = QString());
     ~LevelTreeItem();
 
     virtual int type() const override {return Level;}

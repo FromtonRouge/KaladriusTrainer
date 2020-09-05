@@ -35,6 +35,8 @@ public:
     KeyboardEditorMainWindow(QWidget* pParent = nullptr);
     ~KeyboardEditorMainWindow();
 
+    void Init() override {}
+
 protected slots:
     void on_actionLoad_Default_triggered();
     void on_actionLoad_triggered();

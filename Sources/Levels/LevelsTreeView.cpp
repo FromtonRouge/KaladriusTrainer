@@ -70,47 +70,66 @@ void LevelsTreeView::restart()
 
                 auto pDatabase = qApp->getDatabase();
                 pDatabase->createLevelWordsTable(current.data(LevelWordsTableNameRole).toString());
-                pLevelTreeItem->loadWords();
-
-                QVector<int> progressValues;
-                const QStringList& wordsToPractice = pLevelTreeItem->get5WordsToPractice(&progressValues);
-                emit sendWordsToPractice(wordsToPractice, progressValues);
-
-                const QStringList& randomWords = pLevelTreeItem->getRandomWords();
 
                 QString sText;
-                if (pLevelTreeItem->getLevelType() == LevelTreeItem::PunctuationMarks)
+                const int iLevelType = pLevelTreeItem->getLevelType();
+                switch (iLevelType)
                 {
-                    const QStringList punctuationMarks = {".", "...", "?", "!", ",", ":", ";"};
-
-                    QStringList finalRandomWords;
-                    int iPreviousRandomIndex = 0;
-                    for (QString sWord : randomWords)
+                case LevelTreeItem::Text:
                     {
-                        QString sPunctuation;
-                        const int iFortune = QRandomGenerator::global()->bounded(1, 101);
-                        int iRandomIndex = -1;
-
-                        if (iFortune >= 1 && iFortune <= 25)
-                        {
-                            iRandomIndex = QRandomGenerator::global()->bounded(punctuationMarks.size());
-                            sPunctuation = punctuationMarks[iRandomIndex];
-                        }
-
-                        if (iPreviousRandomIndex >= 0 && iPreviousRandomIndex <= 3)
-                        {
-                            sWord.replace(0, 1, sWord[0].toUpper());
-                        }
-
-                        finalRandomWords << (sWord + sPunctuation);
-                        iPreviousRandomIndex = iRandomIndex;
+                        emit sendWordsToPractice({}, {});
+                        sText = "It can also be argued that DNA is nothing more than a program designed to preserve itself. Life has become more complex in the overwhelming sea of information. And life, when organized into species, relies upon genes to be its memory system. So, man is an individual only because of his intangible memory... and memory cannot be defined, but it defines mankind. The advent of computers, and the subsequent accumulation of incalculable data has given rise to a new system of memory and thought parallel to your own. Humanity has underestimated the consequences of computerization.";
+                        break;
                     }
+                case LevelTreeItem::TimedRandomWords:
+                case LevelTreeItem::PunctuationMarks:
+                    {
+                        pLevelTreeItem->loadWords();
+                        QVector<int> progressValues;
+                        const QStringList& wordsToPractice = pLevelTreeItem->get5WordsToPractice(&progressValues);
+                        emit sendWordsToPractice(wordsToPractice, progressValues);
 
-                    sText = finalRandomWords.join(" ");
-                }
-                else
-                {
-                    sText = randomWords.join(" ");
+                        const QStringList& randomWords = pLevelTreeItem->getRandomWords();
+
+                        if (iLevelType == LevelTreeItem::PunctuationMarks)
+                        {
+                            const QStringList punctuationMarks = {".", "...", "?", "!", ",", ":", ";"};
+
+                            QStringList finalRandomWords;
+                            int iPreviousRandomIndex = 0;
+                            for (QString sWord : randomWords)
+                            {
+                                QString sPunctuation;
+                                const int iFortune = QRandomGenerator::global()->bounded(1, 101);
+                                int iRandomIndex = -1;
+
+                                if (iFortune >= 1 && iFortune <= 25)
+                                {
+                                    iRandomIndex = QRandomGenerator::global()->bounded(punctuationMarks.size());
+                                    sPunctuation = punctuationMarks[iRandomIndex];
+                                }
+
+                                if (iPreviousRandomIndex >= 0 && iPreviousRandomIndex <= 3)
+                                {
+                                    sWord.replace(0, 1, sWord[0].toUpper());
+                                }
+
+                                finalRandomWords << (sWord + sPunctuation);
+                                iPreviousRandomIndex = iRandomIndex;
+                            }
+
+                            sText = finalRandomWords.join(" ");
+                        }
+                        else
+                        {
+                            sText = randomWords.join(" ");
+                        }
+                        break;
+                    }
+                default:
+                    {
+                        break;
+                    }
                 }
 
                 emit sendText(sText);

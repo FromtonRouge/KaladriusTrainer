@@ -38,6 +38,8 @@ public:
 
     QSqlQuery execute(const QString& sQuery) const;
 
+    bool createTextsTable() const;
+    bool createTextFilesTable() const;
     bool createLevelTable(const QString& sTableName) const;
     bool createLevelWordsTable(const QString& sTableName) const;
     bool insertValues(const QString& sTableName, const QStringList& columns, const QVector<QVariantList>& rows) const;

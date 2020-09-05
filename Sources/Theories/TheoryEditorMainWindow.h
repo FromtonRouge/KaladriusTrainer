@@ -36,6 +36,8 @@ public:
     TheoryEditorMainWindow(QWidget *parent = nullptr);
     ~TheoryEditorMainWindow();
 
+    void Init() override {}
+
 protected slots:
     void on_actionLoad_triggered();
     void on_actionLoad_Default_triggered();

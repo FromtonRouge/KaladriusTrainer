@@ -53,9 +53,9 @@ LevelTreeItem::LevelTreeItem(LevelType levelType,
             sIconPath = ":/Icons/clock--arrow-comma.png";
             break;
         }
-    case FreeText:
+    case Text:
         {
-            sIconPath = ":/Icons/document-text.png";
+            sIconPath = ":/Icons/book-open-text.png";
             break;
         }
     default:
@@ -76,6 +76,11 @@ LevelTreeItem::~LevelTreeItem()
 void LevelTreeItem::loadWords()
 {
     _words.clear();
+
+    if (_sWordsFilePath.isEmpty() || !QFile::exists(_sWordsFilePath))
+    {
+        return;
+    }
 
     QFile file(_sWordsFilePath);
     if (file.open(QIODevice::ReadOnly))
@@ -193,6 +198,11 @@ QStringList LevelTreeItem::getRandomWords() const
         return QString();
     };
 
+    if (wordsToPractice.isEmpty() && otherWordsToPractice.isEmpty())
+    {
+        return result;
+    }
+
     for (uint16_t i=0; i<_uiRandomWordsCount; i++)
     {
         QString sWord;
@@ -215,6 +225,7 @@ QStringList LevelTreeItem::getRandomWords() const
 
         result << sWord;
     }
+
     return result;
 }
 

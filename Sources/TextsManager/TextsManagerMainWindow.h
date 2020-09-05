@@ -19,24 +19,34 @@
 
 #pragma once
 
-#include <QtWidgets/QMainWindow>
+#include "../Main/MainTabWindow.h"
+#include <QtCore/QScopedPointer>
 
-class QTabWidget;
-class QUndoStack;
-class MainTabWindow : public QMainWindow
+namespace Ui
+{
+    class TextsManagerMainWindow;
+}
+
+class TextsManagerMainWindow : public MainTabWindow
 {
     Q_OBJECT
 
 public:
-    MainTabWindow(QWidget* pParent = nullptr);
-    QTabWidget* getParentTabWidget() const;
+    TextsManagerMainWindow(QWidget* pParent = nullptr);
+    ~TextsManagerMainWindow();
 
-    virtual void Init() = 0;
+    void Init() override;
 
 protected slots:
-    void onUndoCleanChanged(bool bClean);
+    void on_actionAbout_triggered();
+    void on_actionImport_Text_triggered();
+    void on_actionImport_Directory_triggered();
 
-protected:
-    QAction* createUndoAction(QUndoStack* pUndoStack);
-    QAction* createRedoAction(QUndoStack* pUndoStack);
+private:
+    void importDirectory(const QString& sDirectory);
+    void importTextFile(const QString& sFilePath);
+
+private:
+    QScopedPointer<Ui::TextsManagerMainWindow> _pUi;
 };
+

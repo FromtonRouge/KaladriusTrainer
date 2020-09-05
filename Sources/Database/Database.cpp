@@ -20,6 +20,8 @@
 #include "Database.h"
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
+#include <QtSql/QSqlField>
+#include <QtSql/QSqlDriver>
 #include <QtSql/QSqlError>
 #include <QtCore/QStandardPaths>
 #include <QtCore/QDir>
@@ -78,6 +80,21 @@ QSqlQuery Database::execute(const QString& sQuery) const
     return query;
 }
 
+bool Database::createTextsTable() const
+{
+    QVector<QPair<QString, QString>> columns;
+    columns << QPair<QString, QString>("Text", "TEXT");
+    columns << QPair<QString, QString>("TextFileId", "INTEGER");
+    return createTable("Texts", columns);
+}
+
+bool Database::createTextFilesTable() const
+{
+    QVector<QPair<QString, QString>> columns;
+    columns << QPair<QString, QString>("Filename", "TEXT UNIQUE");
+    return createTable("Text Files", columns);
+}
+
 bool Database::createLevelTable(const QString& sTableName) const
 {
     QVector<QPair<QString, QString>> columns;
@@ -114,15 +131,19 @@ bool Database::insertValues(const QString& sTableName, const QStringList& column
         fixedColumns << QString("\"%1\"").arg(sColumnName);
     }
 
+    const QSqlDatabase& db = QSqlDatabase::database();
+
     // Fix string format in rows
     for (const QVariantList& row : rows)
     {
+        QSqlField field("", QVariant::String);
         QStringList fixedRow;
         for (const QVariant& value : row)
         {
             if (value.type() == QVariant::String)
             {
-                fixedRow << QString("\"%1\"").arg(value.toString());
+                field.setValue(value);
+                fixedRow << db.driver()->formatValue(field); // escape string for sql etc...
             }
             else
             {

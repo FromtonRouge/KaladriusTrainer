@@ -62,5 +62,10 @@
         <file>Icons/clock--arrow-comma.png</file>
         <file>Words/first400ShortMediumWords.txt</file>
         <file>Words/first600ShortMediumLongWords.txt</file>
+        <file>Icons/book-open-text.png</file>
+        <file>Texts/Alice's Adventures in Worderland.txt</file>
+        <file>Icons/database-import.png</file>
+        <file>Texts/Pride and Prejudice.txt</file>
+        <file>Texts/The Adventures of Sherlock Holmes.txt</file>
     </qresource>
 </RCC>

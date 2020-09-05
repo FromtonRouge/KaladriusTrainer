@@ -36,6 +36,7 @@ LevelsTreeItem::LevelsTreeItem()
     appendRow({new LevelTreeItem(LevelTreeItem::PunctuationMarks, "ac64e2bf-4bab-4e4b-9b9b-6f82f5c5fb3d",  QObject::tr("Punctuation Marks"), ":/Words/first200LongWords.txt"), new EmptyTreeItem()});
     appendRow({new LevelTreeItem(LevelTreeItem::TimedRandomWords, "13e31fa2-1122-49e9-89fa-f7aaa4bb1a2d", QObject::tr("Short/Medium/Long words"), ":/Words/first600ShortMediumLongWords.txt"), new EmptyTreeItem()});
     appendRow({new LevelTreeItem(LevelTreeItem::PunctuationMarks, "50431849-061a-4984-b3c7-f4f168291fd5",  QObject::tr("Punctuation Marks"), ":/Words/first600ShortMediumLongWords.txt"), new EmptyTreeItem()});
+    appendRow({new LevelTreeItem(LevelTreeItem::Text, "ab1575a2-c508-4565-8e25-3515c9e22aef",  QObject::tr("Text")), new EmptyTreeItem()});
 }
 
 LevelsTreeItem::~LevelsTreeItem()
