@@ -118,7 +118,7 @@ void TextsModel::fetchMore(const QModelIndex& parent)
     }
 }
 
-QVariant TextsModel::headerData(int iSection, Qt::Orientation orientation, int iRole) const
+QVariant TextsModel::headerData(int iSection, Qt::Orientation, int iRole) const
 {
     if (iSection == 0 && iRole == Qt::DisplayRole)
     {
