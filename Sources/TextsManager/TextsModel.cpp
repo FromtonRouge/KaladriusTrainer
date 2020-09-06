@@ -95,7 +95,7 @@ void TextsModel::fetchMore(const QModelIndex& parent)
             QStandardItem* pItem = new QStandardItem(QIcon(":/Icons/book.png"), sName);
             pItem->setData(iTextFileId);
             pItem->setCheckable(true);
-            invisibleRootItem()->appendRow({pItem});
+            invisibleRootItem()->appendRow(pItem);
         }
     }
     else
@@ -111,11 +111,10 @@ void TextsModel::fetchMore(const QModelIndex& parent)
             while (query.next())
             {
                 const int iTextId = query.value(0).toInt();
-                const bool bEnabled = query.value(1).toBool();
                 QStandardItem* pItem = new QStandardItem(QIcon(":/Icons/book-open-text.png"), QString("[%1]").arg(i++));
                 pItem->setData(iTextId);
                 pItem->setCheckable(true);
-                itemFromIndex(parent)->appendRow({pItem});
+                itemFromIndex(parent)->appendRow(pItem);
             }
         }
     }
