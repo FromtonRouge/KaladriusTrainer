@@ -72,6 +72,7 @@ void LevelsTreeView::restart()
                 pDatabase->createLevelWordsTable(current.data(LevelWordsTableNameRole).toString());
 
                 QString sText;
+                int iTextId = 0;
                 const int iLevelType = pLevelTreeItem->getLevelType();
                 switch (iLevelType)
                 {
@@ -79,12 +80,7 @@ void LevelsTreeView::restart()
                     {
                         emit sendWordsToPractice({}, {});
 
-                        // TODO: Progression system
-                        const int iNbCharactersLimit = 200;
-                        const bool bHasQuotes = false;
-
-                        QString sQuery = "SELECT ROWID FROM \"Texts\" WHERE Characters < %1 AND HasQuotes == %2 AND Enabled == 1";
-                        sQuery = sQuery.arg(iNbCharactersLimit).arg(bHasQuotes);
+                        QString sQuery = "SELECT ROWID FROM \"Texts\" WHERE Enabled == 1";
                         QSqlQuery query = pDatabase->execute(sQuery);
                         QVector<int> textIds;
                         while (query.next())
@@ -100,8 +96,9 @@ void LevelsTreeView::restart()
 
                         if (iRow != -1)
                         {
+                            iTextId = textIds[iRow];
                             sQuery = "SELECT Text FROM \"Texts\" WHERE ROWID == %1";
-                            sQuery = sQuery.arg(textIds[iRow]);
+                            sQuery = sQuery.arg(iTextId);
                             QSqlQuery query = pDatabase->execute(sQuery);
                             if (query.next())
                             {
@@ -162,13 +159,13 @@ void LevelsTreeView::restart()
                     }
                 }
 
-                emit sendText(sText, iLevelType);
+                emit sendText(sText, iTextId);
 
                 QSettings settings;
                 settings.setValue("lastSelectedLevel", current.row());
 
                 const QString& sLevelTableName = current.data(LevelTableNameRole).toString();
-                pDatabase->createLevelTable(sLevelTableName);
+                pDatabase->createLevelTable(sLevelTableName, iLevelType);
                 emit restarted(sLevelTableName);
                 break;
             }

@@ -83,22 +83,10 @@ MainWindow::MainWindow(QWidget* pParent)
         connect(pStrokesSolverTextEdit, SIGNAL(dictionaryMatch(QString, QVector<QBitArray>)), pKeyboardModel, SLOT(selectLinkedKeys(QString, QVector<QBitArray>)));
         connect(pStrokesSolverTextEdit, SIGNAL(notifySpecialKeys(HashSpecialKeysStates)), pKeyboardModel, SLOT(selectLinkedSpecialKeys(HashSpecialKeysStates)));
         connect(pStrokesSolverTextEdit, SIGNAL(solverStarted()), pKeyboardGraphicsScene, SLOT(clearSelection()));
-        connect(pStrokesSolverTextEdit, &StrokesSolverTextEdit::reset, [this](int iLevelType)
+        connect(pStrokesSolverTextEdit, &StrokesSolverTextEdit::reset, [this](int iTextId)
         {
             CountdownTimer::Mode mode;
-            switch (iLevelType)
-            {
-            case LevelTreeItem::Text:
-                {
-                    mode = CountdownTimer::Mode::Timer;
-                    break;
-                }
-            default:
-                {
-                    mode = CountdownTimer::Mode::Countdown;
-                    break;
-                }
-            }
+            mode = iTextId == 0 ? CountdownTimer::Mode::Countdown : CountdownTimer::Mode::Timer;
             _pCountdownTimer->reset(int(mode));
         });
         connect(pStrokesSolverTextEdit, &StrokesSolverTextEdit::started, _pCountdownTimer, &CountdownTimer::start);
@@ -187,7 +175,7 @@ void MainWindow::onTypingTestDone()
 {
     auto pStrokesSolverTextEdit = _pUi->widgetStrokesSolver->findChild<StrokesSolverTextEdit*>("textEdit");
     pStrokesSolverTextEdit->stopTraining();
-    const int iLevelType = pStrokesSolverTextEdit->getLevelType();
+    const int iTextId = pStrokesSolverTextEdit->getTextId();
     _pWordCounter->typingTestDone();
 
     const TypingTestResult& typingTestResult = _pWordCounter->getTypingTestResult();
@@ -201,30 +189,30 @@ void MainWindow::onTypingTestDone()
         {
         case TreeItem::Level:
             {
+                auto pDatabase = qApp->getDatabase();
                 auto pLevelTreeItem = static_cast<LevelTreeItem*>(qApp->getLevelsModel()->itemFromIndex(indexCurrentLevel));
                 const QString sLevelTableName = indexCurrentLevel.data(LevelTableNameRole).toString();
                 const QString sLevelWordsTableName = indexCurrentLevel.data(LevelWordsTableNameRole).toString();
 
-                if (iLevelType != LevelTreeItem::Text)
-                {
-                    // Insert values in the level table
-                    QStringList columns;
-                    columns << "Date";
-                    columns << "Wpm";
-                    columns << "Spm";
-                    columns << "Accuracy";
-                    columns << "Viscosity";
-                    columns << "Progress";
+                QStringList columns;
+                columns << "Date";
+                columns << "Wpm";
+                columns << "Spm";
+                columns << "Accuracy";
+                columns << "Viscosity";
 
-                    QVariantList values;
-                    values << QDateTime::currentDateTime().toString();
-                    values << _pWordCounter->getWpm();
-                    values << _pWordCounter->getSpm();
-                    values << _pWordCounter->getAccuracy();
-                    values << _pWordCounter->getViscosity();
+                QVariantList values;
+                values << QDateTime::currentDateTime().toString();
+                values << _pWordCounter->getWpm();
+                values << _pWordCounter->getSpm();
+                values << _pWordCounter->getAccuracy();
+                values << _pWordCounter->getViscosity();
+
+                if (iTextId == 0)
+                {
+                    columns << "Progress";
                     values << pLevelTreeItem->getProgressionPercentage();
 
-                    auto pDatabase = qApp->getDatabase();
                     if (pDatabase->insertValues(sLevelTableName, columns, {values}))
                     {
                         _pUi->chartView->createChart(sLevelTableName);
@@ -311,14 +299,6 @@ void MainWindow::onTypingTestDone()
                     // Update the Level indicator
                     qApp->getLevelsModel()->updateLevelDisplay(indexCurrentLevel);
 
-                    // Update last and pb
-                    _pDashboard->setLastWpm(pDatabase->getLastWpm(sLevelTableName));
-                    _pDashboard->setLastSpm(pDatabase->getLastSpm(sLevelTableName));
-                    _pDashboard->setLastAccuracy(pDatabase->getLastAccuracy(sLevelTableName));
-                    _pDashboard->setMaxWpm(pDatabase->getMaxWpm(sLevelTableName));
-                    _pDashboard->setMaxSpm(pDatabase->getMaxSpm(sLevelTableName));
-                    _pDashboard->setMaxAccuracy(pDatabase->getMaxAccuracy(sLevelTableName));
-
                     QVector<int> newProgressions;
                     for (const QString& sWord : currentWords)
                     {
@@ -330,7 +310,23 @@ void MainWindow::onTypingTestDone()
                 else
                 {
                     _pCountdownTimer->stop();
+
+                    columns << "TextId";
+                    values << iTextId;
+
+                    if (pDatabase->insertValues(sLevelTableName, columns, {values}))
+                    {
+                        _pUi->chartView->createChart(sLevelTableName);
+                    }
                 }
+
+                // Update last and pb
+                _pDashboard->setLastWpm(pDatabase->getLastWpm(sLevelTableName));
+                _pDashboard->setLastSpm(pDatabase->getLastSpm(sLevelTableName));
+                _pDashboard->setLastAccuracy(pDatabase->getLastAccuracy(sLevelTableName));
+                _pDashboard->setMaxWpm(pDatabase->getMaxWpm(sLevelTableName));
+                _pDashboard->setMaxSpm(pDatabase->getMaxSpm(sLevelTableName));
+                _pDashboard->setMaxAccuracy(pDatabase->getMaxAccuracy(sLevelTableName));
                 break;
             }
         default:

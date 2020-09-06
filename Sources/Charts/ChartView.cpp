@@ -18,6 +18,8 @@
 // ======================================================================
 
 #include "ChartView.h"
+#include "../Database/Database.h"
+#include "../Main/Application.h"
 #include "../Utils/AverageOf.h"
 #include <QtCharts/QLineSeries>
 #include <QtWidgets/QGraphicsLayout>
@@ -70,11 +72,18 @@ void ChartView::createChart(const QString& sLevelName)
 
     _pChart->removeAllSeries();
 
+    auto pDatabase = qApp->getDatabase();
     const QSqlDatabase& db = QSqlDatabase::database();
     QSqlQuery query(db);
 
     for (const auto& config : _seriesConfigurations)
     {
+        // Check at least if the column exists in the table
+        if (pDatabase->hasColumn(_sTableName, config.name) == false)
+        {
+            continue;
+        }
+
         if (!config.pAction->isChecked())
         {
             continue;
@@ -129,8 +138,15 @@ void ChartView::contextMenuEvent(QContextMenuEvent*)
 {
     QMenu menu;
 
+    auto pDatabase = qApp->getDatabase();
     for (const auto& config : _seriesConfigurations)
     {
+        // Check at least if the column exists in the table
+        if (pDatabase->hasColumn(_sTableName, config.name) == false)
+        {
+            continue;
+        }
+
         menu.addAction(config.pAction);
     }
 
@@ -143,6 +159,12 @@ void ChartView::contextMenuEvent(QContextMenuEvent*)
         QSettings settings;
         for (const auto& config : _seriesConfigurations)
         {
+            // Check at least if the column exists in the table
+            if (pDatabase->hasColumn(_sTableName, config.name) == false)
+            {
+                continue;
+            }
+
             settings.setValue(QString("ChartView/%1").arg(config.name), config.pAction->isChecked());
         }
         settings.setValue("ChartView/ao5", _pActionAo5->isChecked());

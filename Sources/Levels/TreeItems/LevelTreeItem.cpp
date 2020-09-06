@@ -37,7 +37,6 @@ LevelTreeItem::LevelTreeItem(LevelType levelType,
     , _levelType(levelType)
 {
     setText(sLabel);
-    setData(QString("Level %1").arg(_uuid.toString(QUuid::WithoutBraces)), LevelTableNameRole);
     setData(QString("Words %1").arg(_uuid.toString(QUuid::WithoutBraces)), LevelWordsTableNameRole);
 
     QString sIconPath;
@@ -45,16 +44,19 @@ LevelTreeItem::LevelTreeItem(LevelType levelType,
     {
     case TimedRandomWords:
         {
+            setData(QString("Level %1").arg(_uuid.toString(QUuid::WithoutBraces)), LevelTableNameRole);
             sIconPath = ":/Icons/clock--arrow.png";
             break;
         }
     case PunctuationMarks:
         {
+            setData(QString("Level %1").arg(_uuid.toString(QUuid::WithoutBraces)), LevelTableNameRole);
             sIconPath = ":/Icons/clock--arrow-comma.png";
             break;
         }
     case Text:
         {
+            setData(QString("Text Level %1").arg(_uuid.toString(QUuid::WithoutBraces)), LevelTableNameRole);
             sIconPath = ":/Icons/book-open-text.png";
             break;
         }

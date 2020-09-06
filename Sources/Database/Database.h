@@ -40,8 +40,10 @@ public:
 
     bool createTextsTable() const;
     bool createTextFilesTable() const;
-    bool createLevelTable(const QString& sTableName) const;
+    bool createLevelTable(const QString& sTableName, int iLevelType) const;
     bool createLevelWordsTable(const QString& sTableName) const;
+
+    bool hasColumn(const QString& sTableName, const QString& sColumnName) const;
     bool insertValues(const QString& sTableName, const QStringList& columns, const QVector<QVariantList>& rows) const;
     int getCount(const QString& sTableName) const;
     float getSumOfCount(const QString& sTableName, const QString& sColumn, uint16_t uiCount) const;

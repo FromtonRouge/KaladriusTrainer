@@ -18,6 +18,7 @@
 // ======================================================================
 
 #include "Database.h"
+#include "../Levels/TreeItems/LevelTreeItem.h"
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlField>
@@ -98,7 +99,7 @@ bool Database::createTextFilesTable() const
     return createTable("Text Files", columns);
 }
 
-bool Database::createLevelTable(const QString& sTableName) const
+bool Database::createLevelTable(const QString& sTableName, int iLevelType) const
 {
     QVector<QPair<QString, QString>> columns;
     columns << QPair<QString, QString>("Date", "TEXT");
@@ -106,7 +107,16 @@ bool Database::createLevelTable(const QString& sTableName) const
     columns << QPair<QString, QString>("Spm", "REAL");
     columns << QPair<QString, QString>("Accuracy", "REAL");
     columns << QPair<QString, QString>("Viscosity", "REAL");
-    columns << QPair<QString, QString>("Progress", "REAL");
+
+    if (iLevelType == LevelTreeItem::Text)
+    {
+        columns << QPair<QString, QString>("TextId", "INTEGER");
+    }
+    else
+    {
+        columns << QPair<QString, QString>("Progress", "REAL");
+    }
+
     return createTable(sTableName, columns);
 }
 
@@ -121,6 +131,19 @@ bool Database::createLevelWordsTable(const QString& sTableName) const
     columns << QPair<QString, QString>("AverageTimeSpentToComplete", "REAL"); // Average time spent to do all chords for the whole word
     columns << QPair<QString, QString>("AverageTimeSpentForFirstStroke", "REAL"); // Average time in ms needed to do the first chord of the word
     return createTable(sTableName, columns);
+}
+
+bool Database::hasColumn(const QString& sTableName, const QString& sColumnName) const
+{
+    bool bHasColumn = false;
+    QString sQuery = "SELECT COUNT(*) FROM pragma_table_info('%1') WHERE name == '%2'";
+    sQuery = sQuery.arg(sTableName).arg(sColumnName);
+    QSqlQuery query = execute(sQuery);
+    if (query.next())
+    {
+        bHasColumn = query.value(0).toInt() > 0;
+    }
+    return bHasColumn;
 }
 
 bool Database::insertValues(const QString& sTableName, const QStringList& columns, const QVector<QVariantList>& rows) const

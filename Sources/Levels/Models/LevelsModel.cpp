@@ -47,7 +47,10 @@ QVariant LevelsModel::data(const QModelIndex& index, int iRole) const
         if (iTreeItemType == TreeItem::Level)
         {
             auto pLevelTreeItem = static_cast<LevelTreeItem*>(itemFromIndex(indexFirstColumn));
-            return QString("%1 %").arg(QString::number(pLevelTreeItem->getProgressionPercentage(), 'f', 1));
+            if (pLevelTreeItem->getLevelType() != LevelTreeItem::Text)
+            {
+                return QString("%1 %").arg(QString::number(pLevelTreeItem->getProgressionPercentage(), 'f', 1));
+            }
         }
     }
 

@@ -44,7 +44,7 @@ StrokesSolverTextEdit::StrokesSolverTextEdit(QWidget* pParent)
     connect(_pTimerSolve, &QTimer::timeout, this, &StrokesSolverTextEdit::onTimerSolve);
 }
 
-void StrokesSolverTextEdit::restart(const QString& sText, int iLevelType)
+void StrokesSolverTextEdit::restart(const QString& sText, int iTextId)
 {
     setEnabled(sText.isEmpty() == false);
 
@@ -64,7 +64,7 @@ void StrokesSolverTextEdit::restart(const QString& sText, int iLevelType)
 
     _pTimerSolve->start();
 
-    _iLevelType = iLevelType;
+    _iTextId = iTextId;
     _uiInvalidCharacters = 0;
     _bCleanState = true;
     _keyPressTimer.invalidate();
@@ -75,7 +75,7 @@ void StrokesSolverTextEdit::restart(const QString& sText, int iLevelType)
     }
 
     setFocus();
-    emit reset(_iLevelType);
+    emit reset(_iTextId);
 }
 
 void StrokesSolverTextEdit::setWordCounter(WordCounter* pWordCounter)

@@ -66,9 +66,8 @@ StrokesSolverWidget::~StrokesSolverWidget()
 
 void StrokesSolverWidget::restart(const QString& sText)
 {
-    const int iLevelType = _pUi->textEdit->getLevelType();
-    Q_ASSERT(iLevelType != -1);
-    _pUi->textEdit->restart(sText, iLevelType);
+    const int iTextId = _pUi->textEdit->getTextId();
+    _pUi->textEdit->restart(sText, iTextId);
 }
 
 void StrokesSolverWidget::on_fontComboBox_currentFontChanged(QFont font)
