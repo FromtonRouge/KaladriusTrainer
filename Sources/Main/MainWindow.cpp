@@ -92,7 +92,7 @@ MainWindow::MainWindow(QWidget* pParent)
         connect(pStrokesSolverTextEdit, &StrokesSolverTextEdit::started, _pCountdownTimer, &CountdownTimer::start);
         connect(pStrokesSolverTextEdit, &StrokesSolverTextEdit::done, this, &MainWindow::onTypingTestDone);
         connect(_pCountdownTimer, &CountdownTimer::done, this, &MainWindow::onTypingTestDone);
-        connect(_pUi->treeViewLevels, &LevelsTreeView::sendText, pStrokesSolverTextEdit, &StrokesSolverTextEdit::restart);
+        connect(_pUi->treeViewLevels, &LevelsTreeView::sendText, _pUi->widgetStrokesSolver, &StrokesSolverWidget::restart);
         connect(_pUi->treeViewLevels, &LevelsTreeView::sendWordsToPractice, pStrokesSolverTextEdit, &StrokesSolverTextEdit::setWordsToPractice);
         connect(_pUi->widgetStrokesSolver, &StrokesSolverWidget::restartNeeded, _pUi->treeViewLevels, &LevelsTreeView::restart);
     }

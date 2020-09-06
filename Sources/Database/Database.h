@@ -37,6 +37,7 @@ public:
     bool open();
 
     QSqlQuery execute(const QString& sQuery) const;
+    QString escape(const QString& sText) const;
 
     bool createTextsTable() const;
     bool createTextFilesTable() const;

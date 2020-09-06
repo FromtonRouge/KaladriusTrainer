@@ -30,6 +30,7 @@
 #include <QtCore/QSettings>
 #include <QtCore/QUuid>
 #include <QtCore/QRandomGenerator>
+#include <QtCore/QSettings>
 #include <iostream>
 
 LevelsTreeView::LevelsTreeView(QWidget* pParent)
@@ -80,7 +81,32 @@ void LevelsTreeView::restart()
                     {
                         emit sendWordsToPractice({}, {});
 
-                        QString sQuery = "SELECT Id FROM \"Texts\" WHERE Enabled == 1";
+                        QSettings settings;
+                        const int iMinimumCharacters = settings.value("minimumCharacters", 0).toInt();
+                        const int iMaximumCharacters = settings.value("maximumCharacters", 100).toInt();
+                        const QString& sContains = settings.value("textContains").toString();
+                        const QString& sDoesNotContain = settings.value("textDoesNotContain", "\"|'").toString();
+
+                        QString sContainsClause;
+                        if (sContains.isEmpty() == false)
+                        {
+                            for (const QString& sPattern : sContains.split('|'))
+                            {
+                                sContainsClause += QString(" AND instr(Text, %1) > 0").arg(pDatabase->escape(sPattern));
+                            }
+                        }
+
+                        QString sDoesNotContainClause;
+                        if (sDoesNotContain.isEmpty() == false)
+                        {
+                            for (const QString& sPattern : sDoesNotContain.split('|'))
+                            {
+                                sDoesNotContainClause += QString(" AND instr(Text, %1) == 0").arg(pDatabase->escape(sPattern));
+                            }
+                        }
+
+                        QString sQuery = "SELECT Id FROM \"Texts\" WHERE Enabled == 1 AND Characters >= %1 AND Characters <= %2%3%4";
+                        sQuery = sQuery.arg(iMinimumCharacters).arg(iMaximumCharacters).arg(sContainsClause).arg(sDoesNotContainClause);
                         QSqlQuery query = pDatabase->execute(sQuery);
                         QVector<int> textIds;
                         while (query.next())
@@ -159,7 +185,7 @@ void LevelsTreeView::restart()
                     }
                 }
 
-                emit sendText(sText, iTextId);
+                emit sendText(sText, iLevelType, iTextId);
 
                 QSettings settings;
                 settings.setValue("lastSelectedLevel", current.row());

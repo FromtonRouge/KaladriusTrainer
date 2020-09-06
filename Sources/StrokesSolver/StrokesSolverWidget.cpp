@@ -19,6 +19,7 @@
 
 #include "StrokesSolverWidget.h"
 #include "WordsToImprove.h"
+#include "../Levels/TreeItems/LevelTreeItem.h"
 #include "ui_StrokesSolverWidget.h"
 #include <QtGui/QFontDatabase>
 #include <QtQml/QQmlContext>
@@ -47,7 +48,8 @@ StrokesSolverWidget::StrokesSolverWidget(QWidget* pParent)
     }
 
     // Try to get a saved font if any
-    const QVariant& variant = QSettings().value("strokesSolverFont", _pUi->textEdit->font());
+    QSettings settings;
+    const QVariant& variant = settings.value("strokesSolverFont", _pUi->textEdit->font());
     const QFont& wantedFont = qvariant_cast<QFont>(variant);
     _pUi->fontComboBox->setCurrentFont(wantedFont);
     _pUi->comboBoxFontSize->setCurrentIndex(sizes.indexOf(wantedFont.pointSize()));
@@ -57,6 +59,15 @@ StrokesSolverWidget::StrokesSolverWidget(QWidget* pParent)
     auto pRootContext = _pUi->quickWidgetWordsToImprove->rootContext();
     pRootContext->setContextProperty("wordsToImprove", _pWordsToImprove);
     _pUi->quickWidgetWordsToImprove->setSource(QUrl("qrc:/Qml/WordsToImprove.qml"));
+
+    const int iMinimumCharacters = settings.value("minimumCharacters", 0).toInt();
+    _pUi->spinBoxMinimumCharacters->setValue(iMinimumCharacters);
+
+    const int iMaximumCharacters = settings.value("maximumCharacters", 100).toInt();
+    _pUi->spinBoxMaximumCharacters->setValue(iMaximumCharacters);
+
+    _pUi->lineEditContains->setText(settings.value("textContains").toString());
+    _pUi->lineEditDoesNotContain->setText(settings.value("textDoesNotContain", "\"|'").toString());
 }
 
 StrokesSolverWidget::~StrokesSolverWidget()
@@ -64,9 +75,9 @@ StrokesSolverWidget::~StrokesSolverWidget()
 
 }
 
-void StrokesSolverWidget::restart(const QString& sText)
+void StrokesSolverWidget::restart(const QString& sText, int iLevelType, int iTextId)
 {
-    const int iTextId = _pUi->textEdit->getTextId();
+    _pUi->stackedWidget->setCurrentIndex(iLevelType == LevelTreeItem::Text ? 1 : 0);
     _pUi->textEdit->restart(sText, iTextId);
 }
 
@@ -89,4 +100,24 @@ void StrokesSolverWidget::on_comboBoxFontSize_currentTextChanged(const QString& 
 void StrokesSolverWidget::on_pushButtonRestart_released()
 {
     emit restartNeeded();
+}
+
+void StrokesSolverWidget::on_spinBoxMinimumCharacters_valueChanged(int i)
+{
+    QSettings().setValue("minimumCharacters", i);
+}
+
+void StrokesSolverWidget::on_spinBoxMaximumCharacters_valueChanged(int i)
+{
+    QSettings().setValue("maximumCharacters", i);
+}
+
+void StrokesSolverWidget::on_lineEditContains_textChanged(const QString& sText)
+{
+    QSettings().setValue("textContains", sText);
+}
+
+void StrokesSolverWidget::on_lineEditDoesNotContain_textChanged(const QString& sText)
+{
+    QSettings().setValue("textDoesNotContain", sText);
 }

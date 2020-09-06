@@ -43,12 +43,16 @@ public:
     WordsToImprove* getWordsToImprove() const {return _pWordsToImprove;}
 
 public slots:
-    void restart(const QString& sText);
+    void restart(const QString& sText, int iLevelType, int iTextId);
 
 protected slots:
     void on_fontComboBox_currentFontChanged(QFont font);
     void on_comboBoxFontSize_currentTextChanged(const QString& sText);
     void on_pushButtonRestart_released();
+    void on_spinBoxMinimumCharacters_valueChanged(int i);
+    void on_spinBoxMaximumCharacters_valueChanged(int i);
+    void on_lineEditContains_textChanged(const QString& sText);
+    void on_lineEditDoesNotContain_textChanged(const QString& sText);
 
 private:
     QScopedPointer<Ui::StrokesSolverWidget> _pUi;

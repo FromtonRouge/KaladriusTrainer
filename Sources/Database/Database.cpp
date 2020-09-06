@@ -83,6 +83,14 @@ QSqlQuery Database::execute(const QString& sQuery) const
     return query;
 }
 
+QString Database::escape(const QString& sText) const
+{
+    const QSqlDatabase& db = QSqlDatabase::database();
+    QSqlField field("", QVariant::String);
+    field.setValue(sText);
+    return db.driver()->formatValue(field);
+}
+
 bool Database::createTextsTable() const
 {
     QVector<QPair<QString, QString>> columns;
@@ -90,7 +98,6 @@ bool Database::createTextsTable() const
     columns << QPair<QString, QString>("Enabled", "INTEGER");
     columns << QPair<QString, QString>("Text", "TEXT");
     columns << QPair<QString, QString>("Characters", "INTEGER");
-    columns << QPair<QString, QString>("HasQuotes", "INTEGER");
     columns << QPair<QString, QString>("TextFileId", "INTEGER NOT NULL");
 
     const QString sConstraints = "FOREIGN KEY (TextFileId) REFERENCES 'Text Files' (Id)";
