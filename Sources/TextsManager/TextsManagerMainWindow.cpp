@@ -54,6 +54,7 @@ void TextsManagerMainWindow::Init()
     pDatabase->createTextFilesTable();
     pDatabase->createTextsTable();
 
+    _pUi->treeViewTexts->setSelectionMode(QTreeView::ExtendedSelection);
     _pUi->treeViewTexts->setModel(_pTextsModel);
     auto pItemSelectionModel = _pUi->treeViewTexts->selectionModel();
     connect(pItemSelectionModel, &QItemSelectionModel::currentChanged, [&](const QModelIndex& current, const QModelIndex&)
@@ -313,11 +314,11 @@ void TextsManagerMainWindow::importTextFile(const QString& sFilePath)
                 QVector<QVariantList> rows;
                 for (const QString& sText : texts)
                 {
-                    QVariantList values = {sText, sText.size(), sText.contains("\""), iTextFileId};
+                    QVariantList values = {true, sText, sText.size(), sText.contains("\""), iTextFileId};
                     rows << values;
                 }
 
-                if (pDatabase->insertValues("Texts", {"Text", "Characters", "HasQuotes", "TextFileId"}, rows))
+                if (pDatabase->insertValues("Texts", {"Enabled", "Text", "Characters", "HasQuotes", "TextFileId"}, rows))
                 {
                     const QString sOutput = QString("%1 texts imported from \"%2\"").arg(texts.size()).arg(fi.fileName());
                     std::cout << sOutput.toStdString() << std::endl;

@@ -83,6 +83,7 @@ QSqlQuery Database::execute(const QString& sQuery) const
 bool Database::createTextsTable() const
 {
     QVector<QPair<QString, QString>> columns;
+    columns << QPair<QString, QString>("Enabled", "INTEGER");
     columns << QPair<QString, QString>("Text", "TEXT");
     columns << QPair<QString, QString>("Characters", "INTEGER");
     columns << QPair<QString, QString>("HasQuotes", "INTEGER");

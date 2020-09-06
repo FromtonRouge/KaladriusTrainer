@@ -19,20 +19,22 @@
 
 #pragma once
 
-#include <QtGui/QStandardItemModel>
+#include <QtWidgets/QTreeView>
 
-class TextsModel : public QStandardItemModel
+class TextsTreeView : public QTreeView
 {
+    Q_OBJECT
+
 public:
-    TextsModel(QObject* pParent = nullptr);
+    TextsTreeView(QWidget* pParent = nullptr);
+    ~TextsTreeView();
 
-    void reset();
+private slots:
+    void enableSelection();
+    void disableSelection();
 
-    bool hasChildren(const QModelIndex &parent) const override;
-    bool canFetchMore(const QModelIndex &parent) const override;
-    void fetchMore(const QModelIndex &parent) override;
-    QVariant headerData(int iSection, Qt::Orientation orientation, int iRole) const override;
-    QVariant data(const QModelIndex &index, int iRole) const override;
-    bool setData(const QModelIndex& index, const QVariant& value, int iRole) override;
+private:
+    QAction* _pActionEnable = nullptr;
+    QAction* _pActionDisable = nullptr;
 };
 

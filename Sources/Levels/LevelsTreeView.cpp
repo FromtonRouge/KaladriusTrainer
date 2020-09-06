@@ -83,7 +83,7 @@ void LevelsTreeView::restart()
                         const int iNbCharactersLimit = 200;
                         const bool bHasQuotes = false;
 
-                        QString sQuery = "SELECT ROWID FROM \"Texts\" WHERE Characters < %1 AND HasQuotes == %2";
+                        QString sQuery = "SELECT ROWID FROM \"Texts\" WHERE Characters < %1 AND HasQuotes == %2 AND Enabled == 1";
                         sQuery = sQuery.arg(iNbCharactersLimit).arg(bHasQuotes);
                         QSqlQuery query = pDatabase->execute(sQuery);
                         QVector<int> textIds;

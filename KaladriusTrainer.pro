@@ -102,6 +102,7 @@ SOURCES += \
     Sources/StrokesSolver/WordsToImprove.cpp \
     Sources/TextsManager/TextsManagerMainWindow.cpp \
     Sources/TextsManager/TextsModel.cpp \
+    Sources/TextsManager/TextsTreeView.cpp \
     Sources/Theories/Models/TheoryModel.cpp \
     Sources/Theories/Models/UndoableTheoryModel.cpp \
     Sources/Theories/TheoryEditorMainWindow.cpp \
@@ -208,6 +209,7 @@ HEADERS += \
     Sources/StrokesSolver/WordsToImprove.h \
     Sources/TextsManager/TextsManagerMainWindow.h \
     Sources/TextsManager/TextsModel.h \
+    Sources/TextsManager/TextsTreeView.h \
     Sources/Theories/Models/TheoryModel.h \
     Sources/Theories/Models/UndoableTheoryModel.h \
     Sources/Theories/TheoryEditorMainWindow.h \

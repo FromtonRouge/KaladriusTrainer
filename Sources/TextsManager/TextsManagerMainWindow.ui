@@ -38,7 +38,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>30</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHelp">
@@ -80,7 +80,7 @@
       <number>0</number>
      </property>
      <item row="0" column="0">
-      <widget class="QTreeView" name="treeViewTexts"/>
+      <widget class="TextsTreeView" name="treeViewTexts"/>
      </item>
     </layout>
    </widget>
@@ -113,6 +113,13 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>TextsTreeView</class>
+   <extends>QTreeView</extends>
+   <header location="global">TextsManager/TextsTreeView.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../../Resources/KaladriusTrainer.qrc"/>
  </resources>

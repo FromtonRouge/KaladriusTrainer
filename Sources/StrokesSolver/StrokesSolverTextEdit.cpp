@@ -46,7 +46,7 @@ StrokesSolverTextEdit::StrokesSolverTextEdit(QWidget* pParent)
 
 void StrokesSolverTextEdit::restart(const QString& sText, int iLevelType)
 {
-    setEnabled(true);
+    setEnabled(sText.isEmpty() == false);
 
     blockSignals(true);
     setText(sText);
