@@ -29,8 +29,7 @@ TextsModel::TextsModel(QObject* pParent)
 
 void TextsModel::reset()
 {
-    beginResetModel();
-    endResetModel();
+    clear();
 }
 
 bool TextsModel::hasChildren(const QModelIndex& parent) const
@@ -93,6 +92,7 @@ void TextsModel::fetchMore(const QModelIndex& parent)
             const int iTextFileId = query.value(0).toInt();
             const QString& sName = query.value(1).toString();
             QStandardItem* pItem = new QStandardItem(QIcon(":/Icons/book.png"), sName);
+            pItem->setEditable(false);
             pItem->setData(iTextFileId);
             pItem->setCheckable(true);
             invisibleRootItem()->appendRow(pItem);
@@ -112,6 +112,7 @@ void TextsModel::fetchMore(const QModelIndex& parent)
             {
                 const int iTextId = query.value(0).toInt();
                 QStandardItem* pItem = new QStandardItem(QIcon(":/Icons/book-open-text.png"), QString("[%1]").arg(i++));
+                pItem->setEditable(false);
                 pItem->setData(iTextId);
                 pItem->setCheckable(true);
                 itemFromIndex(parent)->appendRow(pItem);
@@ -137,11 +138,17 @@ QVariant TextsModel::data(const QModelIndex& index, int iRole) const
 
     if (index.parent().isValid())
     {
+        auto pItem = itemFromIndex(index);
+        const int iTextId = pItem->data().toInt();
         switch (iRole)
         {
+        case Qt::ToolTipRole:
+            {
+                result = QString("TextId = %1").arg(iTextId);
+                break;
+            }
         case Qt::CheckStateRole:
             {
-                const int iTextId = index.data(Qt::UserRole + 1).toInt();
                 QString sQuery = "SELECT Enabled FROM \"Texts\" WHERE ROWID == %1";
                 sQuery = sQuery.arg(iTextId);
                 QSqlQuery query = pDatabase->execute(sQuery);
@@ -252,4 +259,59 @@ bool TextsModel::setData(const QModelIndex& index, const QVariant& value, int iR
     }
 
     return QStandardItemModel::setData(index, value, iRole);
+}
+
+bool TextsModel::removeRows(int iRow, int iCount, const QModelIndex& parent)
+{
+    const QString TEXT_LEVEL = "Text Level ab1575a2-c508-4565-8e25-3515c9e22aef";
+
+    auto pDatabase = qApp->getDatabase();
+    if (parent.isValid() == false)
+    {
+        // Remove Text files
+        for (int i = iRow+iCount-1; i >= iRow ; --i)
+        {
+            const QModelIndex& indexToRemove = index(i, 0, parent);
+            const int iTextFileId = indexToRemove.data(Qt::UserRole + 1).toInt();
+
+            // Delete test results first
+            QString sQuery = "DELETE FROM '%1' WHERE TextId IN (SELECT ROWID FROM 'Texts' WHERE TextFileId == %2)";
+            sQuery = sQuery.arg(TEXT_LEVEL).arg(iTextFileId);
+            pDatabase->execute(sQuery);
+
+            // Delete texts
+            sQuery = "DELETE FROM 'Texts' WHERE TextFileId == %1";
+            sQuery = sQuery.arg(iTextFileId);
+            pDatabase->execute(sQuery);
+
+            // Delete text file
+            sQuery = "DELETE FROM 'Text Files' WHERE ROWID == %1";
+            sQuery = sQuery.arg(iTextFileId);
+            pDatabase->execute(sQuery);
+        }
+    }
+    else
+    {
+        // Remove Text
+        QStringList textIds;
+        for (int i = iRow+iCount-1; i >= iRow ; --i)
+        {
+            const QModelIndex& indexToRemove = index(i, 0, parent);
+            const int iTextId = indexToRemove.data(Qt::UserRole + 1).toInt();
+            textIds << QString::number(iTextId);
+        }
+
+        const QString& sTextIds = textIds.join(",");
+        // Delete test results first
+        QString sQuery = "DELETE FROM '%1' WHERE TextId IN (%2)";
+        sQuery = sQuery.arg(TEXT_LEVEL).arg(sTextIds);
+        pDatabase->execute(sQuery);
+
+        // Delete text
+        sQuery = "DELETE FROM 'Texts' WHERE ROWID IN (%1)";
+        sQuery = sQuery.arg(sTextIds);
+        pDatabase->execute(sQuery);
+    }
+
+    return QStandardItemModel::removeRows(iRow, iCount, parent);
 }

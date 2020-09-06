@@ -54,7 +54,6 @@ void TextsManagerMainWindow::Init()
     pDatabase->createTextFilesTable();
     pDatabase->createTextsTable();
 
-    _pUi->treeViewTexts->setSelectionMode(QTreeView::ExtendedSelection);
     _pUi->treeViewTexts->setModel(_pTextsModel);
     auto pItemSelectionModel = _pUi->treeViewTexts->selectionModel();
     connect(pItemSelectionModel, &QItemSelectionModel::currentChanged, [&](const QModelIndex& current, const QModelIndex&)
@@ -93,6 +92,7 @@ void TextsManagerMainWindow::on_actionImport_Text_triggered()
         settings.setValue("lastTextImportDirectory", fileInfo.absoluteDir().absolutePath());
 
         _pTextsModel->reset();
+        _pUi->textEdit->clear();
     }
 }
 
@@ -108,6 +108,7 @@ void TextsManagerMainWindow::on_actionImport_Directory_triggered()
         settings.setValue("lastTextImportDirectory", sDirectory);
 
         _pTextsModel->reset();
+        _pUi->textEdit->clear();
     }
 }
 

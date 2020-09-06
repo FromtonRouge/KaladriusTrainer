@@ -32,9 +32,11 @@ public:
 private slots:
     void enableSelection();
     void disableSelection();
+    void removeSelection();
 
 private:
     QAction* _pActionEnable = nullptr;
     QAction* _pActionDisable = nullptr;
+    QAction* _pActionRemove = nullptr;
 };
 

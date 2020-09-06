@@ -19,10 +19,16 @@
 
 #include "TextsTreeView.h"
 #include <QtWidgets/QAction>
+#include <QtCore/QVector>
+#include <QtCore/QPersistentModelIndex>
+#include <QtCore/QItemSelectionModel>
+#include <QtCore/QDebug>
 
 TextsTreeView::TextsTreeView(QWidget* pParent)
     : QTreeView(pParent)
 {
+    setSelectionMode(QTreeView::ContiguousSelection);
+
     _pActionEnable = new QAction(tr("Enable"));
     addAction(_pActionEnable);
     connect(_pActionEnable, &QAction::triggered, this, &TextsTreeView::enableSelection);
@@ -30,6 +36,10 @@ TextsTreeView::TextsTreeView(QWidget* pParent)
     _pActionDisable = new QAction(tr("Disable"));
     addAction(_pActionDisable);
     connect(_pActionDisable, &QAction::triggered, this, &TextsTreeView::disableSelection);
+
+    _pActionRemove = new QAction(QIcon(":/Icons/cross.png"), tr("Remove"));
+    addAction(_pActionRemove);
+    connect(_pActionRemove, &QAction::triggered, this, &TextsTreeView::removeSelection);
 
     setContextMenuPolicy(Qt::ActionsContextMenu);
 }
@@ -54,5 +64,14 @@ void TextsTreeView::disableSelection()
     for (const QModelIndex& index : indexes)
     {
         model()->setData(index, Qt::Unchecked, Qt::CheckStateRole);
+    }
+}
+
+void TextsTreeView::removeSelection()
+{
+    QItemSelectionModel* pSelectionModel = selectionModel();
+    for (const QItemSelectionRange& selectionRange : pSelectionModel->selection())
+    {
+        model()->removeRows(selectionRange.top(), selectionRange.height(), selectionRange.parent());
     }
 }

@@ -34,5 +34,6 @@ public:
     QVariant headerData(int iSection, Qt::Orientation orientation, int iRole) const override;
     QVariant data(const QModelIndex &index, int iRole) const override;
     bool setData(const QModelIndex& index, const QVariant& value, int iRole) override;
+    bool removeRows(int iRow, int iCount, const QModelIndex &parent) override;
 };
 
