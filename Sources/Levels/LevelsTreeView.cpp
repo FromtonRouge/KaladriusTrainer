@@ -80,7 +80,7 @@ void LevelsTreeView::restart()
                     {
                         emit sendWordsToPractice({}, {});
 
-                        QString sQuery = "SELECT ROWID FROM \"Texts\" WHERE Enabled == 1";
+                        QString sQuery = "SELECT Id FROM \"Texts\" WHERE Enabled == 1";
                         QSqlQuery query = pDatabase->execute(sQuery);
                         QVector<int> textIds;
                         while (query.next())
@@ -97,7 +97,7 @@ void LevelsTreeView::restart()
                         if (iRow != -1)
                         {
                             iTextId = textIds[iRow];
-                            sQuery = "SELECT Text FROM \"Texts\" WHERE ROWID == %1";
+                            sQuery = "SELECT Text FROM \"Texts\" WHERE Id == %1";
                             sQuery = sQuery.arg(iTextId);
                             QSqlQuery query = pDatabase->execute(sQuery);
                             if (query.next())

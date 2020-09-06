@@ -62,7 +62,7 @@ void TextsManagerMainWindow::Init()
         {
             const int iTextId = current.data(Qt::UserRole + 1).toInt();
 
-            QString sQuery = "SELECT Text FROM \"Texts\" WHERE ROWID == %1";
+            QString sQuery = "SELECT Text FROM \"Texts\" WHERE Id == %1";
             sQuery = sQuery.arg(iTextId);
             QSqlQuery query = pDatabase->execute(sQuery);
             if (query.next())
@@ -293,7 +293,7 @@ void TextsManagerMainWindow::importTextFile(const QString& sFilePath)
         auto pDatabase = qApp->getDatabase();
         auto getTextFileId = [&]() -> int
         {
-            QString sQuery = "SELECT ROWID FROM \"Text Files\" WHERE Filename == \"%1\"";
+            QString sQuery = "SELECT Id FROM \"Text Files\" WHERE Filename == \"%1\"";
             sQuery = sQuery.arg(fi.fileName());
             int iRowId = -1;
             QSqlQuery query = pDatabase->execute(sQuery);

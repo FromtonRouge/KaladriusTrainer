@@ -53,6 +53,8 @@ bool Database::open()
             database.setDatabaseName(sDatabaseFilePath);
             if (database.open())
             {
+                // Activate foreign_keys
+                execute("PRAGMA foreign_keys = ON;");
                 return true;
             }
             else
@@ -75,7 +77,7 @@ QSqlQuery Database::execute(const QString& sQuery) const
     QSqlQuery query(QSqlDatabase::database());
     if (!query.exec(sQuery))
     {
-        QString sError = QString("Can't create table: %1").arg(query.lastError().text());
+        QString sError = QString("SQL query error: %1").arg(query.lastError().text());
         std::cerr << sError.toStdString() << std::endl;
     }
     return query;
@@ -84,17 +86,21 @@ QSqlQuery Database::execute(const QString& sQuery) const
 bool Database::createTextsTable() const
 {
     QVector<QPair<QString, QString>> columns;
+    columns << QPair<QString, QString>("Id", "INTEGER PRIMARY KEY");
     columns << QPair<QString, QString>("Enabled", "INTEGER");
     columns << QPair<QString, QString>("Text", "TEXT");
     columns << QPair<QString, QString>("Characters", "INTEGER");
     columns << QPair<QString, QString>("HasQuotes", "INTEGER");
-    columns << QPair<QString, QString>("TextFileId", "INTEGER");
-    return createTable("Texts", columns);
+    columns << QPair<QString, QString>("TextFileId", "INTEGER NOT NULL");
+
+    const QString sConstraints = "FOREIGN KEY (TextFileId) REFERENCES 'Text Files' (Id)";
+    return createTable("Texts", columns, sConstraints);
 }
 
 bool Database::createTextFilesTable() const
 {
     QVector<QPair<QString, QString>> columns;
+    columns << QPair<QString, QString>("Id", "INTEGER PRIMARY KEY");
     columns << QPair<QString, QString>("Filename", "TEXT UNIQUE");
     return createTable("Text Files", columns);
 }
@@ -108,16 +114,18 @@ bool Database::createLevelTable(const QString& sTableName, int iLevelType) const
     columns << QPair<QString, QString>("Accuracy", "REAL");
     columns << QPair<QString, QString>("Viscosity", "REAL");
 
+    QString sConstraints;
     if (iLevelType == LevelTreeItem::Text)
     {
-        columns << QPair<QString, QString>("TextId", "INTEGER");
+        columns << QPair<QString, QString>("TextId", "INTEGER NOT NULL");
+        sConstraints = "FOREIGN KEY (TextId) REFERENCES 'Texts' (Id)";
     }
     else
     {
         columns << QPair<QString, QString>("Progress", "REAL");
     }
 
-    return createTable(sTableName, columns);
+    return createTable(sTableName, columns, sConstraints);
 }
 
 bool Database::createLevelWordsTable(const QString& sTableName) const
@@ -292,7 +300,7 @@ QSqlQuery Database::getMax(const QString& sColumnName, const QString& sTableName
     return query;
 }
 
-bool Database::createTable(const QString& sTableName, const QVector<QPair<QString, QString> >& columns) const
+bool Database::createTable(const QString& sTableName, const QVector<QPair<QString, QString> >& columns, const QString& sTableConstraints) const
 {
     Q_ASSERT(!sTableName.isEmpty());
     const QSqlDatabase& db = QSqlDatabase::database();
@@ -304,8 +312,8 @@ bool Database::createTable(const QString& sTableName, const QVector<QPair<QStrin
             buffer << QString("\"%1\" %2").arg(pair.first).arg(pair.second);
         }
 
-        QString sCreateDatabase = "CREATE TABLE IF NOT EXISTS \"%1\" (%2);";
-        sCreateDatabase = sCreateDatabase.arg(sTableName).arg(buffer.join(","));
+        QString sCreateDatabase = "CREATE TABLE IF NOT EXISTS \"%1\" (%2%3);";
+        sCreateDatabase = sCreateDatabase.arg(sTableName).arg(buffer.join(",")).arg(sTableConstraints.isEmpty() ? "" : QString(", %1").arg(sTableConstraints));
 
         QSqlQuery query(db);
         if (!query.exec(sCreateDatabase))

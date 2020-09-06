@@ -59,6 +59,6 @@ public:
 private:
     QSqlQuery getLastRecord(const QString& sTableName) const;
     QSqlQuery getMax(const QString& sColumnName, const QString& sTableName) const;
-    bool createTable(const QString& sTableName, const QVector<QPair<QString, QString>>& columns) const;
+    bool createTable(const QString& sTableName, const QVector<QPair<QString, QString>>& columns, const QString& sTableConstraints = QString()) const;
     QString getDatabaseFilePath() const;
 };

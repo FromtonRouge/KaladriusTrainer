@@ -64,7 +64,7 @@ bool TextsModel::canFetchMore(const QModelIndex& parent) const
         {
             const int iTextFileId = parent.data(Qt::UserRole + 1).toInt();
 
-            QString sQuery = "SELECT COUNT(ROWID) FROM \"Texts\" WHERE TextFileId == %1";
+            QString sQuery = "SELECT COUNT(Id) FROM \"Texts\" WHERE TextFileId == %1";
             sQuery = sQuery.arg(iTextFileId);
             QSqlQuery query = pDatabase->execute(sQuery);
             if (query.next())
@@ -85,7 +85,7 @@ void TextsModel::fetchMore(const QModelIndex& parent)
     auto pDatabase = qApp->getDatabase();
     if (!parent.isValid())
     {
-        QString sQuery = "SELECT ROWID, Filename FROM \"Text Files\"";
+        QString sQuery = "SELECT Id, Filename FROM \"Text Files\"";
         QSqlQuery query = pDatabase->execute(sQuery);
         while (query.next())
         {
@@ -104,7 +104,7 @@ void TextsModel::fetchMore(const QModelIndex& parent)
         {
             const int iTextFileId = parent.data(Qt::UserRole + 1).toInt();
 
-            QString sQuery = "SELECT ROWID, Enabled FROM \"Texts\" WHERE TextFileId == %1";
+            QString sQuery = "SELECT Id, Enabled FROM \"Texts\" WHERE TextFileId == %1";
             sQuery = sQuery.arg(iTextFileId);
             QSqlQuery query = pDatabase->execute(sQuery);
             int i = 0;
@@ -149,7 +149,7 @@ QVariant TextsModel::data(const QModelIndex& index, int iRole) const
             }
         case Qt::CheckStateRole:
             {
-                QString sQuery = "SELECT Enabled FROM \"Texts\" WHERE ROWID == %1";
+                QString sQuery = "SELECT Enabled FROM \"Texts\" WHERE Id == %1";
                 sQuery = sQuery.arg(iTextId);
                 QSqlQuery query = pDatabase->execute(sQuery);
                 Qt::CheckState checkState = Qt::Unchecked;
@@ -174,7 +174,7 @@ QVariant TextsModel::data(const QModelIndex& index, int iRole) const
             {
                 int iTotalRows = 0;
                 const int iTextFileId = index.data(Qt::UserRole + 1).toInt();
-                QString sQuery = "SELECT COUNT(ROWID) FROM \"Texts\" WHERE TextFileId == %1";
+                QString sQuery = "SELECT COUNT(Id) FROM \"Texts\" WHERE TextFileId == %1";
                 sQuery = sQuery.arg(iTextFileId);
                 QSqlQuery query = pDatabase->execute(sQuery);
                 if (query.next())
@@ -183,7 +183,7 @@ QVariant TextsModel::data(const QModelIndex& index, int iRole) const
                 }
 
                 int iEnabledRows = 0;
-                sQuery = "SELECT COUNT(ROWID) FROM \"Texts\" WHERE TextFileId == %1 AND Enabled == 1";
+                sQuery = "SELECT COUNT(Id) FROM \"Texts\" WHERE TextFileId == %1 AND Enabled == 1";
                 sQuery = sQuery.arg(iTextFileId);
                 query = pDatabase->execute(sQuery);
                 if (query.next())
@@ -222,7 +222,7 @@ bool TextsModel::setData(const QModelIndex& index, const QVariant& value, int iR
         case Qt::CheckStateRole:
             {
                 const int iTextId = index.data(Qt::UserRole + 1).toInt();
-                QString sQuery = "UPDATE \"Texts\" SET Enabled = %1 WHERE ROWID == %2";
+                QString sQuery = "UPDATE \"Texts\" SET Enabled = %1 WHERE Id == %2";
                 sQuery = sQuery.arg(value.toInt() == 2 ? 1 : 0).arg(iTextId);
                 pDatabase->execute(sQuery);
                 emit dataChanged(index.parent(), index.parent(), {Qt::CheckStateRole});
@@ -275,7 +275,7 @@ bool TextsModel::removeRows(int iRow, int iCount, const QModelIndex& parent)
             const int iTextFileId = indexToRemove.data(Qt::UserRole + 1).toInt();
 
             // Delete test results first
-            QString sQuery = "DELETE FROM '%1' WHERE TextId IN (SELECT ROWID FROM 'Texts' WHERE TextFileId == %2)";
+            QString sQuery = "DELETE FROM '%1' WHERE TextId IN (SELECT Id FROM 'Texts' WHERE TextFileId == %2)";
             sQuery = sQuery.arg(TEXT_LEVEL).arg(iTextFileId);
             pDatabase->execute(sQuery);
 
@@ -285,7 +285,7 @@ bool TextsModel::removeRows(int iRow, int iCount, const QModelIndex& parent)
             pDatabase->execute(sQuery);
 
             // Delete text file
-            sQuery = "DELETE FROM 'Text Files' WHERE ROWID == %1";
+            sQuery = "DELETE FROM 'Text Files' WHERE Id == %1";
             sQuery = sQuery.arg(iTextFileId);
             pDatabase->execute(sQuery);
         }
@@ -302,13 +302,14 @@ bool TextsModel::removeRows(int iRow, int iCount, const QModelIndex& parent)
         }
 
         const QString& sTextIds = textIds.join(",");
+
         // Delete test results first
         QString sQuery = "DELETE FROM '%1' WHERE TextId IN (%2)";
         sQuery = sQuery.arg(TEXT_LEVEL).arg(sTextIds);
         pDatabase->execute(sQuery);
 
         // Delete text
-        sQuery = "DELETE FROM 'Texts' WHERE ROWID IN (%1)";
+        sQuery = "DELETE FROM 'Texts' WHERE Id IN (%1)";
         sQuery = sQuery.arg(sTextIds);
         pDatabase->execute(sQuery);
     }

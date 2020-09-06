@@ -19,6 +19,7 @@
 
 #include "TextsTreeView.h"
 #include <QtWidgets/QAction>
+#include <QtGui/QKeySequence>
 #include <QtCore/QVector>
 #include <QtCore/QPersistentModelIndex>
 #include <QtCore/QItemSelectionModel>
@@ -38,6 +39,7 @@ TextsTreeView::TextsTreeView(QWidget* pParent)
     connect(_pActionDisable, &QAction::triggered, this, &TextsTreeView::disableSelection);
 
     _pActionRemove = new QAction(QIcon(":/Icons/cross.png"), tr("Remove"));
+    _pActionRemove->setShortcut(Qt::Key_Delete);
     addAction(_pActionRemove);
     connect(_pActionRemove, &QAction::triggered, this, &TextsTreeView::removeSelection);
 
