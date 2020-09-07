@@ -33,6 +33,9 @@ class TextsManagerMainWindow : public MainTabWindow
 {
     Q_OBJECT
 
+signals:
+    void sendText(int iTextId) const;
+
 public:
     TextsManagerMainWindow(QWidget* pParent = nullptr);
     ~TextsManagerMainWindow();
@@ -43,6 +46,7 @@ protected slots:
     void on_actionAbout_triggered();
     void on_actionImport_Text_triggered();
     void on_actionImport_Directory_triggered();
+    void on_actionImport_Default_Texts_triggered();
 
 private:
     void importDirectory(const QString& sDirectory);

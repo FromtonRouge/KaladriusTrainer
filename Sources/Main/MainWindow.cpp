@@ -336,3 +336,8 @@ void MainWindow::onTypingTestDone()
         }
     }
 }
+
+void MainWindow::onTextId(int iTextId)
+{
+    _pUi->treeViewLevels->setWantedTextId(iTextId);
+}

@@ -18,8 +18,12 @@
 // ======================================================================
 
 #include "TextsTreeView.h"
+#include "../Database/Database.h"
+#include "../Main/Application.h"
 #include <QtWidgets/QAction>
 #include <QtGui/QKeySequence>
+#include <QtGui/QMouseEvent>
+#include <QtWidgets/QMenu>
 #include <QtCore/QVector>
 #include <QtCore/QPersistentModelIndex>
 #include <QtCore/QItemSelectionModel>
@@ -38,17 +42,66 @@ TextsTreeView::TextsTreeView(QWidget* pParent)
     addAction(_pActionDisable);
     connect(_pActionDisable, &QAction::triggered, this, &TextsTreeView::disableSelection);
 
+    _pActionSendToLearnTab = new QAction(QIcon(":/Icons/ui-tab--arrow.png"), tr("Send to Learn Tab"));
+    addAction(_pActionSendToLearnTab);
+    connect(_pActionSendToLearnTab, &QAction::triggered, this, &TextsTreeView::sendToLearnWindow);
+
     _pActionRemove = new QAction(QIcon(":/Icons/cross.png"), tr("Remove"));
     _pActionRemove->setShortcut(Qt::Key_Delete);
     addAction(_pActionRemove);
     connect(_pActionRemove, &QAction::triggered, this, &TextsTreeView::removeSelection);
 
-    setContextMenuPolicy(Qt::ActionsContextMenu);
+    _pActionRemoveAll = new QAction(QIcon(":/Icons/cross.png"), tr("Remove All"));
+    addAction(_pActionRemoveAll);
+    connect(_pActionRemoveAll, &QAction::triggered, this, &TextsTreeView::removeAll);
 }
 
 TextsTreeView::~TextsTreeView()
 {
 
+}
+
+void TextsTreeView::mouseDoubleClickEvent(QMouseEvent* pEvent)
+{
+    QTreeView::mouseDoubleClickEvent(pEvent);
+
+    const QModelIndex& index = indexAt(pEvent->pos());
+    if (index.isValid() && index.parent().isValid())
+    {
+        emit sendText(index.data(Qt::UserRole + 1).toInt());
+    }
+}
+
+void TextsTreeView::contextMenuEvent(QContextMenuEvent*)
+{
+    QMenu menu;
+
+    if (selectedIndexes().isEmpty())
+    {
+        if (model()->rowCount())
+        {
+            menu.addAction(_pActionRemoveAll);
+        }
+    }
+    else
+    {
+        menu.addAction(_pActionEnable);
+        menu.addAction(_pActionDisable);
+
+        if (currentIndex().parent().isValid())
+        {
+            menu.addSeparator();
+            menu.addAction(_pActionSendToLearnTab);
+        }
+
+        menu.addSeparator();
+        menu.addAction(_pActionRemove);
+    }
+
+    if (!menu.isEmpty())
+    {
+        menu.exec(QCursor::pos());
+    }
 }
 
 void TextsTreeView::enableSelection()
@@ -69,11 +122,30 @@ void TextsTreeView::disableSelection()
     }
 }
 
+void TextsTreeView::sendToLearnWindow()
+{
+    const QModelIndex& current = currentIndex();
+    if (current.isValid() && current.parent().isValid())
+    {
+        emit sendText(current.data(Qt::UserRole + 1).toInt());
+    }
+}
+
 void TextsTreeView::removeSelection()
 {
     QItemSelectionModel* pSelectionModel = selectionModel();
     for (const QItemSelectionRange& selectionRange : pSelectionModel->selection())
     {
         model()->removeRows(selectionRange.top(), selectionRange.height(), selectionRange.parent());
+    }
+}
+
+void TextsTreeView::removeAll()
+{
+    auto pModel = model();
+    const int iRows = pModel->rowCount();
+    if (iRows)
+    {
+        pModel->removeRows(0, iRows);
     }
 }

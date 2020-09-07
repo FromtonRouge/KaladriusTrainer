@@ -38,8 +38,12 @@ public:
 
 public slots:
     void restart();
+    void setWantedTextId(int iTextId);
 
 protected:
     void currentChanged(const QModelIndex &current, const QModelIndex &previous) override;
+
+private:
+    int _iWantedTextId = 0;
 };
 

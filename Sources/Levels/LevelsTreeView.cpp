@@ -81,49 +81,61 @@ void LevelsTreeView::restart()
                     {
                         emit sendWordsToPractice({}, {});
 
-                        QSettings settings;
-                        const int iMinimumCharacters = settings.value("minimumCharacters", 0).toInt();
-                        const int iMaximumCharacters = settings.value("maximumCharacters", 100).toInt();
-                        const QString& sContains = settings.value("textContains").toString();
-                        const QString& sDoesNotContain = settings.value("textDoesNotContain", "\"|'").toString();
-
-                        QString sContainsClause;
-                        if (sContains.isEmpty() == false)
+                        if (_iWantedTextId)
                         {
-                            for (const QString& sPattern : sContains.split('|'))
+                            iTextId = _iWantedTextId;
+                            _iWantedTextId = 0;
+                        }
+                        else
+                        {
+                            QSettings settings;
+                            const int iMinimumCharacters = settings.value("minimumCharacters", 80).toInt();
+                            const int iMaximumCharacters = settings.value("maximumCharacters", 100).toInt();
+                            const QString& sContains = settings.value("textContains").toString();
+                            const QString& sDoesNotContain = settings.value("textDoesNotContain", "\"|'").toString();
+
+                            QString sContainsClause;
+                            if (sContains.isEmpty() == false)
                             {
-                                sContainsClause += QString(" AND instr(Text, %1) > 0").arg(pDatabase->escape(sPattern));
+                                for (const QString& sPattern : sContains.split('|'))
+                                {
+                                    sContainsClause += QString(" AND instr(Text, %1) > 0").arg(pDatabase->escape(sPattern));
+                                }
+                            }
+
+                            QString sDoesNotContainClause;
+                            if (sDoesNotContain.isEmpty() == false)
+                            {
+                                for (const QString& sPattern : sDoesNotContain.split('|'))
+                                {
+                                    sDoesNotContainClause += QString(" AND instr(Text, %1) == 0").arg(pDatabase->escape(sPattern));
+                                }
+                            }
+
+                            QString sQuery = "SELECT Id FROM \"Texts\" WHERE Enabled == 1 AND Characters >= %1 AND Characters <= %2%3%4";
+                            sQuery = sQuery.arg(iMinimumCharacters).arg(iMaximumCharacters).arg(sContainsClause).arg(sDoesNotContainClause);
+                            QSqlQuery query = pDatabase->execute(sQuery);
+                            QVector<int> textIds;
+                            while (query.next())
+                            {
+                                textIds << query.value(0).toInt();
+                            }
+
+                            int iRow = -1;
+                            if (textIds.isEmpty() == false)
+                            {
+                                iRow = QRandomGenerator::global()->bounded(0, textIds.size());
+                            }
+
+                            if (iRow != -1)
+                            {
+                                iTextId = textIds[iRow];
                             }
                         }
 
-                        QString sDoesNotContainClause;
-                        if (sDoesNotContain.isEmpty() == false)
+                        if (iTextId)
                         {
-                            for (const QString& sPattern : sDoesNotContain.split('|'))
-                            {
-                                sDoesNotContainClause += QString(" AND instr(Text, %1) == 0").arg(pDatabase->escape(sPattern));
-                            }
-                        }
-
-                        QString sQuery = "SELECT Id FROM \"Texts\" WHERE Enabled == 1 AND Characters >= %1 AND Characters <= %2%3%4";
-                        sQuery = sQuery.arg(iMinimumCharacters).arg(iMaximumCharacters).arg(sContainsClause).arg(sDoesNotContainClause);
-                        QSqlQuery query = pDatabase->execute(sQuery);
-                        QVector<int> textIds;
-                        while (query.next())
-                        {
-                            textIds << query.value(0).toInt();
-                        }
-
-                        int iRow = -1;
-                        if (textIds.isEmpty() == false)
-                        {
-                            iRow = QRandomGenerator::global()->bounded(0, textIds.size());
-                        }
-
-                        if (iRow != -1)
-                        {
-                            iTextId = textIds[iRow];
-                            sQuery = "SELECT Text FROM \"Texts\" WHERE Id == %1";
+                            QString sQuery = "SELECT Text FROM \"Texts\" WHERE Id == %1";
                             sQuery = sQuery.arg(iTextId);
                             QSqlQuery query = pDatabase->execute(sQuery);
                             if (query.next())
@@ -131,7 +143,6 @@ void LevelsTreeView::restart()
                                 sText = query.value(0).toString();
                             }
                         }
-
                         break;
                     }
                 case LevelTreeItem::TimedRandomWords:
@@ -199,6 +210,28 @@ void LevelsTreeView::restart()
             {
                 break;
             }
+        }
+    }
+}
+
+void LevelsTreeView::setWantedTextId(int iTextId)
+{
+    _iWantedTextId = iTextId;
+
+    const QString TEXT_LEVEL = "Text Level ab1575a2-c508-4565-8e25-3515c9e22aef";
+    auto pLevelsModel = qobject_cast<LevelsModel*>(model());
+    const QModelIndex& start = pLevelsModel->index(0, 0);
+    const QModelIndexList& matches = pLevelsModel->match(start, LevelTableNameRole, TEXT_LEVEL, 1, Qt::MatchExactly|Qt::MatchRecursive);
+    if (matches.isEmpty() == false)
+    {
+        const QModelIndex& indexTextLevel = matches.front();
+        if (indexTextLevel == currentIndex())
+        {
+            restart();
+        }
+        else
+        {
+            setCurrentIndex(indexTextLevel);
         }
     }
 }

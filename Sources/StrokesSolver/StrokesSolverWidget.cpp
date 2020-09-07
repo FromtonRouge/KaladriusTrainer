@@ -18,6 +18,8 @@
 // ======================================================================
 
 #include "StrokesSolverWidget.h"
+#include "../Database/Database.h"
+#include "../Main/Application.h"
 #include "WordsToImprove.h"
 #include "../Levels/TreeItems/LevelTreeItem.h"
 #include "ui_StrokesSolverWidget.h"
@@ -60,7 +62,7 @@ StrokesSolverWidget::StrokesSolverWidget(QWidget* pParent)
     pRootContext->setContextProperty("wordsToImprove", _pWordsToImprove);
     _pUi->quickWidgetWordsToImprove->setSource(QUrl("qrc:/Qml/WordsToImprove.qml"));
 
-    const int iMinimumCharacters = settings.value("minimumCharacters", 0).toInt();
+    const int iMinimumCharacters = settings.value("minimumCharacters", 80).toInt();
     _pUi->spinBoxMinimumCharacters->setValue(iMinimumCharacters);
 
     const int iMaximumCharacters = settings.value("maximumCharacters", 100).toInt();
@@ -78,6 +80,15 @@ StrokesSolverWidget::~StrokesSolverWidget()
 void StrokesSolverWidget::restart(const QString& sText, int iLevelType, int iTextId)
 {
     _pUi->stackedWidget->setCurrentIndex(iLevelType == LevelTreeItem::Text ? 1 : 0);
+    _pUi->textEdit->setPlaceholderText(QString());
+    if (iLevelType == LevelTreeItem::Text && sText.isEmpty())
+    {
+        auto pDatabase = qApp->getDatabase();
+        if (pDatabase->getCount("Texts") == 0)
+        {
+            _pUi->textEdit->setPlaceholderText(tr("No text in database. Please import some texts from the \"Texts\" tab."));
+        }
+    }
     _pUi->textEdit->restart(sText, iTextId);
 }
 

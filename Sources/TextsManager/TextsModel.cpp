@@ -107,11 +107,10 @@ void TextsModel::fetchMore(const QModelIndex& parent)
             QString sQuery = "SELECT Id, Enabled FROM \"Texts\" WHERE TextFileId == %1";
             sQuery = sQuery.arg(iTextFileId);
             QSqlQuery query = pDatabase->execute(sQuery);
-            int i = 0;
             while (query.next())
             {
                 const int iTextId = query.value(0).toInt();
-                QStandardItem* pItem = new QStandardItem(QIcon(":/Icons/book-open-text.png"), QString("[%1]").arg(i++));
+                QStandardItem* pItem = new QStandardItem(QIcon(":/Icons/book-open-text.png"), QString());
                 pItem->setEditable(false);
                 pItem->setData(iTextId);
                 pItem->setCheckable(true);
@@ -142,6 +141,11 @@ QVariant TextsModel::data(const QModelIndex& index, int iRole) const
         const int iTextId = pItem->data().toInt();
         switch (iRole)
         {
+        case Qt::DisplayRole:
+            {
+                result = QString("[%1] Text-%2").arg(index.row()).arg(iTextId);
+                break;
+            }
         case Qt::ToolTipRole:
             {
                 result = QString("TextId = %1").arg(iTextId);

@@ -38,6 +38,7 @@ public:
 
     QSqlQuery execute(const QString& sQuery) const;
     QString escape(const QString& sText) const;
+    void dropTable(const QString& sTableName) const;
 
     bool createTextsTable() const;
     bool createTextFilesTable() const;

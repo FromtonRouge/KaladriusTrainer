@@ -91,6 +91,12 @@ QString Database::escape(const QString& sText) const
     return db.driver()->formatValue(field);
 }
 
+void Database::dropTable(const QString& sTableName) const
+{
+    QString sQuery = QString("DROP TABLE IF EXISTS '%1'").arg(sTableName);
+    execute(sQuery);
+}
+
 bool Database::createTextsTable() const
 {
     QVector<QPair<QString, QString>> columns;

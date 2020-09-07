@@ -67,5 +67,6 @@
         <file>Icons/database-import.png</file>
         <file>Texts/Pride and Prejudice.txt</file>
         <file>Texts/The Adventures of Sherlock Holmes.txt</file>
+        <file>Icons/ui-tab--arrow.png</file>
     </qresource>
 </RCC>

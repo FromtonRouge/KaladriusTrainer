@@ -25,18 +25,28 @@ class TextsTreeView : public QTreeView
 {
     Q_OBJECT
 
+signals:
+    void sendText(int iTextId);
+
 public:
     TextsTreeView(QWidget* pParent = nullptr);
     ~TextsTreeView();
 
+protected:
+    void mouseDoubleClickEvent(QMouseEvent* pEvent) override;
+    void contextMenuEvent(QContextMenuEvent*) override;
+
 private slots:
     void enableSelection();
     void disableSelection();
+    void sendToLearnWindow();
     void removeSelection();
+    void removeAll();
 
 private:
     QAction* _pActionEnable = nullptr;
     QAction* _pActionDisable = nullptr;
+    QAction* _pActionSendToLearnTab = nullptr;
     QAction* _pActionRemove = nullptr;
+    QAction* _pActionRemoveAll = nullptr;
 };
-

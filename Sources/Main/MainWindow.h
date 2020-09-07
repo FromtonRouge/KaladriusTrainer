@@ -41,6 +41,9 @@ public:
 
     void Init();
 
+public slots:
+    void onTextId(int iTextId);
+
 protected slots:
     void on_actionAbout_triggered();
     void delayedRestoreState();

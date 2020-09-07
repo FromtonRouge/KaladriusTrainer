@@ -93,6 +93,11 @@ MainTabDialog::MainTabDialog(QWidget* pParent)
         pChild->Init();
     }
     _pUi->mainWindowLearningMode->Init();
+    connect(_pUi->mainWindowTextsManager, &TextsManagerMainWindow::sendText, [this](int iTextId)
+    {
+        _pUi->mainWindowLearningMode->onTextId(iTextId);
+        _pUi->tabWidget->setCurrentWidget(_pUi->tabLearningMode);
+    });
 }
 
 MainTabDialog::~MainTabDialog()

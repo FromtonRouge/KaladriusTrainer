@@ -41,6 +41,8 @@ TextsManagerMainWindow::TextsManagerMainWindow(QWidget* pParent)
     _pUi->setupUi(this);
     _pUi->textEdit->setReadOnly(true);
     _pUi->textEdit->setFontPointSize(15);
+
+    connect(_pUi->treeViewTexts, &TextsTreeView::sendText, this, &TextsManagerMainWindow::sendText);
 }
 
 TextsManagerMainWindow::~TextsManagerMainWindow()
@@ -110,6 +112,13 @@ void TextsManagerMainWindow::on_actionImport_Directory_triggered()
         _pTextsModel->reset();
         _pUi->textEdit->clear();
     }
+}
+
+void TextsManagerMainWindow::on_actionImport_Default_Texts_triggered()
+{
+    importDirectory(":/Texts/");
+    _pTextsModel->reset();
+    _pUi->textEdit->clear();
 }
 
 void TextsManagerMainWindow::importDirectory(const QString& sDirectory)
@@ -213,7 +222,7 @@ void TextsManagerMainWindow::importTextFile(const QString& sFilePath)
 
                 if (bSplitText)
                 {
-                    if (sText.size() > 100)
+                    if (sText.size() > 50)
                     {
                         QString sSimplified = sText.simplified();
 

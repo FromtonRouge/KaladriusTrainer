@@ -38,7 +38,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>20</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHelp">
@@ -51,8 +51,10 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionImport_Text"/>
+    <addaction name="actionImport_Default_Texts"/>
+    <addaction name="separator"/>
     <addaction name="actionImport_Directory"/>
+    <addaction name="actionImport_Text"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuHelp"/>
@@ -109,7 +111,16 @@
      <normaloff>:/Icons/database-import.png</normaloff>:/Icons/database-import.png</iconset>
    </property>
    <property name="text">
-    <string>Import Directory</string>
+    <string>Import Texts From Directory</string>
+   </property>
+  </action>
+  <action name="actionImport_Default_Texts">
+   <property name="icon">
+    <iconset resource="../../Resources/KaladriusTrainer.qrc">
+     <normaloff>:/Icons/database-import.png</normaloff>:/Icons/database-import.png</iconset>
+   </property>
+   <property name="text">
+    <string>Import Default Texts</string>
    </property>
   </action>
  </widget>
