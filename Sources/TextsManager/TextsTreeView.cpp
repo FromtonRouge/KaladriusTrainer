@@ -25,13 +25,17 @@
 #include <QtGui/QMouseEvent>
 #include <QtWidgets/QMenu>
 #include <QtCore/QVector>
+#include <QtCore/QMimeData>
 #include <QtCore/QPersistentModelIndex>
 #include <QtCore/QItemSelectionModel>
+#include <QtCore/QFileInfo>
+#include <QtCore/QUrl>
 #include <QtCore/QDebug>
 
 TextsTreeView::TextsTreeView(QWidget* pParent)
     : QTreeView(pParent)
 {
+    setAcceptDrops(true);
     setSelectionMode(QTreeView::ContiguousSelection);
 
     _pActionEnable = new QAction(tr("Enable"));
@@ -104,6 +108,42 @@ void TextsTreeView::contextMenuEvent(QContextMenuEvent*)
     }
 }
 
+void TextsTreeView::dragEnterEvent(QDragEnterEvent* pEvent)
+{
+    const QStringList& files = getFilesFromMimeData(pEvent->mimeData());
+    if (files.isEmpty() == false)
+    {
+        pEvent->acceptProposedAction();
+        return;
+    }
+
+    QTreeView::dragEnterEvent(pEvent);
+}
+
+void TextsTreeView::dragMoveEvent(QDragMoveEvent* pEvent)
+{
+    const QStringList& files = getFilesFromMimeData(pEvent->mimeData());
+    if (files.isEmpty() == false)
+    {
+        pEvent->acceptProposedAction();
+        return;
+    }
+
+    QTreeView::dragMoveEvent(pEvent);
+}
+
+void TextsTreeView::dropEvent(QDropEvent* pEvent)
+{
+    const QStringList& files = getFilesFromMimeData(pEvent->mimeData());
+    if (files.isEmpty() == false)
+    {
+        emit importRequest(files);
+        return;
+    }
+
+    QTreeView::dropEvent(pEvent);
+}
+
 void TextsTreeView::enableSelection()
 {
     const QModelIndexList& indexes = selectedIndexes();
@@ -148,4 +188,32 @@ void TextsTreeView::removeAll()
     {
         pModel->removeRows(0, iRows);
     }
+}
+
+QStringList TextsTreeView::getFilesFromMimeData(const QMimeData* pMimeData) const
+{
+    QStringList files;
+    if (!pMimeData || !pMimeData->hasUrls())
+    {
+        return files;
+    }
+
+    const QList<QUrl>& urls = pMimeData->urls();
+    for (const QUrl& url : urls)
+    {
+        const QString& sUrl = url.toLocalFile();
+        QFileInfo file(sUrl);
+        if (file.exists())
+        {
+            if (file.isDir())
+            {
+                files << sUrl;
+            }
+            else if (file.suffix() == "txt")
+            {
+                files << sUrl;
+            }
+        }
+    }
+    return files;
 }

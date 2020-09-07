@@ -26,7 +26,8 @@ class TextsTreeView : public QTreeView
     Q_OBJECT
 
 signals:
-    void sendText(int iTextId);
+    void sendText(int iTextId) const;
+    void importRequest(const QStringList& files) const;
 
 public:
     TextsTreeView(QWidget* pParent = nullptr);
@@ -35,6 +36,9 @@ public:
 protected:
     void mouseDoubleClickEvent(QMouseEvent* pEvent) override;
     void contextMenuEvent(QContextMenuEvent*) override;
+    void dragEnterEvent(QDragEnterEvent* pEvent) override;
+    void dragMoveEvent(QDragMoveEvent* pEvent) override;
+    void dropEvent(QDropEvent* pEvent) override;
 
 private slots:
     void enableSelection();
@@ -42,6 +46,9 @@ private slots:
     void sendToLearnWindow();
     void removeSelection();
     void removeAll();
+
+private:
+    QStringList getFilesFromMimeData(const QMimeData* pMimeData) const;
 
 private:
     QAction* _pActionEnable = nullptr;

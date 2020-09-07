@@ -68,5 +68,9 @@
         <file>Texts/Pride and Prejudice.txt</file>
         <file>Texts/The Adventures of Sherlock Holmes.txt</file>
         <file>Icons/ui-tab--arrow.png</file>
+        <file>Texts/A Tale of Two Cities.txt</file>
+        <file>Texts/Treasure Island.txt</file>
+        <file>Texts/Peter Pan.txt</file>
+        <file>Texts/The Wonderful Wizard of Oz.txt</file>
     </qresource>
 </RCC>

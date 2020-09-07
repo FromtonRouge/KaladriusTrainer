@@ -32,6 +32,7 @@
 #include <QtCore/QSet>
 #include <QtCore/QDebug>
 #include <iostream>
+#include <functional>
 
 TextsManagerMainWindow::TextsManagerMainWindow(QWidget* pParent)
     : MainTabWindow(pParent)
@@ -43,6 +44,12 @@ TextsManagerMainWindow::TextsManagerMainWindow(QWidget* pParent)
     _pUi->textEdit->setFontPointSize(15);
 
     connect(_pUi->treeViewTexts, &TextsTreeView::sendText, this, &TextsManagerMainWindow::sendText);
+    connect(_pUi->treeViewTexts, &TextsTreeView::importRequest, [this](const QStringList& files)
+    {
+        importFiles(files);
+        _pTextsModel->reset();
+        _pUi->textEdit->clear();
+    });
 }
 
 TextsManagerMainWindow::~TextsManagerMainWindow()
@@ -85,7 +92,7 @@ void TextsManagerMainWindow::on_actionImport_Text_triggered()
 {
     QSettings settings;
     const QString& sLastTextImportDirectory = settings.value("lastTextImportDirectory").toString();
-    const QString& sTextFilePath = QFileDialog::getOpenFileName(this, tr("Import Text..."), sLastTextImportDirectory, "*.txt");
+    const QString& sTextFilePath = QFileDialog::getOpenFileName(this, tr("Import Text..."), sLastTextImportDirectory, "*.*");
     if (!sTextFilePath.isEmpty())
     {
         importTextFile(sTextFilePath);
@@ -129,31 +136,19 @@ void TextsManagerMainWindow::importDirectory(const QString& sDirectory)
         return;
     }
 
-    const auto& entries = dir.entryInfoList({"*.txt"}, QDir::NoDotAndDotDot|QDir::Files);
-    const int iEntries = entries.size();
-    if (iEntries > 0)
+    QStringList files;
+    const auto& filesInfo = dir.entryInfoList({"*"}, QDir::NoDotAndDotDot|QDir::Dirs|QDir::Files);
+    for (const QFileInfo& fi : filesInfo)
     {
-        QProgressDialog progressDialog(tr("Import Texts..."), tr("Cancel"), 0, iEntries, this);
-        progressDialog.setWindowModality(Qt::WindowModal);
-
-        for (int i = 0; i < iEntries; ++i)
-        {
-            const QFileInfo& fi = entries[i];
-            progressDialog.setValue(i);
-            if (progressDialog.wasCanceled())
-            {
-                break;
-            }
-
-            importTextFile(fi.absoluteFilePath());
-        }
-
-        progressDialog.setValue(iEntries);
+        files << fi.absoluteFilePath();
     }
+
+    importFiles(files);
 }
 
 void TextsManagerMainWindow::importTextFile(const QString& sFilePath)
 {
+    // TODO: Specific import from file extension
     QFile file(sFilePath);
     if (!file.open(QFile::ReadOnly))
     {
@@ -161,14 +156,6 @@ void TextsManagerMainWindow::importTextFile(const QString& sFilePath)
     }
 
     QTextStream stream(&file);
-
-    enum class ParserState
-    {
-        Idle,
-        Record,
-    };
-
-    ParserState parserState = ParserState::Record;
 
     // Dict that converts unicode characters to a latin1
     // character we can type on keyboard
@@ -188,73 +175,52 @@ void TextsManagerMainWindow::importTextFile(const QString& sFilePath)
 
     auto processChar = [&](const QChar& c)
     {
-        switch (parserState)
-        {
-        case ParserState::Idle:
-            {
-                if (c.isUpper())
-                {
-                    parserState = ParserState::Record;
-                    sText += c;
-                }
-                break;
-            }
-        case ParserState::Record:
-            {
-                sText += c;
+        sText += c;
 
-                bool bSplitText = false;
-                if (stream.atEnd())
+        bool bSplitText = false;
+        if (stream.atEnd())
+        {
+            bSplitText = true;
+        }
+        else if (c == '\n')
+        {
+            for (const QChar& lastChar : last4Chars)
+            {
+                if (lastChar == '\n')
                 {
                     bSplitText = true;
+                    break;
                 }
-                else if (c == '\n')
-                {
-                    for (const QChar& lastChar : last4Chars)
-                    {
-                        if (lastChar == '\n')
-                        {
-                            bSplitText = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (bSplitText)
-                {
-                    if (sText.size() > 50)
-                    {
-                        QString sSimplified = sText.simplified();
-
-                        if (sSimplified.startsWith('"'))
-                        {
-                            int iDoubleQuoteCount = 0;
-                            for (const QChar& character : sSimplified)
-                            {
-                                if (character == '"')
-                                {
-                                    iDoubleQuoteCount++;
-                                }
-                            }
-
-                            if (iDoubleQuoteCount == 1 || iDoubleQuoteCount == 2)
-                            {
-                                sSimplified.remove('"');
-                            }
-                        }
-
-                        texts << sSimplified;
-                    }
-
-                    sText.clear();
-                }
-
-                break;
             }
-        default:
+        }
+
+        if (bSplitText)
+        {
+            if (sText.size() > 50)
             {
-                break;
+                QString sSimplified = sText.simplified();
+
+                if (sSimplified.startsWith('"'))
+                {
+                    int iDoubleQuoteCount = 0;
+                    for (const QChar& character : sSimplified)
+                    {
+                        if (character == '"')
+                        {
+                            iDoubleQuoteCount++;
+                        }
+                    }
+
+                    if (iDoubleQuoteCount == 1 || iDoubleQuoteCount == 2)
+                    {
+                        sSimplified.remove('"');
+                    }
+                }
+
+                texts << sSimplified;
             }
+
+            sText.clear();
         }
 
         // Memorize last 4 characters only to detect double eol
@@ -298,7 +264,6 @@ void TextsManagerMainWindow::importTextFile(const QString& sFilePath)
     if (texts.isEmpty() == false)
     {
         QFileInfo fi(sFilePath);
-
         auto pDatabase = qApp->getDatabase();
         auto getTextFileId = [&]() -> int
         {
@@ -346,5 +311,47 @@ void TextsManagerMainWindow::importTextFile(const QString& sFilePath)
     {
         qDebug() << "Non converted characters" << nonConvertedCharacters;
         Q_ASSERT(false);
+    }
+}
+
+void TextsManagerMainWindow::importFiles(const QStringList& files)
+{
+    const int iEntries = files.size();
+    if (iEntries > 0)
+    {
+        QProgressDialog progressDialog(tr("Import Texts..."), tr("Cancel"), 0, iEntries, this);
+        progressDialog.setWindowModality(Qt::WindowModal);
+
+        std::function<void (const QFileInfo&)> import = [this, &import](const QFileInfo& fi)
+        {
+            if (fi.isDir())
+            {
+                const QDir dir = fi.absoluteFilePath();
+                const auto& filesInfo = dir.entryInfoList({"*"}, QDir::NoDotAndDotDot|QDir::Dirs|QDir::Files);
+                for (const QFileInfo& fileInfo : filesInfo)
+                {
+                    import(fileInfo);
+                }
+            }
+            else
+            {
+                importTextFile(fi.absoluteFilePath());
+            }
+        };
+
+        for (int i = 0; i < iEntries; ++i)
+        {
+            const QFileInfo fi(files[i]);
+            progressDialog.setValue(i);
+            progressDialog.setLabelText(fi.fileName());
+            if (progressDialog.wasCanceled())
+            {
+                break;
+            }
+
+            import(fi);
+        }
+
+        progressDialog.setValue(iEntries);
     }
 }

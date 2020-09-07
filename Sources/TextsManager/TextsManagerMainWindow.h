@@ -51,6 +51,7 @@ protected slots:
 private:
     void importDirectory(const QString& sDirectory);
     void importTextFile(const QString& sFilePath);
+    void importFiles(const QStringList& files);
 
 private:
     QScopedPointer<Ui::TextsManagerMainWindow> _pUi;
