@@ -86,7 +86,7 @@ void StrokesSolverWidget::restart(const QString& sText, int iLevelType, int iTex
         auto pDatabase = qApp->getDatabase();
         if (pDatabase->getCount("Texts") == 0)
         {
-            _pUi->textEdit->setPlaceholderText(tr("No text in database. Please import some texts from the \"Texts\" tab."));
+            _pUi->textEdit->setPlaceholderText(tr("No text in database. Please import texts from the \"Texts\" tab."));
         }
     }
     _pUi->textEdit->restart(sText, iTextId);
