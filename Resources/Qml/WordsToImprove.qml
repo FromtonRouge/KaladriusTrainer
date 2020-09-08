@@ -54,7 +54,7 @@ Item {
     }
 
     Row {
-        y: 3
+        y: 7
         spacing: 8
         Repeater {
             id: repeaterWordCards

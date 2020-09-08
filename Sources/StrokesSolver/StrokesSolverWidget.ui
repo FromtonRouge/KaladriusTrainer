@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>884</width>
+    <width>1271</width>
     <height>300</height>
    </rect>
   </property>
@@ -29,14 +29,30 @@
    <property name="verticalSpacing">
     <number>0</number>
    </property>
-   <item row="0" column="3">
-    <widget class="QLabel" name="label_4">
+   <item row="0" column="0">
+    <widget class="QFontComboBox" name="fontComboBox"/>
+   </item>
+   <item row="0" column="1">
+    <widget class="QComboBox" name="comboBoxFontSize"/>
+   </item>
+   <item row="0" column="2">
+    <widget class="QPushButton" name="pushButtonRestart">
+     <property name="toolTip">
+      <string>Restart (F5)</string>
+     </property>
      <property name="text">
-      <string>Minimum Characters</string>
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="../../Resources/KaladriusTrainer.qrc">
+       <normaloff>:/Icons/arrow-circle-double.png</normaloff>:/Icons/arrow-circle-double.png</iconset>
+     </property>
+     <property name="shortcut">
+      <string>F5</string>
      </property>
     </widget>
    </item>
-   <item row="0" column="5">
+   <item row="0" column="3">
     <widget class="QStackedWidget" name="stackedWidget">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -45,6 +61,12 @@
       </sizepolicy>
      </property>
      <widget class="QWidget" name="pageWordsToImprove">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <layout class="QGridLayout" name="gridLayout">
        <property name="leftMargin">
         <number>0</number>
@@ -56,6 +78,9 @@
         <number>0</number>
        </property>
        <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <property name="verticalSpacing">
         <number>0</number>
        </property>
        <item row="0" column="0">
@@ -85,29 +110,42 @@
       </layout>
      </widget>
      <widget class="QWidget" name="pageTextOptions">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <layout class="QGridLayout" name="gridLayout_3">
-       <item row="0" column="2">
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string>Contains</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="4">
+       <item row="0" column="6">
         <widget class="QLabel" name="label_3">
          <property name="text">
           <string>Doesn't Contain</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>Maximum Characters</string>
+       <item row="0" column="5">
+        <widget class="QLineEdit" name="lineEditContains">
+         <property name="placeholderText">
+          <string>Characters separated by |</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
+       <item row="0" column="4">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Contains</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="7">
+        <widget class="QLineEdit" name="lineEditDoesNotContain">
+         <property name="placeholderText">
+          <string>Characters separated by |</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="3">
         <widget class="QSpinBox" name="spinBoxMaximumCharacters">
          <property name="minimum">
           <number>0</number>
@@ -120,17 +158,24 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="5">
-        <widget class="QLineEdit" name="lineEditDoesNotContain">
-         <property name="placeholderText">
-          <string>Characters separated by |</string>
+       <item row="0" column="2">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Maximum Characters</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="3">
-        <widget class="QLineEdit" name="lineEditContains">
-         <property name="placeholderText">
-          <string>Characters separated by |</string>
+       <item row="0" column="1">
+        <widget class="QSpinBox" name="spinBoxMinimumCharacters">
+         <property name="maximum">
+          <number>10000</number>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>Minimum Characters</string>
          </property>
         </widget>
        </item>
@@ -138,40 +183,10 @@
      </widget>
     </widget>
    </item>
-   <item row="0" column="2">
-    <widget class="QPushButton" name="pushButtonRestart">
-     <property name="toolTip">
-      <string>Restart (F5)</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="icon">
-      <iconset resource="../../Resources/KaladriusTrainer.qrc">
-       <normaloff>:/Icons/arrow-circle-double.png</normaloff>:/Icons/arrow-circle-double.png</iconset>
-     </property>
-     <property name="shortcut">
-      <string>F5</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0">
-    <widget class="QFontComboBox" name="fontComboBox"/>
-   </item>
-   <item row="1" column="0" colspan="6">
+   <item row="1" column="0" colspan="4">
     <widget class="StrokesSolverTextEdit" name="textEdit">
      <property name="acceptRichText">
       <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QComboBox" name="comboBoxFontSize"/>
-   </item>
-   <item row="0" column="4">
-    <widget class="QSpinBox" name="spinBoxMinimumCharacters">
-     <property name="maximum">
-      <number>10000</number>
      </property>
     </widget>
    </item>
