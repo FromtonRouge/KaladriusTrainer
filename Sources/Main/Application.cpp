@@ -55,7 +55,7 @@ Application::Application(int& argc, char** argv)
     setApplicationName("KaladriusTrainer");
 
 #define PROJECT_VERSION_MAJOR 0
-#define PROJECT_VERSION_MINOR 1
+#define PROJECT_VERSION_MINOR 2
 #define PROJECT_VERSION_PATCH 0
     setApplicationVersion(QString("v%1.%2.%3").arg(PROJECT_VERSION_MAJOR).arg(PROJECT_VERSION_MINOR).arg(PROJECT_VERSION_PATCH));
 
@@ -96,6 +96,8 @@ void Application::showAboutDialog()
     sText += tr("<p>Some icons by <a href='http://p.yusukekamiyamane.com/'>Yusuke Kamiyamane</a>. Licensed under a <a href='http://creativecommons.org/licenses/by/3.0/'>Creative Commons Attribution 3.0 License</a>.</p>");
     sText += tr("<p>Application icon by <a href='http://chromatix.deviantart.com/'>Chromatix</a>. Licensed under a <a href='http://creativecommons.org/licenses/by-nc-nd/4.0/'>Creative Commons Attribution-Noncommercial-NoDerivate 4.0 License</a>.</p>");
     sText += tr("<p>Record icon made by <a href='http://www.freepik.com/'>Freepik</a> from <a href='http://www.flaticon.com/'>www.flaticon.com</a>.</p>");
+    sText += tr("<p>Words list from <a href='http://github.com/first20hours/google-10000-english'>google-10000-english</a>.</p>");
+    sText += tr("<p>All texts from <a href='http://www.gutenberg.org/'>Project Gutenberg</a>.</p>");
     messageBox.setText(sText);
     messageBox.exec();
 }

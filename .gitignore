@@ -3,10 +3,5 @@
 /x64
 /.vscode
 /build
-/Installer/setup
-/Installer/setup.exe
 /Installer/packages/com.fromtonrouge.kaladriustrainer/data
 /Installer/KaladriusTrainerInstaller.exe
-/Installer/NSIS/data
-/Installer/NSIS/*.exe
-/Installer/Qt/packages/com.fromtonrouge.kaladriustrainer/data
