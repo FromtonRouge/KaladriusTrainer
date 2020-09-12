@@ -280,7 +280,7 @@ void MainWindow::onTypingTestDone()
 
                         iProgression += iDeltaProgression;
 
-                        const int iFinalProgression = qBound(0, iProgression, 100);
+                        const int iFinalProgression = qBound(0, iProgression, 125); // Max = 100 + [tolerance]
                         progressValuesByWord[sWord] = iFinalProgression;
 
                         QStringList values;

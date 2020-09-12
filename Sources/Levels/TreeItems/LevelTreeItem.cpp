@@ -155,7 +155,7 @@ QStringList LevelTreeItem::get5WordsToPractice(QVector<int>* pProgressValues) co
 
     if (wordsToPractice.size() < 5)
     {
-        QString sQuery = QString("SELECT Word, Progression FROM \"%1\" WHERE Progression == 100 ORDER BY AverageTimeSpentToComplete/AverageChordsCount DESC LIMIT %2").arg(sLevelWordsTableName).arg(5-wordsToPractice.size());
+        QString sQuery = QString("SELECT Word, Progression FROM \"%1\" WHERE Progression >= 100 ORDER BY AverageTimeSpentToComplete/AverageChordsCount DESC LIMIT %2").arg(sLevelWordsTableName).arg(5-wordsToPractice.size());
         QSqlQuery query = pDatabase->execute(sQuery);
         while (query.next())
         {
@@ -182,9 +182,9 @@ QStringList LevelTreeItem::getRandomWords() const
     // Get words to practice
     const QStringList& wordsToPractice = get5WordsToPractice();
 
-    // Get words we don't practice often with a Progression == 100
+    // Get words we don't practice often with a Progression >= 100
     QStringList otherWordsToPractice;
-    QString sQuery = QString("SELECT Word FROM \"%1\" WHERE Progression == 100 ORDER BY Occurences ASC LIMIT %2").arg(sLevelWordsTableName).arg(iTotalWords/3);
+    QString sQuery = QString("SELECT Word FROM \"%1\" WHERE Progression >= 100 ORDER BY Occurences ASC LIMIT %2").arg(sLevelWordsTableName).arg(20);
     QSqlQuery query = pDatabase->execute(sQuery);
     while (query.next())
     {
@@ -239,7 +239,7 @@ float LevelTreeItem::getProgressionPercentage() const
     const int iTotal = pDatabase->getCount(sLevelWordsTableName);
     if (iTotal)
     {
-        const QString sQuery = QString("SELECT COUNT(*) FROM \"%1\" WHERE Progression == 100").arg(sLevelWordsTableName);
+        const QString sQuery = QString("SELECT COUNT(*) FROM \"%1\" WHERE Progression >= 100").arg(sLevelWordsTableName);
         QSqlQuery query = pDatabase->execute(sQuery);
         if (query.next())
         {

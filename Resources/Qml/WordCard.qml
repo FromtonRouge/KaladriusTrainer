@@ -11,6 +11,7 @@ Item {
     function setWord(txt) {word.text = txt}
     function setProgress(prg)
     {
+        prg = Math.min(prg, 100);
         changeColor.progress = prg/100;
         if (prg < 0)
         {
@@ -31,7 +32,7 @@ Item {
 
     function setProgressResult(prg)
     {
-        newProgression = prg;
+        newProgression = Math.min(prg, 100);
         timer.start();
     }
 
