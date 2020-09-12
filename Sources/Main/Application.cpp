@@ -56,7 +56,7 @@ Application::Application(int& argc, char** argv)
 
 #define PROJECT_VERSION_MAJOR 0
 #define PROJECT_VERSION_MINOR 2
-#define PROJECT_VERSION_PATCH 0
+#define PROJECT_VERSION_PATCH 1
     setApplicationVersion(QString("v%1.%2.%3").arg(PROJECT_VERSION_MAJOR).arg(PROJECT_VERSION_MINOR).arg(PROJECT_VERSION_PATCH));
 
     // Command line options (--help, --version)

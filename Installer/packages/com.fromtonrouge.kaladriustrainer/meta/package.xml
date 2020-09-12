@@ -2,8 +2,8 @@
 <Package>
     <DisplayName>KaladriusTrainer</DisplayName>
     <Description>Learn to type on a Kaladrius.</Description>
-    <Version>0.2.0</Version>
-    <ReleaseDate>2020-08-25</ReleaseDate>
+    <Version>0.2.1</Version>
+    <ReleaseDate>2020-09-12</ReleaseDate>
     <Default>true</Default>
     <Script>installscript.qs</Script>
 </Package>
