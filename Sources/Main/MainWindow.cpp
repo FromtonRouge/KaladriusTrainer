@@ -222,6 +222,22 @@ void MainWindow::onTypingTestDone()
                     const QStringList& currentWords = pWordsToImprove->getWordsToImprove();
                     QHash<QString, int> progressValuesByWord;
 
+                    // Initialize progress values for current words to improve first
+                    // The user may not have the time to register a result for each "word to improve"
+                    // So we need at least to report the current progress value for those words
+                    for (const QString& sWordToImprove : currentWords)
+                    {
+                        QString sQueryGetValues = "SELECT Progression FROM \"%1\" WHERE Word == \"%2\"";
+                        sQueryGetValues = sQueryGetValues.arg(sLevelWordsTableName).arg(sWordToImprove);
+                        QSqlQuery queryGetValues = pDatabase->execute(sQueryGetValues);
+
+                        if (queryGetValues.next())
+                        {
+                            const int iProgression =  queryGetValues.value(0).toInt(); // Can be -1 when it's a "NEW" word
+                            progressValuesByWord[sWordToImprove] = iProgression;
+                        }
+                    }
+
                     // Insert values in the level words table
                     auto itWordData = typingTestResult.wordData.begin();
                     while (itWordData != typingTestResult.wordData.end())
