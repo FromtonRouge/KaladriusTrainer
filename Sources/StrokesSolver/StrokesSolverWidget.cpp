@@ -116,11 +116,21 @@ void StrokesSolverWidget::on_pushButtonRestart_released()
 void StrokesSolverWidget::on_spinBoxMinimumCharacters_valueChanged(int i)
 {
     QSettings().setValue("minimumCharacters", i);
+
+    if (i > _pUi->spinBoxMaximumCharacters->value())
+    {
+        _pUi->spinBoxMaximumCharacters->setValue(i);
+    }
 }
 
 void StrokesSolverWidget::on_spinBoxMaximumCharacters_valueChanged(int i)
 {
     QSettings().setValue("maximumCharacters", i);
+
+    if (i < _pUi->spinBoxMinimumCharacters->value())
+    {
+        _pUi->spinBoxMinimumCharacters->setValue(i);
+    }
 }
 
 void StrokesSolverWidget::on_lineEditContains_textChanged(const QString& sText)
