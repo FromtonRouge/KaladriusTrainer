@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Installer>
     <Name>KaladriusTrainer</Name>
-    <Version>0.2.1</Version>
+    <Version>0.2.2</Version>
     <Title>KaladriusTrainer Installer</Title>
     <Publisher>FromtonRouge</Publisher>
     <StartMenuDir>KaladriusTrainer</StartMenuDir>
